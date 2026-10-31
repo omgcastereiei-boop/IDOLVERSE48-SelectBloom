@@ -31,7 +31,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `index.html` | Game shell; loads the files below in the original script order |
 | `js/core/game-base.js` | **Original game code, verbatim** (state, new game, save/load, day tick, training, events) |
 | `js/core/game-systems.js` | **Original game code, verbatim** (members, teams, auditions, Senbatsu, single/album production, costumes, CD Cover Studio, handshake, Roadshow, charts, finances, all original views) |
-| `js/art/characters.js` | New character art engine v3: portraits, half body, full body, 12 expressions, 16 poses, 7 outfit designs, accessories |
+| `js/art/characters.js` | Character art engine v4 (modelled on the art reference): portraits, half body, full body, 12 expressions, 16 poses, 7 layered idol costumes, accessories |
 | `js/scenes/environments.js` | New illustrated environments (office, lounge, dressing room, rehearsal room, recording studio, photo studio, concert stage, tour, fan meeting hall, broadcast studio, audition room, management office, backstage) |
 | `js/ui/ui.js` | New UI layer: HUD, navigation, title screen, Producer Office, member cards, Training, Fan Community, Charts, Management, 6‑step Single Production |
 | `css/base.css` | Original structural CSS, verbatim |
