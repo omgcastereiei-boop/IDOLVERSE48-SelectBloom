@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>IDOLVERSE48 · Character Art Preview</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0;font:13px system-ui;background:#fbf4ef;color:#4b3a5e}h2{margin:14px}.g{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px}.g>div{background:#fff;border-radius:12px;padding:6px;text-align:center;box-shadow:0 2px 8px #0001}small{display:block}</style>
+</head><body>
+<div id="out"></div>
+<script src="../js/core/game-base.js"></script>
+<script src="../js/art/characters.js"></script>
+<script src="../js/core/game-systems.js"></script>
+<script>
+// Standalone preview: builds sample idols from the same appearance generator the game uses.
+S={groups:[],members:[],auds:[],nid:0};
+const q=new URLSearchParams(location.search),mode=q.get('m')||'roster',n=+(q.get('n')||24);
+const P=['Genki','Cool','Shy','Elegant','Airhead','Serious'];
+const mem=[...Array(n)].map((_,i)=>({id:i+1,name:'Idol '+(i+1),hue:(i*67)%360,pers:P[i%6]}));
+mem.forEach((m,i)=>{m.ap=newAp(m,0,{bk:i%BKN.length,ft:(i*3)%FTN.length,hc:(i*5)%HC.length,ec:i%EC.length,ey:i%6,of:i%7,ac:i%7})});
+let h='';
+if(mode=='roster'){h+='<h2>Portraits</h2><div class="g">'+mem.map(m=>`<div>${pt(m,130)}<small>${BKN[m.ap.bk]} · ${FTN[m.ap.ft]}</small></div>`).join('')+'</div>';
+ h+='<h2>Full body</h2><div class="g">'+mem.slice(0,14).map(m=>`<div>${CHAR_ASSETS.full(m,120)}<small>${OFN[m.ap.of]}</small></div>`).join('')+'</div>';}
+if(mode=='expr'){const m=mem[+(q.get('i')||0)];h+='<h2>Expressions</h2><div class="g">'+EXN.map((e,i)=>`<div>${pt(m,120,0,'16 26 68 62',i)}<small>${e}</small></div>`).join('')+'</div>';
+ h+='<h2>Poses</h2><div class="g">'+NPOSE.map((p,i)=>`<div><svg viewBox="-12 0 124 200" width="110">${fig(m,{...m.ap,pose:i})}</svg><small>${i}</small></div>`).join('')+'</div>';
+ h+='<h2>Outfits</h2><div class="g">'+OFN.map((o,i)=>`<div>${CHAR_ASSETS.full(m,120,null,0,[i,m.ap.oh])}${pt({...m,_x:1,ap:{...m.ap,of:i}},110)}<small>${o}</small></div>`).join('')+'</div>';}
+document.getElementById('out').innerHTML=h;
+</script></body></html>

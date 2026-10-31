@@ -1,0 +1,10 @@
+{
+  "name": "idolverse48-select-bloom",
+  "version": "2.0.0",
+  "private": true,
+  "description": "IDOLVERSE48: Select Bloom! — Choose Your Stars. Watch Them Bloom.",
+  "scripts": {
+    "start": "node tools/serve.js",
+    "build": "node tools/build.js"
+  }
+}
