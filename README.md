@@ -32,8 +32,10 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/core/game-base.js` | **Original game code, verbatim** (state, new game, save/load, day tick, training, events) |
 | `js/core/game-systems.js` | **Original game code, verbatim** (members, teams, auditions, Senbatsu, single/album production, costumes, CD Cover Studio, handshake, Roadshow, charts, finances, all original views) |
 | `js/art/characters.js` | Character art engine v4 (modelled on the art reference): portraits, half body, full body, 12 expressions, 16 poses, 7 layered idol costumes, accessories |
+| `js/art/costume-parts.js` | Modular costume renderer: independent clothing pieces, 15 patterns, per-piece colours, accessories, 13 presets |
 | `js/scenes/environments.js` | New illustrated environments (office, lounge, dressing room, rehearsal room, recording studio, photo studio, concert stage, tour, fan meeting hall, broadcast studio, audition room, management office, backstage) |
 | `js/ui/ui.js` | New UI layer: HUD, navigation, title screen, Producer Office, member cards, Training, Fan Community, Charts, Management, 6‑step Single Production |
+| `js/ui/costume-designer.js` | Costume Designer screen: per-song designs, uniform/individual member assignment, CD Cover Studio integration |
 | `css/base.css` | Original structural CSS, verbatim |
 | `css/theme.css` | New visual identity (pastel pink · lavender · sky blue · champagne · ivory · warm beige) |
 | `original/` | Untouched backup of the original single‑file game |
@@ -72,3 +74,19 @@ Saves use the same `localStorage` key and format as the original
 (`idolProducerSave1`); a save made in the original game loads directly.
 Management → Save & Load can also export/import the same data as a `.json` file.
 Display preferences are stored separately (`iv48ui`) and never touch the save.
+
+## Costume Designer
+
+Music Production → Single Production → step 4 → **Open Costume Designer**.
+
+* Every piece is drawn on the idol: tops, sleeves, collars, outerwear, bottoms,
+  overskirts, extras (detached sleeves, cape, ribbons, sash, belt, corset, fabric layer),
+  shoes, legwear and accessories (several can be worn at once).
+* Each piece has its own pattern (15 types, size, intensity) and colours
+  (primary, secondary, accent, pattern, details) with palette, HEX input and recent colours.
+* Designs are stored **per song** (`S.songs[id].cdz`): create, rename, duplicate,
+  delete, copy from another song, start from 13 presets.
+* Uniform mode (one design + optional colour tweaks per member) or Individual mode
+  (a design per member). The CD Cover Studio draws jacket members in these designs.
+* The original production rule is unchanged: each song still needs its production
+  costume line chosen and finalized; finalizing or starting the single locks its designs.

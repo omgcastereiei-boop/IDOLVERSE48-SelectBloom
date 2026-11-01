@@ -226,7 +226,7 @@ function headParts(m,ex,id,opt={}){const a=opt.a||apEff(m),D=dz(m),X=EXS[exOf(m,
  const shadow=`<clipPath id="${id}fc"><path d="${facePath(D.face)}"/></clipPath><g clip-path="url(#${id}fc)"><path d="${bd}" transform="translate(0 2.4)${F.flip?' translate(100 0) scale(-1 1)':''}" fill="${sk[1]}" opacity=".9"/></g>`;
  const sl=`<g fill="${HF}" ${hs}>${sideLocks(B.sk,B.s,seed)}</g>`;
  const browL=`<g opacity="${F.part?'.95':'.5'}">${brows(a,D,X,bc)}</g>`;
- return{defs,back,over,face:face+shadow,feat,sl,bangs,brow:browL,acc:accSvg(a.ac,a,D,hb),ties,a,D,sk}}
+ return{defs,back,over,face:face+shadow,feat,sl,bangs,brow:browL,acc:a.cd&&(czHasHead(a.cd)||(a.cd.a&&a.cd.a.earrings))?czHeadAcc(a.cd)+(czHasHead(a.cd)?'':accSvg(a.ac,a,D,hb)):accSvg(a.ac,a,D,hb),ties,a,D,sk}}
 
 // =====================================================================================
 //  BODY (figure frame 0..100 x 0..200; head drawn at scale HK)
@@ -302,46 +302,59 @@ function outfit(o,C,id,D){const ln=C.ln,LN=`stroke="${ln}" stroke-width=".35" st
 
 // ---- limbs ---------------------------------------------------------------------------
 function armBuild(sh,a1,a2,sk,O){const[e1,e2]=ep(sh[0],sh[1],18.6,a1),[h1,h2]=ep(e1,e2,17,a2),J=[sh,[e1,e2],[h1,h2]],S=limbPts(J,armProf,12);
- const dx=h1-e1,dy=h2-e2,dl=Math.hypot(dx,dy)||1,hx_=h1+dx/dl*1.4,hy_=h2+dy/dl*1.4,ang=Math.atan2(dy,dx)*180/Math.PI-90;
- let s=`<path d="${limbPath(S)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/><path d="M-1.7 -1.4C-2.4 .6 -1.8 3.4 0 3.6C1.9 3.4 2.4 .6 1.7 -1.4C.9 -2 -.9 -2 -1.7 -1.4Z" transform="translate(${N2(hx_)} ${N2(hy_)}) rotate(${N2(ang)})" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".3"/>`;
- const sc=O.sc,sl=sc?mixc(sc,'#3a2a4a',.35):'';
+ const dx=h1-e1,dy=h2-e2,dl=Math.hypot(dx,dy)||1,hx_=h1+dx/dl*1.4,hy_=h2+dy/dl*1.4,ang=Math.atan2(dy,dx)*180/Math.PI-90,gl=O.glove,glL=gl&&/^#/.test(gl)?mixc(gl,'#3a2a4a',.35):'#ddd0e0';
+ let s=`<path d="${limbPath(S)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/>`;
+ if(gl)s+=`<path d="${limbPath(S,O.gloveFrom||.82,1,.22)}" fill="${gl}" stroke="${glL}" stroke-width=".3"/>`;
+ s+=`<path d="M-1.7 -1.4C-2.4 .6 -1.8 3.4 0 3.6C1.9 3.4 2.4 .6 1.7 -1.4C.9 -2 -.9 -2 -1.7 -1.4Z" transform="translate(${N2(hx_)} ${N2(hy_)}) rotate(${N2(ang)})" fill="${gl||sk[0]}" stroke="${gl?glL:sk[2]}" stroke-width=".3"/>`;
+ const sc=O.sc,sl=O.sln||(sc&&/^#/.test(sc)?mixc(sc,'#3a2a4a',.35):'#8a7a96');
  if(O.wrist){const q=S.find(z=>z.t>=.9);s+=`<ellipse cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" rx="2.2" ry="1.3" fill="${O.wrist}" stroke="${mixc(O.wrist,'#3a2a4a',.35)}" stroke-width=".3" transform="rotate(${N2(-a2)} ${N2(q.p[0])} ${N2(q.p[1])})"/>`}
- if(O.sleeve=='long'){s+=`<path d="${limbPath(S,0,.86,.7)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`;const c=S.find(q=>q.t>=.83);s+=`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="2.6" ry="1.3" fill="${O.cuff||sc}" stroke="${sl}" stroke-width=".3" transform="rotate(${N2(-a2)} ${N2(c.p[0])} ${N2(c.p[1])})"/>`}
- else if(O.sleeve=='puff'){const c=S.find(q=>q.t>=.1),r=`rotate(${N2(-a1)} ${N2(c.p[0])} ${N2(c.p[1])})`;s+=`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="4.4" ry="5" fill="${sc}" stroke="${sl}" stroke-width=".32" transform="${r}"/><path d="M${N2(c.p[0]-2)} ${N2(c.p[1]-3.6)}q-.6 3 0 6M${N2(c.p[0]+1.6)} ${N2(c.p[1]-3.8)}q.8 3 0 6.2" stroke="${sl}" stroke-width=".25" fill="none" opacity=".6" transform="${r}"/><path d="M${N2(c.p[0]-3.4)} ${N2(c.p[1]+3.4)}q3.4 1.6 6.8 0" stroke="${O.cuff||sc}" stroke-width="1" fill="none" transform="${r}"/>`}
+ if(O.armb){const q=S.find(z=>z.t>=.26);s+=`<ellipse cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" rx="3" ry="1.1" fill="${O.armb.c}" stroke="${mixc(O.armb.c,'#3a2a4a',.4)}" stroke-width=".3" transform="rotate(${N2(-a1)} ${N2(q.p[0])} ${N2(q.p[1])})"/><circle cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" r=".6" fill="${O.armb.c3}"/>`}
+ if(O.dsl){const S2=limbPts(J,t=>t<.6?armProf(t)+1.3:armProf(t)+1.3+(t-.6)*13,12),q=S2.find(z=>z.t>=.34);s+=`<path d="${limbPath(S2,.34,.93,0,.4)}" fill="${O.dsl.f}" stroke="${O.dsl.l}" stroke-width=".32"/><ellipse cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" rx="3" ry="1" fill="${O.dsl.c2}" transform="rotate(${N2(-a1)} ${N2(q.p[0])} ${N2(q.p[1])})"/>`}
+ const sv=O.sleeve,cuffAt=(t,rx=2.6)=>{const c=S.find(q=>q.t>=t);return`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="${rx}" ry="1.3" fill="${O.cuff||'#fff'}" stroke="${sl}" stroke-width=".3" transform="rotate(${N2(-(t>.5?a2:a1))} ${N2(c.p[0])} ${N2(c.p[1])})"/>`};
+ if(sv=='long'){s+=`<path d="${limbPath(S,0,.86,.7)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`+cuffAt(.83)}
+ else if(sv=='short'){s+=`<path d="${limbPath(S,0,.3,.9)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`+cuffAt(.28,3.2)}
+ else if(sv=='bell'){const S2=limbPts(J,t=>t<.55?armProf(t)+1.4:armProf(t)+1.4+(t-.55)*15,12);s+=`<path d="${limbPath(S2,0,.9,0,.35)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`}
+ else if(sv=='puff'||sv=='lpuff'){const c=S.find(q=>q.t>=.1),r=`rotate(${N2(-a1)} ${N2(c.p[0])} ${N2(c.p[1])})`;s+=`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="4.4" ry="5" fill="${sc}" stroke="${sl}" stroke-width=".32" transform="${r}"/><path d="M${N2(c.p[0]-2)} ${N2(c.p[1]-3.6)}q-.6 3 0 6M${N2(c.p[0]+1.6)} ${N2(c.p[1]-3.8)}q.8 3 0 6.2" stroke="${sl}" stroke-width=".25" fill="none" opacity=".6" transform="${r}"/>`+(sv=='lpuff'?`<path d="M${N2(c.p[0]-4.4)} ${N2(c.p[1]+3.6)}q1.1 1.8 2.2 0q1.1 1.8 2.2 0q1.1 1.8 2.2 0q1.1 1.8 2.2 0" fill="${O.cuff||'#fff'}" stroke="${sl}" stroke-width=".25" transform="${r}"/>`:`<path d="M${N2(c.p[0]-3.4)} ${N2(c.p[1]+3.4)}q3.4 1.6 6.8 0" stroke="${O.cuff||sc}" stroke-width="1" fill="none" transform="${r}"/>`)}
  return{s,h:[hx_,hy_],e:[e1,e2]}}
 function legBuild(J,sk,O,left){const S=limbPts(J,legProf,16),L=O.leg||{};
- const layer=spec=>{if(!spec)return'';const lnc=mixc(spec.c,'#3a2a4a',.45),f=spec.from||.6;let r=`<path d="${limbPath(S,f,1,spec.t=='boot'?.5:.16)}" fill="${spec.c}" stroke="${lnc}" stroke-width=".32"/>`;const top=S.find(q=>q.t>=f)||S[0];
-  r+=`<path d="M${N2(top.p[0]-top.w/2-.4)} ${N2(top.p[1])}q${N2(top.w/2+.4)} ${spec.t=='boot'?1.3:.8} ${N2(top.w+.8)} 0" stroke="${spec.frill?'#fff':spec.band||spec.lace||lnc}" stroke-width="${spec.frill?1.4:.6}" fill="none"/>`;
+ const layer=spec=>{if(!spec||!spec.t)return'';const lnc=mixc(spec.c,'#3a2a4a',.45),f=spec.from||0,fill=spec.f||spec.c;
+  if(spec.t=='tights')return`<path d="${limbPath(S,0,1,.08)}" fill="${fill}" stroke="${lnc}" stroke-width=".3" opacity=".93"/>`+(spec.over?layer(spec.over):'');
+  let r=`<path d="${limbPath(S,f,1,spec.t=='boot'?.5:.16)}" fill="${fill}" stroke="${lnc}" stroke-width=".32"/>`;const top=S.find(q=>q.t>=f)||S[0];
+  r+=`<path d="M${N2(top.p[0]-top.w/2-.4)} ${N2(top.p[1])}q${N2(top.w/2+.4)} ${spec.t=='boot'?1.3:.8} ${N2(top.w+.8)} 0" stroke="${spec.frill?'#fff':spec.band||spec.lace||lnc}" stroke-width="${spec.frill?1.4:spec.lacetop?1.8:.6}" fill="none" ${spec.lacetop?'stroke-dasharray=".7 .4"':''}/>`;
   if(spec.band)r+=`<path d="M${N2(top.p[0]-top.w/2)} ${N2(top.p[1]+1.8)}h${N2(top.w)}" stroke="${spec.band}" stroke-width=".6"/>`;
   if(spec.lace&&spec.t=='boot')for(let k=1;k<5;k++){const q=S.find(z=>z.t>=f+(1-f)*k/5.4);if(q)r+=`<path d="M${N2(q.p[0]-1.3)} ${N2(q.p[1])}l2.6 .9M${N2(q.p[0]+1.3)} ${N2(q.p[1])}l-2.6 .9" stroke="${spec.lace}" stroke-width=".32"/>`}
   return r+(spec.over?layer(spec.over):'')};
  let s=`<path d="${limbPath(S)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/><path d="${limbPath(S,.47,.53,-.8)}" fill="${sk[1]}" opacity=".45"/>`+layer(L);
+ if(O.garter&&!left){const q=S.find(z=>z.t>=.3);s+=`<path d="M${N2(q.p[0]-q.w/2)} ${N2(q.p[1])}h${N2(q.w)}" stroke="${O.garter}" stroke-width="1.1"/>`+bowS(N2(q.p[0]+q.w/2-.6),N2(q.p[1]),.45,O.garter,mixc(O.garter,'#3a2a4a',.4),0)}
  const A=J[2],K=J[1],dir=Math.atan2(A[1]-K[1],A[0]-K[0])*180/Math.PI-90,sh=O.shoe||{t:'sneaker',c:'#fff'},sc=sh.c,sl=mixc(sc,'#3a2a3a',.5),fl=left?-1:1;
  let shoe='';
  if(sh.t=='boot')shoe=`<path d="M-2.4 -1H2.4L3.2 4.2Q3.6 6.6 1.2 6.6H-1.8Q-3.6 6.6 -3.2 4.2Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-3.1 6H3.3" stroke="${sl}" stroke-width=".7"/>`;
  else if(sh.t=='loafer')shoe=`<path d="M-2.3 0H2.3L3 4.2Q3.2 6.4 1 6.4H-1.6Q-3.4 6.4 -3 4.2Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-1.5 2.2h3" stroke="#ffffff66" stroke-width=".5"/>`;
+ else if(sh.t=='mary')shoe=`<path d="M-2.3 0H2.3L3 4.4Q3.2 6.4 1 6.4H-1.6Q-3.4 6.4 -3 4.4Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-2.4 1.6H2.6" stroke="${sh.a||sl}" stroke-width=".6"/><circle cx="${fl*1.6}" cy="1.6" r=".5" fill="${sh.a||'#fff'}"/>`;
+ else if(sh.t=='heel')shoe=`<path d="M-2 0H2L2.8 4.6Q2.6 7.4 0 7.6Q-2.6 7.4 -2.8 4.6Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-1.4 1.2Q0 2.4 1.4 1.2" stroke="${sh.a||sl}" stroke-width=".5" fill="none"/><path d="M${fl*-2.2} 4.6l${fl*-.4} 3" stroke="${sl}" stroke-width=".7"/>`;
  else shoe=`<path d="M-2.5 -.3H2.5L3.6 4Q4 6.6 1.3 6.6H-1.8Q-4 6.6 -3.6 4Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-3.6 5.2H3.8" stroke="${sh.a||'#fff'}" stroke-width="1"/><path d="M-1.4 1.2l2.8.8M-1.4 2.6l2.8.8" stroke="${sh.a||'#fff'}" stroke-width=".4"/><path d="M${fl*2.6} 1.6l${fl*1} 1.6" stroke="${sl}" stroke-width=".3"/>`;
+ if(sh.deco)shoe+=bowS(0,1.2,.32,sh.deco,mixc(sh.deco,'#3a2a4a',.4),0);
  return s+`<g transform="translate(${N2(A[0])} ${N2(A[1]-.6)}) rotate(${N2(dir*.6)}) scale(1.4)">${shoe}</g>`}
 
-function bodyParts(m,a,pose,id,D,sk){const Pz=NPOSE[pose|0]||NPOSE[0],C=ocol(a),o=a.of|0,O=outfit(o,C,id,D);
- const LJ=legJ(Pz[3],D.lf),legs=legBuild(LJ[0],sk,O,1)+legBuild(LJ[1],sk,O,0);
+function bodyParts(m,a,pose,id,D,sk){const Pz=NPOSE[pose|0]||NPOSE[0],C=ocol(a),o=a.of|0,O=a.cd?modOutfit(a.cd,id,D,sk):outfit(o,C,id,D);
+ const LJ=legJ(Pz[3],D.lf),legs=legBuild(LJ[0],sk,O,1)+legBuild(LJ[1],sk,O,0)+(O.pantsFn?O.pantsFn(LJ):'');
  const neck=`<path d="M47.6 34L52.4 34L53 46L47 46Z" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".28"/><path d="M47.4 37Q50 41.6 52.6 37L52.8 41Q50 44 47.2 41Z" fill="${sk[1]}"/>`;
  const torsoSkin=`<path d="${torsoD}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/>`;
- const body=torsoSkin+(O.cover?(O.skirt||'')+(O.top||''):(O.top||'')+(O.vestL||'')+(O.skirt||''));
+ const body=torsoSkin+(O.cover?(O.skirt||'')+(O.top||''):(O.top||'')+(O.vestL||'')+(O.skirt||''))+(O.mid||'')+(O.outer||'');
  const L=armBuild(SHL,Pz[1][0],Pz[1][1],sk,O),R=armBuild(SHR,Pz[2][0],Pz[2][1],sk,O);
  let g='';const hR=R.h;
  if(Pz[4]=='wave')g=`<path d="M${N2(hR[0]+4)} ${N2(hR[1]-3)}q2 -2 4 0M${N2(hR[0]+5)} ${N2(hR[1]+1)}q2 -2 4 0" stroke="#f58fb5" stroke-width=".7" fill="none"/>`;
- if(Pz[4]=='peace')g=`<g stroke-linecap="round"><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${sk[2]}" stroke-width="1.55"/><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${sk[0]}" stroke-width="1.05"/></g>`;
+ if(Pz[4]=='peace')g=`<g stroke-linecap="round"><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${sk[2]}" stroke-width="1.55"/><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${O.glove||sk[0]}" stroke-width="1.05"/></g>`;
  if(Pz[4]=='heart')g=`<path d="M50 66C45 61 46 57 50 60C54 57 55 61 50 66Z" fill="#ff7eaa" stroke="#fff" stroke-width=".6"/>`;
- if(Pz[4]=='point')g=`<path d="M${N2(hR[0])} ${N2(hR[1])}l4.6 -1" stroke="${sk[0]}" stroke-width="1.3" stroke-linecap="round"/>`;
+ if(Pz[4]=='point')g=`<path d="M${N2(hR[0])} ${N2(hR[1])}l4.6 -1" stroke="${O.glove||sk[0]}" stroke-width="1.3" stroke-linecap="round"/>`;
  if(Pz[4]=='kiss')g=`<path d="M${N2(hR[0]+6)} ${N2(hR[1]-6)}c-3 -3 -1 -5 1 -3c2 -2 4 0 1 3l-1 1z" fill="#ff8fb7"/><path d="M${N2(hR[0]+11)} ${N2(hR[1]-12)}c-2 -2 -.6 -3.4.7 -2c1.4 -1.4 2.8 0 .7 2l-.7.7z" fill="#ffc2da"/>`;
  return{Pz,O,C,legs,neck,torso:body,collar:O.collar||'',back:(O.defs?`<defs>${O.defs}</defs>`:'')+(O.back||''),arms:L.s+R.s,g,hR}}
-function figBuild(m,l,id){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac},mm={...m,_x:1,ap:a},D=dz(m),sk=SKN[D.skin]||SKN[1];
+function figBuild(m,l,id){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac,...(l.cd?{cd:l.cd}:{})},mm={...m,_x:1,ap:a},D=dz(m),sk=SKN[D.skin]||SKN[1];
  const H=headParts(mm,l.ex,id,{a}),B=bodyParts(m,a,l.pose,id,D,sk),tilt=B.Pz[0],HT=`translate(${N2(HTX)} ${HTY}) scale(${HK})`,G=s=>`<g transform="rotate(${tilt} 50 40)"><g transform="${HT}">${s}</g></g>`;
  const pr=(l.prop==1||B.Pz[5]==1)?`<g transform="translate(${N2(B.hR[0])} ${N2(B.hR[1])}) rotate(-20)"><rect x="-1.2" y="-8.6" width="2.4" height="9.6" rx="1" fill="#3b3346"/><circle cy="-10" r="2.8" fill="#d6dbe4" stroke="#8a8f9a" stroke-width=".45"/><path d="M-2 -11h4M-2 -9.2h4" stroke="#a7acb6" stroke-width=".35"/></g>`:l.prop==2?`<g transform="translate(${N2(B.hR[0])} ${N2(B.hR[1])}) rotate(-12)"><rect x="-.9" y="-20" width="1.8" height="21" rx=".9" fill="#ff9ec4"/><rect x="-1.4" y="-2" width="2.8" height="5" rx="1" fill="#555"/><circle cy="-20" r="2.2" fill="#fff6c0" opacity=".9"/></g>`:'';
  const ear=l.ear?`<circle cx="20.4" cy="69" r="1.8" fill="#ffd966"/><circle cx="79.6" cy="69" r="1.8" fill="#ffd966"/>`:'',nk=l.neck?`<path d="M46.6 45.6Q50 50 53.4 45.6" stroke="#ffd966" stroke-width=".7" fill="none"/><circle cx="50" cy="48.6" r="1.1" fill="#ff7eb6"/>`:'';
  return`<defs>${H.defs}</defs>${G(H.back)}${B.back}${B.legs}${B.neck}${B.torso}${B.collar}${nk}${G(H.face+H.feat+H.brow+H.bangs+H.acc+H.ties+ear)}${B.arms}${G(H.sl+H.over)}${B.g}${pr}`}
-function fig(m,l){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac},k=JSON.stringify(['f4',m.id|0,m.hue|0,a,l.pose|0,l.prop|0,l.ear|0,l.neck|0,l.ex==null?'':l.ex]);let t=ART.cache.get(k);if(!t){t=figBuild(m,l,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}return t.split('§').join('f'+(++PTC[0]))}
+function fig(m,l){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac,...(l.cd?{cd:l.cd}:{})},k=JSON.stringify(['f4',m.id|0,m.hue|0,a,l.pose|0,l.prop|0,l.ear|0,l.neck|0,l.ex==null?'':l.ex]);let t=ART.cache.get(k);if(!t){t=figBuild(m,l,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}return t.split('§').join('f'+(++PTC[0]))}
 
 // ---- portrait (bust): same head + same costume, magnified ------------------------------
 function ptBuild(m,s,nb,vb,ex,id){const H=headParts(m,ex,id),a=H.a,h=m.hue|0,D=H.D,sk=H.sk,B=bodyParts(m,a,0,id+'b',D,sk),inv=1/HK;

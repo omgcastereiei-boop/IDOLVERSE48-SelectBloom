@@ -277,3 +277,44 @@ body.nomo *{animation:none!important;transition:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @keyframes sh{from{background-position:150% 0}to{background-position:-100% 0}}
 @media(max-width:480px){.nav{gap:0;padding-left:2px;padding-right:2px}.nav button{flex:1 0 41px;min-width:41px;font-size:8.5px}.nav button i{width:32px;height:32px;border-radius:11px}.nav button i svg{width:18px;height:18px}}
+/* ---------------- costume designer ---------------- */
+.czhead .row{margin:4px 0}.czt{font:800 18px 'M PLUS Rounded 1c'}
+.czsongs{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.czsong{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:6px 12px;cursor:pointer;font:700 12px Quicksand;color:var(--ink);text-align:left}
+.czsong.on{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}.czsong small{color:var(--mut)}
+.czdes select{max-width:240px}
+.czgrid{display:grid;grid-template-columns:150px minmax(260px,1fr) minmax(320px,440px);gap:12px;margin-top:12px;align-items:start}
+.czcats{display:flex;flex-direction:column;gap:4px;background:rgba(255,251,245,.95);border:1px solid var(--line);border-radius:18px;padding:6px;box-shadow:var(--sh);position:sticky;top:76px}
+.czcats button{position:relative;border:0;background:none;border-radius:12px;padding:8px 10px;text-align:left;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;font:800 13px Quicksand}
+.czcats button small{font:700 10px 'M PLUS Rounded 1c';color:var(--mut)}.czcats button.on{background:linear-gradient(90deg,#fde3ec,#eee7fb);box-shadow:inset 3px 0 0 var(--pk)}
+.czcats button i{position:absolute;right:8px;top:9px;font-style:normal;font-size:10px;background:var(--grad);color:#fff;border-radius:999px;min-width:18px;height:18px;display:grid;place-items:center;padding:0 4px}
+.czstagewrap{position:sticky;top:76px}
+.czstage{background:radial-gradient(ellipse at 50% 92%,rgba(255,255,255,.9),transparent 50%),linear-gradient(170deg,#fde3ec,#eee7fb 60%,#e2f2fc);border:2px solid #fff;border-radius:24px;box-shadow:var(--sh2),inset 0 0 0 1px var(--line);height:min(68vh,620px);display:flex;justify-content:center;align-items:flex-end;overflow:hidden;position:relative}
+.czstage::after{content:"";position:absolute;left:22%;right:22%;bottom:14px;height:18px;border-radius:50%;background:rgba(80,50,110,.18);filter:blur(5px)}
+.czstage svg{height:100%;width:auto;position:relative;z-index:1}
+.czpose{justify-content:center}.czpose select{max-width:150px}
+.czact{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:6px}
+.czpanel{max-height:none}
+.czitems{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:6px}
+.czitem{border:2px solid var(--lv2);border-radius:14px;background:#fff;padding:3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;color:var(--ink);font:700 10.5px Quicksand;transition:.15s}
+.czitem svg{width:100%;aspect-ratio:1;height:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:10px}
+.czitem.on{border-color:#c9b6ef}.czitem.sel{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}.czitem:hover{transform:translateY(-2px)}.czitem small{text-align:center;line-height:1.15;margin-top:2px}
+.czedit{margin-top:10px;border-top:1px dashed var(--line);padding-top:6px}
+.czsub{font:800 12px 'M PLUS Rounded 1c';color:#7a5d8f;margin:8px 0 4px}
+.czpats{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:4px}
+.czpat{border:2px solid var(--lv2);background:#fff;border-radius:10px;padding:2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;font:700 9px Quicksand;color:var(--ink)}
+.czpat svg{width:100%;height:28px}.czpat.on{border-color:var(--pk);box-shadow:0 0 0 2px var(--pk2)}
+.czcol{display:grid;grid-template-columns:80px 44px 1fr;gap:6px;align-items:center;margin:3px 0;font-size:12.5px}
+.czcol input[type=color]{width:44px;height:30px;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff}.czcol .hex{width:100%;max-width:110px;font-family:monospace}
+.czpal{display:flex;flex-wrap:wrap;gap:4px}.czpal button{width:24px;height:24px;border-radius:7px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.czasg{margin-top:12px}.czlineup{display:flex;gap:8px;overflow-x:auto;padding:4px 2px}
+.czm{flex:0 0 auto;width:96px;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:14px;padding:4px;border:1px solid var(--line);background:#fff;font-size:11px}
+.czm.on{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}.czm select{font-size:10.5px;padding:3px 22px 3px 6px;width:100%;min-height:0}.czm small{color:var(--mut);text-align:center}
+.czmfig{border:0;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:10px;padding:0;cursor:pointer;width:100%}.czmfig svg{height:150px;width:100%;display:block}
+.czov{margin-top:8px;padding:8px;border-radius:12px;background:#fff7f9;border:1px dashed #f0c4d6}.czovc{display:inline-flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px}.czovc input{width:40px;height:28px;padding:0}
+.czbase{margin-top:12px}
+.czcard{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;margin-bottom:8px;padding:8px;border-radius:16px;background:linear-gradient(90deg,#fff7fb,#f6f1ff);border:1px solid var(--line)}
+.czcprev{height:200px;background:linear-gradient(170deg,#fde3ec,#eee7fb);border-radius:14px;display:flex;justify-content:center;overflow:hidden}.czcprev svg{height:100%}
+.czlbl{margin:4px 0 2px;font-weight:800}
+.czcov{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+@media(max-width:1100px){.czgrid{grid-template-columns:130px 1fr}.czpanel{grid-column:1/-1}}
+@media(max-width:700px){.czgrid{grid-template-columns:1fr}.czcats{position:static;flex-direction:row;overflow-x:auto}.czcats button{flex:0 0 auto}.czcats button i{position:static;display:inline-grid;margin-top:2px}.czstagewrap{position:static}.czstage{height:440px}.czcard{grid-template-columns:90px 1fr}.czcprev{height:170px}}

@@ -359,6 +359,47 @@ body.nomo *{animation:none!important;transition:none!important}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @keyframes sh{from{background-position:150% 0}to{background-position:-100% 0}}
 @media(max-width:480px){.nav{gap:0;padding-left:2px;padding-right:2px}.nav button{flex:1 0 41px;min-width:41px;font-size:8.5px}.nav button i{width:32px;height:32px;border-radius:11px}.nav button i svg{width:18px;height:18px}}
+/* ---------------- costume designer ---------------- */
+.czhead .row{margin:4px 0}.czt{font:800 18px 'M PLUS Rounded 1c'}
+.czsongs{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.czsong{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:6px 12px;cursor:pointer;font:700 12px Quicksand;color:var(--ink);text-align:left}
+.czsong.on{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}.czsong small{color:var(--mut)}
+.czdes select{max-width:240px}
+.czgrid{display:grid;grid-template-columns:150px minmax(260px,1fr) minmax(320px,440px);gap:12px;margin-top:12px;align-items:start}
+.czcats{display:flex;flex-direction:column;gap:4px;background:rgba(255,251,245,.95);border:1px solid var(--line);border-radius:18px;padding:6px;box-shadow:var(--sh);position:sticky;top:76px}
+.czcats button{position:relative;border:0;background:none;border-radius:12px;padding:8px 10px;text-align:left;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;font:800 13px Quicksand}
+.czcats button small{font:700 10px 'M PLUS Rounded 1c';color:var(--mut)}.czcats button.on{background:linear-gradient(90deg,#fde3ec,#eee7fb);box-shadow:inset 3px 0 0 var(--pk)}
+.czcats button i{position:absolute;right:8px;top:9px;font-style:normal;font-size:10px;background:var(--grad);color:#fff;border-radius:999px;min-width:18px;height:18px;display:grid;place-items:center;padding:0 4px}
+.czstagewrap{position:sticky;top:76px}
+.czstage{background:radial-gradient(ellipse at 50% 92%,rgba(255,255,255,.9),transparent 50%),linear-gradient(170deg,#fde3ec,#eee7fb 60%,#e2f2fc);border:2px solid #fff;border-radius:24px;box-shadow:var(--sh2),inset 0 0 0 1px var(--line);height:min(68vh,620px);display:flex;justify-content:center;align-items:flex-end;overflow:hidden;position:relative}
+.czstage::after{content:"";position:absolute;left:22%;right:22%;bottom:14px;height:18px;border-radius:50%;background:rgba(80,50,110,.18);filter:blur(5px)}
+.czstage svg{height:100%;width:auto;position:relative;z-index:1}
+.czpose{justify-content:center}.czpose select{max-width:150px}
+.czact{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:6px}
+.czpanel{max-height:none}
+.czitems{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:6px}
+.czitem{border:2px solid var(--lv2);border-radius:14px;background:#fff;padding:3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;color:var(--ink);font:700 10.5px Quicksand;transition:.15s}
+.czitem svg{width:100%;aspect-ratio:1;height:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:10px}
+.czitem.on{border-color:#c9b6ef}.czitem.sel{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}.czitem:hover{transform:translateY(-2px)}.czitem small{text-align:center;line-height:1.15;margin-top:2px}
+.czedit{margin-top:10px;border-top:1px dashed var(--line);padding-top:6px}
+.czsub{font:800 12px 'M PLUS Rounded 1c';color:#7a5d8f;margin:8px 0 4px}
+.czpats{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:4px}
+.czpat{border:2px solid var(--lv2);background:#fff;border-radius:10px;padding:2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;font:700 9px Quicksand;color:var(--ink)}
+.czpat svg{width:100%;height:28px}.czpat.on{border-color:var(--pk);box-shadow:0 0 0 2px var(--pk2)}
+.czcol{display:grid;grid-template-columns:80px 44px 1fr;gap:6px;align-items:center;margin:3px 0;font-size:12.5px}
+.czcol input[type=color]{width:44px;height:30px;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff}.czcol .hex{width:100%;max-width:110px;font-family:monospace}
+.czpal{display:flex;flex-wrap:wrap;gap:4px}.czpal button{width:24px;height:24px;border-radius:7px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.czasg{margin-top:12px}.czlineup{display:flex;gap:8px;overflow-x:auto;padding:4px 2px}
+.czm{flex:0 0 auto;width:96px;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:14px;padding:4px;border:1px solid var(--line);background:#fff;font-size:11px}
+.czm.on{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}.czm select{font-size:10.5px;padding:3px 22px 3px 6px;width:100%;min-height:0}.czm small{color:var(--mut);text-align:center}
+.czmfig{border:0;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:10px;padding:0;cursor:pointer;width:100%}.czmfig svg{height:150px;width:100%;display:block}
+.czov{margin-top:8px;padding:8px;border-radius:12px;background:#fff7f9;border:1px dashed #f0c4d6}.czovc{display:inline-flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px}.czovc input{width:40px;height:28px;padding:0}
+.czbase{margin-top:12px}
+.czcard{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;margin-bottom:8px;padding:8px;border-radius:16px;background:linear-gradient(90deg,#fff7fb,#f6f1ff);border:1px solid var(--line)}
+.czcprev{height:200px;background:linear-gradient(170deg,#fde3ec,#eee7fb);border-radius:14px;display:flex;justify-content:center;overflow:hidden}.czcprev svg{height:100%}
+.czlbl{margin:4px 0 2px;font-weight:800}
+.czcov{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+@media(max-width:1100px){.czgrid{grid-template-columns:130px 1fr}.czpanel{grid-column:1/-1}}
+@media(max-width:700px){.czgrid{grid-template-columns:1fr}.czcats{position:static;flex-direction:row;overflow-x:auto}.czcats button{flex:0 0 auto}.czcats button i{position:static;display:inline-grid;margin-top:2px}.czstagewrap{position:static}.czstage{height:440px}.czcard{grid-template-columns:90px 1fr}.czcprev{height:170px}}
 
 </style>
 </head><body>
@@ -677,7 +718,7 @@ function headParts(m,ex,id,opt={}){const a=opt.a||apEff(m),D=dz(m),X=EXS[exOf(m,
  const shadow=`<clipPath id="${id}fc"><path d="${facePath(D.face)}"/></clipPath><g clip-path="url(#${id}fc)"><path d="${bd}" transform="translate(0 2.4)${F.flip?' translate(100 0) scale(-1 1)':''}" fill="${sk[1]}" opacity=".9"/></g>`;
  const sl=`<g fill="${HF}" ${hs}>${sideLocks(B.sk,B.s,seed)}</g>`;
  const browL=`<g opacity="${F.part?'.95':'.5'}">${brows(a,D,X,bc)}</g>`;
- return{defs,back,over,face:face+shadow,feat,sl,bangs,brow:browL,acc:accSvg(a.ac,a,D,hb),ties,a,D,sk}}
+ return{defs,back,over,face:face+shadow,feat,sl,bangs,brow:browL,acc:a.cd&&(czHasHead(a.cd)||(a.cd.a&&a.cd.a.earrings))?czHeadAcc(a.cd)+(czHasHead(a.cd)?'':accSvg(a.ac,a,D,hb)):accSvg(a.ac,a,D,hb),ties,a,D,sk}}
 
 // =====================================================================================
 //  BODY (figure frame 0..100 x 0..200; head drawn at scale HK)
@@ -753,46 +794,59 @@ function outfit(o,C,id,D){const ln=C.ln,LN=`stroke="${ln}" stroke-width=".35" st
 
 // ---- limbs ---------------------------------------------------------------------------
 function armBuild(sh,a1,a2,sk,O){const[e1,e2]=ep(sh[0],sh[1],18.6,a1),[h1,h2]=ep(e1,e2,17,a2),J=[sh,[e1,e2],[h1,h2]],S=limbPts(J,armProf,12);
- const dx=h1-e1,dy=h2-e2,dl=Math.hypot(dx,dy)||1,hx_=h1+dx/dl*1.4,hy_=h2+dy/dl*1.4,ang=Math.atan2(dy,dx)*180/Math.PI-90;
- let s=`<path d="${limbPath(S)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/><path d="M-1.7 -1.4C-2.4 .6 -1.8 3.4 0 3.6C1.9 3.4 2.4 .6 1.7 -1.4C.9 -2 -.9 -2 -1.7 -1.4Z" transform="translate(${N2(hx_)} ${N2(hy_)}) rotate(${N2(ang)})" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".3"/>`;
- const sc=O.sc,sl=sc?mixc(sc,'#3a2a4a',.35):'';
+ const dx=h1-e1,dy=h2-e2,dl=Math.hypot(dx,dy)||1,hx_=h1+dx/dl*1.4,hy_=h2+dy/dl*1.4,ang=Math.atan2(dy,dx)*180/Math.PI-90,gl=O.glove,glL=gl&&/^#/.test(gl)?mixc(gl,'#3a2a4a',.35):'#ddd0e0';
+ let s=`<path d="${limbPath(S)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/>`;
+ if(gl)s+=`<path d="${limbPath(S,O.gloveFrom||.82,1,.22)}" fill="${gl}" stroke="${glL}" stroke-width=".3"/>`;
+ s+=`<path d="M-1.7 -1.4C-2.4 .6 -1.8 3.4 0 3.6C1.9 3.4 2.4 .6 1.7 -1.4C.9 -2 -.9 -2 -1.7 -1.4Z" transform="translate(${N2(hx_)} ${N2(hy_)}) rotate(${N2(ang)})" fill="${gl||sk[0]}" stroke="${gl?glL:sk[2]}" stroke-width=".3"/>`;
+ const sc=O.sc,sl=O.sln||(sc&&/^#/.test(sc)?mixc(sc,'#3a2a4a',.35):'#8a7a96');
  if(O.wrist){const q=S.find(z=>z.t>=.9);s+=`<ellipse cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" rx="2.2" ry="1.3" fill="${O.wrist}" stroke="${mixc(O.wrist,'#3a2a4a',.35)}" stroke-width=".3" transform="rotate(${N2(-a2)} ${N2(q.p[0])} ${N2(q.p[1])})"/>`}
- if(O.sleeve=='long'){s+=`<path d="${limbPath(S,0,.86,.7)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`;const c=S.find(q=>q.t>=.83);s+=`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="2.6" ry="1.3" fill="${O.cuff||sc}" stroke="${sl}" stroke-width=".3" transform="rotate(${N2(-a2)} ${N2(c.p[0])} ${N2(c.p[1])})"/>`}
- else if(O.sleeve=='puff'){const c=S.find(q=>q.t>=.1),r=`rotate(${N2(-a1)} ${N2(c.p[0])} ${N2(c.p[1])})`;s+=`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="4.4" ry="5" fill="${sc}" stroke="${sl}" stroke-width=".32" transform="${r}"/><path d="M${N2(c.p[0]-2)} ${N2(c.p[1]-3.6)}q-.6 3 0 6M${N2(c.p[0]+1.6)} ${N2(c.p[1]-3.8)}q.8 3 0 6.2" stroke="${sl}" stroke-width=".25" fill="none" opacity=".6" transform="${r}"/><path d="M${N2(c.p[0]-3.4)} ${N2(c.p[1]+3.4)}q3.4 1.6 6.8 0" stroke="${O.cuff||sc}" stroke-width="1" fill="none" transform="${r}"/>`}
+ if(O.armb){const q=S.find(z=>z.t>=.26);s+=`<ellipse cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" rx="3" ry="1.1" fill="${O.armb.c}" stroke="${mixc(O.armb.c,'#3a2a4a',.4)}" stroke-width=".3" transform="rotate(${N2(-a1)} ${N2(q.p[0])} ${N2(q.p[1])})"/><circle cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" r=".6" fill="${O.armb.c3}"/>`}
+ if(O.dsl){const S2=limbPts(J,t=>t<.6?armProf(t)+1.3:armProf(t)+1.3+(t-.6)*13,12),q=S2.find(z=>z.t>=.34);s+=`<path d="${limbPath(S2,.34,.93,0,.4)}" fill="${O.dsl.f}" stroke="${O.dsl.l}" stroke-width=".32"/><ellipse cx="${N2(q.p[0])}" cy="${N2(q.p[1])}" rx="3" ry="1" fill="${O.dsl.c2}" transform="rotate(${N2(-a1)} ${N2(q.p[0])} ${N2(q.p[1])})"/>`}
+ const sv=O.sleeve,cuffAt=(t,rx=2.6)=>{const c=S.find(q=>q.t>=t);return`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="${rx}" ry="1.3" fill="${O.cuff||'#fff'}" stroke="${sl}" stroke-width=".3" transform="rotate(${N2(-(t>.5?a2:a1))} ${N2(c.p[0])} ${N2(c.p[1])})"/>`};
+ if(sv=='long'){s+=`<path d="${limbPath(S,0,.86,.7)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`+cuffAt(.83)}
+ else if(sv=='short'){s+=`<path d="${limbPath(S,0,.3,.9)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`+cuffAt(.28,3.2)}
+ else if(sv=='bell'){const S2=limbPts(J,t=>t<.55?armProf(t)+1.4:armProf(t)+1.4+(t-.55)*15,12);s+=`<path d="${limbPath(S2,0,.9,0,.35)}" fill="${sc}" stroke="${sl}" stroke-width=".32"/>`}
+ else if(sv=='puff'||sv=='lpuff'){const c=S.find(q=>q.t>=.1),r=`rotate(${N2(-a1)} ${N2(c.p[0])} ${N2(c.p[1])})`;s+=`<ellipse cx="${N2(c.p[0])}" cy="${N2(c.p[1])}" rx="4.4" ry="5" fill="${sc}" stroke="${sl}" stroke-width=".32" transform="${r}"/><path d="M${N2(c.p[0]-2)} ${N2(c.p[1]-3.6)}q-.6 3 0 6M${N2(c.p[0]+1.6)} ${N2(c.p[1]-3.8)}q.8 3 0 6.2" stroke="${sl}" stroke-width=".25" fill="none" opacity=".6" transform="${r}"/>`+(sv=='lpuff'?`<path d="M${N2(c.p[0]-4.4)} ${N2(c.p[1]+3.6)}q1.1 1.8 2.2 0q1.1 1.8 2.2 0q1.1 1.8 2.2 0q1.1 1.8 2.2 0" fill="${O.cuff||'#fff'}" stroke="${sl}" stroke-width=".25" transform="${r}"/>`:`<path d="M${N2(c.p[0]-3.4)} ${N2(c.p[1]+3.4)}q3.4 1.6 6.8 0" stroke="${O.cuff||sc}" stroke-width="1" fill="none" transform="${r}"/>`)}
  return{s,h:[hx_,hy_],e:[e1,e2]}}
 function legBuild(J,sk,O,left){const S=limbPts(J,legProf,16),L=O.leg||{};
- const layer=spec=>{if(!spec)return'';const lnc=mixc(spec.c,'#3a2a4a',.45),f=spec.from||.6;let r=`<path d="${limbPath(S,f,1,spec.t=='boot'?.5:.16)}" fill="${spec.c}" stroke="${lnc}" stroke-width=".32"/>`;const top=S.find(q=>q.t>=f)||S[0];
-  r+=`<path d="M${N2(top.p[0]-top.w/2-.4)} ${N2(top.p[1])}q${N2(top.w/2+.4)} ${spec.t=='boot'?1.3:.8} ${N2(top.w+.8)} 0" stroke="${spec.frill?'#fff':spec.band||spec.lace||lnc}" stroke-width="${spec.frill?1.4:.6}" fill="none"/>`;
+ const layer=spec=>{if(!spec||!spec.t)return'';const lnc=mixc(spec.c,'#3a2a4a',.45),f=spec.from||0,fill=spec.f||spec.c;
+  if(spec.t=='tights')return`<path d="${limbPath(S,0,1,.08)}" fill="${fill}" stroke="${lnc}" stroke-width=".3" opacity=".93"/>`+(spec.over?layer(spec.over):'');
+  let r=`<path d="${limbPath(S,f,1,spec.t=='boot'?.5:.16)}" fill="${fill}" stroke="${lnc}" stroke-width=".32"/>`;const top=S.find(q=>q.t>=f)||S[0];
+  r+=`<path d="M${N2(top.p[0]-top.w/2-.4)} ${N2(top.p[1])}q${N2(top.w/2+.4)} ${spec.t=='boot'?1.3:.8} ${N2(top.w+.8)} 0" stroke="${spec.frill?'#fff':spec.band||spec.lace||lnc}" stroke-width="${spec.frill?1.4:spec.lacetop?1.8:.6}" fill="none" ${spec.lacetop?'stroke-dasharray=".7 .4"':''}/>`;
   if(spec.band)r+=`<path d="M${N2(top.p[0]-top.w/2)} ${N2(top.p[1]+1.8)}h${N2(top.w)}" stroke="${spec.band}" stroke-width=".6"/>`;
   if(spec.lace&&spec.t=='boot')for(let k=1;k<5;k++){const q=S.find(z=>z.t>=f+(1-f)*k/5.4);if(q)r+=`<path d="M${N2(q.p[0]-1.3)} ${N2(q.p[1])}l2.6 .9M${N2(q.p[0]+1.3)} ${N2(q.p[1])}l-2.6 .9" stroke="${spec.lace}" stroke-width=".32"/>`}
   return r+(spec.over?layer(spec.over):'')};
  let s=`<path d="${limbPath(S)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/><path d="${limbPath(S,.47,.53,-.8)}" fill="${sk[1]}" opacity=".45"/>`+layer(L);
+ if(O.garter&&!left){const q=S.find(z=>z.t>=.3);s+=`<path d="M${N2(q.p[0]-q.w/2)} ${N2(q.p[1])}h${N2(q.w)}" stroke="${O.garter}" stroke-width="1.1"/>`+bowS(N2(q.p[0]+q.w/2-.6),N2(q.p[1]),.45,O.garter,mixc(O.garter,'#3a2a4a',.4),0)}
  const A=J[2],K=J[1],dir=Math.atan2(A[1]-K[1],A[0]-K[0])*180/Math.PI-90,sh=O.shoe||{t:'sneaker',c:'#fff'},sc=sh.c,sl=mixc(sc,'#3a2a3a',.5),fl=left?-1:1;
  let shoe='';
  if(sh.t=='boot')shoe=`<path d="M-2.4 -1H2.4L3.2 4.2Q3.6 6.6 1.2 6.6H-1.8Q-3.6 6.6 -3.2 4.2Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-3.1 6H3.3" stroke="${sl}" stroke-width=".7"/>`;
  else if(sh.t=='loafer')shoe=`<path d="M-2.3 0H2.3L3 4.2Q3.2 6.4 1 6.4H-1.6Q-3.4 6.4 -3 4.2Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-1.5 2.2h3" stroke="#ffffff66" stroke-width=".5"/>`;
+ else if(sh.t=='mary')shoe=`<path d="M-2.3 0H2.3L3 4.4Q3.2 6.4 1 6.4H-1.6Q-3.4 6.4 -3 4.4Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-2.4 1.6H2.6" stroke="${sh.a||sl}" stroke-width=".6"/><circle cx="${fl*1.6}" cy="1.6" r=".5" fill="${sh.a||'#fff'}"/>`;
+ else if(sh.t=='heel')shoe=`<path d="M-2 0H2L2.8 4.6Q2.6 7.4 0 7.6Q-2.6 7.4 -2.8 4.6Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-1.4 1.2Q0 2.4 1.4 1.2" stroke="${sh.a||sl}" stroke-width=".5" fill="none"/><path d="M${fl*-2.2} 4.6l${fl*-.4} 3" stroke="${sl}" stroke-width=".7"/>`;
  else shoe=`<path d="M-2.5 -.3H2.5L3.6 4Q4 6.6 1.3 6.6H-1.8Q-4 6.6 -3.6 4Z" fill="${sc}" stroke="${sl}" stroke-width=".35"/><path d="M-3.6 5.2H3.8" stroke="${sh.a||'#fff'}" stroke-width="1"/><path d="M-1.4 1.2l2.8.8M-1.4 2.6l2.8.8" stroke="${sh.a||'#fff'}" stroke-width=".4"/><path d="M${fl*2.6} 1.6l${fl*1} 1.6" stroke="${sl}" stroke-width=".3"/>`;
+ if(sh.deco)shoe+=bowS(0,1.2,.32,sh.deco,mixc(sh.deco,'#3a2a4a',.4),0);
  return s+`<g transform="translate(${N2(A[0])} ${N2(A[1]-.6)}) rotate(${N2(dir*.6)}) scale(1.4)">${shoe}</g>`}
 
-function bodyParts(m,a,pose,id,D,sk){const Pz=NPOSE[pose|0]||NPOSE[0],C=ocol(a),o=a.of|0,O=outfit(o,C,id,D);
- const LJ=legJ(Pz[3],D.lf),legs=legBuild(LJ[0],sk,O,1)+legBuild(LJ[1],sk,O,0);
+function bodyParts(m,a,pose,id,D,sk){const Pz=NPOSE[pose|0]||NPOSE[0],C=ocol(a),o=a.of|0,O=a.cd?modOutfit(a.cd,id,D,sk):outfit(o,C,id,D);
+ const LJ=legJ(Pz[3],D.lf),legs=legBuild(LJ[0],sk,O,1)+legBuild(LJ[1],sk,O,0)+(O.pantsFn?O.pantsFn(LJ):'');
  const neck=`<path d="M47.6 34L52.4 34L53 46L47 46Z" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".28"/><path d="M47.4 37Q50 41.6 52.6 37L52.8 41Q50 44 47.2 41Z" fill="${sk[1]}"/>`;
  const torsoSkin=`<path d="${torsoD}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".32"/>`;
- const body=torsoSkin+(O.cover?(O.skirt||'')+(O.top||''):(O.top||'')+(O.vestL||'')+(O.skirt||''));
+ const body=torsoSkin+(O.cover?(O.skirt||'')+(O.top||''):(O.top||'')+(O.vestL||'')+(O.skirt||''))+(O.mid||'')+(O.outer||'');
  const L=armBuild(SHL,Pz[1][0],Pz[1][1],sk,O),R=armBuild(SHR,Pz[2][0],Pz[2][1],sk,O);
  let g='';const hR=R.h;
  if(Pz[4]=='wave')g=`<path d="M${N2(hR[0]+4)} ${N2(hR[1]-3)}q2 -2 4 0M${N2(hR[0]+5)} ${N2(hR[1]+1)}q2 -2 4 0" stroke="#f58fb5" stroke-width=".7" fill="none"/>`;
- if(Pz[4]=='peace')g=`<g stroke-linecap="round"><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${sk[2]}" stroke-width="1.55"/><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${sk[0]}" stroke-width="1.05"/></g>`;
+ if(Pz[4]=='peace')g=`<g stroke-linecap="round"><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${sk[2]}" stroke-width="1.55"/><path d="M${N2(hR[0]-.3)} ${N2(hR[1]-.6)}l-1.6 -4.6M${N2(hR[0]+.6)} ${N2(hR[1]-.6)}l1.4 -4.6" stroke="${O.glove||sk[0]}" stroke-width="1.05"/></g>`;
  if(Pz[4]=='heart')g=`<path d="M50 66C45 61 46 57 50 60C54 57 55 61 50 66Z" fill="#ff7eaa" stroke="#fff" stroke-width=".6"/>`;
- if(Pz[4]=='point')g=`<path d="M${N2(hR[0])} ${N2(hR[1])}l4.6 -1" stroke="${sk[0]}" stroke-width="1.3" stroke-linecap="round"/>`;
+ if(Pz[4]=='point')g=`<path d="M${N2(hR[0])} ${N2(hR[1])}l4.6 -1" stroke="${O.glove||sk[0]}" stroke-width="1.3" stroke-linecap="round"/>`;
  if(Pz[4]=='kiss')g=`<path d="M${N2(hR[0]+6)} ${N2(hR[1]-6)}c-3 -3 -1 -5 1 -3c2 -2 4 0 1 3l-1 1z" fill="#ff8fb7"/><path d="M${N2(hR[0]+11)} ${N2(hR[1]-12)}c-2 -2 -.6 -3.4.7 -2c1.4 -1.4 2.8 0 .7 2l-.7.7z" fill="#ffc2da"/>`;
  return{Pz,O,C,legs,neck,torso:body,collar:O.collar||'',back:(O.defs?`<defs>${O.defs}</defs>`:'')+(O.back||''),arms:L.s+R.s,g,hR}}
-function figBuild(m,l,id){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac},mm={...m,_x:1,ap:a},D=dz(m),sk=SKN[D.skin]||SKN[1];
+function figBuild(m,l,id){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac,...(l.cd?{cd:l.cd}:{})},mm={...m,_x:1,ap:a},D=dz(m),sk=SKN[D.skin]||SKN[1];
  const H=headParts(mm,l.ex,id,{a}),B=bodyParts(m,a,l.pose,id,D,sk),tilt=B.Pz[0],HT=`translate(${N2(HTX)} ${HTY}) scale(${HK})`,G=s=>`<g transform="rotate(${tilt} 50 40)"><g transform="${HT}">${s}</g></g>`;
  const pr=(l.prop==1||B.Pz[5]==1)?`<g transform="translate(${N2(B.hR[0])} ${N2(B.hR[1])}) rotate(-20)"><rect x="-1.2" y="-8.6" width="2.4" height="9.6" rx="1" fill="#3b3346"/><circle cy="-10" r="2.8" fill="#d6dbe4" stroke="#8a8f9a" stroke-width=".45"/><path d="M-2 -11h4M-2 -9.2h4" stroke="#a7acb6" stroke-width=".35"/></g>`:l.prop==2?`<g transform="translate(${N2(B.hR[0])} ${N2(B.hR[1])}) rotate(-12)"><rect x="-.9" y="-20" width="1.8" height="21" rx=".9" fill="#ff9ec4"/><rect x="-1.4" y="-2" width="2.8" height="5" rx="1" fill="#555"/><circle cy="-20" r="2.2" fill="#fff6c0" opacity=".9"/></g>`:'';
  const ear=l.ear?`<circle cx="20.4" cy="69" r="1.8" fill="#ffd966"/><circle cx="79.6" cy="69" r="1.8" fill="#ffd966"/>`:'',nk=l.neck?`<path d="M46.6 45.6Q50 50 53.4 45.6" stroke="#ffd966" stroke-width=".7" fill="none"/><circle cx="50" cy="48.6" r="1.1" fill="#ff7eb6"/>`:'';
  return`<defs>${H.defs}</defs>${G(H.back)}${B.back}${B.legs}${B.neck}${B.torso}${B.collar}${nk}${G(H.face+H.feat+H.brow+H.bangs+H.acc+H.ties+ear)}${B.arms}${G(H.sl+H.over)}${B.g}${pr}`}
-function fig(m,l){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac},k=JSON.stringify(['f4',m.id|0,m.hue|0,a,l.pose|0,l.prop|0,l.ear|0,l.neck|0,l.ex==null?'':l.ex]);let t=ART.cache.get(k);if(!t){t=figBuild(m,l,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}return t.split('§').join('f'+(++PTC[0]))}
+function fig(m,l){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac,...(l.cd?{cd:l.cd}:{})},k=JSON.stringify(['f4',m.id|0,m.hue|0,a,l.pose|0,l.prop|0,l.ear|0,l.neck|0,l.ex==null?'':l.ex]);let t=ART.cache.get(k);if(!t){t=figBuild(m,l,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}return t.split('§').join('f'+(++PTC[0]))}
 
 // ---- portrait (bust): same head + same costume, magnified ------------------------------
 function ptBuild(m,s,nb,vb,ex,id){const H=headParts(m,ex,id),a=H.a,h=m.hue|0,D=H.D,sk=H.sk,B=bodyParts(m,a,0,id+'b',D,sk),inv=1/HK;
@@ -811,6 +865,166 @@ const CHAR_ASSETS={
  half:(m,w,ex,pose=0)=>{const e=apEff(m),a=ap(m);return`<svg viewBox="20 0 60 84" ${w?`width="${w}"`:''} class="chh" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex})}</svg>`},
  full:(m,w,ex,pose=0,of)=>{const e=apEff(m),a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:of!=null?of[0]:e.of,oh:of!=null?of[1]:e.oh,ac:a.ac,ex})}</svg>`},
  entry:m=>({id:m.id,name:m.name,assets:{portrait:`char/${m.id}/portrait`,half:`char/${m.id}/half`,full:`char/${m.id}/full`,expressions:EXN.map((n,i)=>`char/${m.id}/expr/${i}`),costumes:OFN.map((n,i)=>`char/${m.id}/costume/${i}`)},design:{...ap(m),...dz(m)}})};
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom!  —  Modular costume renderer (layered clothing pieces)
+// -------------------------------------------------------------------------------------
+//  A costume design is a set of independent pieces. Every piece has its own type,
+//  variant, colours (primary / secondary / accent / pattern / details) and pattern
+//  (type, size, density). modOutfit() turns a design into the drawing layers used by
+//  the character engine (characters.js), so the pieces are really drawn on the idol.
+//
+//  Design format (stored per song in the save, see js/ui/costume-designer.js):
+//   { top, sleeve, collar, outer, bottom, over, shoes, legs : piece,
+//     x: {dsl,cape,ribbon,sash,belt,corset,drape : piece|null},
+//     a: {hbow,headband,clip,crown,hat,hribbon,necklace,choker,earrings,gloves,armband,legacc,sdeco : piece|null} }
+//   piece = { t:type, v:variant, c1,c2,c3,pc,dc:'#hex', pat:'solid'|..., ps:size, pd:density }
+// =====================================================================================
+const CZ_PATS=[['solid','Solid'],['stripe','Stripes'],['dots','Polka dots'],['plaid','Plaid'],['check','Checkered'],['floral','Floral'],['stars','Stars'],['hearts','Hearts'],['diamond','Diamonds'],['geo','Geometric'],['lace','Lace'],['mesh','Dot mesh'],['gradient','Gradient'],['sparkle','Sparkles'],['embroid','Embroidery']];
+const CZ_CATS=[
+ {k:'top',n:'Tops',jp:'トップス',items:[['blouse','Blouse'],['shirt','Shirt'],['crop','Crop top'],['sleeveless','Sleeveless top'],['offshoulder','Off-shoulder top'],['tee','T-shirt']],vars:{blouse:['Buttons','Frill front','Lace yoke'],shirt:['Plain','Pocket'],crop:['Frill hem','Plain hem']}},
+ {k:'sleeve',n:'Sleeves',jp:'袖',items:[['none','No sleeves'],['short','Short'],['puff','Puff'],['lpuff','Frilled puff'],['long','Long'],['bell','Bell']]},
+ {k:'collar',n:'Collars',jp:'襟',items:[['none','None'],['round','Round collar'],['sailor','Sailor collar'],['frill','Frill collar'],['high','Mandarin collar'],['wide','Lace bertha']]},
+ {k:'outer',n:'Outerwear',jp:'アウター',items:[['none','None'],['jacket','Cropped jacket'],['cardigan','Cardigan'],['vest','Vest'],['bolero','Bolero'],['coat','Tailcoat']]},
+ {k:'bottom',n:'Bottoms',jp:'ボトムス',items:[['pleated','Pleated skirt'],['flared','Flared skirt'],['layered','Layered skirt'],['mini','Mini skirt'],['shorts','Shorts'],['pants','Long pants'],['wide','Wide-leg pants']],vars:{pleated:['Short','Medium','Long'],flared:['Short','Medium','Long'],layered:['Short','Medium','Long']}},
+ {k:'over',n:'Overskirts',jp:'オーバースカート',items:[['none','None'],['sheer','Sheer tails'],['apron','Apron'],['peplum','Peplum'],['bustle','Back bustle'],['frillhem','Frill hem']]},
+ {k:'x',n:'Extras',jp:'アクセント',multi:1,items:[['dsl','Detached sleeves'],['cape','Cape'],['ribbon','Neck ribbon'],['sash','Ribbon sash'],['belt','Belt'],['corset','Corset'],['drape','Fabric layer']],vars:{cape:['Short','Long'],ribbon:['Bow','Long tie']}},
+ {k:'shoes',n:'Shoes',jp:'シューズ',items:[['boots','Knee boots'],['heels','High heels'],['mary','Mary Janes'],['sneakers','Sneakers'],['ankle','Ankle boots'],['loafers','Loafers']]},
+ {k:'legs',n:'Legwear',jp:'レッグ',items:[['none','Bare legs'],['socks','Ankle socks'],['knee','Knee socks'],['thigh','Thigh-highs'],['stockings','Stockings']],vars:{socks:['Plain','Frilled'],knee:['Plain','Frilled','Striped top'],thigh:['Plain','Lace top']}},
+ {k:'a',n:'Accessories',jp:'アクセサリー',multi:1,items:[['hbow','Hair bow'],['headband','Headband'],['clip','Hair clips'],['crown','Crown'],['hat','Hat'],['hribbon','Hair ribbon'],['necklace','Necklace'],['choker','Choker'],['earrings','Earrings'],['gloves','Gloves'],['armband','Arm accessory'],['legacc','Leg accessory'],['sdeco','Shoe decoration']],vars:{gloves:['Short','Long'],hat:['Mini top hat','Beret'],crown:['Tiara','Royal crown'],clip:['Stars','Hearts']}}];
+const CZ_HEAD=['hbow','headband','clip','crown','hat','hribbon'];
+const czPiece=(t,c1,c2,c3,o={})=>({t,v:0,c1,c2:c2||'#ffffff',c3:c3||'#f3c35c',pc:o.pc||'#ffffff',dc:o.dc||'#ffffff',pat:o.pat||'solid',ps:o.ps||1,pd:o.pd==null?.75:o.pd,...o});
+const czLine=c=>/^#/.test(c||'')?mixc(c,'#2e2038',.48):'#6d5a7c';
+
+// ---- patterns ------------------------------------------------------------------------
+function czPat(pid,P){const k=P.pat||'solid';if(k=='solid')return{f:P.c1,d:''};
+ if(k=='gradient')return{f:`url(#${pid})`,d:`<linearGradient id="${pid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.c1}"/><stop offset="${N2(.3+(1-(P.pd??.75))*.4)}" stop-color="${P.c1}"/><stop offset="1" stop-color="${P.pc}"/></linearGradient>`};
+ const c=P.pc,d=P.dc,o=N2(Math.max(.15,Math.min(1,P.pd??.75))),s=N2(Math.max(.4,Math.min(2.5,P.ps||1))),W=4;let m='';
+ switch(k){
+  case'stripe':m=`<rect width="1.4" height="4" fill="${c}"/>`;break;
+  case'dots':m=`<circle cx="1" cy="1" r=".62" fill="${c}"/><circle cx="3" cy="3" r=".62" fill="${c}"/>`;break;
+  case'plaid':m=`<rect width="4" height="1.3" fill="${c}" opacity=".7"/><rect width="1.3" height="4" fill="${c}" opacity=".6"/><rect x="2.6" width=".22" height="4" fill="${d}"/><rect y="2.6" width="4" height=".22" fill="${d}"/>`;break;
+  case'check':m=`<rect width="2" height="2" fill="${c}"/><rect x="2" y="2" width="2" height="2" fill="${c}"/>`;break;
+  case'floral':m=`<g transform="translate(2 2)">${[0,72,144,216,288].map(r=>`<ellipse cy="-.8" rx=".48" ry=".75" fill="${c}" transform="rotate(${r})"/>`).join('')}<circle r=".38" fill="${d}"/></g><circle cx=".2" cy=".2" r=".25" fill="${c}"/>`;break;
+  case'stars':m=`<path d="M2 .8l.36.74.82.12-.6.58.14.82L2 2.67l-.72.39.14-.82-.6-.58.82-.12z" fill="${c}"/><circle cx=".4" cy="3.4" r=".22" fill="${c}"/>`;break;
+  case'hearts':m=`<path d="M2 2.9C.9 2.1 1.1 1.2 2 1.7C2.9 1.2 3.1 2.1 2 2.9Z" fill="${c}"/><path d="M.3 .6C-.1 .3 0 0 .3 .2C.6 0 .7 .3 .3 .6Z" fill="${c}" transform="translate(.2 3)"/>`;break;
+  case'diamond':m=`<path d="M2 0L4 2L2 4L0 2Z" fill="${c}"/><path d="M0 0L4 4M4 0L0 4" stroke="${d}" stroke-width=".14"/>`;break;
+  case'geo':m=`<path d="M0 4L1 2.3L2 4ZM2 2L3 .3L4 2Z" fill="${c}"/><rect x="2.5" y="2.8" width=".8" height=".8" fill="${d}" transform="rotate(20 2.9 3.2)"/>`;break;
+  case'lace':m=`<path d="M0 3.4Q1 1.8 2 3.4Q3 1.8 4 3.4" stroke="${c}" stroke-width=".3" fill="none"/><circle cx="1" cy="2.9" r=".3" fill="none" stroke="${c}" stroke-width=".18"/><circle cx="3" cy="2.9" r=".3" fill="none" stroke="${c}" stroke-width=".18"/><path d="M2 .4l.3.5-.3.5-.3-.5z" fill="${c}"/>`;break;
+  case'mesh':m=`${[.5,1.5,2.5,3.5].map(x=>[.5,1.5,2.5,3.5].map(y=>`<circle cx="${x}" cy="${y}" r=".2" fill="${c}"/>`).join('')).join('')}`;break;
+  case'sparkle':m=`<path d="M1.2 .3Q1.3 1.1 2.1 1.2Q1.3 1.3 1.2 2.1Q1.1 1.3 .3 1.2Q1.1 1.1 1.2 .3Z" fill="${c}"/><path d="M3 2.4Q3.06 2.88 3.5 2.94Q3.06 3 3 3.48Q2.94 3 2.5 2.94Q2.94 2.88 3 2.4Z" fill="${d}"/>`;break;
+  case'embroid':m=`<path d="M.4 3.2C.4 1.8 2 1.6 2 .6M2 .6C2 1.6 3.6 1.8 3.6 3.2M1.2 2.6a.45 .45 0 1 1 .6 .5M2.8 2.6a.45 .45 0 1 0 -.6 .5" stroke="${c}" stroke-width=".2" fill="none" stroke-linecap="round"/><circle cx="2" cy=".5" r=".25" fill="${d}"/>`;break}
+ return{f:`url(#${pid})`,d:`<pattern id="${pid}" width="${W}" height="${W}" patternUnits="userSpaceOnUse" patternTransform="scale(${s})"><rect width="${W}" height="${W}" fill="${P.c1}"/><g opacity="${o}">${m}</g></pattern>`}}
+
+// ---- head accessories (head frame 0..100 x 0..120) ------------------------------------
+function czHeadAcc(cd){const A=(cd&&cd.a)||{};let s='';const L=czLine;
+ if(A.hribbon){const P=A.hribbon;s+=`<path d="M78 28C86 46 82 70 90 92L84 90C78 70 82 48 74 32Z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".6"/>`+bowSvg(77,26,.9,22,P.c1,L(P.c1))}
+ if(A.headband){const P=A.headband;s+=`<path d="M19 34C22 14 36 8 50 8C64 8 78 14 81 34L77.6 35C75 18 63 12.4 50 12.4C37 12.4 25 18 22.4 35Z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".6"/>`+(P.v?'':`<circle cx="50" cy="10.2" r="1.6" fill="${P.c3}"/>`)}
+ if(A.crown){const P=A.crown;s+=P.v?`<path d="M36 14L37 2L43 8L50 0L57 8L63 2L64 14Q50 10 36 14Z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".7"/><rect x="36" y="12" width="28" height="3" rx="1" fill="${P.c2}" stroke="${L(P.c1)}" stroke-width=".5"/><circle cx="50" cy="7" r="1.8" fill="${P.c3}"/><circle cx="43" cy="10" r="1.1" fill="${P.c3}"/><circle cx="57" cy="10" r="1.1" fill="${P.c3}"/>`:`<path d="M34 16L37 6L42 12L50 1L58 12L63 6L66 16Q50 12 34 16Z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".7"/><circle cx="50" cy="7" r="2" fill="${P.c3}" stroke="#fff" stroke-width=".4"/><circle cx="42" cy="12" r="1.1" fill="${P.c2}"/><circle cx="58" cy="12" r="1.1" fill="${P.c2}"/>`}
+ if(A.hat){const P=A.hat,pt=czPat('§HAT',P);s+=pt.d?`<defs>${pt.d}</defs>`:'';s+=P.v?`<g transform="rotate(-14 62 12)"><ellipse cx="62" cy="13" rx="18" ry="7" fill="${pt.f}" stroke="${L(P.c1)}" stroke-width=".7"/><circle cx="62" cy="5.6" r="1.6" fill="${P.c2}"/><path d="M45 15Q62 20 79 15" stroke="${P.c2}" stroke-width="1.4" fill="none"/></g>`:`<g transform="rotate(14 66 14)"><ellipse cx="66" cy="16" rx="12" ry="3" fill="${pt.f}" stroke="${L(P.c1)}" stroke-width=".7"/><path d="M58 15L59 1H73L74 15Z" fill="${pt.f}" stroke="${L(P.c1)}" stroke-width=".7"/><rect x="58.6" y="10.6" width="14.8" height="2.6" fill="${P.c2}"/></g>`+bowSvg(74,10,.35,14,P.c3,L(P.c3))}
+ if(A.clip){const P=A.clip;s+=[[24,32,-10],[28,26,8]].map(([x,y,r])=>P.v?`<path d="M${x} ${y+2.4}C${x-4.4} ${y-.6} ${x-2.4} ${y-4} ${x} ${y-1.6}C${x+2.4} ${y-4} ${x+4.4} ${y-.6} ${x} ${y+2.4}Z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".5" transform="rotate(${r} ${x} ${y})"/>`:`<path d="M${x} ${y-4}l1.2 2.5 2.7.4-2 1.9.5 2.7-2.4-1.3-2.4 1.3.5-2.7-2-1.9 2.7-.4z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".5" transform="rotate(${r} ${x} ${y})"/>`).join('')}
+ if(A.hbow){const P=A.hbow;s+=bowSvg(A.hribbon?24:76,22,1,A.hribbon?-18:18,P.c1,L(P.c1))}
+ if(A.earrings){const P=A.earrings;s+=[20.6,79.4].map(x=>`<path d="M${x} 68v3" stroke="${P.c2}" stroke-width=".5"/><circle cx="${x}" cy="73" r="1.5" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".4"/>`).join('')}
+ return s}
+const czHasHead=cd=>!!(cd&&cd.a&&CZ_HEAD.some(k=>cd.a[k]));
+
+// ---- body pieces (figure frame) -------------------------------------------------------
+function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P)=>{if(!P)return'#fff';const r=czPat(id+'Z'+k,P);defs+=r.d;return r.f};
+ const T=cd.top||czPiece('blouse','#ffffff'),SL=cd.sleeve||{t:'none'},CO=cd.collar||{t:'none'},OU=cd.outer||{t:'none'},BO=cd.bottom||czPiece('pleated','#f5a3c4'),OV=cd.over||{t:'none'},SH=cd.shoes||czPiece('sneakers','#ffffff'),LG=cd.legs||{t:'none'},X=cd.x||{},A=cd.a||{};
+ const fT=pat('top',T),lT=czLine(T.c1),sx=T.t=='tee'?1.1:1.05;
+ const clip=`<clipPath id="${id}tc"><path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)"/></clipPath>`;
+ const hem=T.t=='crop'?62:T.t=='tee'?73:71;
+ let top=clip+`<g clip-path="url(#${id}tc)"><rect x="20" y="${T.t=='offshoulder'?51.4:38}" width="60" height="${hem-(T.t=='offshoulder'?51.4:38)}" fill="${fT}"/><path d="M57 44L66 48L64 ${hem}L57 ${hem}Z" fill="#2e2038" opacity=".07"/>`;
+ if(T.t=='blouse'){if(T.v==1)top+=`<path d="M50 47V${hem}" stroke="${T.dc}" stroke-width="1.6"/>`+[50,54,58,62,66].map(y=>`<path d="M48.6 ${y}q1.4 1.2 2.8 0" stroke="${czLine(T.dc)}" stroke-width=".25" fill="none"/>`).join('');else if(T.v==2)top+=`<path d="M41 46H59L58 55Q50 58 42 55Z" fill="${T.dc}" opacity=".9"/><path d="M42 55Q50 58 58 55" stroke="${czLine(T.dc)}" stroke-width=".3" fill="none" stroke-dasharray=".6 .5"/>`;else top+=`<path d="M50 46V${hem}" stroke="${lT}" stroke-width=".3" opacity=".6"/>`+[52,57,62,67].map(y=>`<circle cx="50.8" cy="${y}" r=".5" fill="${T.c3}"/>`).join('')}
+ if(T.t=='shirt'){top+=`<path d="M49 46V${hem}M51 46V${hem}" stroke="${lT}" stroke-width=".3" opacity=".6"/>`+[52,57,62,67].map(y=>`<circle cx="50" cy="${y}" r=".5" fill="${T.c3}"/>`).join('')+(T.v?`<path d="M53.4 54h4.4v4Q55.6 59.4 53.4 58Z" fill="none" stroke="${lT}" stroke-width=".3"/>`:'')}
+ if(T.t=='crop'&&!T.v)top+='';
+ if(T.t=='tee')top+=`<path d="M45 52Q50 56 55 52Q54 60 50 60Q46 60 45 52Z" fill="${T.c2}" opacity=".9"/><path d="M47 55l1.4-1.4 1.6 1.6 1.6-1.6 1.4 1.4-3 3z" fill="${T.c3}"/>`;
+ top+=`<path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)" fill="none" stroke="${lT}" stroke-width=".7" clip-path="url(#${id}hm)"/></g><clipPath id="${id}hm"><rect width="100" height="${hem}"/></clipPath>`;
+ if(T.t=='sleeveless')top+=`<path d="M34 46L44 45L44.6 50L39 56L34 54ZM66 46L56 45L55.4 50L61 56L66 54Z" fill="${sk[0]}"/><path d="M44.4 45.6L44.8 50.4L39.6 55.6M55.6 45.6L55.2 50.4L60.4 55.6" stroke="${lT}" stroke-width=".35" fill="none"/>`;
+ if(T.t=='offshoulder')top+=`<path d="${skirtD(50.4,12.6,52.6,12.6,14,.9,0).replace(/wT\*=/,'')}" fill="${T.c2}" stroke="${czLine(T.c2)}" stroke-width=".3"/>`;
+ if(T.t=='crop')top+=T.v?`<path d="M40.6 ${hem}Q50 ${hem+1.2} 59.4 ${hem}" stroke="${lT}" stroke-width=".35" fill="none"/>`:`<path d="${skirtD(hem-1.4,9.2,hem+.4,9,9,1,0)}" fill="${T.dc}" stroke="${czLine(T.dc)}" stroke-width=".3"/>`;
+ else if(T.t!='offshoulder')top+=`<path d="M41.6 ${hem}Q50 ${hem+1.2} 58.4 ${hem}" stroke="${lT}" stroke-width=".35" fill="none"/>`;
+ // bottoms
+ const fB=pat('bot',BO),lB=czLine(BO.c1);let bottom='',pantsFn=null,hemY=92;
+ const len=[86,92,104][BO.v|0]||92;
+ if(BO.t=='pleated'){hemY=len;bottom=lay(69,8.6,len,15.4+(BO.v|0)*1.6,fB,lB,10)+pleats(69,8.6,len,15.4+(BO.v|0)*1.6,10,lB,.55)}
+ else if(BO.t=='flared'){hemY=len;bottom=lay(69,8.2,len,18+(BO.v|0)*1.6,fB,lB,7)+[44,50,56].map(x=>`<path d="M${x} 71Q${x+(x-50)*.6} ${(69+len)/2} ${x+(x-50)*1.4} ${len+3}" stroke="${lB}" stroke-width=".3" fill="none" opacity=".5"/>`).join('')}
+ else if(BO.t=='layered'){hemY=len+2;const fB2=pat('bot2',{...BO,c1:BO.c2,pat:'solid'});bottom=lay(69,8.4,len+2,18.4,fB,lB,12)+`<path d="${skirtD(len,18,len+2,18.4,12,1.4,2.2)}" fill="${BO.dc}" stroke="${czLine(BO.dc)}" stroke-width=".3"/>`+lay(69,8.4,len-6,15,fB2,czLine(BO.c2),10)+`<path d="${skirtD(len-8,14.6,len-6,15,10,1.3,2.2)}" fill="${BO.dc}" stroke="${czLine(BO.dc)}" stroke-width=".3"/>`+lay(69,8.4,len-14,11.4,fB,lB,8)}
+ else if(BO.t=='mini'){hemY=84;bottom=`<path d="M41.2 69L58.8 69L61.6 84Q50 86 38.4 84Z" fill="${fB}" stroke="${lB}" stroke-width=".35"/><path d="M41 70.6H59" stroke="${BO.c2}" stroke-width="1.2"/>`}
+ else{const wide=BO.t=='wide',full=BO.t!='shorts';hemY=0;bottom=`<path d="M41.2 69L58.8 69L60.4 ${full?84:82}L50 ${full?84:82}L50 80L50 ${full?84:82}L39.6 ${full?84:82}Z" fill="${fB}" stroke="${lB}" stroke-width=".35"/><path d="M41.2 70.6H58.8" stroke="${BO.c2}" stroke-width="1.2"/><circle cx="50" cy="70.6" r=".6" fill="${BO.c3}"/>`;
+  pantsFn=LJ=>LJ.map(J=>{const S=limbPts(J,t=>legProf(t)+(wide?1.6+t*9:1.2),16);return`<path d="${limbPath(S,0,full?.97:.24,.15,full?.2:.6)}" fill="${fB}" stroke="${lB}" stroke-width=".35"/>`+(full?'':`<path d="${limbPath(S,.2,.24,.4)}" fill="${BO.c2}"/>`)}).join('')}
+ // overskirts
+ let back='',over='';const fO=OV.t!='none'?pat('ovr',OV):'',lO=czLine(OV.c1||'#fff');
+ if(OV.t=='sheer')back+=`<path d="M42 72Q28 94 32 122L44 110L46 80ZM58 72Q72 96 68 126L56 112L54 80Z" fill="${fO}" opacity=".6" stroke="${lO}" stroke-width=".3"/>`;
+ if(OV.t=='apron')over+=`<path d="M44 70.4L56 70.4L58.6 ${Math.max(84,hemY-4)}Q50 ${Math.max(86,hemY-2)} 41.4 ${Math.max(84,hemY-4)}Z" fill="${fO}" stroke="${lO}" stroke-width=".35"/><path d="${skirtD(Math.max(84,hemY-4)-1.4,7.6,Math.max(84,hemY-4),7.6,7,1,.6)}" fill="${OV.dc}" stroke="${czLine(OV.dc)}" stroke-width=".25"/>`;
+ if(OV.t=='peplum')over+=lay(69,8.4,76,11.4,fO,lO,9);
+ if(OV.t=='bustle'){back+=`<path d="M56 72Q70 90 66 118L60 112Q64 92 54 76ZM44 72Q30 90 34 118L40 112Q36 92 46 76Z" fill="${fO}" stroke="${lO}" stroke-width=".3"/>`;over+=bowS(59,71.6,1.3,fO,lO,0)}
+ if(OV.t=='frillhem'&&hemY)over+=`<path d="${skirtD(hemY,16,hemY+3.4,17.6,13,1.5,2.2)}" fill="${fO}" stroke="${lO}" stroke-width=".3"/>`;
+ // extras
+ let mid='',outer='',collar='',front='';
+ if(X.corset){const P=X.corset,f=pat('cor',P),l=czLine(P.c1);mid+=`<path d="M41 57Q50 55.6 59 57L58.4 66Q57.4 69 58.6 72.4Q50 74 41.4 72.4Q42.6 69 41.6 66Z" fill="${f}" stroke="${l}" stroke-width=".4"/>`+[59,62,65,68].map(y=>`<path d="M48.4 ${y}L51.6 ${y+2}M51.6 ${y}L48.4 ${y+2}" stroke="${P.dc}" stroke-width=".35"/>`).join('')+`<path d="M41 57Q50 55.6 59 57" stroke="${P.c2}" stroke-width=".8" fill="none"/>`}
+ if(X.belt){const P=X.belt;mid+=`<path d="M41 69.4H59V71.6H41Z" fill="${P.c1}" stroke="${czLine(P.c1)}" stroke-width=".3"/><rect x="48.6" y="69" width="2.8" height="3" rx=".5" fill="none" stroke="${P.c3}" stroke-width=".55"/>`}
+ if(X.sash){const P=X.sash,f=pat('sash',P),l=czLine(P.c1);mid+=`<path d="M40.8 68.4H59.2V72.2H40.8Z" fill="${f}" stroke="${l}" stroke-width=".3"/><path d="M57 72L62 92L58.6 90.4L57.4 93L54 74Z" fill="${f}" stroke="${l}" stroke-width=".3"/>`+bowS(57.6,70.6,1.6,f,l,0)}
+ if(X.drape){const P=X.drape,f=pat('drp',P);mid+=`<path d="M40.4 70Q52 74 60 72L58 94Q48 90 37 86Z" fill="${f}" opacity=".55" stroke="${czLine(P.c1)}" stroke-width=".3"/>`}
+ // outerwear
+ let sleeveOv=null;
+ if(OU.t!='none'){const f=pat('out',OU),l=czLine(OU.c1),LN=`stroke="${l}" stroke-width=".4" stroke-linejoin="round"`;
+  if(OU.t=='vest')outer=`<g clip-path="url(#${id}tc)"><path d="M41 44L47.6 46.4L50 58L52.4 46.4L59 44L64 50L62 70Q56 72.4 50 73.4Q44 72.4 38 70L36 50Z" fill="${f}" ${LN}/>${[61,64.6,68].map(y=>`<circle cx="48.4" cy="${y}" r=".55" fill="${OU.c3}"/><circle cx="51.6" cy="${y}" r=".55" fill="${OU.c3}"/>`).join('')}</g>`;
+  else{const yb={jacket:66,cardigan:84,bolero:56.6,coat:71}[OU.t],lap=OU.t=='jacket'||OU.t=='coat';
+   const panel=s=>`<path d="M${50-s*13.6} 47.6Q${50-s*9} 45.8 ${50-s*5.4} 45.6L${50-s*(lap?3.2:4.6)} ${lap?60:52}L${50-s*(OU.t=='bolero'?7:4.2)} ${yb}Q${50-s*11} ${yb+1} ${50-s*(OU.t=='cardigan'?12.6:11.4)} ${yb}L${50-s*14.6} 52Z" fill="${f}" ${LN}/>`;
+   outer=panel(1)+panel(-1);
+   if(lap)outer+=`<path d="M44.6 45.8L46.8 59L44 54.6L42.6 47.2ZM55.4 45.8L53.2 59L56 54.6L57.4 47.2Z" fill="${OU.c2}" ${LN}/>`;
+   if(OU.t=='cardigan')outer+=`<path d="M45.8 47L45.8 84M54.2 47L54.2 84" stroke="${OU.c2}" stroke-width="1.2"/><path d="M37.6 83.4H45.8M54.2 83.4H62.4" stroke="${OU.c2}" stroke-width="1.4"/>`+[56,62,68,74].map(y=>`<circle cx="46.4" cy="${y}" r=".55" fill="${OU.c3}"/>`).join('');
+   if(OU.t=='coat'){back+=`<path d="M40 66L34 112L44 106L46 70ZM60 66L66 112L56 106L54 70Z" fill="${f}" ${LN}/><path d="M34 112L44 106M66 112L56 106" stroke="${OU.c3}" stroke-width=".7"/>`;outer+=`<path d="M38.6 71H45.8M54.2 71H61.4" stroke="${OU.c3}" stroke-width=".8"/>`+[60,64,68].map(y=>`<circle cx="45.6" cy="${y}" r=".6" fill="${OU.c3}"/><circle cx="54.4" cy="${y}" r=".6" fill="${OU.c3}"/>`).join('')}
+   if(OU.t=='jacket')outer+=[60,63.4].map(y=>`<circle cx="45.2" cy="${y}" r=".55" fill="${OU.c3}"/>`).join('');
+   sleeveOv={t:OU.t=='bolero'?'puff':'long',f,l,cuff:OU.t=='coat'?OU.c3:OU.c2}}}
+ // collars & neck pieces
+ if(CO.t!='none'){const f=pat('col',CO),l=czLine(CO.c1);
+  if(CO.t=='round')collar+=`<path d="M45.2 45.2C43 47 43 50.6 46.6 51.4L50 48.6ZM54.8 45.2C57 47 57 50.6 53.4 51.4L50 48.6Z" fill="${f}" stroke="${l}" stroke-width=".35"/><path d="M44.2 50.2Q45 51.2 46.6 51.4M55.8 50.2Q55 51.2 53.4 51.4" stroke="${CO.dc}" stroke-width=".5" fill="none"/>`;
+  if(CO.t=='sailor')collar+=`<path d="M43.2 45.4L50 57L56.8 45.4L63.8 49.4L60 55.4L50 60L40 55.4L36.2 49.4Z" fill="${f}" stroke="${l}" stroke-width=".35"/><path d="M37.6 50.2L41 54.4L50 58.6L59 54.4L62.4 50.2" stroke="${CO.c2}" stroke-width=".5" fill="none"/>`;
+  if(CO.t=='frill')collar+=`<path d="${skirtD(45.4,5.2,49.6,7.6,9,1.4,1.6)}" fill="${f}" stroke="${l}" stroke-width=".3"/>`;
+  if(CO.t=='high')collar+=`<path d="M46.6 42.4H53.4L54 46.6Q50 47.6 46 46.6Z" fill="${f}" stroke="${l}" stroke-width=".35"/><circle cx="50" cy="45" r=".55" fill="${CO.c3}"/>`;
+  if(CO.t=='wide')collar+=`<path d="${skirtD(45.2,6.6,54,14.4,13,1.6,2.4)}" fill="${f}" stroke="${l}" stroke-width=".3"/><path d="${skirtD(52,13.2,54,14.4,13,1.2,2.4)}" fill="none" stroke="${CO.dc}" stroke-width=".4"/>`}
+ if(A.choker){const P=A.choker;collar+=`<path d="M47.2 40.6Q50 42 52.8 40.6V42Q50 43.4 47.2 42Z" fill="${P.c1}"/><circle cx="50" cy="43.6" r=".8" fill="${P.c3}"/>`}
+ if(A.necklace){const P=A.necklace;collar+=[...Array(9)].map((_,i)=>`<circle cx="${N2(45.6+i*1.1)}" cy="${N2(46+Math.sin(i/8*Math.PI)*3)}" r=".45" fill="${P.c1}" stroke="${czLine(P.c1)}" stroke-width=".12"/>`).join('')+`<path d="M50 49.4l1 1.4-1 1.4-1-1.4z" fill="${P.c3}"/>`}
+ if(X.ribbon){const P=X.ribbon,f=pat('rib',P),l=czLine(P.c1);collar+=P.v?`<path d="M49 48.4H51L51.8 60L50 62L48.2 60Z" fill="${f}" stroke="${l}" stroke-width=".3"/><path d="M48.6 47.2H51.4L51 49H49Z" fill="${f}" stroke="${l}" stroke-width=".3"/>`:bowS(50,49.2,1.05,f,l)}
+ if(X.cape){const P=X.cape,f=pat('cape',P),l=czLine(P.c1),yb=P.v?124:98;back+=`<path d="M37 47Q50 44 63 47Q72 ${yb*.6} 76 ${yb}Q50 ${yb+6} 24 ${yb}Q28 ${yb*.6} 37 47Z" fill="${f}" stroke="${l}" stroke-width=".4"/><path d="M28 ${yb-2}Q50 ${yb+4} 72 ${yb-2}" stroke="${P.c2}" stroke-width=".8" fill="none"/>`;front+=`<path d="M36.4 48.4Q50 43 63.6 48.4L62 53Q50 49.6 38 53Z" fill="${f}" stroke="${l}" stroke-width=".35"/><circle cx="50" cy="47" r="1.2" fill="${P.c3}" stroke="${l}" stroke-width=".3"/>`}
+ // limbs
+ const fS=SL.t!='none'?pat('slv',SL):null;
+ const O={defs:(defs?defs:'')}; // defs filled after all pat() calls below
+ O.sleeve=sleeveOv?sleeveOv.t:SL.t;O.sc=sleeveOv?sleeveOv.f:fS;O.sln=sleeveOv?sleeveOv.l:czLine(SL.c1);O.cuff=sleeveOv?sleeveOv.cuff:SL.c2;
+ if(X.dsl){const P=X.dsl;O.dsl={f:pat('dsl',P),l:czLine(P.c1),c2:P.c2}}
+ if(A.gloves){const P=A.gloves;O.glove=P.c1;O.gloveFrom=P.v?.45:.82}
+ if(A.armband){const P=A.armband;O.armb={c:P.c1,c3:P.c3}}
+ // legs & shoes
+ const legSpec={none:null,socks:{t:'sock',c:LG.c1,from:.88,frill:LG.v==1},knee:{t:'sock',c:LG.c1,from:.6,frill:LG.v==1,band:LG.v==2?LG.c2:null},thigh:{t:'sock',c:LG.c1,from:.28,lace:LG.v==1?LG.c2:null,lacetop:LG.v==1},stockings:{t:'tights',c:LG.c1,from:0}}[LG.t]||null;
+ const fL=legSpec&&LG.pat&&LG.pat!='solid'?pat('leg',LG):null;if(legSpec&&fL)legSpec.f=fL;
+ let leg=legSpec?{...legSpec}:null;
+ if(SH.t=='boots'||SH.t=='ankle'){const bt={t:'boot',c:SH.c1,from:SH.t=='boots'?.6:.86,lace:SH.c2};leg=leg?{...leg,over:bt}:bt}
+ O.leg=leg||{};O.shoe={t:{boots:'boot',ankle:'boot',heels:'heel',mary:'mary',sneakers:'sneaker',loafers:'loafer'}[SH.t]||'sneaker',c:SH.c1,a:SH.c2,deco:A.sdeco?A.sdeco.c1:null};
+ if(A.legacc)O.garter=A.legacc.c1;
+ O.top=top;O.vestL='';O.skirt=bottom+over;O.cover=0;O.mid=mid;O.outer=outer;O.collar=collar+front;O.back=back;O.pantsFn=pantsFn;
+ O.defs=defs;return O}
+
+// ---- costume presets: starting points only (every piece stays editable) --------------
+const CZ_PRESETS=(()=>{const P=czPiece,x=(o)=>o;const mk=(top,sleeve,collar,outer,bottom,over,shoes,legs,X={},A={})=>({top,sleeve,collar,outer,bottom,over,shoes,legs,x:X,a:A});
+ return[
+ ['Cute Idol',mk(P('blouse','#ffffff','#f7a8c8','#f3c35c',{v:1,dc:'#ffd7e6'}),P('lpuff','#ffffff','#f7a8c8'),P('round','#ffffff',0,0,{dc:'#f7a8c8'}),{t:'none'},P('layered','#f9b6cf','#ffffff','#f3c35c',{v:0,pat:'plaid',pc:'#e985ad',dc:'#ffffff'}),{t:'none'},P('sneakers','#f7a8c8','#ffffff'),P('knee','#ffffff','#f7a8c8',0,{v:1}),{ribbon:P('ribbon','#f27aa6'),sash:P('sash','#ffffff')},{hbow:P('hbow','#f27aa6'),armband:P('armband','#f7a8c8')})],
+ ['School Uniform',mk(P('blouse','#ffffff'),P('long','#ffffff','#2c3a6b'),P('sailor','#2c3a6b','#ffffff'),{t:'none'},P('pleated','#2c3a6b','#ffffff','#f3c35c',{v:1}),{t:'none'},P('loafers','#4a3438'),P('knee','#2c3a6b'),{ribbon:P('ribbon','#e2455f')},{})],
+ ['Princess',mk(P('offshoulder','#fff5fb','#ffffff','#f3c35c'),P('puff','#fff5fb','#ffffff'),{t:'none'},{t:'none'},P('layered','#ffd3e6','#ffffff','#f3c35c',{v:2,dc:'#ffffff'}),P('frillhem','#ffffff'),P('heels','#ffe3ef','#f3c35c'),P('stockings','#fff4f8'),{corset:P('corset','#f7a8c8','#ffffff','#f3c35c',{dc:'#ffffff',pat:'embroid',pc:'#ffffff',pd:.5})},{crown:P('crown','#f6d77c','#ffffff','#f58fb5'),necklace:P('necklace','#fff8f2','#fff','#a6dbff'),gloves:P('gloves','#ffffff',0,0,{v:1}),earrings:P('earrings','#a6dbff','#f3c35c')})],
+ ['Magical Girl',mk(P('crop','#ffffff','#ffffff','#f3c35c',{dc:'#9fd3ff'}),P('puff','#ffffff','#9fd3ff'),P('wide','#ffffff',0,0,{dc:'#9fd3ff'}),{t:'none'},P('flared','#8fc8ff','#ffffff','#f3c35c',{v:0,pat:'stars',pc:'#ffffff'}),P('frillhem','#ffffff'),P('boots','#ffffff','#8fc8ff'),P('none','#ffffff'),{ribbon:P('ribbon','#ff8fb7'),cape:P('cape','#c9b6ff','#ffffff','#f3c35c',{pat:'sparkle',pc:'#ffffff'})},{hbow:P('hbow','#ff8fb7'),gloves:P('gloves','#ffffff')})],
+ ['Elegant',mk(P('blouse','#fbf6ee','#d9c08a','#d9b36a',{v:2,dc:'#efe4cf'}),P('long','#fbf6ee','#d9c08a'),P('high','#fbf6ee',0,'#d9b36a'),{t:'none'},P('flared','#3b3562','#d9c08a','#d9b36a',{v:2}),{t:'none'},P('heels','#2b2436','#d9b36a'),P('stockings','#ecdcd0'),{belt:P('belt','#d9b36a','#fff','#fff4c0')},{necklace:P('necklace','#fff8f2','#fff','#d9b36a'),earrings:P('earrings','#d9b36a','#d9b36a')})],
+ ['Cool',mk(P('tee','#2b2436','#ffffff','#9fd3ff'),P('none','#2b2436'),{t:'none'},P('jacket','#3c4a78','#2b2436','#cfd4dc'),P('shorts','#2b2436','#9fd3ff','#cfd4dc'),{t:'none'},P('ankle','#1e1a28','#9fd3ff'),P('thigh','#1e1a28'),{belt:P('belt','#1e1a28','#fff','#cfd4dc')},{choker:P('choker','#1e1a28',0,'#9fd3ff')})],
+ ['Sexy / Mature',mk(P('sleeveless','#7a1f3d','#ffffff','#d9b36a'),P('none','#7a1f3d'),{t:'none'},{t:'none'},P('mini','#2b1a24','#7a1f3d','#d9b36a'),P('sheer','#b83a64'),P('heels','#2b1a24','#d9b36a'),P('stockings','#3a2a30',0,0,{pat:'mesh',pc:'#000000',pd:.6}),{corset:P('corset','#2b1a24','#7a1f3d','#d9b36a',{dc:'#d9b36a'})},{choker:P('choker','#2b1a24',0,'#d9b36a'),earrings:P('earrings','#d9b36a','#d9b36a'),gloves:P('gloves','#2b1a24',0,0,{v:1})})],
+ ['Gothic',mk(P('blouse','#2b2436','#ffffff','#b9a2ec',{v:1,dc:'#ffffff'}),P('bell','#2b2436','#ffffff'),P('frill','#ffffff'),{t:'none'},P('layered','#2b2436','#5b3f78','#b9a2ec',{v:1,dc:'#ffffff'}),P('apron','#ffffff','#fff','#fff',{pat:'lace',pc:'#e6dcef',dc:'#ffffff'}),P('boots','#1e1a28','#b9a2ec'),P('thigh','#1e1a28','#ffffff',0,{v:1}),{corset:P('corset','#5b3f78','#2b2436','#b9a2ec',{dc:'#ffffff'})},{headband:P('headband','#2b2436',0,0,{v:1}),choker:P('choker','#2b2436',0,'#b9a2ec'),hbow:P('hbow','#2b2436')})],
+ ['Rock',mk(P('tee','#1e1a28','#e2455f','#ffffff'),P('none','#1e1a28'),{t:'none'},P('vest','#2b2436','#e2455f','#cfd4dc',{pat:'check',pc:'#e2455f',ps:.8,pd:.5}),P('pleated','#e2455f','#1e1a28','#cfd4dc',{v:0,pat:'plaid',pc:'#1e1a28',dc:'#ffffff'}),{t:'none'},P('boots','#1e1a28','#cfd4dc'),P('stockings','#1e1a28',0,0,{pat:'mesh',pc:'#000000'}),{belt:P('belt','#1e1a28','#fff','#cfd4dc')},{choker:P('choker','#1e1a28',0,'#cfd4dc'),armband:P('armband','#1e1a28','#fff','#cfd4dc'),clip:P('clip','#e2455f')})],
+ ['Street Fashion',mk(P('tee','#ffffff','#9fd3ff','#f3c35c'),P('short','#ffffff','#9fd3ff'),{t:'none'},P('cardigan','#ffd36a','#ffffff','#ffffff'),P('wide','#6e86c4','#ffffff','#cfd4dc'),{t:'none'},P('sneakers','#ffffff','#ff8fb7'),P('socks','#ffffff'),{},{hat:P('hat','#ff8fb7','#ffffff','#ffd36a',{v:1}),clip:P('clip','#ffd36a',0,0,{v:1})})],
+ ['Traditional Japanese',mk(P('blouse','#f6e7f0','#c0392b','#f3c35c',{pat:'floral',pc:'#f28aa8',dc:'#ffd36a'}),P('bell','#f6e7f0','#c0392b',0,{pat:'floral',pc:'#f28aa8',dc:'#ffd36a'}),P('high','#c0392b',0,'#f3c35c'),{t:'none'},P('pleated','#7a2335','#f3c35c','#f3c35c',{v:2}),{t:'none'},P('mary','#7a2335','#f3c35c'),P('socks','#ffffff'),{sash:P('sash','#f3c35c','#ffffff','#c0392b',{pat:'embroid',pc:'#c0392b'})},{hribbon:P('hribbon','#c0392b'),clip:P('clip','#ffd36a',0,0,{v:1})})],
+ ['Futuristic',mk(P('crop','#e8f4ff','#9fd3ff','#7cf2ff',{v:1}),P('long','#c9d6ea','#7cf2ff',0,{pat:'geo',pc:'#9fd3ff',pd:.5}),P('high','#e8f4ff',0,'#7cf2ff'),P('bolero','#c9d6ea','#7cf2ff','#7cf2ff',{pat:'gradient',pc:'#9fb4ff'}),P('mini','#c9d6ea','#7cf2ff','#7cf2ff',{pat:'gradient',pc:'#8a9cff'}),P('sheer','#9fd3ff'),P('boots','#e8f4ff','#7cf2ff'),P('none','#fff'),{belt:P('belt','#7cf2ff','#fff','#ffffff')},{headband:P('headband','#c9d6ea',0,'#7cf2ff'),earrings:P('earrings','#7cf2ff','#c9d6ea')})],
+ ['Summer Festival',mk(P('sleeveless','#fff7d6','#ffb46e','#ff8fb7',{pat:'floral',pc:'#ffb46e',dc:'#ff8fb7'}),P('none','#fff'),{t:'none'},{t:'none'},P('flared','#ffb46e','#ffffff','#ff8fb7',{v:0,pat:'stripe',pc:'#ffe2b8',pd:.6}),P('frillhem','#ffffff'),P('sneakers','#ffffff','#ffb46e'),P('socks','#ffffff',0,0,{v:1}),{sash:P('sash','#ff8fb7')},{hat:P('hat','#fff2c8','#ff8fb7','#ffb46e',{v:1}),armband:P('armband','#ff8fb7','#fff','#fff')})]]})();
+const czClone=o=>JSON.parse(JSON.stringify(o));
 
 </script>
 <script>
@@ -1857,6 +2071,127 @@ function render(){const a=$('#app');
  save();document.body.dataset.view=view;
  a.innerHTML=chrome(V[view]())+modal();rsCenter()}
 applyPrefs();render();setTimeout(()=>{const s=document.getElementById('splash');if(s)s.remove()},1800);
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom!  —  Costume Designer (modular, per-song)
+// -------------------------------------------------------------------------------------
+//  Each song keeps its own costume designs:  S.songs[id].cdz = {
+//     v:1, ds:[{id,name,p:design}], main:designId, mode:'uniform'|'individual',
+//     mem:{ memberId: { d:designId (individual mode), ov:{slotPath:{c1:'#hex'}} (uniform colour overrides) } } }
+//  This is an addition to the save. The original rules are untouched: the song's
+//  "production costume line" (cid), finalizing and the 7-day manufacturing still work
+//  exactly as before; a finalized / started song locks its designs.
+// =====================================================================================
+const CZ_PAL=['#ffffff','#fff4e8','#f6e7c8','#f3c35c','#ffb46e','#ff8fb7','#f27aa6','#e2455f','#7a1f3d','#ffd3e6','#f7a8c8','#c9b6ff','#9d86da','#5b3f78','#9fd3ff','#6fb3e4','#3c4a78','#2c3a6b','#9fe0c0','#3c9a6c','#cfd4dc','#8a8f9a','#2b2436','#1e1a28'];
+const CZ_COLS=[['c1','Primary'],['c2','Secondary'],['c3','Accent'],['pc','Pattern'],['dc','Details']];
+const CZ_MAP=[9,1,0,8,12,0,5]; // original outfit index -> closest starting preset
+let _czn=0;SECS.find(x=>x.k=='music').hid.push('costume');SC_VIEW.costume='dressing';SUBLOC.costume='Dressing Room · Costume Designer';
+const czId=()=>'cz'+Date.now().toString(36)+(++_czn);
+function czSong(o){if(!o.cdz)o.cdz={v:1,ds:[],main:null,mode:'uniform',mem:{}};return o.cdz}
+function czStart(o){const z=czSong(o);if(z.ds.length)return z;const c=o.cid!=null&&COS[o.cid]?COS[o.cid]:null,p=czClone(CZ_PRESETS[c?CZ_MAP[c[1]]||0:0][1]);
+ if(c){const hue=o.coh!=null?o.coh:c[2],col=hslx(hue,70,80),col2=hslx(hue,55,55);['top','bottom','outer'].forEach(k=>{if(p[k]&&p[k].t!='none'&&p[k].c1!='#ffffff')p[k].c1=k=='top'?p[k].c1:col});if(p.x.sash)p.x.sash.c1=col2;if(p.x.ribbon)p.x.ribbon.c1=col2}
+ const d={id:czId(),name:c?c[0]:'Design 1',p};z.ds.push(d);z.main=d.id;return z}
+const czGetSlot=(p,path)=>path.split('.').reduce((a,k)=>a&&a[k],p);
+function czSetSlot(p,path,v){const ks=path.split('.'),last=ks.pop();let t=p;ks.forEach(k=>{t[k]=t[k]||{};t=t[k]});if(v==null)delete t[last];else t[last]=v}
+function czFor(o,mid){const z=o&&o.cdz;if(!z||!z.ds.length)return null;const mm=(z.mem||{})[mid]||{};const did=z.mode=='individual'&&mm.d?mm.d:z.main;const d=z.ds.find(x=>x.id==did)||z.ds.find(x=>x.id==z.main)||z.ds[0];let p=d.p;
+ if(z.mode=='uniform'&&mm.ov&&Object.keys(mm.ov).length){p=czClone(p);for(const k in mm.ov){const s=czGetSlot(p,k);if(s)Object.assign(s,mm.ov[k])}}return p}
+const czLocked=o=>!o||lockedSong(o.id)||!!o.cosFinal;
+const czMembers=o=>(o.slots||[]).filter(Boolean).map(get).filter(Boolean);
+
+// ---- designer state ---------------------------------------------------------------------
+function czOpen(songId){const o=S.songs[songId];if(!o)return;const z=czStart(o),E=ui.czE;
+ if(!E||E.song!=songId)ui.czE={song:songId,did:z.main,p:czClone((z.ds.find(d=>d.id==z.main)||z.ds[0]).p),dirty:0,cat:'top',sel:'top',mid:(czMembers(o)[0]||S.members[0]||{}).id,pose:2,ex:2,mt:null};
+ view='costume';render();try{window.scrollTo(0,0)}catch(e){}}
+function czDesign(){const E=ui.czE,o=E&&S.songs[E.song];return o&&o.cdz?o.cdz.ds.find(d=>d.id==E.did):null}
+function czGuard(){const o=S.songs[ui.czE.song];if(czLocked(o)){toast(lockedSong(o.id)?'The single has started: costumes are being manufactured and can no longer change.':'This song\'s costume is finalized. Unlock it in Single Production → Costume Selection to edit.','err');return false}return true}
+function czPick(did){const E=ui.czE,go=()=>{const d=S.songs[E.song].cdz.ds.find(x=>x.id==did);if(!d)return;E.did=did;E.p=czClone(d.p);E.dirty=0;render()};if(E.dirty)ask('Discard unsaved changes to the current design?',go,'Discard');else go()}
+function czMark(){ui.czE.dirty=1}
+function czCat(k){const E=ui.czE,c=CZ_CATS.find(x=>x.k==k);E.cat=k;if(c&&c.multi){const on=Object.keys(E.p[k]||{}).find(x=>E.p[k][x]);E.sel=on?k+'.'+on:k+'.'+c.items[0][0]}else E.sel=k;render()}
+function czItem(cat,t){if(!czGuard())return;const E=ui.czE,c=CZ_CATS.find(x=>x.k==cat);
+ if(c.multi){const path=cat+'.'+t,cur=czGetSlot(E.p,path);if(!cur){const base=czPiece(t,'#f7a8c8','#ffffff','#f3c35c');czSetSlot(E.p,path,base);E.sel=path}else E.sel=path}
+ else{const cur=E.p[cat]||{};E.p[cat]=t=='none'?{t:'none'}:{...czPiece(t,cur.c1||'#ffffff',cur.c2,cur.c3),...(cur.t&&cur.t!='none'?{c1:cur.c1,c2:cur.c2,c3:cur.c3,pc:cur.pc,dc:cur.dc,pat:cur.pat,ps:cur.ps,pd:cur.pd}:{}),t,v:0};E.sel=cat}
+ czMark();render()}
+function czRemove(){if(!czGuard())return;const E=ui.czE;czSetSlot(E.p,E.sel,null);const c=CZ_CATS.find(x=>x.k==E.cat),on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);if(c&&c.multi)E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0];czMark();render()}
+function czVar(v){if(!czGuard())return;const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.v=v;czMark();render()}}
+function czSetPat(k){if(!czGuard())return;const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.pat=k;czMark();render()}}
+function czNum(f,v,live){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(!P||czLocked(S.songs[ui.czE.song]))return;P[f]=+v;czMark();live?czLive():render()}
+function czRecent(c){let r=(UIP.czRecent||[]).filter(x=>x!=c);r.unshift(c);UIP.czRecent=r.slice(0,10);try{localStorage.setItem('iv48ui',JSON.stringify(UIP))}catch(e){}}
+function czCol(f,v,live){if(!/^#?[0-9a-f]{6}$/i.test(v)){if(!live)toast('Use a HEX colour like #ff8fb7.','err');return}if(v[0]!='#')v='#'+v;v=v.toLowerCase();const P=czGetSlot(ui.czE.p,ui.czE.sel);if(!P||czLocked(S.songs[ui.czE.song]))return;P[f]=v;czMark();if(live)return czLive();czRecent(v);render()}
+function czLive(){const el=document.getElementById('czstage');if(el)el.innerHTML=czStageSvg()}
+function czSave(){if(!czGuard())return;const d=czDesign();if(!d)return;d.p=czClone(ui.czE.p);ui.czE.dirty=0;toast(`"${d.name}" saved.`);render()}
+function czApply(){if(!czGuard())return;const E=ui.czE,o=S.songs[E.song],z=o.cdz,d=czDesign();d.p=czClone(E.p);E.dirty=0;
+ if(z.mode=='individual'&&E.mid&&czMembers(o).some(m=>m.id==E.mid)){z.mem[E.mid]={...(z.mem[E.mid]||{}),d:d.id};toast(`${get(E.mid).name} will wear "${d.name}".`)}else{z.main=d.id;toast(`"${d.name}" is now the costume for "${o.title}".`)}render()}
+function czRevert(){const d=czDesign();if(!d)return;ui.czE.p=czClone(d.p);ui.czE.dirty=0;render()}
+function czNew(){if(!czGuard())return;const o=S.songs[ui.czE.song],z=o.cdz,d={id:czId(),name:'Design '+(z.ds.length+1),p:czClone(CZ_PRESETS[0][1])};z.ds.push(d);ui.czE.did=d.id;ui.czE.p=czClone(d.p);ui.czE.dirty=0;toast('New design created from the Cute Idol starting point.');render()}
+function czDup(){if(!czGuard())return;const o=S.songs[ui.czE.song],z=o.cdz,src=czDesign(),d={id:czId(),name:src.name+' (copy)',p:czClone(ui.czE.p)};z.ds.push(d);ui.czE.did=d.id;ui.czE.dirty=0;toast('Design duplicated.');render()}
+function czRename(v){if(!czGuard())return;const d=czDesign(),n=cleanName(v);if(!n)return toast('Enter a name.','err');d.name=n;toast('Design renamed.');render()}
+function czDel(){if(!czGuard())return;const o=S.songs[ui.czE.song],z=o.cdz;if(z.ds.length<2)return toast('A song needs at least one design.','err');const d=czDesign();
+ ask(`Delete the design "${d.name}"? Members wearing it will switch to the song's main design.`,()=>{z.ds=z.ds.filter(x=>x.id!=d.id);if(z.main==d.id)z.main=z.ds[0].id;Object.values(z.mem).forEach(m=>{if(m.d==d.id)delete m.d});ui.czE.did=z.main;ui.czE.p=czClone(z.ds.find(x=>x.id==z.main).p);ui.czE.dirty=0;render()},'Delete')}
+function czPreset(i){if(i===''||!czGuard())return;const go=()=>{ui.czE.p=czClone(CZ_PRESETS[+i][1]);czMark();toast(`Started from "${CZ_PRESETS[+i][0]}". Every piece can still be changed.`);render()};if(ui.czE.dirty)ask('Replace the current unsaved changes with this preset?',go,'Use preset');else go()}
+function czCopyFrom(v){if(!v||!czGuard())return;const[sid,did]=v.split('|'),src=S.songs[sid]&&S.songs[sid].cdz&&S.songs[sid].cdz.ds.find(d=>d.id==did);if(!src)return;const o=S.songs[ui.czE.song],d={id:czId(),name:`${src.name} (from ${S.songs[sid].title})`.slice(0,40),p:czClone(src.p)};o.cdz.ds.push(d);ui.czE.did=d.id;ui.czE.p=czClone(d.p);ui.czE.dirty=0;toast('Design copied into this song. The original song is unchanged.');render()}
+function czMode(m){const o=S.songs[ui.czE.song];if(!czGuard())return;o.cdz.mode=m;toast(m=='uniform'?'Uniform: all members wear the main design (optional colour tweaks per member).':'Individual: assign a design to each member.');render()}
+function czAssign(mid,did){const o=S.songs[ui.czE.song];if(!czGuard())return;o.cdz.mem[mid]={...(o.cdz.mem[mid]||{}),d:did||undefined};if(!did)delete o.cdz.mem[mid].d;render()}
+function czOv(mid,path,v){const o=S.songs[ui.czE.song];if(!czGuard())return;const mm=o.cdz.mem[mid]=o.cdz.mem[mid]||{};mm.ov=mm.ov||{};if(v)mm.ov[path]={c1:v};else delete mm.ov[path];render()}
+function czOvReset(mid){const o=S.songs[ui.czE.song];if(!czGuard())return;if(o.cdz.mem[mid])delete o.cdz.mem[mid].ov;render()}
+
+// ---- rendering helpers ------------------------------------------------------------------
+function czPrevMember(){const E=ui.czE;return get(E.mid)||czMembers(S.songs[E.song])[0]||S.members[0]}
+function czStageSvg(){const E=ui.czE,m=czPrevMember();if(!m)return'';const a=ap(m);return`<svg viewBox="4 -4 92 204" class="czfig" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose:E.pose,of:a.of,oh:a.oh,ac:a.ac,ex:E.ex,cd:E.p})}</svg>`}
+const CZ_CROP={top:'24 32 52 46',sleeve:'18 36 64 56',collar:'30 30 40 30',outer:'20 34 60 60',bottom:'16 62 68 64',over:'10 62 80 70',shoes:'26 156 48 40',legs:'22 92 56 106',x:'14 30 72 90',a:'14 0 72 110'};
+const CZ_ACROP={hbow:'26 -2 48 32',headband:'26 -2 48 32',clip:'26 -2 48 32',crown:'26 -4 48 32',hat:'26 -6 48 34',hribbon:'26 -2 48 46',earrings:'28 14 44 30',necklace:'34 32 32 26',choker:'34 30 32 24',gloves:'14 50 72 50',armband:'14 46 72 40',legacc:'30 84 40 40',sdeco:'26 162 48 34'};
+function czThumb(cat,t){const E=ui.czE,m=czPrevMember(),a=ap(m),c=CZ_CATS.find(x=>x.k==cat),p=czClone(E.p);
+ if(c.multi){p[cat]=p[cat]||{};if(!p[cat][t])p[cat][t]=czPiece(t,'#f7a8c8','#ffffff','#f3c35c')}else{const cur=p[cat]||{};p[cat]=t=='none'?{t:'none'}:{...czPiece(t,cur.c1||'#ffffff',cur.c2,cur.c3),...(cur.t&&cur.t!='none'?{c1:cur.c1,c2:cur.c2,c3:cur.c3,pc:cur.pc,dc:cur.dc,pat:cur.pat,ps:cur.ps,pd:cur.pd}:{}),t,v:0}}
+ const vb=c.k=='a'?CZ_ACROP[t]:CZ_CROP[cat];return`<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:p})}</svg>`}
+function czSwatch(k,P){const r=czPat('czs'+k+(++PTC[0]),{...P,pat:k,ps:.9});return`<svg viewBox="0 0 12 12"><defs>${r.d}</defs><rect width="12" height="12" rx="2" fill="${r.f}"/></svg>`}
+const czSlotName=path=>{const[c,i]=path.split('.'),cat=CZ_CATS.find(x=>x.k==c);if(i){const it=cat.items.find(x=>x[0]==i);return it?it[1]:i}return cat?cat.n:path};
+
+// ---- the designer screen ----------------------------------------------------------------
+V.costume=function(){const E=ui.czE,o=E&&S.songs[E.song];
+ if(!o){if(S.pj){czOpen(S.pj.mainId);return''}return`<div class="c">${emptyBox('Open the Costume Designer from Single Production → Costume Selection.')}<button class="b p" onclick="ui.mstep=4;goView('music')">Go to Single Production</button></div>`}
+ const z=czStart(o),d=czDesign()||z.ds[0],lk=czLocked(o),dis=lk?'disabled':'',P=czGetSlot(E.p,E.sel),cat=CZ_CATS.find(x=>x.k==E.cat)||CZ_CATS[0],mem=czMembers(o);
+ const songs=S.pj?[S.pj.mainId,...S.pj.coup].map(id=>S.songs[id]).filter(Boolean):[o];
+ const others=Object.values(S.songs).filter(x=>x.id!=o.id&&x.cdz&&x.cdz.ds.length);
+ const head=`<div class="czhead c"><div class="row"><button class="b s" onclick="${E.dirty?`ask('Leave with unsaved design changes? They will be lost.',()=>{ui.czE.dirty=0;ui.mstep=4;goView('music')},'Leave')`:`ui.mstep=4;goView('music')`}">◀ Single Production</button><b class="czt">Costume Designer</b><span class="st">衣装デザイン</span>${lk?`<span class="tag warn">🔒 ${lockedSong(o.id)?'In production: view only':'Finalized: view only'}</span>`:''}</div>
+ <div class="czsongs">${songs.map((s,i)=>`<button class="czsong ${s.id==o.id?'on':''}" onclick="${s.id==o.id?'':`${E.dirty?`ask('Switch song? Unsaved design changes will be lost.',()=>{ui.czE=null;czOpen('${s.id}')},'Switch')`:`ui.czE=null;czOpen('${s.id}')`}`}"><span class="tag ${i?'tcoup':'tmain'}">${i?'Coupling':'Main'}</span><b>${esc(s.title||'Untitled')}</b><small>${s.cdz&&s.cdz.ds.length?s.cdz.ds.length+' design(s)':'no design yet'}</small></button>`).join('')}</div>
+ <div class="row czdes"><label class="st">Design <select onchange="czPick(this.value)">${z.ds.map(x=>`<option value="${x.id}" ${x.id==d.id?'selected':''}>${esc(x.name)}${x.id==z.main?' ★ main':''}</option>`).join('')}</select></label><input id="czname" value="${esc(d.name)}" maxlength="40" ${dis} style="width:170px" aria-label="Design name"><button class="b s" ${dis} onclick="czRename($('#czname').value)">Rename</button><button class="b s" ${dis} onclick="czNew()">+ New</button><button class="b s" ${dis} onclick="czDup()">Duplicate</button><button class="b s" ${dis} onclick="czDel()">Delete</button>
+ <select ${dis} onchange="czPreset(this.value)"><option value="">Start from a preset…</option>${CZ_PRESETS.map(([n],i)=>`<option value="${i}">${n}</option>`).join('')}</select>
+ <select ${dis||(others.length?'':'disabled')} onchange="czCopyFrom(this.value)"><option value="">${others.length?'Copy a design from another song…':'No other song has designs yet'}</option>${others.map(s=>s.cdz.ds.map(x=>`<option value="${s.id}|${x.id}">${esc(s.title)} · ${esc(x.name)}</option>`).join('')).join('')}</select></div></div>`;
+ const nav=`<div class="czcats" role="tablist">${CZ_CATS.map(c=>{const on=c.multi?Object.values(E.p[c.k]||{}).filter(Boolean).length:(E.p[c.k]&&E.p[c.k].t!='none'?1:0);return`<button role="tab" class="${c.k==E.cat?'on':''}" onclick="czCat('${c.k}')"><b>${c.n}</b><small>${c.jp}</small>${on?`<i>${c.multi?on:'✓'}</i>`:''}</button>`}).join('')}</div>`;
+ const stage=`<div class="czstagewrap"><div id="czstage" class="czstage">${czStageSvg()}</div><div class="row czpose"><label class="st">Member <select onchange="ui.czE.mid=+this.value;render()">${(mem.length?mem:S.members).map(m=>`<option value="${m.id}" ${m.id==E.mid?'selected':''}>${esc(m.name)}</option>`).join('')}</select></label><label class="st">Pose <select onchange="ui.czE.pose=+this.value;render()">${POSES.map((p,i)=>`<option value="${i}" ${i==E.pose?'selected':''}>${p[0]}</option>`).join('')}</select></label><label class="st">Expression <select onchange="ui.czE.ex=+this.value;render()">${EXN.map((n,i)=>`<option value="${i}" ${i==E.ex?'selected':''}>${n}</option>`).join('')}</select></label></div>
+ <div class="czact">${E.dirty?'<span class="tag warn">Unsaved changes</span>':'<span class="tag">Saved</span>'}<button class="b" ${dis||(E.dirty?'':'disabled')} onclick="czRevert()">Revert</button><button class="b" ${dis} onclick="czSave()">💾 Save design</button><button class="b p" ${dis} onclick="czApply()">${z.mode=='individual'&&mem.some(m=>m.id==E.mid)?`Save & dress ${esc((get(E.mid)||{}).name||'member').split(' ')[0]}`:'Save & set as song costume'}</button></div></div>`;
+ const items=`<div class="czitems">${cat.items.map(([t,n])=>{const on=cat.multi?!!czGetSlot(E.p,cat.k+'.'+t):(E.p[cat.k]||{t:'none'}).t==t,sel=E.sel==(cat.multi?cat.k+'.'+t:cat.k)&&on;return`<button class="czitem ${on?'on':''} ${sel?'sel':''}" ${dis} onclick="czItem('${cat.k}','${t}')" title="${cat.multi?(on?'Click to edit':'Click to add'):n}">${czThumb(cat.k,t)}<small>${n}${cat.multi&&on?' ✓':''}</small></button>`}).join('')}</div>${cat.multi?'<p class="st">Combine as many as you like: click an item to add it or to edit it, then use “Remove” to take it off.</p>':''}`;
+ const vars=P&&P.t&&cat.vars&&cat.vars[P.t]?`<div class="row"><b>Style</b>${cat.vars[P.t].map((n,i)=>`<button class="b s ${(P.v|0)==i?'on':''}" ${dis} onclick="czVar(${i})">${n}</button>`).join('')}</div>`:'';
+ const colRow=([f,n])=>`<div class="czcol"><span>${n}</span><input type="color" value="${P[f]||'#ffffff'}" ${dis} oninput="czCol('${f}',this.value,1)" onchange="czCol('${f}',this.value)" aria-label="${n} colour"><input class="hex" value="${P[f]||''}" maxlength="7" ${dis} onchange="czCol('${f}',this.value)" aria-label="${n} HEX"></div>`;
+ const recent=(UIP.czRecent||[]);
+ const editor=P&&P.t&&P.t!='none'?`<div class="czedit"><h3>${esc(czSlotName(E.sel))}${cat.multi?` <button class="b s" ${dis} onclick="czRemove()">Remove</button>`:''}</h3>${vars}
+ <div class="czsub">Pattern</div><div class="czpats">${CZ_PATS.map(([k,n])=>`<button class="czpat ${(P.pat||'solid')==k?'on':''}" ${dis} onclick="czSetPat('${k}')" title="${n}">${czSwatch(k,P)}<small>${n}</small></button>`).join('')}</div>
+ ${(P.pat||'solid')!='solid'?`<div class="row"><label class="st">Pattern size <input type="range" min=".4" max="2.4" step=".1" value="${P.ps||1}" ${dis} oninput="czNum('ps',this.value,1)" onchange="czNum('ps',this.value)"></label><label class="st">Intensity <input type="range" min=".15" max="1" step=".05" value="${P.pd??.75}" ${dis} oninput="czNum('pd',this.value,1)" onchange="czNum('pd',this.value)"></label></div>`:''}
+ <div class="czsub">Colours</div>${CZ_COLS.map(colRow).join('')}
+ <div class="czsub">Palette &amp; recent colours</div><div class="row"><label class="st">Apply to <select id="czpt">${CZ_COLS.map(([f,n])=>`<option value="${f}">${n}</option>`).join('')}</select></label></div><div class="czpal">${CZ_PAL.map(c=>`<button style="background:${c}" ${dis} onclick="czCol($('#czpt').value,'${c}')" aria-label="${c}"></button>`).join('')}</div>
+ ${recent.length?`<div class="czsub">Recently used</div><div class="czpal">${recent.map(c=>`<button style="background:${c}" ${dis} onclick="czCol($('#czpt').value,'${c}')" aria-label="${c}"></button>`).join('')}</div>`:''}</div>`:`<div class="czedit">${emptyBox(cat.multi?'Pick an item above to add it and edit its colours & pattern.':'Nothing selected here. Choose an item above.','👗')}</div>`;
+ // member assignment
+ const asg=`<div class="c czasg"><h3>Members & costume assignment</h3><div class="row"><span class="st">Mode</span><button class="b s ${z.mode=='uniform'?'on':''}" ${dis} onclick="czMode('uniform')">Uniform costume</button><button class="b s ${z.mode=='individual'?'on':''}" ${dis} onclick="czMode('individual')">Individual costumes</button></div>
+ <p class="st">${z.mode=='uniform'?'Everyone wears the main design (★). You can tweak individual colours for a member below.':'Each member wears the design you assign. Edit a design, then "Save & dress" to give it to the member shown on stage.'}</p>
+ ${mem.length?`<div class="czlineup">${mem.map(m=>{const mm=z.mem[m.id]||{},a=ap(m),cd=czFor(o,m.id),dn=(z.ds.find(x=>x.id==(z.mode=='individual'&&mm.d?mm.d:z.main))||{}).name;return`<div class="czm ${m.id==E.mid?'on':''}"><button class="czmfig" onclick="ui.czE.mid=${m.id};render()" title="Preview ${esc(m.name)}"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd})}</svg></button><b>${esc(m.name.split(' ')[0])}</b>${z.mode=='individual'?`<select ${dis} onchange="czAssign(${m.id},this.value)"><option value="">Main design</option>${z.ds.map(x=>`<option value="${x.id}" ${mm.d==x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`:`<small>${esc(dn||'')}${mm.ov&&Object.keys(mm.ov).length?' · tweaked':''}</small>`}</div>`}).join('')}</div>`:`<p class="st">This song has no Senbatsu yet. Choose members in step 3 to dress them; you can still design with any idol as the model.</p>`}
+ ${z.mode=='uniform'&&mem.some(m=>m.id==E.mid)?(()=>{const mm=z.mem[E.mid]||{},base=czFor(o,-1)||E.p,paths=['top','bottom','outer','sleeve','collar','over',...Object.keys(base.x||{}).filter(k=>base.x[k]).map(k=>'x.'+k)].filter(k=>{const s=czGetSlot(base,k);return s&&s.t&&s.t!='none'});return`<div class="czov"><b>Colour tweaks for ${esc(get(E.mid).name)}</b> <span class="st">(only this member, only this song)</span><div class="row">${paths.map(k=>{const cur=mm.ov&&mm.ov[k]?mm.ov[k].c1:czGetSlot(base,k).c1;return`<label class="st czovc">${esc(czSlotName(k))}<input type="color" value="${cur}" ${dis} onchange="czOv(${E.mid},'${k}',this.value)">${mm.ov&&mm.ov[k]?`<button class="b s" ${dis} onclick="czOv(${E.mid},'${k}','')">↺</button>`:''}</label>`}).join('')}</div>${mm.ov&&Object.keys(mm.ov).length?`<button class="b s" ${dis} onclick="czOvReset(${E.mid})">Reset ${esc(get(E.mid).name.split(' ')[0])}'s colours</button>`:''}</div>`})():''}</div>`;
+ const base=`<div class="c czbase"><h3>Production costume line</h3><p class="st">The game's production rules are unchanged: each song still needs a costume line chosen and finalized in Single Production → Costume Selection, and manufacturing takes ${CFG.costumeDays} days after Start Single. Your design above is what the idols actually wear on screen and on the CD jacket.</p><div class="row"><span class="tag">${o.cid!=null?esc(COS[o.cid][0]):'Not chosen yet'}</span><span class="tag">${o.cosFinal?'✔ Finalized':'Not finalized'}</span><button class="b s" onclick="${E.dirty?`ask('Leave with unsaved design changes?',()=>{ui.czE.dirty=0;ui.mstep=4;goView('music')},'Leave')`:`ui.mstep=4;goView('music')`}">Open Costume Selection</button></div></div>`;
+ return head+`<div class="czgrid">${nav}${stage}<div class="czpanel c"><h3>${cat.n} <small class="st">${cat.jp}</small></h3>${items}${editor}</div></div>`+asg+base};
+
+// ---- integration: Single Production step 4 ----------------------------------------------
+function czCard(o){const z=o.cdz,mem=czMembers(o),pm=get(o.center)||mem[0],has=z&&z.ds.length,d=has&&z.ds.find(x=>x.id==z.main);
+ return`<div class="czcard"><div class="czcprev">${has&&pm?(()=>{const a=ap(pm);return`<svg viewBox="10 -2 80 200">${fig(pm,{pose:2,of:a.of,oh:a.oh,ac:a.ac,ex:1,cd:czFor(o,pm.id)})}</svg>`})():'<div class="empty"><i>✂</i>No design yet</div>'}</div><div><b>Costume design</b> <span class="st">衣装デザイン</span><div class="st">${has?`${z.ds.length} design(s) · main: <b>${esc(d?d.name:'')}</b> · ${z.mode=='uniform'?'Uniform':'Individual'} mode`:'Design every piece: tops, sleeves, collars, outerwear, bottoms, extras, shoes, legwear, accessories, patterns and colours.'}</div>
+ ${has&&mem.length?`<div class="cosline">${mem.slice(0,10).map(m=>{const a=ap(m);return`<svg viewBox="10 -2 80 200" width="34">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:czFor(o,m.id)})}</svg>`}).join('')}</div>`:''}
+ <button class="b p" onclick="czOpen('${o.id}')">🎨 ${has?'Open Costume Designer':'Create costume design'}</button></div></div>`}
+const _czMusic=V.music;V.music=function(){let h=_czMusic.call(V);if((ui.mstep==null?1:ui.mstep)!=4&&ui.mstep!==0)return h;
+ const p=S.pj;if(!p)return h;[p.mainId,...p.coup].forEach(id=>{const o=S.songs[id];if(!o)return;const key=`<div class="cosrow"><div class="cosprev">`;const at=h.indexOf(key,h.indexOf(`trCos('${o.id}'`)>0?Math.max(0,h.lastIndexOf(key,h.indexOf(`trCos('${o.id}'`))):0);if(at>=0)h=h.slice(0,at)+czCard(o)+'<div class="czlbl st">Production costume line (required by the production rules)</div>'+h.slice(at)});return h};
+
+// ---- integration: CD Cover Studio (member layers wear the main song's designs) ----------
+function czCoverSync(){const d=ui.cd;if(!d||ui.cvCtx=='album'||!S.pj)return;const o=S.songs[S.pj.mainId];const on=d.useCz!==false&&o&&o.cdz&&o.cdz.ds.length;d.layers.forEach(l=>{if(l.t!='m')return;if(on){const cd=czFor(o,l.mid);if(cd)l.cd=cd;else delete l.cd}else delete l.cd})}
+const _czCover=V.cover;V.cover=function(){czCoverSync();let h=_czCover.call(V);if(ui.cd&&!ui.cd._czs){ui.cd._czs=1;czCoverSync();h=_czCover.call(V)}
+ const o=S.pj&&S.songs[S.pj.mainId],has=o&&o.cdz&&o.cdz.ds.length&&ui.cvCtx!='album';
+ return(has?`<div class="c czcov"><b>👗 Costume designs on the jacket</b><span class="st">Members are drawn in the costumes designed for "${esc(o.title)}".</span><button class="b s ${ui.cd&&ui.cd.useCz!==false?'on':''}" onclick="ui.cd.useCz=true;render()">Use song designs</button><button class="b s ${ui.cd&&ui.cd.useCz===false?'on':''}" onclick="ui.cd.useCz=false;render()">Use studio costume settings</button><button class="b s" onclick="czOpen('${o.id}')">Edit designs</button></div>`:'')+h};
 
 </script>
 </body></html>
