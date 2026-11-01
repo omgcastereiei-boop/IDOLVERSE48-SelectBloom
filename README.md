@@ -36,6 +36,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/scenes/environments.js` | New illustrated environments (office, lounge, dressing room, rehearsal room, recording studio, photo studio, concert stage, tour, fan meeting hall, broadcast studio, audition room, management office, backstage) |
 | `js/ui/ui.js` | New UI layer: HUD, navigation, title screen, Producer Office, member cards, Training, Fan Community, Charts, Management, 6‑step Single Production |
 | `js/ui/costume-designer.js` | Costume Designer screen: per-song designs, uniform/individual member assignment, CD Cover Studio integration |
+| `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
 | `css/theme.css` | New visual identity (pastel pink · lavender · sky blue · champagne · ivory · warm beige) |
@@ -93,6 +94,17 @@ Music Production → **Costume Designer** tab (also reachable from each song in 
   A design's **concept line** (Cute / Cool / Pure / Elegant / Sporty) feeds the original
   release formula, so the concept-match sales bonus works as before.
 * Designs made with the earlier per-song designer are moved into the library automatically.
+
+## Event images & Roadshows
+
+* Release Day Mini Concert, every Roadshow and every Handshake Event get **one** image, drawn
+  with the members who actually took part, wearing the title-track Senbatsu costume of that
+  single. An image record (members, their looks, costume snapshot, single, place, date) is
+  stored on the event and its history records, so it looks the same after save/load.
+  Shown in the release popup, Roadshow / Handshake results and each single's promotion history.
+* Roadshows always promote the **latest released single**. A single in production only takes
+  over on its Release Day; planning resets cleanly (setlist, members, date) when it does.
+  Each location can host one Roadshow per single; growth and history keep accumulating.
 
 ## Language / ภาษา
 

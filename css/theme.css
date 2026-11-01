@@ -332,3 +332,10 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 .czcardb.on{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}
 .czbadge{display:flex;gap:8px;align-items:center;margin:6px 0;padding:6px 8px;border-radius:12px;background:linear-gradient(90deg,#fff7fb,#f6f1ff);border:1px solid var(--line)}
 .czbadge svg{height:76px;width:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:8px}.czbx{font-size:28px}
+/* event images */
+.evfig{margin:6px 0 10px;text-align:center}.evfig svg.evimg{width:100%;max-width:760px;height:auto;border-radius:14px;box-shadow:var(--sh2);display:block;margin:0 auto;background:#2a2350}
+.evfig figcaption{font-size:11.5px;color:var(--mut);margin-top:4px}
+.evgal{display:flex;gap:8px;overflow-x:auto;padding:6px 0}.evthumb{flex:0 0 auto;width:220px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:3px;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:var(--ink);font:700 11px Quicksand,'Noto Sans Thai Looped',sans-serif}
+.evthumb svg{width:100%;height:auto;border-radius:9px;display:block}.evthumb:hover{transform:translateY(-2px)}
+.evph{display:flex;align-items:center;gap:8px;justify-content:center;padding:18px;border:2px dashed var(--line);border-radius:14px;color:var(--mut);margin:6px 0}.evph span{font-size:24px}
+.evpromo{white-space:normal}
