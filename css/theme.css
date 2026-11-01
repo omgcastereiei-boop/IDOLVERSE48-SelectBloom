@@ -318,3 +318,10 @@ body.nomo *{animation:none!important;transition:none!important}
 .czcov{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
 @media(max-width:1100px){.czgrid{grid-template-columns:130px 1fr}.czpanel{grid-column:1/-1}}
 @media(max-width:700px){.czgrid{grid-template-columns:1fr}.czcats{position:static;flex-direction:row;overflow-x:auto}.czcats button{flex:0 0 auto}.czcats button i{position:static;display:inline-grid;margin-top:2px}.czstagewrap{position:static}.czstage{height:440px}.czcard{grid-template-columns:90px 1fr}.czcprev{height:170px}}
+/* ---------------- language ---------------- */
+body.lang-th{font-family:Quicksand,'Noto Sans Thai Looped','Zen Maru Gothic',system-ui,sans-serif}
+body.lang-th .ht,body.lang-th h2,body.lang-th h3,body.lang-th .locb b,body.lang-th .app b,body.lang-th .czt,body.lang-th .np b,body.lang-th .vnn,body.lang-th .desk .co,body.lang-th .kv b,body.lang-th .stat4 b,body.lang-th .msteps button,body.lang-th .nav button{font-family:'M PLUS Rounded 1c',Mitr,'Noto Sans Thai Looped',sans-serif}
+body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.lang-th .tag,body.lang-th .czitem,body.lang-th .czpat,body.lang-th .czcats button{font-family:Quicksand,'Noto Sans Thai Looped',sans-serif}
+.langsw{display:inline-flex;align-items:center;gap:2px;background:rgba(255,251,245,.95);border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--sh);font:700 13px Quicksand,'Noto Sans Thai Looped',sans-serif}
+.langsw span{padding:0 6px}.langsw button{border:0;background:none;border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;color:var(--ink)}.langsw button.on{background:var(--grad);color:#fff}
+.title>.langsw{position:absolute;top:14px;right:14px;z-index:5}

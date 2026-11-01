@@ -36,6 +36,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/scenes/environments.js` | New illustrated environments (office, lounge, dressing room, rehearsal room, recording studio, photo studio, concert stage, tour, fan meeting hall, broadcast studio, audition room, management office, backstage) |
 | `js/ui/ui.js` | New UI layer: HUD, navigation, title screen, Producer Office, member cards, Training, Fan Community, Charts, Management, 6‑step Single Production |
 | `js/ui/costume-designer.js` | Costume Designer screen: per-song designs, uniform/individual member assignment, CD Cover Studio integration |
+| `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
 | `css/theme.css` | New visual identity (pastel pink · lavender · sky blue · champagne · ivory · warm beige) |
 | `original/` | Untouched backup of the original single‑file game |
@@ -90,3 +91,9 @@ Music Production → Single Production → step 4 → **Open Costume Designer**.
   (a design per member). The CD Cover Studio draws jacket members in these designs.
 * The original production rule is unchanged: each song still needs its production
   costume line chosen and finalized; finalizing or starting the single locks its designs.
+
+## Language / ภาษา
+
+Choose **ไทย** or **English** on the title screen (top right) or in Management & Settings → Display.
+The choice is a display preference (stored with the UI prefs, not in the save) and can be switched any time.
+Names, song titles and CD-cover text typed by the player are never translated.
