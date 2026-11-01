@@ -28,17 +28,19 @@ let _czn=0;const czId=()=>'cz'+Date.now().toString(36)+(++_czn);
 
 // ---- library & migration ---------------------------------------------------------------
 function czLib(){if(!S.czLib)S.czLib={v:2,ds:[]};if(!S.czLib.mig){Object.values(S.songs||{}).forEach(o=>{const z=o.cdz;if(z&&Array.isArray(z.ds)){z.ds.forEach(d=>{if(!S.czLib.ds.some(x=>x.id==d.id))S.czLib.ds.push({id:d.id,name:d.name,p:d.p,style:o.costume||'',created:S.day,updated:S.day})});delete z.ds}});S.czLib.mig=1}return S.czLib}
-const czD=id=>id?czLib().ds.find(d=>d.id==id):null;
+const czMemD=id=>{if(typeof id!="string"||!id.startsWith("mz~"))return null;const[,sid,mid]=id.split("~"),o=S.songs[sid];const mm=o&&o.cdz&&o.cdz.mem&&o.cdz.mem[mid];if(!mm||!mm.own)return null;mm.own.id=id;return mm.own};
+const czD=id=>id?(czMemD(id)||czLib().ds.find(d=>d.id==id)):null;
+const czHasOwn=o=>!!(o&&o.cdz&&Object.values(o.cdz.mem||{}).some(m=>m.own&&m.own.p));
 function czSongZ(o){if(!o.cdz)o.cdz={mode:'uniform',main:null,mem:{}};if(!o.cdz.mem)o.cdz.mem={};if(!o.cdz.mode)o.cdz.mode='uniform';return o.cdz}
 const czGetSlot=(p,path)=>path.split('.').reduce((a,k)=>a&&a[k],p);
 function czSetSlot(p,path,v){const ks=path.split('.'),last=ks.pop();let t=p;ks.forEach(k=>{t[k]=t[k]||{};t=t[k]});if(v==null)delete t[last];else t[last]=v}
-function czFor(o,mid){if(!o||!o.cdz)return null;czLib();const z=o.cdz,mm=(z.mem||{})[mid]||{};const d=czD(z.mode=='individual'&&mm.d?mm.d:z.main)||czD(z.main);if(!d)return null;let p=d.p;
+function czFor(o,mid){if(!o||!o.cdz)return null;czLib();const z=o.cdz,mm=(z.mem||{})[mid]||{};if(mm.own&&mm.own.p)return mm.own.p;const d=czD(z.mode=='individual'&&mm.d?mm.d:z.main)||czD(z.main);if(!d)return null;let p=d.p;
  if(z.mode=='uniform'&&mm.ov&&Object.keys(mm.ov).length){p=czClone(p);for(const k in mm.ov){const s=czGetSlot(p,k);if(s)Object.assign(s,mm.ov[k])}}return p}
 const czMain=o=>o&&o.cdz?czD(o.cdz.main):null;
 const czMembers=o=>(o.slots||[]).filter(Boolean).map(get).filter(Boolean);
 const czUsers=did=>Object.values(S.songs||{}).filter(o=>o.cdz&&(o.cdz.main==did||Object.values(o.cdz.mem||{}).some(m=>m.d==did)));
 // keep the original production fields in step with the assigned design (only while the song is still a draft)
-function czSync(o){if(!o||lockedSong(o.id))return;const d=czMain(o);if(d){o.cid=CZ_COS;o.coh=null;o.cosFinal=true;o.costume='Custom'}else if(o.cid==CZ_COS){o.cid=null;o.cosFinal=false}}
+function czSync(o){if(!o||lockedSong(o.id))return;const d=czMain(o)||czHasOwn(o);if(d){o.cid=CZ_COS;o.coh=null;o.cosFinal=true;o.costume='Custom'}else if(o.cid==CZ_COS){o.cid=null;o.cosFinal=false}}
 function czSyncPlan(){if(!S||!S.pj)return;[S.pj.mainId,...S.pj.coup].forEach(id=>czSync(S.songs[id]))}
 function czSongs(){const L=[];if(S.pj)[S.pj.mainId,...S.pj.coup].forEach((id,i)=>{const o=S.songs[id];if(o)L.push([o,i?'Coupling':'Main'])});if(S.al)(S.al.tracks||[]).forEach(id=>{const o=S.songs[id];if(o&&!o.rel&&!L.some(x=>x[0]==o))L.push([o,'Album'])});return L}
 
@@ -112,6 +114,8 @@ V.costume=function(){czLib();if(!ui.czE)czInit();const E=ui.czE,L=czLib().ds,d=c
  const cat=CZ_CATS.find(x=>x.k==E.cat)||CZ_CATS[0],P=czGetSlot(E.p,E.sel),U=czUsers(d.id);
  const head=`<div class="c czhead"><div class="row czdes"><input id="czname" value="${esc(d.name)}" maxlength="40" style="width:200px" aria-label="Design name"><button class="b s" onclick="czRename($('#czname').value)">Rename</button><button class="b s" onclick="czDup()">Duplicate</button><button class="b s" onclick="czDel()">Delete</button><select onchange="czPreset(this.value);this.value=''"><option value="">Start from a preset…</option>${CZ_PRESETS.map(([n],i)=>`<option value="${i}">${n}</option>`).join('')}</select></div>
  <div class="st">Costumes are purely creative: they never change sales, fans, Buzz or member stats.${U.length?` · Worn by: ${U.map(x=>`<b>${esc(x.title)}</b>`).join(', ')}`:''}</div></div>`;
+ return lib+head+czGridHtml(E,o,d,model)+czAssignPanel(o,songs,model)};
+function czGridHtml(E,o,d,model){const cat=CZ_CATS.find(x=>x.k==E.cat)||CZ_CATS[0],P=czGetSlot(E.p,E.sel);
  const nav=`<div class="czcats" role="tablist">${CZ_CATS.map(c=>{const on=c.multi?Object.values(E.p[c.k]||{}).filter(Boolean).length:(E.p[c.k]&&E.p[c.k].t!='none'?1:0);return`<button role="tab" class="${c.k==E.cat?'on':''}" onclick="czCat('${c.k}')"><b>${c.n}</b><small>${c.jp}</small>${on?`<i>${c.multi?on:'✓'}</i>`:''}</button>`}).join('')}</div>`;
  const mem=o?czMembers(o):[];
  const stage=`<div class="czstagewrap"><div id="czstage" class="czstage">${czStageSvg()}</div><div class="row czpose"><label class="st">Model <select onchange="ui.czE.mid=+this.value;render()">${(mem.length?mem:S.members).map(m=>`<option value="${m.id}" ${m.id==(model&&model.id)?'selected':''}>${esc(m.name)}</option>`).join('')}</select></label><label class="st">Pose <select onchange="ui.czE.pose=+this.value;render()">${POSES.map((p,i)=>`<option value="${i}" ${i==E.pose?'selected':''}>${p[0]}</option>`).join('')}</select></label><label class="st">Expression <select onchange="ui.czE.ex=+this.value;render()">${EXN.map((n,i)=>`<option value="${i}" ${i==E.ex?'selected':''}>${n}</option>`).join('')}</select></label></div>
@@ -125,7 +129,7 @@ V.costume=function(){czLib();if(!ui.czE)czInit();const E=ui.czE,L=czLib().ds,d=c
  <div class="czsub">Fabric &amp; texture</div><div class="row czfabs">${CZ_FABS.map(([k,n])=>`<button class="b s ${(P.fab||'cotton')==k?'on':''}" onclick="czSetFab('${k}')">${n}</button>`).join('')}</div>${(P.pat||'solid')=='gradient'?'<div class="st">Fabric texture is not drawn on gradient pieces.</div>':''}<div class="czsub">Colours</div>${CZ_COLS.map(colRow).join('')}
  <div class="czsub">Palette &amp; recent colours</div><div class="row"><label class="st">Apply to <select id="czpt">${CZ_COLS.map(([f,n])=>`<option value="${f}">${n}</option>`).join('')}</select></label></div><div class="czpal">${CZ_PAL.map(c=>`<button style="background:${c}" onclick="czCol($('#czpt').value,'${c}')" aria-label="${c}"></button>`).join('')}</div>
  ${recent.length?`<div class="czsub">Recently used</div><div class="czpal">${recent.map(c=>`<button style="background:${c}" onclick="czCol($('#czpt').value,'${c}')" aria-label="${c}"></button>`).join('')}</div>`:''}</div>`:`<div class="czedit">${emptyBox(cat.multi?'Pick an item above to add it and edit its colours & pattern.':'Nothing selected here. Choose an item above.','👗')}</div>`;
- return lib+head+`<div class="czgrid">${nav}${stage}<div class="czpanel c"><h3>${cat.n} <small class="st">${cat.jp}</small></h3>${items}${editor}</div></div>`+czAssignPanel(o,songs,model)};
+ return `<div class="czgrid">${nav}${stage}<div class="czpanel c"><h3>${cat.n} <small class="st">${cat.jp}</small></h3>${items}${editor}</div></div>`}
 function czAssignPanel(o,songs,model){const L=czLib().ds;
  let h=`<div class="c czasg"><h3>Assign costumes to songs</h3><p class="st">Each song wears the design assigned here; Single Production uses it automatically. One design can be reused by several songs, and changing a design updates every song that wears it.</p>
  <div class="czsongs">${songs.map(([s,k])=>{const d=czMain(s);return`<button class="czsong ${o&&s.id==o.id?'on':''}" onclick="czSelSong('${s.id}')"><span class="tag ${k=='Main'?'tmain':'tcoup'}">${k}</span><b>${esc(s.title||'Untitled')}</b><small>${d?'👗 '+esc(d.name):'⚠ no costume assigned'}${lockedSong(s.id)?' · 🔒':''}</small></button>`}).join('')||'<span class="st">No songs are being planned. Start a single in Music Production → Single Production.</span>'}</div>`;

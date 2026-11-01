@@ -38,6 +38,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/costume-designer.js` | Costume Designer screen: per-song designs, uniform/individual member assignment, CD Cover Studio integration |
 | `js/ui/single-planning.js` | Unified New Single Planning page, 30 Genres / 30 Concepts, Release Day check, production calendar milestones, Song Library |
 | `js/ui/fanbase.js` | Fanbase Management: aggregate fan segments, Kami Oshi / Oshi, acquisition, loss, graduation, teams/units, rankings, dashboard, revenue hooks, save slots |
+| `js/ui/release-planning.js` | Restored step-by-step Single / Album planning page, Senbatsu screen filter, per-member song costumes, random costume & CD cover, release-level Senbatsu history, Group & Team navigation |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
@@ -64,31 +65,35 @@ card, the modal frame) and every control calls the original game functions.
 
 ## Navigation
 
-Producer Office · Members · Training · Music Production · Events & Concerts ·
+Producer Office · Members · Group & Team · Training · Music Production · Events & Concerts ·
 Fan Community · Charts & Sales · Audition & Recruitment · Management & Settings.
-Music Production has four tabs: Single Production, Song Library, Album Production, Costume Designer.
+Music Production has three tabs: Single Production (Singles and Albums), Song Library, Costume Designer.
 
-## New Single Planning (Single Production)
+## Single & Album planning (Single Production)
 
-Everything is planned on **one page**. The left panel keeps the single visible (title, number,
-tracklist with ✔/✗ status, budget, missing items, Start Single); the right side shows one song
-at a time (or all songs) with:
+The step-by-step planning page: **1 Release Information · 2 Songs & Tracklist · 3 Senbatsu & Positions ·
+4 Costume Design · 5 CD Cover Design · 6 Budget & Start**, plus an “All steps” overview.
 
-* song title and track type (Title Track / Coupling Song), “Make title track”, track order;
-* **Genre** (one of 30) and **Concept** (one of 30): every combination is allowed, no sub-genre
-  or secondary concept, no compatibility bonus or penalty;
-* **Senbatsu**: participation, Senbatsu name, Center, Front / Middle / Back rows, Auto-select,
-  copy, and the full formation editor opened *inside* the song section;
-* **Costume design**: pick from the library, create a new design for the song, open the
-  Costume Designer, and **Confirm costume** (required before Start Single).
-
-Coupling songs can be added (new, or an unassigned song from the Song Library), reordered and
-removed (they stay in the library). Editions (Types) and CD covers are on the same page.
+* **Single or Album.** Same workflow and 28-day production. A Single's name is its Title Track title (kept in
+  sync). An Album has its own title, one new Main Song, new songs and previously released songs from the Song
+  Library (referenced, never copied; their original Senbatsu and costumes are kept), and track types of up to
+  10 songs each. Albums use the album prices of the existing economy.
+* **Songs:** title, Genre (30) and Concept (30) per song, any combination; add / remove / reorder tracks.
+* **Select Senbatsu** opens the Senbatsu screen for that song: members, Center, Front / Middle / Back rows.
+  For other songs it shows who is in this release's Title Track Senbatsu and offers the filter
+  “Show only members not selected for the Title Track” (optional; members may sing several songs).
+* **Costumes per song and per member:** every Senbatsu member gets her own costume built from separate pieces,
+  patterns, fabrics and colours; **Randomize Costume** makes a new outfit (only saved when you press Save);
+  face and hair never change. Library designs can still be assigned in the Costume Designer.
+* **CD covers** can be designed from the start; **Randomize CD Cover** builds a cover from the Title Track
+  Senbatsu and release name (asks before replacing a saved cover). A confirmed cover is required by Release Day.
+* **Senbatsu history** is kept per release across Singles and Albums (first / continuing / returning; a member
+  counts once per release however many songs she sings); see the member profile.
+* Group & Team is its own navigation category. Thai uses “เพลงรอง” for coupling songs.
 
 **Production (28 days, game calendar):** Week 1 Song Production (costume manufacturing starts,
 7 days) · Week 2 Rehearsal · Week 3 Production · Week 4 Final Preparation. Milestones appear in
-the calendar. The CD Cover Studio unlocks when the costumes are finished; a confirmed cover for
-every edition is mandatory. On **Release Day** the single is released automatically if
+the calendar. A confirmed cover for every edition / track type is mandatory. On **Release Day** the single is released automatically if
 everything is ready; otherwise nothing is released and a notice lists what is missing (fix it
 and release, or reschedule).
 
