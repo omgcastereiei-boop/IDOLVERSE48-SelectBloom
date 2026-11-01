@@ -102,6 +102,15 @@ Music Production → **Costume Designer** tab (also reachable from each song in 
   single. An image record (members, their looks, costume snapshot, single, place, date) is
   stored on the event and its history records, so it looks the same after save/load.
   Shown in the release popup, Roadshow / Handshake results and each single's promotion history.
+  Each image record carries its Event ID (`eid`) and Single ID (`rid`) and is never regenerated.
+* Composition: members stand on the stage floor (feet measured per pose, contact shadows,
+  front/back rows with the Center in front), facing a large audience with glow sticks and
+  uchiwa. Roadshows use an outdoor stage with a landmark for the location (Tokyo tower,
+  Osaka castle, Mt. Fuji, torii, temples, skylines…) and the location name on the banner.
+* Handshake images show exactly the **Top 5 members by New Fans Gained** (ties: interactions,
+  then popularity, then member ID), one booth each with a fan in front. This only affects the
+  picture: every participating member is still calculated exactly as before. Older handshake
+  images are reduced to their Top 5 automatically on load.
 * Roadshows always promote the **latest released single**. A single in production only takes
   over on its Release Day; planning resets cleanly (setlist, members, date) when it does.
   Each location can host one Roadshow per single; growth and history keep accumulating.
