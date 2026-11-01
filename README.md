@@ -36,6 +36,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/scenes/environments.js` | New illustrated environments (office, lounge, dressing room, rehearsal room, recording studio, photo studio, concert stage, tour, fan meeting hall, broadcast studio, audition room, management office, backstage) |
 | `js/ui/ui.js` | New UI layer: HUD, navigation, title screen, Producer Office, member cards, Training, Fan Community, Charts, Management, 6‑step Single Production |
 | `js/ui/costume-designer.js` | Costume Designer screen: per-song designs, uniform/individual member assignment, CD Cover Studio integration |
+| `js/ui/single-planning.js` | Unified New Single Planning page, 30 Genres / 30 Concepts, Release Day check, production calendar milestones, Song Library |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
@@ -64,11 +65,37 @@ card, the modal frame) and every control calls the original game functions.
 
 Producer Office · Members · Training · Music Production · Events & Concerts ·
 Fan Community · Charts & Sales · Audition & Recruitment · Management & Settings.
-Costume Selection and the CD Cover Studio stay inside Single Production.
+Music Production has four tabs: Single Production, Song Library, Album Production, Costume Designer.
 
-Single Production is organised into six steps (UI only): Single Information →
-Song Selection → Senbatsu Selection → Costume Selection → CD Cover Design →
-Final Preview & Confirmation, plus an "All steps" overview.
+## New Single Planning (Single Production)
+
+Everything is planned on **one page**. The left panel keeps the single visible (title, number,
+tracklist with ✔/✗ status, budget, missing items, Start Single); the right side shows one song
+at a time (or all songs) with:
+
+* song title and track type (Title Track / Coupling Song), “Make title track”, track order;
+* **Genre** (one of 30) and **Concept** (one of 30): every combination is allowed, no sub-genre
+  or secondary concept, no compatibility bonus or penalty;
+* **Senbatsu**: participation, Senbatsu name, Center, Front / Middle / Back rows, Auto-select,
+  copy, and the full formation editor opened *inside* the song section;
+* **Costume design**: pick from the library, create a new design for the song, open the
+  Costume Designer, and **Confirm costume** (required before Start Single).
+
+Coupling songs can be added (new, or an unassigned song from the Song Library), reordered and
+removed (they stay in the library). Editions (Types) and CD covers are on the same page.
+
+**Production (28 days, game calendar):** Week 1 Song Production (costume manufacturing starts,
+7 days) · Week 2 Rehearsal · Week 3 Production · Week 4 Final Preparation. Milestones appear in
+the calendar. The CD Cover Studio unlocks when the costumes are finished; a confirmed cover for
+every edition is mandatory. On **Release Day** the single is released automatically if
+everything is ready; otherwise nothing is released and a notice lists what is missing (fix it
+and release, or reschedule).
+
+**Song Library:** every song with Genre, Concept, single, track type and position, Senbatsu,
+Center, positions, costume, production and release status. A snapshot is stored on release.
+
+Older saves: Pop → Teen Pop, Rock → Pop Rock, Electro → Electropop, Folk → Folk Pop, Ballad stays
+Ballad; Pure → Youth (Cute, Cool, Elegant stay). Skills and Roadshow stamina values are unchanged.
 
 ## Saves
 
@@ -88,11 +115,13 @@ Music Production → **Costume Designer** tab (also reachable from each song in 
 * Songs reference designs (`S.songs[id].cdz`): one main costume per song, reusable across
   songs; uniform mode (with per-member colour tweaks) or individual member designs.
   Editing a design updates every song that wears it.
-* **Production rule:** Single Production has no costume selection step any more. Each song
-  needs a costume design assigned in the Costume Designer; when the single starts the
-  assigned design is used automatically (manufacturing still takes 7 days).
-  A design's **concept line** (Cute / Cool / Pure / Elegant / Sporty) feeds the original
-  release formula, so the concept-match sales bonus works as before.
+* **Production rule:** each song needs its own assigned and confirmed costume design (set on the
+  New Single Planning page or in the Costume Designer); manufacturing takes 7 days after Start Single.
+  The title track's design is never copied to coupling songs automatically.
+  Costumes are **purely creative**: they have no score and never change sales, fans, Buzz or
+  member stats (the old costume/concept sales bonus was removed in this update).
+  Pieces include one-piece dresses, and every piece has a fabric texture (cotton, satin, velvet,
+  sequins, denim, tulle, leather, knit) as well as pattern and colours.
 * Designs made with the earlier per-song designer are moved into the library automatically.
 
 ## Event images & Roadshows

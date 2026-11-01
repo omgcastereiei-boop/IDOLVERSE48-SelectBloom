@@ -14,7 +14,7 @@
 // =====================================================================================
 const CZ_PATS=[['solid','Solid'],['stripe','Stripes'],['dots','Polka dots'],['plaid','Plaid'],['check','Checkered'],['floral','Floral'],['stars','Stars'],['hearts','Hearts'],['diamond','Diamonds'],['geo','Geometric'],['lace','Lace'],['mesh','Dot mesh'],['gradient','Gradient'],['sparkle','Sparkles'],['embroid','Embroidery']];
 const CZ_CATS=[
- {k:'top',n:'Tops',jp:'トップス',items:[['blouse','Blouse'],['shirt','Shirt'],['crop','Crop top'],['sleeveless','Sleeveless top'],['offshoulder','Off-shoulder top'],['tee','T-shirt']],vars:{blouse:['Buttons','Frill front','Lace yoke'],shirt:['Plain','Pocket'],crop:['Frill hem','Plain hem']}},
+ {k:'top',n:'Tops',jp:'トップス',items:[['blouse','Blouse'],['shirt','Shirt'],['crop','Crop top'],['sleeveless','Sleeveless top'],['offshoulder','Off-shoulder top'],['tee','T-shirt'],['dress','One-piece dress']],vars:{dress:['Short','Medium','Long'],blouse:['Buttons','Frill front','Lace yoke'],shirt:['Plain','Pocket'],crop:['Frill hem','Plain hem']}},
  {k:'sleeve',n:'Sleeves',jp:'袖',items:[['none','No sleeves'],['short','Short'],['puff','Puff'],['lpuff','Frilled puff'],['long','Long'],['bell','Bell']]},
  {k:'collar',n:'Collars',jp:'襟',items:[['none','None'],['round','Round collar'],['sailor','Sailor collar'],['frill','Frill collar'],['high','Mandarin collar'],['wide','Lace bertha']]},
  {k:'outer',n:'Outerwear',jp:'アウター',items:[['none','None'],['jacket','Cropped jacket'],['cardigan','Cardigan'],['vest','Vest'],['bolero','Bolero'],['coat','Tailcoat']]},
@@ -29,7 +29,7 @@ const czPiece=(t,c1,c2,c3,o={})=>({t,v:0,c1,c2:c2||'#ffffff',c3:c3||'#f3c35c',pc
 const czLine=c=>/^#/.test(c||'')?mixc(c,'#2e2038',.48):'#6d5a7c';
 
 // ---- patterns ------------------------------------------------------------------------
-function czPat(pid,P){const k=P.pat||'solid';if(k=='solid')return{f:P.c1,d:''};
+function czPat0(pid,P){const k=P.pat||'solid';if(k=='solid')return{f:P.c1,d:''};
  if(k=='gradient')return{f:`url(#${pid})`,d:`<linearGradient id="${pid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.c1}"/><stop offset="${N2(.3+(1-(P.pd??.75))*.4)}" stop-color="${P.c1}"/><stop offset="1" stop-color="${P.pc}"/></linearGradient>`};
  const c=P.pc,d=P.dc,o=N2(Math.max(.15,Math.min(1,P.pd??.75))),s=N2(Math.max(.4,Math.min(2.5,P.ps||1))),W=4;let m='';
  switch(k){
@@ -48,6 +48,20 @@ function czPat(pid,P){const k=P.pat||'solid';if(k=='solid')return{f:P.c1,d:''};
   case'embroid':m=`<path d="M.4 3.2C.4 1.8 2 1.6 2 .6M2 .6C2 1.6 3.6 1.8 3.6 3.2M1.2 2.6a.45 .45 0 1 1 .6 .5M2.8 2.6a.45 .45 0 1 0 -.6 .5" stroke="${c}" stroke-width=".2" fill="none" stroke-linecap="round"/><circle cx="2" cy=".5" r=".25" fill="${d}"/>`;break}
  return{f:`url(#${pid})`,d:`<pattern id="${pid}" width="${W}" height="${W}" patternUnits="userSpaceOnUse" patternTransform="scale(${s})"><rect width="${W}" height="${W}" fill="${P.c1}"/><g opacity="${o}">${m}</g></pattern>`}}
 
+
+// ---- fabrics: a texture drawn over the colour/pattern (cotton = plain) ----------------
+const CZ_FABS=[['cotton','Cotton'],['satin','Satin'],['velvet','Velvet'],['sequin','Sequins'],['denim','Denim'],['tulle','Tulle'],['leather','Leather'],['knit','Knit']];
+function czFabOv(k){switch(k){
+ case'satin':return'<path d="M-1 7L7 -1" stroke="#fff" stroke-width="1.6" opacity=".26"/><path d="M-1 3L3 -1M3 7L7 3" stroke="#fff" stroke-width=".5" opacity=".18"/>';
+ case'velvet':return'<rect width="6" height="6" fill="#1e1a28" opacity=".16"/><circle cx="3" cy="3" r="2.2" fill="#fff" opacity=".07"/>';
+ case'sequin':return[[1,1],[4,1.6],[2.4,3.4],[5,4.4],[.8,5]].map(([x,y])=>'<circle cx="'+x+'" cy="'+y+'" r=".42" fill="#fff" opacity=".55"/>').join('')+'<circle cx="4" cy="1.6" r=".18" fill="#fff"/>';
+ case'denim':return'<path d="M0 6L6 0M-3 6L3 0M3 6L9 0" stroke="#1e1a28" stroke-width=".25" opacity=".22"/><path d="M0 4.5L4.5 0" stroke="#fff" stroke-width=".2" opacity=".25"/>';
+ case'tulle':return'<path d="M0 0L6 6M6 0L0 6M3 0V6M0 3H6" stroke="#fff" stroke-width=".18" opacity=".45"/>';
+ case'leather':return'<rect width="6" height="6" fill="#1e1a28" opacity=".1"/><path d="M.5 2Q2 1 3.5 2" stroke="#fff" stroke-width=".35" opacity=".3" fill="none"/>';
+ case'knit':return'<path d="M0 1L1.5 2.5L3 1L4.5 2.5L6 1M0 4L1.5 5.5L3 4L4.5 5.5L6 4" stroke="#1e1a28" stroke-width=".22" opacity=".2" fill="none"/>'}return''}
+function czPat(pid,P){const r=czPat0(pid,P),k=P&&P.fab;if(!k||k=='cotton'||(P.pat||'solid')=='gradient')return r;const ov=czFabOv(k);if(!ov)return r;const id=pid+'F';
+ return{f:'url(#'+id+')',d:r.d+'<pattern id="'+id+'" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="'+r.f+'"/>'+ov+'</pattern>'}}
+
 // ---- head accessories (head frame 0..100 x 0..120) ------------------------------------
 function czHeadAcc(cd){const A=(cd&&cd.a)||{};let s='';const L=czLine;
  if(A.hribbon){const P=A.hribbon;s+=`<path d="M78 28C86 46 82 70 90 92L84 90C78 70 82 48 74 32Z" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".6"/>`+bowSvg(77,26,.9,22,P.c1,L(P.c1))}
@@ -62,7 +76,7 @@ const czHasHead=cd=>!!(cd&&cd.a&&CZ_HEAD.some(k=>cd.a[k]));
 
 // ---- body pieces (figure frame) -------------------------------------------------------
 function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P)=>{if(!P)return'#fff';const r=czPat(id+'Z'+k,P);defs+=r.d;return r.f};
- const T=cd.top||czPiece('blouse','#ffffff'),SL=cd.sleeve||{t:'none'},CO=cd.collar||{t:'none'},OU=cd.outer||{t:'none'},BO=cd.bottom||czPiece('pleated','#f5a3c4'),OV=cd.over||{t:'none'},SH=cd.shoes||czPiece('sneakers','#ffffff'),LG=cd.legs||{t:'none'},X=cd.x||{},A=cd.a||{};
+ const T=cd.top||czPiece('blouse','#ffffff'),SL=cd.sleeve||{t:'none'},CO=cd.collar||{t:'none'},OU=cd.outer||{t:'none'},BO=(cd.top&&cd.top.t=='dress')?{...cd.top,t:'flared',v:cd.top.v|0}:(cd.bottom||czPiece('pleated','#f5a3c4')),OV=cd.over||{t:'none'},SH=cd.shoes||czPiece('sneakers','#ffffff'),LG=cd.legs||{t:'none'},X=cd.x||{},A=cd.a||{};
  const fT=pat('top',T),lT=czLine(T.c1),sx=T.t=='tee'?1.1:1.05;
  const clip=`<clipPath id="${id}tc"><path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)"/></clipPath>`;
  const hem=T.t=='crop'?62:T.t=='tee'?73:71;
