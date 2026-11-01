@@ -325,3 +325,10 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 .langsw{display:inline-flex;align-items:center;gap:2px;background:rgba(255,251,245,.95);border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--sh);font:700 13px Quicksand,'Noto Sans Thai Looped',sans-serif}
 .langsw span{padding:0 6px}.langsw button{border:0;background:none;border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;color:var(--ink)}.langsw button.on{background:var(--grad);color:#fff}
 .title>.langsw{position:absolute;top:14px;right:14px;z-index:5}
+/* costume library */
+.czlib .czcards{display:flex;gap:8px;overflow-x:auto;padding:6px 2px}
+.czcardb{flex:0 0 auto;width:110px;display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid var(--lv2);border-radius:14px;background:#fff;padding:4px;cursor:pointer;color:var(--ink);font:700 11px Quicksand,'Noto Sans Thai Looped',sans-serif}
+.czcardb svg{height:120px;width:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:10px}.czcardb b{font-size:12px;text-align:center;line-height:1.15}.czcardb small{color:var(--mut);font-size:10px;text-align:center}
+.czcardb.on{border-color:var(--pk);box-shadow:0 0 0 3px var(--pk2)}
+.czbadge{display:flex;gap:8px;align-items:center;margin:6px 0;padding:6px 8px;border-radius:12px;background:linear-gradient(90deg,#fff7fb,#f6f1ff);border:1px solid var(--line)}
+.czbadge svg{height:76px;width:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:8px}.czbx{font-size:28px}

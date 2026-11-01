@@ -76,21 +76,23 @@ Saves use the same `localStorage` key and format as the original
 Management → Save & Load can also export/import the same data as a `.json` file.
 Display preferences are stored separately (`iv48ui`) and never touch the save.
 
-## Costume Designer
+## Costume Designer & costume library
 
-Music Production → Single Production → step 4 → **Open Costume Designer**.
+Music Production → **Costume Designer** tab (also reachable from each song in Single Production).
 
-* Every piece is drawn on the idol: tops, sleeves, collars, outerwear, bottoms,
-  overskirts, extras (detached sleeves, cape, ribbons, sash, belt, corset, fabric layer),
-  shoes, legwear and accessories (several can be worn at once).
-* Each piece has its own pattern (15 types, size, intensity) and colours
-  (primary, secondary, accent, pattern, details) with palette, HEX input and recent colours.
-* Designs are stored **per song** (`S.songs[id].cdz`): create, rename, duplicate,
-  delete, copy from another song, start from 13 presets.
-* Uniform mode (one design + optional colour tweaks per member) or Individual mode
-  (a design per member). The CD Cover Studio draws jacket members in these designs.
-* The original production rule is unchanged: each song still needs its production
-  costume line chosen and finalized; finalizing or starting the single locks its designs.
+* All designs live in one **costume library** (`S.czLib`): create (blank or from 13 presets),
+  edit, rename, duplicate, delete. Every piece is drawn on the idol: tops, sleeves, collars,
+  outerwear, bottoms, overskirts, extras, shoes, legwear and accessories, each with its own
+  pattern (15 types, size, intensity) and colours.
+* Songs reference designs (`S.songs[id].cdz`): one main costume per song, reusable across
+  songs; uniform mode (with per-member colour tweaks) or individual member designs.
+  Editing a design updates every song that wears it.
+* **Production rule:** Single Production has no costume selection step any more. Each song
+  needs a costume design assigned in the Costume Designer; when the single starts the
+  assigned design is used automatically (manufacturing still takes 7 days).
+  A design's **concept line** (Cute / Cool / Pure / Elegant / Sporty) feeds the original
+  release formula, so the concept-match sales bonus works as before.
+* Designs made with the earlier per-song designer are moved into the library automatically.
 
 ## Language / ภาษา
 
