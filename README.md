@@ -39,6 +39,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/single-planning.js` | Unified New Single Planning page, 30 Genres / 30 Concepts, Release Day check, production calendar milestones, Song Library |
 | `js/ui/fanbase.js` | Fanbase Management: aggregate fan segments, Kami Oshi / Oshi, acquisition, loss, graduation, teams/units, rankings, dashboard, revenue hooks, save slots |
 | `js/ui/release-planning.js` | Restored step-by-step Single / Album planning page, Senbatsu screen filter, per-member song costumes, random costume & CD cover, release-level Senbatsu history, Group & Team navigation |
+| `js/ui/release-events.js` | Senbatsu box in Songs & Tracklist, Auto Select filter, Single Costume & profile costume, event costume rules, Roadshow Senbatsu badges/filter, chronological song history, Title-Track-only Senbatsu history |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
@@ -71,8 +72,8 @@ Music Production has three tabs: Single Production (Singles and Albums), Song Li
 
 ## Single & Album planning (Single Production)
 
-The step-by-step planning page: **1 Release Information · 2 Songs & Tracklist · 3 Senbatsu & Positions ·
-4 Costume Design · 5 CD Cover Design · 6 Budget & Start**, plus an “All steps” overview.
+The step-by-step planning page: **1 Release Information · 2 Songs & Tracklist (with each song's Senbatsu) ·
+3 Costume Design · 4 CD Cover Design · 5 Budget & Start**, plus an “All steps” overview.
 
 * **Single or Album.** Same workflow and 28-day production. A Single's name is its Title Track title (kept in
   sync). An Album has its own title, one new Main Song, new songs and previously released songs from the Song
@@ -87,8 +88,16 @@ The step-by-step planning page: **1 Release Information · 2 Songs & Tracklist �
   face and hair never change. Library designs can still be assigned in the Costume Designer.
 * **CD covers** can be designed from the start; **Randomize CD Cover** builds a cover from the Title Track
   Senbatsu and release name (asks before replacing a saved cover). A confirmed cover is required by Release Day.
-* **Senbatsu history** is kept per release across Singles and Albums (first / continuing / returning; a member
-  counts once per release however many songs she sings); see the member profile.
+* **Songs & Tracklist** shows each song's Senbatsu name (editable), members, Center and rows; **Select Senbatsu**
+  opens the selection screen (3 member columns on phones). Auto Select can use only members not in the Title Track.
+* **Single Costume** (Singles): an optional release outfit for members outside the Title Track Senbatsu, designed
+  per member; it can be saved to the member's profile (older profile costumes stay in her costume history).
+* **Event costumes** follow the released single: Title Track members wear their Title Track costume; others wear
+  the Single Costume (else their coupling-song costume, else the default outfit). Roadshow planning shows
+  Title Track / Center / Non-Senbatsu badges and a "Show Only Title Track Senbatsu" filter (Full Group unchanged).
+* **Senbatsu history** (first-time, consecutive, best streak, returns, first and latest) counts the Title Track only
+  (the Album Main Song for albums); coupling songs and reused album songs never count. Profile song history is
+  listed oldest first.
 * Group & Team is its own navigation category. Thai uses “เพลงรอง” for coupling songs.
 
 **Production (28 days, game calendar):** Week 1 Song Production (costume manufacturing starts,

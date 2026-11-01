@@ -444,3 +444,20 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 .plczh .row{gap:8px}
 .plsenrec{margin-top:10px}
 @media(max-width:480px){.nav button{flex:1 0 35px;min-width:35px;font-size:8px}.nav button i{width:29px;height:29px}.nav button i svg{width:16px;height:16px}}
+
+/* ---- member selection grids, Senbatsu box, Single Costume, Roadshow badges ---- */
+.g.msel{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px}
+.msel .c.m{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+.msel .c.m>svg{width:56px;height:auto;border-radius:12px}
+.msel .c.m .st{font-size:11px;line-height:1.35;word-break:break-word}
+.msel .c.m.msel-on{outline:3px solid var(--pk);outline-offset:1px;background:var(--pk2)}
+.mselck{position:absolute;top:4px;right:6px;font-style:normal;background:var(--pk);color:#fff;border-radius:999px;width:20px;height:20px;display:grid;place-items:center;font-size:11px}
+@media(max-width:600px){.g.msel,.evpick{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.msel .c.m{padding:5px 3px!important}.msel .c.m>svg{width:100%;max-width:64px}.msel .c.m .st{font-size:10px}.msel .c.m .tag{font-size:8.5px;padding:1px 4px}}
+.rsfull .c.m{cursor:default}
+.plsenb{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:5px}
+.tag.plsct{background:linear-gradient(135deg,#f3c35c,#ff9fb8);color:#fff;border:0}
+.plscz{border-left:6px solid #f3c35c;margin-top:12px}
+.plpf{font-style:normal;font-size:9px;color:#a37a00}
+.rsb{display:inline-block;font-size:10px;font-weight:800;border-radius:8px;padding:1px 6px;margin:1px 0;white-space:nowrap}
+.rsb.c{background:#fff1c7;color:#9a6a00;border:1px solid #f3c35c}.rsb.s{background:#ffe0ec;color:#b02d63}.rsb.n{background:#eef2f6;color:#5f6b7a}
+.plprofcz .plpcz{height:180px;width:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:12px}
