@@ -37,6 +37,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/ui.js` | New UI layer: HUD, navigation, title screen, Producer Office, member cards, Training, Fan Community, Charts, Management, 6‑step Single Production |
 | `js/ui/costume-designer.js` | Costume Designer screen: per-song designs, uniform/individual member assignment, CD Cover Studio integration |
 | `js/ui/single-planning.js` | Unified New Single Planning page, 30 Genres / 30 Concepts, Release Day check, production calendar milestones, Song Library |
+| `js/ui/fanbase.js` | Fanbase Management: aggregate fan segments, Kami Oshi / Oshi, acquisition, loss, graduation, teams/units, rankings, dashboard, revenue hooks, save slots |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
@@ -143,6 +144,33 @@ Music Production → **Costume Designer** tab (also reachable from each song in 
 * Roadshows always promote the **latest released single**. A single in production only takes
   over on its Release Day; planning resets cleanly (setlist, members, date) when it does.
   Each location can host one Roadshow per single; growth and history keep accumulating.
+
+## Fanbase Management
+
+Fan Community → **Fanbase** (tabs: Overview · Member Ranking · Kami Oshi & Oshi · Team / Unit · Fan Growth).
+
+* **Aggregate simulation.** Fans are stored as segments in the save (`S.fb.segs`): count, fan type
+  (Casual, Dedicated, Oshi Fan, Hardcore, Collector) plus the Overseas and New Generation traits,
+  origin, region, loyalty, engagement and spending power (0–100), a support pattern
+  (Strong Kami 95/5, Kami-focused 90/10, Balanced 75/25, Multi-Oshi 60/40), **one or no Kami Oshi**,
+  and an Oshi distribution (overlapping; never the segment's own Kami Oshi). Segments are created,
+  split, merged and moved without changing the number of fans.
+* **Group fanbase** is the number of unique fans (Σ segment counts) and is the game's fan count, so
+  the HUD and every existing formula use unique fans. Member supporters = Kami Oshi + Oshi fans (unique per member).
+* **Acquisition.** Fans gained by releases, concerts, events, handshakes and roadshows arrive through the
+  group channel; members' exposure (Center, Senbatsu, front row, skills, personality, performances,
+  team songs) brings fans through the member channel. New fans start with modest loyalty.
+* **Monthly (on the 1st):** acquisition, loss (by type, loyalty, release activity, failed releases and
+  long-term lack of exposure — one missed Senbatsu costs little), fan type evolution, loyalty and engagement
+  drift, Kami Oshi changes (uncommon; the old Kami Oshi often stays an Oshi), Oshi changes, team/unit stats,
+  rankings and history. Events are processed once (ids in `S.fb.done`); loading never replays them.
+* **Graduation** (member action menu → Graduate…): her fans split into those who stay with the group,
+  choose a new Kami Oshi, stay attached to her (leave the active fanbase; kept in history) and leave.
+* **Revenue:** daily merch & streaming come from engagement, loyalty, spending power and Kami Oshi / Oshi
+  support weights; single sales use Dedicated/Hardcore/Oshi share and loyalty; albums Hardcore/Collector
+  share, loyalty and spending; concerts and roadshows engagement, popularity and loyalty.
+* **Save slots:** Management → Agency & Save has three extra slots; each holds its own game and fanbase.
+  Older saves get a fanbase built from their existing fan count without changing anything else.
 
 ## Language / ภาษา
 
