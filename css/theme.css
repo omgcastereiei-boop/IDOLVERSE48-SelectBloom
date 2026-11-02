@@ -468,3 +468,18 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 .rsb.pd{background:#dff5e9;color:#1f6b45}.rsb.np{background:#f4efff;color:#6252c4}
 .rssel .c.m{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line)}
 .covsrc{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;border-left:5px solid var(--pk)}
+
+/* ---- configurable member grids, roadshow planning status ---- */
+.gcolbar{display:inline-flex;align-items:center;gap:6px;margin:6px 0}.gcolbar button{border:1px solid var(--line);background:#fff;border-radius:10px;min-width:36px;min-height:32px;font:inherit;font-weight:800;cursor:pointer;color:var(--ink)}.gcolbar button.on{background:var(--pk);color:#fff;border-color:transparent}
+.g.gcol{gap:8px}.g.gcol-3{grid-template-columns:repeat(3,minmax(0,1fr))!important}.g.gcol-4{grid-template-columns:repeat(4,minmax(0,1fr))!important}.g.gcol-5{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.g.gcol>.c{min-width:0;overflow:hidden}.g.gcol>.c svg{max-width:100%;height:auto}
+.g.gcol .st,.g.gcol b{overflow-wrap:break-word;word-break:normal;hyphens:auto}
+.g.gcol-5 .c.m{padding:4px!important}.g.gcol-5 .st{font-size:10px}.g.gcol-5 .tag{font-size:8.5px;padding:1px 4px}
+@media(max-width:600px){.g.gcol-4 .st{font-size:10px}.g.gcol-5 .st{font-size:9px}.g.gcol-5 .c.m b{font-size:10px}.g.gcol .c.m>svg{width:100%}}
+.rsb.pl{background:#fff1c7;color:#8a5a00;border:1px dashed #f3c35c}
+.rsplan{display:block;font-size:9.5px;color:#8a5a00;line-height:1.3;margin-top:2px}
+.rspf{gap:6px;margin-top:6px}.rspf .fbseg button{font-size:11.5px}
+@media(max-width:600px){.g.gcol-5 .c.m b{font-size:9.5px;letter-spacing:-.2px}.g.gcol-5 .c.m{font-size:9px}.g.gcol-4 .c.m b{font-size:11px}}
+.g.gcol>.mc{min-width:0;overflow:hidden}.g.gcol .mc b{overflow-wrap:break-word;word-break:normal}
+@media(max-width:600px){.g.gcol-4 .mc b{font-size:11.5px}.g.gcol-4 .mc{font-size:10.5px}.g.gcol-5 .mc b{font-size:9.5px;letter-spacing:-.2px}.g.gcol-5 .mc{font-size:9px}.g.gcol-5 .mc .tag,.g.gcol-5 .mc small{font-size:8px}}
+@media(min-width:601px) and (max-width:1100px){.g.gcol-5 .mc b{font-size:12px}}

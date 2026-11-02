@@ -41,6 +41,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/release-planning.js` | Restored step-by-step Single / Album planning page, Senbatsu screen filter, per-member song costumes, random costume & CD cover, release-level Senbatsu history, Group & Team navigation |
 | `js/ui/release-events.js` | Senbatsu box in Songs & Tracklist, Auto Select filter, Single Costume & profile costume, event costume rules, Roadshow Senbatsu badges/filter, chronological song history, Title-Track-only Senbatsu history |
 | `js/ui/fixes.js` | Roadshow participation tracking & member picker, costume library auto-save, Copy to members, cover costume picker |
+| `js/ui/member-extras.js` | Member grid columns, profile outfit after each release, Roadshow planning status (Not Planned / Planned / Participated), audition without probability settings |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
@@ -194,6 +195,20 @@ Fan Community → **Fanbase** (tabs: Overview · Member Ranking · Kami Oshi & O
   share, loyalty and spending; concerts and roadshows engagement, popularity and loyalty.
 * **Save slots:** Management → Agency & Save has three extra slots; each holds its own game and fanbase.
   Older saves get a fanbase built from their existing fan count without changing anything else.
+
+## Members, profiles & Roadshow planning
+
+* **Member grids:** the Members directory, team member selection and the CD Cover Studio member list have a
+  Columns control (3 / 4 / 5), remembered per screen (UI preferences and the save).
+* **Profile outfit:** when a single is officially released, each member's profile shows her Title Track costume
+  (Senbatsu) or the single's Single Costume (Under Girls). Earlier outfits stay in her costume history.
+* **Roadshow planning:** for the promoted single every member is Not Planned, Planned (booked for an upcoming
+  Roadshow, with location and date) or Participated (a Roadshow that took place). Filters: All / Not Planned /
+  Planned / Participated, plus "have not participated". Adding a member who is already booked asks first.
+  Cancelling a Roadshow clears its planned status. Each released single has its own cycle.
+* **Labels:** Senbatsu / Under Girls replace "Selected / Not selected for Title Track" (data unchanged).
+* **Auditions** use the default recruitment odds; the Probability Settings screen was removed (an earlier
+  custom setting is kept aside in the save).
 
 ## Language / ภาษา
 
