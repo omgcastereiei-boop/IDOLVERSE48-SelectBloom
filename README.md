@@ -198,10 +198,12 @@ Fan Community → **Fanbase** (tabs: Overview · Member Ranking · Kami Oshi & O
 
 ## Members, profiles & Roadshow planning
 
-* **Member grids:** the Members directory, team member selection and the CD Cover Studio member list have a
+* **Grades** (UR / SR / R / N) are shown only in Auditions.
+* **Member grids:** the Members directory, Group & Team lists, team member selection and the CD Cover Studio member list have a
   Columns control (3 / 4 / 5), remembered per screen (UI preferences and the save).
-* **Profile outfit:** when a single is officially released, each member's profile shows her Title Track costume
-  (Senbatsu) or the single's Single Costume (Under Girls). Earlier outfits stay in her costume history.
+* **Profile outfit:** when a single is officially released, every portrait and full-body picture of a member (member
+  cards, lists, profile) shows her Title Track costume (Senbatsu) or the single's Single Costume (Under Girls).
+  Costume editors, CD covers and event images keep their own outfits. Earlier outfits stay in her costume history.
 * **Roadshow planning:** for the promoted single every member is Not Planned, Planned (booked for an upcoming
   Roadshow, with location and date) or Participated (a Roadshow that took place). Filters: All / Not Planned /
   Planned / Participated, plus "have not participated". Adding a member who is already booked asks first.

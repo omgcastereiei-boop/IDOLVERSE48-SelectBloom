@@ -566,6 +566,19 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 @media(max-width:600px){.g.gcol-4 .mc b{font-size:11.5px}.g.gcol-4 .mc{font-size:10.5px}.g.gcol-5 .mc b{font-size:9.5px;letter-spacing:-.2px}.g.gcol-5 .mc{font-size:9px}.g.gcol-5 .mc .tag,.g.gcol-5 .mc small{font-size:8px}}
 @media(min-width:601px) and (max-width:1100px){.g.gcol-5 .mc b{font-size:12px}}
 
+/* grades only in Auditions; team lists in 3-5 columns */
+body:not([data-view="audition"]) .mc{--rb:var(--tc,#e8c4d8);box-shadow:var(--sh)}
+body:not([data-view="audition"]) .mc .mart::after{display:none}
+body:not([data-view="audition"]) .mc .rb{display:none}
+.g.gteam>.c.m{padding:6px!important;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;min-width:0}
+.g.gteam>.c.m>svg{width:100%;max-width:72px;height:auto}
+.g.gteam .c.m select.act{width:100%;min-width:0;font-size:11px;padding:4px 18px 4px 6px}
+.g.gteam .c.m .tag{font-size:10px}.g.gteam .c.m .st{font-size:11px;overflow-wrap:break-word}
+@media(max-width:600px){.g.gteam.gcol-4 .c.m b,.g.gteam.gcol-5 .c.m b{font-size:10.5px}.g.gteam.gcol-5 .c.m .st{font-size:9px}.g.gteam.gcol-5 .c.m select.act{font-size:9.5px;padding:3px 14px 3px 4px}.g.gteam.gcol-5 .c.m .tag{font-size:8.5px;padding:1px 4px}}
+.g.gteam .c.m select{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box;text-overflow:ellipsis;background-position:right 4px center}
+.g.gteam>.c.m>*{max-width:100%}
+@media(max-width:600px){.g.gteam.gcol-5 .c.m b{font-size:8.6px;letter-spacing:-.35px}.g.gteam.gcol-4 .c.m b{font-size:10px;letter-spacing:-.2px}.g.gteam.gcol-5>.c.m{padding:4px 2px!important}}
+
 </style>
 </head><body>
 <div id="scene" aria-hidden="true"></div><div id="splash" aria-hidden="true"><div><svg class="fl" viewBox="-30 -30 60 60"><ellipse rx="9" ry="15" cy="-14" transform="rotate(0)" fill="#f7bcd2"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(72)" fill="#c9b6ef"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(144)" fill="#a9d8f5"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(216)" fill="#f1dcae"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(288)" fill="#fbd3e2"/><circle r="7" fill="#fff"/></svg><div class="s1">IDOLVERSE48</div><div class="s2">Select Bloom!</div></div></div><div id="app"></div><div id="toast"></div>
@@ -3192,7 +3205,7 @@ V.songcz=function(){const s=ui.scz,H=s&&plCzHost(s.song);if(!H||!S.pj||(!H.singl
  let grid=czGridHtml(E,null,null,m).replace(/<label class="st">Model <select[\s\S]*?<\/select><\/label>/,'').replace('onclick="czSave()"','onclick="plCzSave()"').replace('onclick="czRevert()"','onclick="plCzRevert()"').replace('💾 Save design',H.single?'💾 Save Single Costume':'💾 Save costume');if(!(mm&&mm.own)&&!E.dirty)grid=grid.replace('<span class="tag">Saved</span>','<span class="tag warn">Not saved yet</span>');
  const tg=H.single?'<span class="tag plsct">SINGLE COSTUME</span>':`<span class="tag ${o.id==p.mainId?'tmain':'tcoup'}">${PL_ROLE(p,o.id)}</span>`;
  return`<h2 class="ht">Costume Design · ${esc(H.single?'Single Costume — '+(p.title||''):o.title)}</h2><div class="c plczh"><div class="row">${tg}<b>${done} / ${D.length} members designed</b><span class="st">${H.single?'Members outside the Title Track Senbatsu wear this at events promoting the single.':'Each member of this song gets her own costume.'} Face and hair never change.</span><span style="flex:1"></span><button class="b" onclick="czConfirmLeave(()=>{ui.czE=null;view='music';render()})">◀ Back to planning</button></div>${strip}
- <div class="row"><b>${esc(m.name)}</b>${lk?'<span class="tag warn">🔒 In production: costumes are locked</span>':`<button class="b s p" onclick="plCzRandom()">🎲 Randomize Costume</button><select onchange="if(this.value)plCzLib(this.value);this.value=''"><option value="">Start from a library design…</option>${L.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('')}</select><select onchange="if(this.value!=='')(ui.czE.p=czClone(CZ_PRESETS[+this.value][1]),ui.czE.dirty=1,render());this.value=''"><option value="">Start from a preset…</option>${CZ_PRESETS.map(([n],i)=>`<option value="${i}">${esc(n)}</option>`).join('')}</select><button class="b s" onclick="plCzCopyAll()">Copy to members without a costume</button>`}${H.single?`<button class="b s" ${mm&&mm.ok?'':'disabled'} onclick="plProfSave(${m.id})">⭐ Save to member profile</button><button class="b s" onclick="plProfSaveAll()">Save all to profiles</button>`:''}</div></div>${grid}`};
+ <div class="row"><b>${esc(m.name)}</b>${lk?'<span class="tag warn">🔒 In production: costumes are locked</span>':`<button class="b s p" onclick="plCzRandom()">🎲 Randomize Costume</button><select onchange="if(this.value)plCzLib(this.value);this.value=''"><option value="">Start from a library design…</option>${L.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('')}</select><select onchange="if(this.value!=='')(ui.czE.p=czClone(CZ_PRESETS[+this.value][1]),ui.czE.dirty=1,render());this.value=''"><option value="">Start from a preset…</option>${CZ_PRESETS.map(([n],i)=>`<option value="${i}">${esc(n)}</option>`).join('')}</select><button class="b s" onclick="plCzCopyAll()">Copy to members without a costume</button>`}</div></div>${grid}`};
 
 // keep the release's Title Track Senbatsu and Single Costumes on the released single
 const _reRelease=doRelease;doRelease=function(){const p=S.pj,n=S.singles.length,pk=p&&p.key,scz=p&&!plAlb(p)&&p.scz?JSON.parse(JSON.stringify(p.scz)):null;const r=_reRelease.apply(this,arguments);const x=S.singles[n];
@@ -3336,8 +3349,10 @@ function profSync(x){if(!x||!x.mainId)return 0;const mn=S.songs[x.mainId];if(!mn
 const _mxRelease=doRelease;doRelease=function(){const n=S.singles.length;const r=_mxRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)try{profSync(x)}catch(e){console.error(e)}return r};
 const _mxMig=migrate;migrate=function(){const r=_mxMig.apply(this,arguments);try{auDefaults();if(S.uiPref&&S.uiPref.gcol){UIP.gcol={...S.uiPref.gcol,...(UIP.gcol||{})}}const x=typeof latestSingle=='function'?latestSingle():null;if(x)profSync(x)}catch(e){console.error(e)}return r};
 // the profile's full-body art wears the profile outfit (face, hair and identity unchanged)
-let PROF_CZ=null;const _mxFull=CH.full;CH.full=function(m,w,ex,pose=0,of){if(PROF_CZ&&m&&PROF_CZ.id==m.id&&!of){const e=apEff(m),a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex,cd:PROF_CZ.p})}</svg>`}return _mxFull.apply(this,arguments)};
-const _mxProf=profHtml;profHtml=function(m,cand){if(cand||!m||!m.profCz)return _mxProf.apply(this,arguments);PROF_CZ={id:m.id,p:m.profCz.p};try{return _mxProf.apply(this,arguments)}finally{PROF_CZ=null}};
+// every portrait and full-body picture of a member wears her profile outfit (face, hair, identity unchanged).
+// Pictures that pass an explicit outfit (costume editor, CD covers, event images) are not affected.
+const _mxApEff=apEff;apEff=function(m){const a=_mxApEff.apply(this,arguments);if(m&&!m._x&&m.profCz&&m.profCz.p&&m.cosOv==null)return{...a,cd:m.profCz.p};return a};
+const _mxFull=CH.full;CH.full=function(m,w,ex,pose=0,of){if(!of&&m){const e=apEff(m);if(e.cd){const a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex,cd:e.cd})}</svg>`}}return _mxFull.apply(this,arguments)};
 // profile outfit card wording
 plProfExtra=(f=>function(m){return f(m).replace('<h3>Current Single Costume</h3>',`<h3>Profile outfit</h3><p class="st">${m.profCz&&m.profCz.kind=='title'?'Title Track Senbatsu costume':'Single Costume (Under Girls)'} of the latest released single</p>`)})(plProfExtra);
 
@@ -3358,6 +3373,17 @@ rsSelHtml=(f=>function(){const h=f();const P=ui.rsp;if(!P||!h)return h;const x=S
  let out=h.replace('<div class="g msel rssel">',rsPfBar(x.rid,E,'ui.rsf',ui.rsf.pf)+'<div class="g msel rssel">');if(ui.rsf.pf&&ui.rsf.pf!='all'){const keep=new Set(E.filter(id=>rsPfOk(x.rid,id,ui.rsf.pf)).map(String));out=out.replace(/<button class="c m[^"]*"[^>]*onclick="rsSelTog\((\d+)\)">[\s\S]*?<\/div><\/button>/g,(s,id)=>keep.has(id)?s:'')}return out.replace('>Not yet participated</button>','>Not planned</button>')})(rsSelHtml);
 rsSelSet=(f=>function(k){if(k!='np')return f(k);const P=ui.rsp,x=S.singles.find(s=>s.rid==P.rid);if(!x)return;rsElig(x).filter(id=>rsStatus(x.rid,id)=='none'&&!(P.day!=null&&busy(id,[P.day,P.day+1]).length)).forEach(id=>{if(!P.sel.includes(id))P.sel.push(id)});rsSelRefresh()})(rsSelSet);
 rsSelTog=function(id){ui._rsPick=1;rsTogM(id);if(!(ui.mod&&ui.mod.t=='cf')){ui._rsPick=0;rsSelRefresh()}};
+
+// ---- team lists (Group & Team) use the same 3 / 4 / 5 column setting ---------------------------------
+GCOL_DEF.grp=3;
+const _mxGroups=V.groups;V.groups=function(){let h=_mxGroups.call(V),first=true;h=h.replace(/<div class="g">(?=\s*<div class="c m")/g,()=>{const s=(first?gcolBar('grp'):'')+`<div class="g gcol gteam ${gcolCls('grp')}">`;first=false;return s});return h};
+
+// ---- grades (UR / SR / R / N) are only shown in Auditions ------------------------------------------------
+function hideRarity(){if(!S||view=='audition'||(ui.mod&&ui.mod.t=='cprof'))return;const root=document.getElementById('app');if(!root)return;
+ root.querySelectorAll('i.rb').forEach(x=>x.remove());
+ root.querySelectorAll('.tag[class*="rr"]').forEach(x=>{const t=x.textContent.trim();if(/^(UR|SR|R|N)$/.test(t)||/^(UR|SR|R|N)\s*·/.test(t))x.remove()});
+ root.querySelectorAll('select').forEach(s=>{if([...s.options].some(o=>/All rarities/i.test(o.textContent))){const l=s.closest('label');(l||s).style.display='none'}})}
+const _mxRender=render;render=function(){if(S&&view!='audition'){if(ui.f)ui.f.rar='all';if(ui.sf)ui.sf.rar='all';if(ui.aa)ui.aa.rar='all'}const r=_mxRender.apply(this,arguments);try{hideRarity()}catch(e){console.error(e)}return r};
 
 </script>
 <script>

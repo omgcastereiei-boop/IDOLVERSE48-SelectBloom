@@ -34,8 +34,10 @@ function profSync(x){if(!x||!x.mainId)return 0;const mn=S.songs[x.mainId];if(!mn
 const _mxRelease=doRelease;doRelease=function(){const n=S.singles.length;const r=_mxRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)try{profSync(x)}catch(e){console.error(e)}return r};
 const _mxMig=migrate;migrate=function(){const r=_mxMig.apply(this,arguments);try{auDefaults();if(S.uiPref&&S.uiPref.gcol){UIP.gcol={...S.uiPref.gcol,...(UIP.gcol||{})}}const x=typeof latestSingle=='function'?latestSingle():null;if(x)profSync(x)}catch(e){console.error(e)}return r};
 // the profile's full-body art wears the profile outfit (face, hair and identity unchanged)
-let PROF_CZ=null;const _mxFull=CH.full;CH.full=function(m,w,ex,pose=0,of){if(PROF_CZ&&m&&PROF_CZ.id==m.id&&!of){const e=apEff(m),a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex,cd:PROF_CZ.p})}</svg>`}return _mxFull.apply(this,arguments)};
-const _mxProf=profHtml;profHtml=function(m,cand){if(cand||!m||!m.profCz)return _mxProf.apply(this,arguments);PROF_CZ={id:m.id,p:m.profCz.p};try{return _mxProf.apply(this,arguments)}finally{PROF_CZ=null}};
+// every portrait and full-body picture of a member wears her profile outfit (face, hair, identity unchanged).
+// Pictures that pass an explicit outfit (costume editor, CD covers, event images) are not affected.
+const _mxApEff=apEff;apEff=function(m){const a=_mxApEff.apply(this,arguments);if(m&&!m._x&&m.profCz&&m.profCz.p&&m.cosOv==null)return{...a,cd:m.profCz.p};return a};
+const _mxFull=CH.full;CH.full=function(m,w,ex,pose=0,of){if(!of&&m){const e=apEff(m);if(e.cd){const a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex,cd:e.cd})}</svg>`}}return _mxFull.apply(this,arguments)};
 // profile outfit card wording
 plProfExtra=(f=>function(m){return f(m).replace('<h3>Current Single Costume</h3>',`<h3>Profile outfit</h3><p class="st">${m.profCz&&m.profCz.kind=='title'?'Title Track Senbatsu costume':'Single Costume (Under Girls)'} of the latest released single</p>`)})(plProfExtra);
 
@@ -56,3 +58,14 @@ rsSelHtml=(f=>function(){const h=f();const P=ui.rsp;if(!P||!h)return h;const x=S
  let out=h.replace('<div class="g msel rssel">',rsPfBar(x.rid,E,'ui.rsf',ui.rsf.pf)+'<div class="g msel rssel">');if(ui.rsf.pf&&ui.rsf.pf!='all'){const keep=new Set(E.filter(id=>rsPfOk(x.rid,id,ui.rsf.pf)).map(String));out=out.replace(/<button class="c m[^"]*"[^>]*onclick="rsSelTog\((\d+)\)">[\s\S]*?<\/div><\/button>/g,(s,id)=>keep.has(id)?s:'')}return out.replace('>Not yet participated</button>','>Not planned</button>')})(rsSelHtml);
 rsSelSet=(f=>function(k){if(k!='np')return f(k);const P=ui.rsp,x=S.singles.find(s=>s.rid==P.rid);if(!x)return;rsElig(x).filter(id=>rsStatus(x.rid,id)=='none'&&!(P.day!=null&&busy(id,[P.day,P.day+1]).length)).forEach(id=>{if(!P.sel.includes(id))P.sel.push(id)});rsSelRefresh()})(rsSelSet);
 rsSelTog=function(id){ui._rsPick=1;rsTogM(id);if(!(ui.mod&&ui.mod.t=='cf')){ui._rsPick=0;rsSelRefresh()}};
+
+// ---- team lists (Group & Team) use the same 3 / 4 / 5 column setting ---------------------------------
+GCOL_DEF.grp=3;
+const _mxGroups=V.groups;V.groups=function(){let h=_mxGroups.call(V),first=true;h=h.replace(/<div class="g">(?=\s*<div class="c m")/g,()=>{const s=(first?gcolBar('grp'):'')+`<div class="g gcol gteam ${gcolCls('grp')}">`;first=false;return s});return h};
+
+// ---- grades (UR / SR / R / N) are only shown in Auditions ------------------------------------------------
+function hideRarity(){if(!S||view=='audition'||(ui.mod&&ui.mod.t=='cprof'))return;const root=document.getElementById('app');if(!root)return;
+ root.querySelectorAll('i.rb').forEach(x=>x.remove());
+ root.querySelectorAll('.tag[class*="rr"]').forEach(x=>{const t=x.textContent.trim();if(/^(UR|SR|R|N)$/.test(t)||/^(UR|SR|R|N)\s*·/.test(t))x.remove()});
+ root.querySelectorAll('select').forEach(s=>{if([...s.options].some(o=>/All rarities/i.test(o.textContent))){const l=s.closest('label');(l||s).style.display='none'}})}
+const _mxRender=render;render=function(){if(S&&view!='audition'){if(ui.f)ui.f.rar='all';if(ui.sf)ui.sf.rar='all';if(ui.aa)ui.aa.rar='all'}const r=_mxRender.apply(this,arguments);try{hideRarity()}catch(e){console.error(e)}return r};
