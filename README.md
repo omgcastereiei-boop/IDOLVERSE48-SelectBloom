@@ -199,6 +199,9 @@ Fan Community → **Fanbase** (tabs: Overview · Member Ranking · Kami Oshi & O
 ## Members, profiles & Roadshow planning
 
 * **Grades** (UR / SR / R / N) are shown only in Auditions.
+* **Song history** in the profile lists Title Tracks (A-Sides) and Coupling Songs (B-Sides, with their title track),
+  oldest first, with month and year.
+* **Team costumes** were removed; Group & Team lists and the add-members window can be sorted by any stat.
 * **Member grids:** the Members directory, Group & Team lists, team member selection and the CD Cover Studio member list have a
   Columns control (3 / 4 / 5), remembered per screen (UI preferences and the save).
 * **Profile outfit:** when a single is officially released, every portrait and full-body picture of a member (member

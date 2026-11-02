@@ -36,7 +36,7 @@ const _mxMig=migrate;migrate=function(){const r=_mxMig.apply(this,arguments);try
 // the profile's full-body art wears the profile outfit (face, hair and identity unchanged)
 // every portrait and full-body picture of a member wears her profile outfit (face, hair, identity unchanged).
 // Pictures that pass an explicit outfit (costume editor, CD covers, event images) are not affected.
-const _mxApEff=apEff;apEff=function(m){const a=_mxApEff.apply(this,arguments);if(m&&!m._x&&m.profCz&&m.profCz.p&&m.cosOv==null)return{...a,cd:m.profCz.p};return a};
+const _mxApEff=apEff;apEff=function(m){const a=ap(m);if(!m||m._x)return a;return m.profCz&&m.profCz.p?{...a,cd:m.profCz.p}:a}; // team costumes removed: no team / individual costume override
 const _mxFull=CH.full;CH.full=function(m,w,ex,pose=0,of){if(!of&&m){const e=apEff(m);if(e.cd){const a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex,cd:e.cd})}</svg>`}}return _mxFull.apply(this,arguments)};
 // profile outfit card wording
 plProfExtra=(f=>function(m){return f(m).replace('<h3>Current Single Costume</h3>',`<h3>Profile outfit</h3><p class="st">${m.profCz&&m.profCz.kind=='title'?'Title Track Senbatsu costume':'Single Costume (Under Girls)'} of the latest released single</p>`)})(plProfExtra);
@@ -61,7 +61,7 @@ rsSelTog=function(id){ui._rsPick=1;rsTogM(id);if(!(ui.mod&&ui.mod.t=='cf')){ui._
 
 // ---- team lists (Group & Team) use the same 3 / 4 / 5 column setting ---------------------------------
 GCOL_DEF.grp=3;
-const _mxGroups=V.groups;V.groups=function(){let h=_mxGroups.call(V),first=true;h=h.replace(/<div class="g">(?=\s*<div class="c m")/g,()=>{const s=(first?gcolBar('grp'):'')+`<div class="g gcol gteam ${gcolCls('grp')}">`;first=false;return s});return h};
+const _mxGroups=V.groups;V.groups=function(){let h=_mxGroups.call(V),first=true;h=h.replace(/<div class="g">(?=\s*(?:<!--mc:\d+-->)?<div class="c m")/g,()=>{const s=(first?gcolBar('grp'):'')+`<div class="g gcol gteam ${gcolCls('grp')}">`;first=false;return s});return h};
 
 // ---- grades (UR / SR / R / N) are only shown in Auditions ------------------------------------------------
 function hideRarity(){if(!S||view=='audition'||(ui.mod&&ui.mod.t=='cprof'))return;const root=document.getElementById('app');if(!root)return;
@@ -69,3 +69,29 @@ function hideRarity(){if(!S||view=='audition'||(ui.mod&&ui.mod.t=='cprof'))retur
  root.querySelectorAll('.tag[class*="rr"]').forEach(x=>{const t=x.textContent.trim();if(/^(UR|SR|R|N)$/.test(t)||/^(UR|SR|R|N)\s*·/.test(t))x.remove()});
  root.querySelectorAll('select').forEach(s=>{if([...s.options].some(o=>/All rarities/i.test(o.textContent))){const l=s.closest('label');(l||s).style.display='none'}})}
 const _mxRender=render;render=function(){if(S&&view!='audition'){if(ui.f)ui.f.rar='all';if(ui.sf)ui.sf.rar='all';if(ui.aa)ui.aa.rar='all'}const r=_mxRender.apply(this,arguments);try{hideRarity()}catch(e){console.error(e)}return r};
+
+// ---- team costume system removed from the UI -----------------------------------------------------------
+const _mxGroups2=V.groups;V.groups=function(){let h=_mxGroups2.call(V);
+ h=h.replace(/<label class="st">Team costume <select onchange="setTeamCos\([\s\S]*?<\/select><\/label>/g,'').replace(/<label class="st"><input type="checkbox"[^>]*onchange="setTeamAuto\([^"]*\)"> New members follow it<\/label>/g,'').replace(/<button class="b s" onclick="clearOv\([^"]*\)">Clear individual overrides<\/button>/g,'');
+ // sort team members by any stat (same list as the other screens)
+ const g=ui.gs=ui.gs||{k:'pop',dir:'d'},lab=(STATS.find(x=>x[0]==g.k)||['',''])[1];let first=true;
+ h=h.replace(/(?:<!--mc:\d+-->[\s\S]*?<!--\/mc-->)+/g,run=>{const C=[];run.replace(/<!--mc:(\d+)-->([\s\S]*?)<!--\/mc-->/g,(x,id,c)=>{C.push([get(+id),c])});
+  C.sort((a,b)=>(a[0]&&b[0])?((g.dir=='a'?-1:1)*(sv(b[0],g.k)-sv(a[0],g.k))||a[0].id-b[0].id):0);return C.map(([m,c])=>m?c.replace(/<\/div>\s*$/,`<div class="st gsv">${esc(lab)}: <b>${svs(m,g.k)}</b></div></div>`):c).join('')});
+ return h.replace(/<div class="gcolbar"/,()=>{if(!first)return'<div class="gcolbar"';first=false;return sortBar('ui.gs',g)+'<div class="gcolbar"'})};
+const _mxCardT=mcardT;mcardT=function(m){return`<!--mc:${m.id}-->`+_mxCardT.apply(this,arguments)+'<!--/mc-->'};
+const _mxProfC=profHtml;profHtml=function(){return _mxProfC.apply(this,arguments).replace(/<label class="st">Costume <select onchange="setMemCos\([\s\S]*?<\/select><\/label>/,'')};
+function sortBar(obj,g){const op=(a,v)=>a.map(([k,n])=>`<option value="${k}" ${String(k)==String(v)?'selected':''}>${n}</option>`).join('');return`<div class="row gsort"><label class="st">Sort by <select onchange="${obj}.k=this.value;render()">${op(STATS.map(x=>[x[0],x[1]]),g.k)}</select></label><select onchange="${obj}.dir=this.value;render()" aria-label="Order">${op([['d','Highest to Lowest'],['a','Lowest to Highest']],g.dir)}</select></div>`}
+// add-members window: same sorting, value shown on each card
+const _mxAddm2=addmHtml;addmHtml=function(){let h=_mxAddm2.apply(this,arguments);const g=ui.ams=ui.ams||{k:'pop',dir:'d'},lab=(STATS.find(x=>x[0]==g.k)||['',''])[1];
+ h=h.replace(/(?:<div class="c m" id="am\d+"[\s\S]*?<\/div><\/div>)+/,run=>{const C=[];run.replace(/<div class="c m" id="am(\d+)"[\s\S]*?<\/div><\/div>/g,(c,id)=>{C.push([get(+id),c])});C.sort((a,b)=>(a[0]&&b[0])?((g.dir=='a'?-1:1)*(sv(b[0],g.k)-sv(a[0],g.k))||a[0].id-b[0].id):0);
+  return C.map(([m,c])=>m?c.replace(/<\/div><\/div>$/,`<br>${esc(lab)}: <b>${svs(m,g.k)}</b></div></div>`):c).join('')});
+ return h.replace('<div class="gcolbar"',sortBar('ui.ams',g)+'<div class="gcolbar"')};
+
+// ---- song history: Title Tracks (A-Sides) and Coupling Songs (B-Sides), oldest first ----------------------
+histHtml=function(m){const H=(m.hist||[]).slice(),rel=h=>S.singles.find(x=>x.rid==h.rid)||(S.albums||[]).find(a=>a.id==h.rid)||null,ym=d=>d==null?'':new Date(2026,3,1+d).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+ const ord=h=>{const r=rel(h),T=r?(r.mainId?plTracksX(r):r.tracks||[]):[],i=T.indexOf(h.song);return i<0?99:i};H.sort((a,b)=>(a.day??0)-(b.day??0)||plRidNo(a.rid)-plRidNo(b.rid)||ord(a)-ord(b));
+ const isA=h=>{const r=rel(h);return h.cat=='main'||!!(r&&r.kind=='album'&&r.mainId==h.song)};
+ const mainOf=h=>{const r=rel(h);if(!r)return h.rel||'';if(r.kind=='album')return 'Album: '+(r.title||'');const o=S.songs[r.mainId];return o?o.title:(r.title||'')};
+ const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':''}</li>`};
+ const A=H.filter(isA),B=H.filter(h=>!isA(h));
+ return`<div class="row"><span class="pill">Title Tracks ${A.length}</span><span class="pill">Coupling Songs ${B.length}</span><span class="pill">Center ×${H.filter(h=>h.center).length}</span></div><div class="shist"><h3>Title Tracks <span class="st">(A-Sides)</span></h3><ul>${A.map(h=>li(h,0)).join('')||'<li class="st">None yet.</li>'}</ul><h3>Coupling Songs <span class="st">(B-Sides)</span></h3><ul>${B.map(h=>li(h,1)).join('')||'<li class="st">None yet.</li>'}</ul></div>`};

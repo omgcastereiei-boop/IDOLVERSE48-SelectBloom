@@ -496,3 +496,5 @@ body:not([data-view="audition"]) .mc .rb{display:none}
 .g.gteam .c.m select{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box;text-overflow:ellipsis;background-position:right 4px center}
 .g.gteam>.c.m>*{max-width:100%}
 @media(max-width:600px){.g.gteam.gcol-5 .c.m b{font-size:8.6px;letter-spacing:-.35px}.g.gteam.gcol-4 .c.m b{font-size:10px;letter-spacing:-.2px}.g.gteam.gcol-5>.c.m{padding:4px 2px!important}}
+.shist ul{margin:4px 0 12px;padding-left:20px}.shist li{margin:4px 0;line-height:1.45}.shist li b{color:var(--ink)}.shist li .tag{font-size:10px;padding:1px 6px}
+.gsort{gap:8px;margin:6px 0}.gsv{font-size:11px;color:var(--pk);font-weight:700}
