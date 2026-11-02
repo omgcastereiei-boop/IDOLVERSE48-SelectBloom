@@ -43,6 +43,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/fixes.js` | Roadshow participation tracking & member picker, costume library auto-save, Copy to members, cover costume picker |
 | `js/ui/member-extras.js` | Member grid columns, profile outfit after each release, Roadshow planning status (Not Planned / Planned / Participated), audition without probability settings |
 | `js/ui/debut.js` | Automatic group debut on the first single release, anniversary calendar events, debut info in Groups, trainees in Handshake Events |
+| `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
@@ -225,6 +226,32 @@ Fan Community → **Fanbase** (tabs: Overview · Member Ranking · Kami Oshi & O
 * Older saves get their debut date from the group's earliest released single.
 * Trainees of the performing group take part in Handshake Events (all formats) under the same rules; each member's
   handshake participation is listed in her profile. Their status and team do not change.
+
+## Member emotions & wellness
+
+Each member has four separate conditions (shown in her profile under **Wellness & Emotions** and in the Lesson Room):
+
+| Stat | Range | What changes it |
+|---|---|---|
+| Physical Health | 0–100 (Excellent / Good / Normal / Poor / Critical) | Falls only under overload (sustained heavy workload, exhaustion), injuries or illness; recovers slowly with rest |
+| Energy | 0–100 (the existing Stamina) | Lessons: Vocal −15 · Dance −25 · Performance −20 · Variety −10 · Rest +40; +15 per day |
+| Mental Health | 0–100 | Long-term; drops only in context (former Center moved back/out, repeated exclusion, Center pressure, sustained stress); recovers slowly |
+| Mood | Happy, Excited, Proud, Motivated, Neutral, Nervous, Pressured, Disappointed, Frustrated, Sad, Lonely | Short-term feeling from events; fades back to Neutral after about a week |
+
+Passion, Loyalty and Morale stay separate and recoverable.
+
+**Lesson EXP by Mental Health:** 80+ ×1.10 · 60–79 ×1.00 · 40–59 ×0.95 · 20–39 ×0.85 (chance of a negative mood) · 1–19 ×0.75 and no high-pressure activities (Center positions, events). Dance lessons are unavailable at Critical Physical Health.
+
+**Senbatsu reactions.** When a single is announced, every member of the group reacts to her result: Center, Front/Middle/Back Row or Not Selected, including first Center, first Senbatsu, former Center moved to the back row, comebacks and repeated exclusion. The reaction depends on personality, traits, Passion, Loyalty, popularity, Mental Health and her history (with a little randomness; rarity plays no part). Reactions and dialogue appear in the announcement window. Each member keeps a Senbatsu record: totals, selections and non-selections in a row, previous position, first Senbatsu and first Center.
+
+**Recovery.** Rest (free, once a day), Recovery Day, Medical Checkup (report), Medical Treatment, Mental Recovery, Producer Talk, Team Bonding and Reduced Schedule.
+
+**Mandatory leave.** If Physical or Mental Health reaches 0, the member immediately starts a Medical Leave, a Mental Health Leave, or one combined leave if both are 0. The leave lasts exactly 3 calendar months and cannot be cancelled or shortened with money.
+- During leave she is out of lessons, Senbatsu/Center selection, events, concerts, handshakes and roadshows, and is removed from upcoming plans.
+- She stays in her group and team with all her data.
+- She keeps recovering during the leave and returns automatically on the return date, with a notification.
+
+Older saves load with Physical and Mental Health at 100, a Neutral mood, unchanged Energy, Passion and Loyalty, and a Senbatsu record rebuilt from past releases.
 
 ## Language / ภาษา
 
