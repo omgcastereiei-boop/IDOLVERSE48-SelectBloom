@@ -544,6 +544,13 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 .rsb.c{background:#fff1c7;color:#9a6a00;border:1px solid #f3c35c}.rsb.s{background:#ffe0ec;color:#b02d63}.rsb.n{background:#eef2f6;color:#5f6b7a}
 .plprofcz .plpcz{height:180px;width:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:12px}
 
+/* ---- stability banners, roadshow participation, cover costume picker ---- */
+.svwarn{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fff4d6;border:2px solid #f3c35c;color:#6b4b00;border-radius:14px;padding:8px 12px;margin:6px 0;font-size:13px;font-weight:700}
+.svcrash{margin:20px auto;max-width:640px}.svrec{margin-bottom:10px;border:2px solid #f3c35c}
+.rsb.pd{background:#dff5e9;color:#1f6b45}.rsb.np{background:#f4efff;color:#6252c4}
+.rssel .c.m{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line)}
+.covsrc{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;border-left:5px solid var(--pk)}
+
 </style>
 </head><body>
 <div id="scene" aria-hidden="true"></div><div id="splash" aria-hidden="true"><div><svg class="fl" viewBox="-30 -30 60 60"><ellipse rx="9" ry="15" cy="-14" transform="rotate(0)" fill="#f7bcd2"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(72)" fill="#c9b6ef"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(144)" fill="#a9d8f5"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(216)" fill="#f1dcae"/><ellipse rx="9" ry="15" cy="-14" transform="rotate(288)" fill="#fbd3e2"/><circle r="7" fill="#fff"/></svg><div class="s1">IDOLVERSE48</div><div class="s2">Select Bloom!</div></div></div><div id="app"></div><div id="toast"></div>
@@ -2257,6 +2264,8 @@ function czInit(did,songId){czLib();const songs=czSongs(),o=songId?S.songs[songI
  ui.czE={did:d?d.id:null,p:d?czClone(d.p):null,style:d?d.style||'':'',dirty:0,cat:'top',sel:'top',mid:((o&&czMembers(o)[0])||S.members[0]||{}).id,pose:2,ex:2,song:o?o.id:null}}
 function czOpen(songId){czInit(null,songId);view='costume';render();try{window.scrollTo(0,0)}catch(e){}}
 const czEditing=()=>ui.czE&&ui.czE.did&&czD(ui.czE.did);
+// pieces can be edited in the library designer AND in a member's song / Single costume (even before its first save)
+const czCanEdit=()=>!!(ui.czE&&ui.czE.p&&(ui.czE.scz||czEditing()));
 function czConfirmLeave(go){if(ui.czE&&ui.czE.dirty)ask('Discard unsaved changes to the current design?',go,'Discard');else go()}
 function czPick(did){czConfirmLeave(()=>{const d=czD(did);if(!d)return;Object.assign(ui.czE,{did,p:czClone(d.p),style:d.style||'',dirty:0});render()})}
 function czMark(){ui.czE.dirty=1}
@@ -2266,17 +2275,17 @@ function czRename(v){const d=czEditing(),n=cleanName(v);if(!d)return;if(!n)retur
 function czDel(){const d=czEditing();if(!d)return;const U=czUsers(d.id),busy=U.filter(o=>lockedSong(o.id));
  if(busy.length)return toast(`"${d.name}" is worn by songs already in production or released (${busy.map(o=>o.title).join(', ')}). It cannot be deleted.`,'err');
  ask(`Delete the design "${d.name}" from the costume library?${U.length?` It is assigned to ${U.length} song(s); they will need another design.`:''}`,()=>{U.forEach(o=>{const z=o.cdz;if(z.main==d.id)z.main=null;Object.values(z.mem).forEach(m=>{if(m.d==d.id)delete m.d});czSync(o)});const L=czLib();L.ds=L.ds.filter(x=>x.id!=d.id);const n=L.ds[0];Object.assign(ui.czE,{did:n?n.id:null,p:n?czClone(n.p):null,style:n?n.style||'':'',dirty:0});render()},'Delete')}
-function czPreset(i){if(i===''||!czEditing())return;const go=()=>{ui.czE.p=czClone(CZ_PRESETS[+i][1]);ui.czE.style=CZ_PRESET_STYLE[+i]||'';czMark();toast(`Started from "${CZ_PRESETS[+i][0]}". Every piece can still be changed.`);render()};if(ui.czE.dirty)ask('Replace the current unsaved changes with this preset?',go,'Use preset');else go()}
+function czPreset(i){if(i===''||!czCanEdit())return;const go=()=>{ui.czE.p=czClone(CZ_PRESETS[+i][1]);ui.czE.style=CZ_PRESET_STYLE[+i]||'';czMark();toast(`Started from "${CZ_PRESETS[+i][0]}". Every piece can still be changed.`);render()};if(ui.czE.dirty)ask('Replace the current unsaved changes with this preset?',go,'Use preset');else go()}
 function czStyle(v){if(!czEditing())return;ui.czE.style=v;czMark();render()}
 function czSave(){const d=czEditing();if(!d)return;d.p=czClone(ui.czE.p);d.style=ui.czE.style||'';d.updated=S.day;ui.czE.dirty=0;czSyncPlan();const n=czUsers(d.id).length;toast(n?`"${d.name}" saved. ${n} song(s) wearing it are updated.`:`"${d.name}" saved to the costume library.`);render()}
 function czRevert(){const d=czEditing();if(!d)return;Object.assign(ui.czE,{p:czClone(d.p),style:d.style||'',dirty:0});render()}
 // piece editing (draft)
 function czCat(k){const E=ui.czE,c=CZ_CATS.find(x=>x.k==k);E.cat=k;if(c&&c.multi){const on=Object.keys((E.p||{})[k]||{}).find(x=>E.p[k][x]);E.sel=on?k+'.'+on:k+'.'+c.items[0][0]}else E.sel=k;render()}
-function czItem(cat,t){const E=ui.czE;if(!czEditing())return;const c=CZ_CATS.find(x=>x.k==cat);
+function czItem(cat,t){const E=ui.czE;if(!czCanEdit())return;const c=CZ_CATS.find(x=>x.k==cat);
  if(c.multi){const path=cat+'.'+t;if(!czGetSlot(E.p,path))czSetSlot(E.p,path,czPiece(t,'#f7a8c8','#ffffff','#f3c35c'));E.sel=path}
  else{const cur=E.p[cat]||{};E.p[cat]=t=='none'?{t:'none'}:{...czPiece(t,cur.c1||'#ffffff',cur.c2,cur.c3),...(cur.t&&cur.t!='none'?{c1:cur.c1,c2:cur.c2,c3:cur.c3,pc:cur.pc,dc:cur.dc,pat:cur.pat,ps:cur.ps,pd:cur.pd}:{}),t,v:0};E.sel=cat}
  czMark();render()}
-function czRemove(){const E=ui.czE;if(!czEditing())return;czSetSlot(E.p,E.sel,null);const c=CZ_CATS.find(x=>x.k==E.cat),on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);if(c&&c.multi)E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0];czMark();render()}
+function czRemove(){const E=ui.czE;if(!czCanEdit())return;czSetSlot(E.p,E.sel,null);const c=CZ_CATS.find(x=>x.k==E.cat),on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);if(c&&c.multi)E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0];czMark();render()}
 function czSetFab(k){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.fab=k;czMark();render()}}
 function czVar(v){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.v=v;czMark();render()}}
 function czSetPat(k){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.pat=k;czMark();render()}}
@@ -3184,13 +3193,14 @@ const _reEvS=evSpec;evSpec=function(k,rid,songId,ids,ex){const sp=_reEvS.apply(t
 
 // ---- Roadshow planning: Title Track Senbatsu / Center badges and filter ---------------------------------
 function plTTInfo(x){const mn=x&&S.songs[x.mainId],I=new Map();((mn&&mn.fm&&mn.fm.sl)||[]).forEach(s=>{if(s.m)I.set(s.m,{c:!!s.c,r:s.r,n:s.n})});return I}
-const plBadge=i=>i?(i.c?`<span class="rsb c" title="Center of the Title Track">★ Center</span>`:`<span class="rsb s" title="Title Track Senbatsu">Title Track · Row ${i.r+1} #${i.n}</span>`):'<span class="rsb n">Non-Senbatsu</span>';
+const plBadge=i=>i?(i.c?'<span class="rsb c" title="Center of the Title Track">★ Center</span> <span class="rsb s">Senbatsu</span>':'<span class="rsb s" title="Title Track Senbatsu">Senbatsu</span>'):'<span class="rsb n">Non-Senbatsu</span>';
+const plPartB=(rid,id)=>rsParted(rid).has(id)?'<span class="rsb pd" title="Took part in a completed Roadshow for this single">✔ Participated</span>':'<span class="rsb np">Not Yet Participated</span>';
 const _reRsPlan=rsPlanHtml;rsPlanHtml=function(P,x,l){const h=_reRsPlan.apply(this,arguments),a=h.indexOf('<h3>3 · Participating members</h3>'),b=h.indexOf('<h3>4 · Event date');if(a<0||b<0)return h;
- const E=rsElig(x),I=plTTInfo(x),tto=!!P.tto,sel=P.sel.filter(i=>E.includes(i)).length,L=E.filter(id=>!tto||I.has(id));
- const leg=`<div class="st">Senbatsu status from the released single “${esc(x.title)}”: ${plBadge({c:1})} ${plBadge({c:0,r:0,n:1}).replace('Row 1 #1','')} ${plBadge(null)}</div>`;
- const seg=`<h3>3 · Participating members</h3><div class="row"><button class="b s ${P.mode=='full'?'on':''}" onclick="ui.rsp.mode='full';render()">Full Group (${E.length})</button><button class="b s ${P.mode=='sel'?'on':''}" onclick="ui.rsp.mode='sel';render()">Selected Members (${sel})</button>${P.mode=='sel'?`<label class="plnm"><input type="checkbox" ${tto?'checked':''} onchange="ui.rsp.tto=this.checked?1:0;render()"> Show Only Title Track Senbatsu</label>`:''}</div>${leg}
- ${P.mode=='full'?`<p class="st">All ${E.length} eligible members take part; Title Track members wear their Title Track costume, the others the Single Costume.</p><div class="g msel rsfull">${E.map(id=>{const m=get(id);return`<div class="c m">${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b><br>${plBadge(I.get(id))}</div></div>`}).join('')}</div>`
- :`<div class="g msel">${L.map(id=>{const m=get(id),bz=P.day!=null&&busy(id,[P.day,P.day+1]).length,on=P.sel.includes(id);return`<div class="c m ${on?'msel-on':''}" style="${bz?'opacity:.5':''}" onclick="rsTogM(${id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b><br>${plBadge(I.get(id))}<br>Stamina ${m.en}${bz?'<br><span style="color:var(--err)">Busy</span>':''}</div></div>`}).join('')||'<p class="st">No Title Track Senbatsu members are eligible.</p>'}</div>${tto&&P.sel.some(id=>E.includes(id)&&!I.has(id))?`<p class="st">${P.sel.filter(id=>E.includes(id)&&!I.has(id)).length} selected non-Senbatsu member(s) are hidden by the filter (still selected).</p>`:''}`}`;
+ const E=rsElig(x),I=plTTInfo(x),tto=!!P.tto,npo=!!P.npo,PT=rsParted(x.rid),sel=P.sel.filter(i=>E.includes(i)).length,L=E.filter(id=>(!tto||I.has(id))&&(!npo||!PT.has(id)));
+ const leg=`<div class="st">Status for the released single “${esc(x.title)}”: Title Track ${plBadge({c:1})} · ${plBadge(null)} · Roadshows: ${PT.size} member(s) participated so far</div>`;
+ const seg=`<h3>3 · Participating members</h3><div class="row"><button class="b s ${P.mode=='full'?'on':''}" onclick="ui.rsp.mode='full';render()">Full Group (${E.length})</button><button class="b s ${P.mode=='sel'?'on':''}" onclick="ui.rsp.mode='sel';render()">Selected Members (${sel})</button>${P.mode=='sel'?`<button class="b s p" onclick="rsSelOpen()">👥 Select Members…</button><label class="plnm"><input type="checkbox" ${tto?'checked':''} onchange="ui.rsp.tto=this.checked?1:0;render()"> Show Only Title Track Senbatsu</label><label class="plnm"><input type="checkbox" ${npo?'checked':''} onchange="ui.rsp.npo=this.checked?1:0;render()"> Show Only Members Who Have Not Participated</label>`:''}</div>${leg}
+ ${P.mode=='full'?`<p class="st">All ${E.length} eligible members take part; Title Track members wear their Title Track costume, the others the Single Costume.</p><div class="g msel rsfull">${E.map(id=>{const m=get(id);return`<div class="c m">${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b><br>${plBadge(I.get(id))}<br>${plPartB(x.rid,id)}</div></div>`}).join('')}</div>`
+ :`<div class="g msel">${L.map(id=>{const m=get(id),bz=P.day!=null&&busy(id,[P.day,P.day+1]).length,on=P.sel.includes(id);return`<div class="c m ${on?'msel-on':''}" style="${bz?'opacity:.5':''}" onclick="rsTogM(${id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b><br>${plBadge(I.get(id))}<br>${plPartB(x.rid,id)}<br>Stamina ${m.en}${bz?'<br><span style="color:var(--err)">Busy</span>':''}</div></div>`}).join('')||'<p class="st">No members match these filters.</p>'}</div>${(()=>{const h=P.sel.filter(id=>E.includes(id)&&!L.includes(id)).length;return h?`<p class="st">${h} selected member(s) are hidden by the filters (still selected).</p>`:''})()}`}`;
  return h.slice(0,a)+seg+h.slice(b)};
 
 // ---- member song history: chronological (oldest first) ---------------------------------------------------
@@ -3215,6 +3225,145 @@ function plProfExtra(m){const r=plSenRec(m),pc=m.profCz,a=ap(m);
  const stats=`<div class="c plsenrec"><h3>Title Track Senbatsu history</h3>${r.status?`<p>${stagHtml(r.status)}</p>`:''}<div class="fbkv">${[['Title Track Senbatsu',`${r.n} / ${r.of} releases`],['Current consecutive',r.streak],['Best consecutive',r.best],['Returned after missing',r.returns],['First Title Track',r.first?esc(r.first.title||'—'):'Not yet'],['Most recent',r.last?esc(r.last.title||'—'):'—']].map(([x,y])=>`<div><small>${x}</small><b>${y}</b></div>`).join('')}</div><p class="st">Only the Title Track (Album Main Song for albums) counts; coupling songs never do.</p></div>`;
  const cz=pc?`<div class="c plprofcz"><h3>Current Single Costume</h3><div class="row"><svg viewBox="10 -2 80 200" class="plpcz">${fig(m,{pose:2,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:pc.p})}</svg><div><b>${esc(plPcTitle(pc))}</b><div class="st">Saved ${jd(pc.day)}</div>${(m.czHist||[]).length?`<div class="st">Earlier costumes:</div><div class="plczmini">${m.czHist.slice().reverse().map(h=>`<span class="plczt ok" title="${esc(plPcTitle(h))}"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:h.p})}</svg><small>${esc(plPcTitle(h).slice(0,9))}</small></span>`).join('')}</div>`:''}</div></div></div>`:'';
  return stats+cz}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — interaction fixes & small features
+//  · Roadshow participation per single (only Roadshows that actually took place)
+//  · Roadshow "Select Members" picker (select / deselect / quick sets)
+//  · Completed member costumes are added to the Costume Design Library (no duplicates)
+//  · "Copy to members" works on every member, with an overwrite confirmation
+//  · CD Cover Studio: members default to their Title Track costume; any other costume
+//    can be chosen per member and is stored in the cover draft
+// =====================================================================================
+
+// ---- Roadshow participation (per single, completed Roadshows only) ------------------------------
+function rsPartStore(){S.rsPart=S.rsPart||{};return S.rsPart}
+function rsPartRec(ev){if(!ev||!ev.rid||!ev.d1)return;const P=rsPartStore(),R=P[ev.rid]=P[ev.rid]||{ev:[]};if(R.ev.some(e=>e.id==ev.id))return;
+ R.ev.push({id:ev.id,loc:ev.loc||ev.dest||null,day:ev.day,members:(ev.members||[]).slice(),status:'completed'})}
+function rsPartBackfill(){if(!S)return;(S.cal||[]).forEach(e=>{if(e.type=='road'&&e.d1)rsPartRec(e)});Object.values((S.rs&&S.rs.hist)||{}).forEach(L=>(L||[]).forEach(h=>{if(h&&h.rid&&(h.members||h.ids)&&(h.d1||h.done||h.fin))rsPartRec({id:h.id||('h'+h.rid+(h.loc||'')+h.day),rid:h.rid,loc:h.loc,day:h.day,members:h.members||h.ids,d1:1})}))}
+function rsParted(rid){const R=rsPartStore()[rid],s=new Set();(R&&R.ev||[]).forEach(e=>(e.members||[]).forEach(id=>s.add(id)));return s}
+const _fxRsRun=rsRun;rsRun=function(ev,part){const r=_fxRsRun.apply(this,arguments);try{rsPartRec(ev)}catch(e){console.error(e)}return r};
+const _fxMig=migrate;migrate=function(){const r=_fxMig.apply(this,arguments);try{rsPartBackfill()}catch(e){console.error(e)}return r};
+
+// ---- Roadshow member picker ---------------------------------------------------------------------
+function rsSelHtml(){const P=ui.rsp;if(!P)return'';const x=S.singles.find(s=>s.rid==P.rid);if(!x)return'';const E=rsElig(x),I=plTTInfo(x),PT=rsParted(x.rid),f=ui.rsf=ui.rsf||{tt:0,np:0},L=E.filter(id=>(!f.tt||I.has(id))&&(!f.np||!PT.has(id)));
+ return`<h2 class="ht">Select Roadshow members</h2><p class="st">${P.sel.filter(i=>E.includes(i)).length} selected · tap a member to select or deselect.</p><div class="row"><button class="b s" onclick="rsSelSet('all')">Select all shown</button><button class="b s" onclick="rsSelSet('tt')">Title Track Senbatsu</button><button class="b s" onclick="rsSelSet('np')">Not yet participated</button><button class="b s" onclick="rsSelSet('none')">Clear</button></div>
+ <div class="row"><label class="plnm"><input type="checkbox" ${f.tt?'checked':''} onchange="ui.rsf.tt=this.checked?1:0;rsSelRefresh()"> Show Only Title Track Senbatsu</label><label class="plnm"><input type="checkbox" ${f.np?'checked':''} onchange="ui.rsf.np=this.checked?1:0;rsSelRefresh()"> Show Only Members Who Have Not Participated</label></div>
+ <div class="g msel rssel">${L.map(id=>{const m=get(id),on=P.sel.includes(id),bz=P.day!=null&&busy(id,[P.day,P.day+1]).length;return`<button class="c m ${on?'msel-on':''}" style="${bz?'opacity:.5':''}" onclick="rsSelTog(${id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b><br>${plBadge(I.get(id))}<br>${plPartB(x.rid,id)}</div></button>`}).join('')||'<p class="st">No members match these filters.</p>'}</div><div class="row"><button class="b p" onclick="ui.mod=null;render()">Done</button></div>`}
+function rsSelOpen(){if(!ui.rsp)return;ui.rsp.mode='sel';ui.mod={t:'html',h:rsSelHtml(),rssel:1};render()}
+function rsSelRefresh(){if(ui.mod&&ui.mod.rssel)ui.mod.h=rsSelHtml();render()}
+function rsSelTog(id){const n=ui.rsp.sel.length;rsTogM(id);rsSelRefresh()}
+function rsSelSet(k){const P=ui.rsp,x=S.singles.find(s=>s.rid==P.rid);if(!x)return;const E=rsElig(x),I=plTTInfo(x),PT=rsParted(x.rid),f=ui.rsf||{},shown=E.filter(id=>(!f.tt||I.has(id))&&(!f.np||!PT.has(id))),free=id=>!(P.day!=null&&busy(id,[P.day,P.day+1]).length);
+ if(k=='none')P.sel=[];else{const add=k=='all'?shown:k=='tt'?E.filter(id=>I.has(id)):E.filter(id=>!PT.has(id));add.filter(free).forEach(id=>{if(!P.sel.includes(id))P.sel.push(id)})}rsSelRefresh()}
+
+// ---- costumes: completed designs go to the library; copy to any members -----------------------------
+function fxLibAdd(p,name){czLib();const L=czLib().ds,key=JSON.stringify(p);if(L.some(d=>JSON.stringify(d.p)==key))return false;L.push({id:czId(),name:String(name).slice(0,40),p:czClone(p),style:'',created:S.day,updated:S.day,auto:1});return true}
+const _fxCzSave=plCzSave;plCzSave=function(){const s=ui.scz;const r=_fxCzSave.apply(this,arguments);try{const H=s&&plCzHost(s.song),mm=H&&H.o.cdz.mem[s.mid],m=get(s&&s.mid);if(mm&&mm.ok&&mm.own&&m&&!H.locked&&fxLibAdd(mm.own.p,`${H.single?'Single Costume':H.o.title} — ${m.name}`))toast(`Saved — also added to the Costume Design Library.`)}catch(e){console.error(e)}return r};
+function plCzCopyHtml(){const s=ui.scz,H=s&&plCzHost(s.song);if(!H)return'';const c=ui.czcp=ui.czcp||{sel:[]},M=(H.o.cdz&&H.o.cdz.mem)||{},src=get(s.mid),T=H.mem.filter(m=>m.id!=s.mid);
+ return`<h2 class="ht">Copy ${esc(src?src.name.split(' ')[0]:'')}'s costume to…</h2><p class="st">The design currently in the editor is copied. Members who already have a costume are marked; their costume is replaced only if you select them.</p><div class="row"><button class="b s" onclick="plCzCpSet('none_cz')">Members without a costume</button><button class="b s" onclick="plCzCpSet('all')">All members</button><button class="b s" onclick="plCzCpSet('clear')">Clear</button></div>
+ <div class="g msel">${T.map(m=>{const on=c.sel.includes(m.id),has=!!(M[m.id]&&M[m.id].own&&M[m.id].ok);return`<button class="c m ${on?'msel-on':''}" onclick="plCzCpTog(${m.id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b><br>${has?'<span class="rsb s">Has a costume</span>':'<span class="rsb n">No costume</span>'}</div></button>`}).join('')}</div><div class="row"><button class="b p" ${c.sel.length?'':'disabled'} onclick="plCzCpGo()">Copy to ${c.sel.length} member(s)</button><button class="b" onclick="ui.mod=null;render()">Cancel</button></div>`}
+plCzCopyAll=function(){const H=ui.scz&&plCzHost(ui.scz.song);if(!H)return;if(H.locked)return toast('The release is in production: costumes are locked.','err');if(H.mem.length<2)return toast('There is no other member in this lineup.','err');ui.czcp={sel:[]};ui.mod={t:'html',h:plCzCopyHtml(),czcp:1};render()};
+function plCzCpTog(id){const c=ui.czcp,i=c.sel.indexOf(id);if(i>=0)c.sel.splice(i,1);else c.sel.push(id);ui.mod.h=plCzCopyHtml();render()}
+function plCzCpSet(k){const s=ui.scz,H=plCzHost(s.song),M=H.o.cdz.mem||{},T=H.mem.filter(m=>m.id!=s.mid);ui.czcp.sel=k=='clear'?[]:T.filter(m=>k=='all'||!(M[m.id]&&M[m.id].own&&M[m.id].ok)).map(m=>m.id);ui.mod.h=plCzCopyHtml();render()}
+function plCzCpGo(){const s=ui.scz,H=plCzHost(s.song),o=H.o,z=czSongZ(o),sel=ui.czcp.sel.slice(),over=sel.filter(id=>z.mem[id]&&z.mem[id].own&&z.mem[id].ok);if(!sel.length)return;
+ const go=()=>{const p=czClone(ui.czE.p);sel.forEach(id=>{const m=get(id),mm=z.mem[id]=z.mem[id]||{};mm.own={name:`${H.single?'Single Costume':o.title} — ${m.name}`,p:czClone(p),updated:S.day};mm.ok=true});if(!H.single)czSync(o);fxLibAdd(p,`${H.single?'Single Costume':o.title} — ${get(s.mid).name}`);ui.mod=null;ui.czcp=null;toast(`Costume copied to ${sel.length} member(s).`);render()};
+ if(over.length)ask(`${over.length} of the selected member(s) already have a costume. Replace it with this design?`,go,'Replace costumes');else go()}
+const _fxSongcz=V.songcz;V.songcz=function(){return _fxSongcz.call(V).replace('>Copy to members without a costume</button>','>Copy to members…</button>')};
+
+// ---- CD Cover Studio: Title Track costume by default, any costume per member -----------------------
+function covSrcList(mid){const p=S.pj,L=[];if(!p)return L;const mn=S.songs[p.mainId];if(czFor(mn,mid))L.push(['tt',`Title Track costume — ${mn.title}`]);
+ p.coup.forEach(i=>{const o=S.songs[i];if(o&&(o.slots||[]).includes(mid)&&czFor(o,mid))L.push(['song:'+i,`Song costume — ${o.title}`])});
+ const sc=p.scz&&p.scz.cdz&&p.scz.cdz.mem&&p.scz.cdz.mem[mid];if(sc&&sc.own&&sc.ok)L.push(['scz','Single Costume']);czLib().ds.forEach(d=>L.push(['lib:'+d.id,'Library — '+d.name]));L.push(['cos','Studio outfit (cover presets)']);return L}
+function covSrcResolve(src,mid){const p=S.pj;if(!p)return null;if(!src||src=='tt')return czFor(S.songs[p.mainId],mid);if(src.startsWith('song:'))return czFor(S.songs[src.slice(5)],mid);if(src=='scz'){const sc=p.scz&&p.scz.cdz.mem[mid];return sc&&sc.own?sc.own.p:null}if(src.startsWith('lib:')){const d=czD(src.slice(4));return d?d.p:null}return null}
+czCoverSync=function(){const d=ui.cd;if(!d||ui.cvCtx=='album'||!S.pj)return;const o=S.songs[S.pj.mainId];const on=d.useCz!==false;d.layers.forEach(l=>{if(l.t!='m')return;if(l.czSrc=='cos'){delete l.cd;return}if(!on&&!l.czSrc){delete l.cd;return}const cd=covSrcResolve(l.czSrc,l.mid);if(cd)l.cd=czClone(cd);else delete l.cd})};
+function covSrcSet(v){const l=SEL();if(!l||l.t!='m')return;snap();l.czSrc=v||'tt';if(v=='tt')delete l.czSrc;czCoverSync();toast('Cover costume changed. The original design is not modified.');render()}
+const _fxCover=V.cover;V.cover=function(){let h=_fxCover.call(V);try{const l=typeof SEL=='function'?SEL():null;if(ui.cvCtx!='album'&&S.pj&&l&&l.t=='m'){const m=get(l.mid),L=covSrcList(l.mid),cur=l.czSrc||(L.some(x=>x[0]=='tt')?'tt':'cos');
+ const card=`<div class="c covsrc"><b>Costume for ${esc(m?m.name:'member')}</b> <select onchange="covSrcSet(this.value)">${L.map(([k,n])=>`<option value="${esc(k)}" ${k==cur?'selected':''}>${esc(n)}</option>`).join('')}</select><span class="st">Default: the Title Track Senbatsu costume of this single. Changing it here never edits the costume design.</span></div>`;
+ const i=h.indexOf('<div class="c czcov">');h=i>=0?h.slice(0,i)+card+h.slice(i):card+h}}catch(e){console.error(e)}return h};
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — stability & data-safety layer
+// -------------------------------------------------------------------------------------
+//  SAVE SAFETY
+//  · Every autosave is written to localStorage AND mirrored to IndexedDB (much larger
+//    quota). A full localStorage no longer loses progress silently; a banner explains it.
+//  · Loading picks the newest valid copy (localStorage or IndexedDB), repairs missing
+//    fields instead of rejecting the save, and never starts a new game on its own.
+//  · Refreshing the page resumes the existing save directly.
+//  · A save that cannot be read shows a recovery screen (backup, download raw data).
+//  · Before a migration on load and before "New Game" replaces a save, a backup copy
+//    of the previous save is kept in IndexedDB.
+//  · Save slots are stored in IndexedDB (moved out of localStorage, which they filled).
+//  RUNTIME SAFETY
+//  · A broken screen shows an error panel with a way back instead of freezing.
+//  · Each scheduled event of a day runs in isolation, so one faulty event can no longer
+//    stop "Next Day" from advancing and saving.
+//  · References to graduated members are removed from upcoming schedules.
+// =====================================================================================
+const SAVE_V=2;
+const SV={db:null,ready:false,idbMain:null,warn:null,lastErr:null,t:null,bad:null};
+function svOpen(){return new Promise(res=>{try{const r=indexedDB.open('idolverse48',1);r.onupgradeneeded=()=>{try{r.result.createObjectStore('kv')}catch(e){}};r.onsuccess=()=>{SV.db=r.result;res(true)};r.onerror=()=>res(false);r.onblocked=()=>res(false)}catch(e){res(false)}})}
+function svGet(k){return new Promise(res=>{if(!SV.db)return res(null);try{const q=SV.db.transaction('kv','readonly').objectStore('kv').get(k);q.onsuccess=()=>res(q.result??null);q.onerror=()=>res(null)}catch(e){res(null)}})}
+function svPut(k,v){return new Promise(res=>{if(!SV.db)return res(false);try{const tx=SV.db.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false);tx.onabort=()=>res(false)}catch(e){res(false)}})}
+function svDel(k){return new Promise(res=>{if(!SV.db)return res(false);try{const tx=SV.db.transaction('kv','readwrite');tx.objectStore('kv').delete(k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false)}catch(e){res(false)}})}
+const svValid=s=>!!(s&&typeof s=='object'&&Array.isArray(s.members)&&Array.isArray(s.groups)&&typeof s.money=='number'&&isFinite(s.money));
+// fill in missing structural fields instead of rejecting a save
+function svRepair(s){if(!Array.isArray(s.led))s.led=[];if(!s.sen||!Array.isArray(s.sen.slots))s.sen={slots:Array(16).fill(null),center:null};if(s.sen.slots.length!=16)s.sen.slots=[...s.sen.slots,...Array(16).fill(null)].slice(0,16);
+ if(typeof s.day!='number'||!isFinite(s.day))s.day=0;if(typeof s.fans!='number'||!isFinite(s.fans))s.fans=0;['singles','albums','cal'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=[]});if(!s.songs||typeof s.songs!='object')s.songs={};if(typeof s.sid!='number')s.sid=1000;return s}
+function svParse(raw){if(!raw)return null;try{const s=JSON.parse(raw);return svValid(s)?svRepair(s):null}catch(e){return null}}
+const svNewer=(a,b)=>!b||((a._ts||0)!=(b._ts||0)?(a._ts||0)>(b._ts||0):(a.day||0)>(b.day||0));
+load=function(){let ls=null;try{ls=localStorage.getItem(KEY)}catch(e){}const A=svParse(ls),B=svParse(SV.idbMain);SV.bad=(ls&&!A)?ls:null;if(A&&B)return svNewer(B,A)?B:A;return A||B||null};
+save=function(){if(!S||!svValid(S))return;let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
+ let ok=true;try{localStorage.setItem(KEY,j)}catch(e){ok=false}SV.idbMain=j;clearTimeout(SV.t);SV.t=setTimeout(()=>{svPut('main',j).then(r=>{if(!r&&!ok)SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.'})},250);
+ SV.warn=ok?null:(SV.db?'Browser storage is almost full, so the game is now saved in the larger IndexedDB backup storage. To be safe, export a save file from Management › Save & Load.':'Browser storage is full and the game could not be saved. Export a save file from Management › Save & Load now.')};
+function svFlush(){if(!S)return Promise.resolve();save();clearTimeout(SV.t);return svPut('main',SV.idbMain)}
+window.addEventListener('pagehide',()=>{try{if(S&&!ui.t)save()}catch(e){}});
+document.addEventListener('visibilitychange',()=>{try{if(document.visibilityState=='hidden'&&S)svFlush()}catch(e){}});
+// load an existing save: back it up first, then migrate; a migration problem never drops the save
+cont=function(){const s=load();if(!s){if(SV.bad)return svRecover();return toast('No saved game was found in this browser. Start a New Game or import a save file.','err')}
+ const raw=JSON.stringify(s);svPut('bak_load',raw);S=s;try{migrate()}catch(e){console.error('migrate',e);SV.lastErr='Part of the save could not be updated ('+e.message+'). Your data was kept and a backup was stored.'}
+ try{ui.g=S.groups[0]?.id}catch(e){}ui.t=false;ui.recov=null;view='dash';toast('Save loaded.');render()};
+function svRecover(){ui.recov=1;ui.t=true;render()}
+function svDownloadRaw(raw,name){try{const b=new Blob([raw],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}catch(e){toast('Download failed.','err')}}
+async function svTryBackup(){for(const k of ['bak_load','bak_newgame','main']){const raw=await svGet(k),s=svParse(raw);if(s){S=s;try{migrate()}catch(e){console.error(e)}ui.t=false;ui.recov=null;view='dash';save();toast('Backup restored.');return render()}}toast('No usable backup was found.','err')}
+// New Game never silently replaces an existing save
+const _svStart=startNew;startNew=function(){const ex=load();if(ex&&!ui.ngOk){ask(`Start a new game? Your current save “${ex.co||'Agency'}” (day ${ex.day}) will be replaced. A backup copy is kept and can be restored from the title screen.`,()=>{svPut('bak_newgame',JSON.stringify(ex)).then(()=>{ui.ngOk=1;try{startNew()}finally{ui.ngOk=0}})},'Start new game');return}return _svStart.apply(this,arguments)};
+// title screen: recovery panel / backup restore
+const _svTitle=titleScreen;titleScreen=function(ok){let h=_svTitle.apply(this,arguments);if(ui.recov&&SV.bad){h=h.replace('<div class="tbtn">',`<div class="c svrec"><h3>⚠ Your save could not be read</h3><p class="st">The saved data in this browser is damaged or incomplete. Nothing was deleted. You can restore the latest backup or download the raw data.</p><div class="row"><button class="b p" onclick="svTryBackup()">Restore backup</button><button class="b" onclick="svDownloadRaw(SV.bad,'IDOLVERSE48_raw_save.json')">Download raw save data</button></div></div><div class="tbtn">`)}
+ return h.replace('</div>\n <details class="c newg"',`<button class="b s" onclick="svTryBackup()">Restore a backup</button></div>\n <details class="c newg"`)};
+const _svImport=uiImport;uiImport=function(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const s=svParse(r.result);if(!s)return toast('That file is not a valid IDOLVERSE48 save.','err');ask(`Import "${s.co||'save'}" (day ${s.day})? Your current progress in this browser will be replaced (a backup is kept).`,()=>{if(S)svPut('bak_newgame',JSON.stringify(S));SV.idbMain=JSON.stringify(s);try{localStorage.setItem(KEY,SV.idbMain)}catch(e){}svPut('main',SV.idbMain).then(()=>cont())},'Import')};r.readAsText(f);inp.value=''};
+
+// ---- runtime guards ------------------------------------------------------------------------
+const _svRender=render;render=function(){try{return _svRender.apply(this,arguments)}catch(e){console.error('render',e);SV.lastErr=e.message;const a=$('#app');if(a)a.innerHTML=`<div class="c svcrash"><h2 class="ht">Something went wrong on this screen</h2><p class="st">Your game is safe and was saved. Error: ${esc(String(e.message||e))}</p><div class="row"><button class="b p" onclick="ui.mod=null;view='dash';render()">Back to the Office</button><button class="b" onclick="ui.mod=null;render()">Try again</button></div></div>`}};
+// one faulty scheduled event must not stop the day from advancing
+promoDay=function(){(S.cal||[]).forEach(ev=>{if(ev.done)return;try{if(ev.type=='handshake'){if(!ev.rid)return;const fn=ev.v==2?hsRun2:hsRun;if(S.day>=ev.day&&!ev.r1)fn(ev,1);if(S.day>=ev.day2&&!ev.r2)fn(ev,2)}else if(ev.type=='road'){if(ev.v==2){if(S.day>=ev.day&&!ev.d1)rsRun(ev,1);if(S.day>=ev.day+1&&!ev.d2)rsRun(ev,2);return}if(S.day>=ev.day&&!ev.res)roadRun(ev);if(S.day>=ev.day+(ev.dur||1)-1&&ev.res)ev.done=true}}catch(e){console.error('event',ev.id,e);ev.err=(ev.err||0)+1;if(ev.err>=3){ev.done=true;ev.failed=e.message;toast(`An event could not run and was skipped: ${ev.title||ev.type}.`,'err')}}});calTrim()};
+const _svAdv=adv;adv=function(){if(ui.advBusy)return;ui.advBusy=1;try{return _svAdv.apply(this,arguments)}catch(e){console.error('adv',e);toast('The day advanced, but something failed: '+e.message,'err');render()}finally{ui.advBusy=0}};
+// graduated members: remove them from upcoming schedules and plans
+function svCleanRefs(){if(!S||!(S.alumni||[]).length)return;const gone=new Set(S.alumni.map(m=>m.id)),f=a=>Array.isArray(a)?a.filter(id=>!gone.has(id)):a;
+ (S.cal||[]).forEach(e=>{if(e.done)return;if(Array.isArray(e.members))e.members=f(e.members);if(e.plan&&Array.isArray(e.plan.rows))e.plan.rows=e.plan.rows.filter(r=>!gone.has(r.mid))});
+ [...S.singles,S.pj].filter(Boolean).forEach(x=>{if(x.hs){if(Array.isArray(x.hs.members))x.hs.members=f(x.hs.members);(x.hs.groups||[]).forEach(g=>{if(Array.isArray(g.members))g.members=f(g.members);if(Array.isArray(g.ids))g.ids=f(g.ids)})}});if(ui.rsp&&Array.isArray(ui.rsp.sel))ui.rsp.sel=f(ui.rsp.sel)}
+const _svMig=migrate;migrate=function(){const r=_svMig.apply(this,arguments);try{svCleanRefs();svSlotsMove()}catch(e){console.error(e)}return r};
+const _svGrad=graduateMember;graduateMember=function(mid){const r=_svGrad.apply(this,arguments);const t=setInterval(()=>{if(!S||!get(mid)){clearInterval(t);try{svCleanRefs()}catch(e){}}},150);setTimeout(()=>clearInterval(t),60000);return r};
+
+// ---- save slots live in IndexedDB (localStorage keeps only the autosave) ------------------------------
+const SV_SLOT={};
+async function svSlotsLoad(){for(let n=1;n<=FB_SLOTS;n++){SV_SLOT[n]=await svGet('slot'+n)}}
+async function svSlotsMove(){if(!SV.db)return;for(let n=1;n<=FB_SLOTS;n++){let raw=null;try{raw=localStorage.getItem(slotKey(n))}catch(e){}if(raw&&!SV_SLOT[n]){const ok=await svPut('slot'+n,raw);if(ok){SV_SLOT[n]=raw;try{localStorage.removeItem(slotKey(n))}catch(e){}}}}}
+slotInfo=function(n){const s=svParse(SV_SLOT[n]||(()=>{try{return localStorage.getItem(slotKey(n))}catch(e){return null}})());return s};
+slotSave=function(n){if(!S)return;const go=()=>{try{fbSync&&fbSync()}catch(e){}save();const j=JSON.stringify(S),prev=SV_SLOT[n];SV_SLOT[n]=j;toast(`Saved to slot ${n}.`);svPut('slot'+n,j).then(ok=>{if(!ok){SV_SLOT[n]=prev;toast('Could not store the slot (browser storage unavailable). Export a save file instead.','err')}render()})};if(slotInfo(n))ask(`Overwrite save slot ${n}?`,go,'Overwrite');else go()};
+slotLoad=function(n){const s=slotInfo(n);if(!s)return toast('That slot is empty.','err');ask(`Load slot ${n}? The current game is replaced (it stays in the autosave backup).`,()=>{svPut('bak_newgame',JSON.stringify(S));S=s;try{migrate()}catch(e){console.error(e)}ui.mod=null;ui.t=false;view='dash';FBC={s:null,v:-1,val:null};toast(`Slot ${n} loaded.`);render()},'Load')};
+slotDel=function(n){if(!slotInfo(n))return;ask(`Delete save slot ${n}?`,()=>{svDel('slot'+n).then(()=>{SV_SLOT[n]=null;try{localStorage.removeItem(slotKey(n))}catch(e){}render()})},'Delete')};
+
+// ---- storage warning banner ------------------------------------------------------------------------
+const _svChrome=chrome;chrome=function(h){const w=SV.warn||SV.lastErr;return _svChrome.call(this,(w?`<div class="svwarn" role="alert">⚠ ${esc(w)} <button class="b s" onclick="uiExport()">Export save</button><button class="b s" onclick="SV.warn=null;SV.lastErr=null;render()">Dismiss</button></div>`:'')+h)};
+
+// ---- startup: read IndexedDB, then resume the existing save ------------------------------------------
+(async function svBoot(){await svOpen();SV.idbMain=await svGet('main');await svSlotsLoad();SV.ready=true;
+ const s=load();if(s&&ui.t&&!S){cont();return}if(!s&&SV.bad&&!S){svRecover();return}if(ui.t)render()})();
 
 </script>
 <script>
@@ -3406,6 +3555,9 @@ Object.assign(I18N_TH,{
 "Graduate…":"จบการศึกษา…","Graduated from the group":"จบการศึกษาจากวง","Stay with the group":"ยังเชียร์วงต่อ","New Kami Oshi in the group":"เปลี่ยนคามิโอชิเป็นสมาชิกคนอื่น","Stay attached to her (leave the active fanbase)":"ยังผูกพันกับเธอ (ออกจากฐานแฟนปัจจุบัน)","Leave the group":"เลิกติดตามวง","New Kami Oshi":"คามิโอชิใหม่",
 "Save slots":"ช่องเซฟ","Three extra save slots. Each one keeps its own game, including its own fanbase.":"ช่องเซฟเพิ่ม 3 ช่อง แต่ละช่องเก็บเกมของตัวเอง รวมถึงฐานแฟน","Empty":"ว่าง","Load":"โหลด","Delete":"ลบ","Fanbase dashboard":"แดชบอร์ดฐานแฟน","supporters":"ผู้สนับสนุน","Most-loved members":"สมาชิกที่แฟนรักที่สุด"
 });
+Object.assign(I18N_TH,{"Your save could not be read":"อ่านเซฟไม่ได้","Restore backup":"กู้คืนข้อมูลสำรอง","Restore a backup":"กู้คืนข้อมูลสำรอง","Download raw save data":"ดาวน์โหลดข้อมูลเซฟดิบ","Export save":"ส่งออกเซฟ","Dismiss":"ปิด","Something went wrong on this screen":"หน้านี้เกิดข้อผิดพลาด","Back to the Office":"กลับไปห้องทำงาน","Try again":"ลองอีกครั้ง",
+"👥 Select Members…":"👥 เลือกสมาชิก…","Select Roadshow members":"เลือกสมาชิกโรดโชว์","Select all shown":"เลือกทุกคนที่แสดง","Title Track Senbatsu":"เซ็มบัตสึเพลงหลัก","Not yet participated":"ยังไม่เคยเข้าร่วม","Clear":"ล้าง","Done":"เสร็จ","✔ Participated":"✔ เข้าร่วมแล้ว","Not Yet Participated":"ยังไม่เคยเข้าร่วม","Show Only Members Who Have Not Participated":"แสดงเฉพาะสมาชิกที่ยังไม่เคยเข้าร่วม","Senbatsu":"เซ็มบัตสึ",
+"Copy to members…":"คัดลอกให้สมาชิก…","Members without a costume":"สมาชิกที่ยังไม่มีชุด","All members":"สมาชิกทุกคน","Has a costume":"มีชุดแล้ว","No costume":"ยังไม่มีชุด","Replace costumes":"แทนที่ชุด","Studio outfit (cover presets)":"ชุดสตูดิโอ (พรีเซ็ตปก)","Single Costume":"ชุดประจำซิงเกิล"});
 
 </script>
 <script>

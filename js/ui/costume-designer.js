@@ -55,6 +55,8 @@ function czInit(did,songId){czLib();const songs=czSongs(),o=songId?S.songs[songI
  ui.czE={did:d?d.id:null,p:d?czClone(d.p):null,style:d?d.style||'':'',dirty:0,cat:'top',sel:'top',mid:((o&&czMembers(o)[0])||S.members[0]||{}).id,pose:2,ex:2,song:o?o.id:null}}
 function czOpen(songId){czInit(null,songId);view='costume';render();try{window.scrollTo(0,0)}catch(e){}}
 const czEditing=()=>ui.czE&&ui.czE.did&&czD(ui.czE.did);
+// pieces can be edited in the library designer AND in a member's song / Single costume (even before its first save)
+const czCanEdit=()=>!!(ui.czE&&ui.czE.p&&(ui.czE.scz||czEditing()));
 function czConfirmLeave(go){if(ui.czE&&ui.czE.dirty)ask('Discard unsaved changes to the current design?',go,'Discard');else go()}
 function czPick(did){czConfirmLeave(()=>{const d=czD(did);if(!d)return;Object.assign(ui.czE,{did,p:czClone(d.p),style:d.style||'',dirty:0});render()})}
 function czMark(){ui.czE.dirty=1}
@@ -64,17 +66,17 @@ function czRename(v){const d=czEditing(),n=cleanName(v);if(!d)return;if(!n)retur
 function czDel(){const d=czEditing();if(!d)return;const U=czUsers(d.id),busy=U.filter(o=>lockedSong(o.id));
  if(busy.length)return toast(`"${d.name}" is worn by songs already in production or released (${busy.map(o=>o.title).join(', ')}). It cannot be deleted.`,'err');
  ask(`Delete the design "${d.name}" from the costume library?${U.length?` It is assigned to ${U.length} song(s); they will need another design.`:''}`,()=>{U.forEach(o=>{const z=o.cdz;if(z.main==d.id)z.main=null;Object.values(z.mem).forEach(m=>{if(m.d==d.id)delete m.d});czSync(o)});const L=czLib();L.ds=L.ds.filter(x=>x.id!=d.id);const n=L.ds[0];Object.assign(ui.czE,{did:n?n.id:null,p:n?czClone(n.p):null,style:n?n.style||'':'',dirty:0});render()},'Delete')}
-function czPreset(i){if(i===''||!czEditing())return;const go=()=>{ui.czE.p=czClone(CZ_PRESETS[+i][1]);ui.czE.style=CZ_PRESET_STYLE[+i]||'';czMark();toast(`Started from "${CZ_PRESETS[+i][0]}". Every piece can still be changed.`);render()};if(ui.czE.dirty)ask('Replace the current unsaved changes with this preset?',go,'Use preset');else go()}
+function czPreset(i){if(i===''||!czCanEdit())return;const go=()=>{ui.czE.p=czClone(CZ_PRESETS[+i][1]);ui.czE.style=CZ_PRESET_STYLE[+i]||'';czMark();toast(`Started from "${CZ_PRESETS[+i][0]}". Every piece can still be changed.`);render()};if(ui.czE.dirty)ask('Replace the current unsaved changes with this preset?',go,'Use preset');else go()}
 function czStyle(v){if(!czEditing())return;ui.czE.style=v;czMark();render()}
 function czSave(){const d=czEditing();if(!d)return;d.p=czClone(ui.czE.p);d.style=ui.czE.style||'';d.updated=S.day;ui.czE.dirty=0;czSyncPlan();const n=czUsers(d.id).length;toast(n?`"${d.name}" saved. ${n} song(s) wearing it are updated.`:`"${d.name}" saved to the costume library.`);render()}
 function czRevert(){const d=czEditing();if(!d)return;Object.assign(ui.czE,{p:czClone(d.p),style:d.style||'',dirty:0});render()}
 // piece editing (draft)
 function czCat(k){const E=ui.czE,c=CZ_CATS.find(x=>x.k==k);E.cat=k;if(c&&c.multi){const on=Object.keys((E.p||{})[k]||{}).find(x=>E.p[k][x]);E.sel=on?k+'.'+on:k+'.'+c.items[0][0]}else E.sel=k;render()}
-function czItem(cat,t){const E=ui.czE;if(!czEditing())return;const c=CZ_CATS.find(x=>x.k==cat);
+function czItem(cat,t){const E=ui.czE;if(!czCanEdit())return;const c=CZ_CATS.find(x=>x.k==cat);
  if(c.multi){const path=cat+'.'+t;if(!czGetSlot(E.p,path))czSetSlot(E.p,path,czPiece(t,'#f7a8c8','#ffffff','#f3c35c'));E.sel=path}
  else{const cur=E.p[cat]||{};E.p[cat]=t=='none'?{t:'none'}:{...czPiece(t,cur.c1||'#ffffff',cur.c2,cur.c3),...(cur.t&&cur.t!='none'?{c1:cur.c1,c2:cur.c2,c3:cur.c3,pc:cur.pc,dc:cur.dc,pat:cur.pat,ps:cur.ps,pd:cur.pd}:{}),t,v:0};E.sel=cat}
  czMark();render()}
-function czRemove(){const E=ui.czE;if(!czEditing())return;czSetSlot(E.p,E.sel,null);const c=CZ_CATS.find(x=>x.k==E.cat),on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);if(c&&c.multi)E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0];czMark();render()}
+function czRemove(){const E=ui.czE;if(!czCanEdit())return;czSetSlot(E.p,E.sel,null);const c=CZ_CATS.find(x=>x.k==E.cat),on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);if(c&&c.multi)E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0];czMark();render()}
 function czSetFab(k){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.fab=k;czMark();render()}}
 function czVar(v){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.v=v;czMark();render()}}
 function czSetPat(k){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(P){P.pat=k;czMark();render()}}

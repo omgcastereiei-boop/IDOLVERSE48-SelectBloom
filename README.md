@@ -40,6 +40,8 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/fanbase.js` | Fanbase Management: aggregate fan segments, Kami Oshi / Oshi, acquisition, loss, graduation, teams/units, rankings, dashboard, revenue hooks, save slots |
 | `js/ui/release-planning.js` | Restored step-by-step Single / Album planning page, Senbatsu screen filter, per-member song costumes, random costume & CD cover, release-level Senbatsu history, Group & Team navigation |
 | `js/ui/release-events.js` | Senbatsu box in Songs & Tracklist, Auto Select filter, Single Costume & profile costume, event costume rules, Roadshow Senbatsu badges/filter, chronological song history, Title-Track-only Senbatsu history |
+| `js/ui/fixes.js` | Roadshow participation tracking & member picker, costume library auto-save, Copy to members, cover costume picker |
+| `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
 | `css/base.css` | Original structural CSS, verbatim |
@@ -113,6 +115,13 @@ Older saves: Pop → Teen Pop, Rock → Pop Rock, Electro → Electropop, Folk �
 Ballad; Pure → Youth (Cute, Cool, Elegant stay). Skills and Roadshow stamina values are unchanged.
 
 ## Saves
+
+* Every autosave goes to localStorage **and** an IndexedDB mirror (larger storage). If localStorage is full the game keeps
+  saving to IndexedDB and shows a banner suggesting an export.
+* Refreshing resumes the newest valid save automatically. A damaged save shows a recovery screen (restore backup,
+  download raw data); the game never starts a new game on its own, and New Game asks before replacing a save.
+* A backup of the save is kept before each load-time migration and before New Game / Import / slot loading.
+* Save slots are stored in IndexedDB.
 
 Saves use the same `localStorage` key and format as the original
 (`idolProducerSave1`); a save made in the original game loads directly.

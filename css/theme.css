@@ -461,3 +461,10 @@ body.lang-th .b,body.lang-th .tabb,body.lang-th input,body.lang-th select,body.l
 .rsb{display:inline-block;font-size:10px;font-weight:800;border-radius:8px;padding:1px 6px;margin:1px 0;white-space:nowrap}
 .rsb.c{background:#fff1c7;color:#9a6a00;border:1px solid #f3c35c}.rsb.s{background:#ffe0ec;color:#b02d63}.rsb.n{background:#eef2f6;color:#5f6b7a}
 .plprofcz .plpcz{height:180px;width:auto;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:12px}
+
+/* ---- stability banners, roadshow participation, cover costume picker ---- */
+.svwarn{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#fff4d6;border:2px solid #f3c35c;color:#6b4b00;border-radius:14px;padding:8px 12px;margin:6px 0;font-size:13px;font-weight:700}
+.svcrash{margin:20px auto;max-width:640px}.svrec{margin-bottom:10px;border:2px solid #f3c35c}
+.rsb.pd{background:#dff5e9;color:#1f6b45}.rsb.np{background:#f4efff;color:#6252c4}
+.rssel .c.m{font:inherit;color:inherit;cursor:pointer;border:1px solid var(--line)}
+.covsrc{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0;border-left:5px solid var(--pk)}
