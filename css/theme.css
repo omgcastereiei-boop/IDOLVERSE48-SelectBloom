@@ -498,3 +498,6 @@ body:not([data-view="audition"]) .mc .rb{display:none}
 @media(max-width:600px){.g.gteam.gcol-5 .c.m b{font-size:8.6px;letter-spacing:-.35px}.g.gteam.gcol-4 .c.m b{font-size:10px;letter-spacing:-.2px}.g.gteam.gcol-5>.c.m{padding:4px 2px!important}}
 .shist ul{margin:4px 0 12px;padding-left:20px}.shist li{margin:4px 0;line-height:1.45}.shist li b{color:var(--ink)}.shist li .tag{font-size:10px;padding:1px 6px}
 .gsort{gap:8px;margin:6px 0}.gsv{font-size:11px;color:var(--pk);font-weight:700}
+.gdeb{margin:8px 0;border-left:5px solid #f3c35c}.gdebk{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.gdebk>div{display:flex;flex-direction:column;gap:1px}.gdebk small{font-size:11px;color:var(--mut);font-weight:700}.gdebk b{font-size:15px}
+.hshist ul{margin:4px 0;padding-left:20px}.hshist li{margin:3px 0}
+.gann{font-weight:800;color:#b02d63;margin-bottom:6px}

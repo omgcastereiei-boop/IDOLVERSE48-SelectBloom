@@ -42,6 +42,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/release-events.js` | Senbatsu box in Songs & Tracklist, Auto Select filter, Single Costume & profile costume, event costume rules, Roadshow Senbatsu badges/filter, chronological song history, Title-Track-only Senbatsu history |
 | `js/ui/fixes.js` | Roadshow participation tracking & member picker, costume library auto-save, Copy to members, cover costume picker |
 | `js/ui/member-extras.js` | Member grid columns, profile outfit after each release, Roadshow planning status (Not Planned / Planned / Participated), audition without probability settings |
+| `js/ui/debut.js` | Automatic group debut on the first single release, anniversary calendar events, debut info in Groups, trainees in Handshake Events |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
@@ -214,6 +215,16 @@ Fan Community → **Fanbase** (tabs: Overview · Member Ranking · Kami Oshi & O
 * **Labels:** Senbatsu / Under Girls replace "Selected / Not selected for Title Track" (data unchanged).
 * **Auditions** use the default recruitment odds; the Probability Settings screen was removed (an earlier
   custom setting is kept aside in the save).
+
+## Group debut & anniversaries
+
+* There is no manual "Debut group" step. A group's official debut date is the release day of its first single
+  (production, announcement or scheduling do not count). Later releases never change it.
+* The debut day and every anniversary (1st, 2nd, …) are events in the game calendar; each one is created once.
+* Groups shows Official Debut, time since debut (years, months, days) and the next anniversary, or "Not Yet Debuted".
+* Older saves get their debut date from the group's earliest released single.
+* Trainees of the performing group take part in Handshake Events (all formats) under the same rules; each member's
+  handshake participation is listed in her profile. Their status and team do not change.
 
 ## Language / ภาษา
 
