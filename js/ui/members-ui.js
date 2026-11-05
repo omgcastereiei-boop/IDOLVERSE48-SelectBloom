@@ -22,10 +22,9 @@ function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d
 const ML_SKIP='.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.czlineup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
  // ⓘ profile buttons
- P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||host.querySelector(':scope > .mpi'))return;
-  const b=document.createElement('span');b.className='mpi';b.setAttribute('role','button');b.setAttribute('aria-label','Member profile');b.title='Member profile';b.textContent='ⓘ';
-  b.addEventListener('click',e=>{e.stopPropagation();e.preventDefault();mpOpen(sv0.dataset.mid)},true);b.addEventListener('mousedown',e=>e.stopPropagation());
-  if(getComputedStyle(host).position=='static')host.style.position='relative';host.appendChild(b)});
+ const HS=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||HS.some(x=>x[0]===host))return;HS.push([host,sv0])});
+ HS.forEach(([host,sv0],i)=>{const b=document.createElement('span');b.className='mpi';b.setAttribute('role','button');b.setAttribute('aria-label','Member profile');b.title='Member profile';b.textContent='ⓘ';
+  b.dataset.mid=sv0.dataset.mid;host.classList.add('mph');host.appendChild(b)});
  // sort / filter bars on member lists
  const seen=new Set(),conts=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;let el=sv0;while(el&&el.parentElement&&el.parentElement!==app){const par=el.parentElement;if(par.children.length>=4&&!seen.has(par)){const kids=[...par.children].filter(ch=>ch.matches('svg[data-mid]')?false:ch.querySelectorAll('svg[data-mid]').length==1);if(kids.length>=4&&kids.length>=par.children.length*.6){seen.add(par);conts.push([par,kids]);break}}el=par}});
  let idx=0;conts.forEach(([par,kids])=>{if(par.closest(ML_SKIP)||kids.some(k=>k.matches('.slot,.thpos')||k.querySelector('.slot,.thpos')))return;if(view=='members'&&!ui.mod&&kids.every(k=>k.matches('.mc')))return;
@@ -36,6 +35,9 @@ function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t
   const gens=gensOf(items.map(i=>i.m)),op=(l,v)=>l.map(([k,n])=>`<option value="${esc(String(k))}" ${String(k)==String(v)?'selected':''}>${esc(n)}</option>`).join('');
   const bar=document.createElement('div');bar.className='mlbar';bar.dataset.mlk=key;
   bar.innerHTML=`<label>Sort <select aria-label="Sort members" onchange="mlSet('${key}','k',this.value)">${op(ML_KEYS(),c.k)}</select></label><button class="b s" type="button" onclick="mlSet('${key}','d')" aria-label="Sort direction">${c.d=='a'?'↑ Reverse order':'↓ Highest first / A→Z'}</button><select aria-label="Team filter" onchange="mlSet('${key}','team',this.value)">${op(teamOpts(),c.team)}</select>${gens.length>1?`<select aria-label="Generation filter" onchange="mlSet('${key}','gen',this.value)">${op([['all','All Generations'],...gens.map(g=>[g,ord(g)+' Generation'])],c.gen)}</select>`:''}<select aria-label="Rarity filter" onchange="mlSet('${key}','rar',this.value)">${op([['all','All rarities'],['UR','UR'],['SR','SR'],['R','R'],['N','N']],c.rar)}</select><span class="st">${shown}/${items.length} shown</span>`;
-  ['click','mousedown','change'].forEach(t=>bar.addEventListener(t,e=>e.stopPropagation()));
+  ['onclick','onmousedown','onchange'].forEach(t=>bar.setAttribute(t,'event.stopPropagation()'));
   if(par.tagName=='TBODY'||par.tagName=='TABLE'){const tb=par.closest('table');tb.before(bar)}else par.before(bar)})}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{if(S&&!ui.t){const a=document.getElementById('app');if(a&&ui.pov)a.insertAdjacentHTML('beforeend',mpHtml());mlDecorate()}}catch(e){console.error(e)}return r}}
+// one delegated listener (no per-render closures): ⓘ opens the profile without triggering the card it sits on
+document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('.mpi');if(!b)return;e.stopPropagation();e.preventDefault();mpOpen(b.dataset.mid)},true);
+document.addEventListener('mousedown',e=>{if(e.target&&e.target.closest&&e.target.closest('.mpi'))e.stopPropagation()},true);

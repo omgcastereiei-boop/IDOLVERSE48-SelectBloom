@@ -727,3 +727,4 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 .thfm{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:14px;padding:6px 8px;background:#fffdf8;cursor:pointer;font:inherit;color:var(--ink)}
 .thfm.on{border-color:#e9758f;box-shadow:0 0 0 2px #ffd0dc}.thfm small{display:block;font-size:11px;color:var(--mut)}
 .thfs{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}.thfs i{font-style:normal;font-size:11px;background:#f4eefc;border-radius:8px;padding:1px 6px}
+:where(.mph){position:relative}
