@@ -46,6 +46,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
+| `js/ui/mv.js` | Music Video production: per-song MV choice, style / location / storyline planning, itemised dynamic budget, Week 3 filming, Release Day publication, daily views and Buzz, MV library |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
@@ -314,6 +315,24 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Performances in between are cancelled; cancelling the transition restores them.
   - Reusing a retired Stage keeps its number. Adopting another team's Stage creates an independent copy that receives the adopting team's next number. Unavailable songs or costumes must be replaced.
 - **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
+
+## Music Videos
+
+For every song of a new single (Songs & tracklist step), choose **Produce Music Video** or **No Music Video**. Each MV has its own plan:
+
+- **Style** (exactly one): Performance, Story, Cinematic, Conceptual, Location or Special Visual.
+- **Filming location**: 14 domestic (studios, school, street, beach, forest, garden, rooftop, amusement park, palace, Kyoto, snowfield, custom set …) or 12 overseas (Seoul, Bangkok, Shanghai, Taipei, Singapore, Hong Kong, Paris, London, Rome, Los Angeles, Hawaii, Bali). Each card shows its rent, travel and hotel costs and the estimated total.
+- **Storyline**: optional; a Story MV unlocks extra storylines. Genre and Concept never restrict any choice.
+- **Production design**: sets, supporting actors, equipment (drone, crane, Steadicam, lighting, weather effects) and VFX.
+- **Participants**: the song's own Senbatsu (Title Track and coupling songs have their own lineups), wearing the costumes assigned to that song in Costume Designer.
+
+The budget is itemised from these choices: location rental, crew, sets, props and equipment, cast, VFX, travel and accommodation, coordination, post-production and other costs. Overseas shoots add flights, hotels and extra days.
+
+- Confirming pays it once through the ledger, and insufficient funds block confirmation.
+- Revising the plan, or changing the Senbatsu size, charges or refunds only the difference.
+- Cancelling before production refunds the budget.
+
+Filming happens in Week 3 and the production check in Week 4 of the unchanged 28-day schedule. The MV is published on its song's Release Day. Views are simulated every day: first-day interest from popularity, fans, Buzz, song sales, Senbatsu and Center, budget and choices, then decay, a long tail, and occasional viral or renewed-interest spikes (budget helps but guarantees nothing). Views add Buzz to the participating members. All MVs with their full history are listed under **Music Production › Music Videos** and in the Song Library.
 
 ## Language / ภาษา
 
