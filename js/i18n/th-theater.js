@@ -23,3 +23,13 @@ Object.assign(I18N_TH,{
 "Physical audience":"ผู้ชมในโรง","Tickets sold":"ตั๋วที่ขายได้","Ticket revenue":"รายได้ตั๋ว","Online viewers":"ผู้ชมออนไลน์","Satisfaction":"ความพึงพอใจ","New fans":"แฟนใหม่","Availability & replacements":"ความพร้อมและตัวแทน","Setlist as performed":"เซ็ตลิสต์ที่แสดงจริง","Members":"สมาชิก","Performances":"การแสดง","Physical attendance":"ผู้ชมในโรงรวม","Original Setlist (as debuted)":"เซ็ตลิสต์ต้นฉบับ (ตอนเปิดตัว)","Show more":"แสดงเพิ่ม","Performance summary":"สรุปการแสดง","Trainee group":"กลุ่มเด็กฝึก","Team":"ทีม"
 });
 I18N_TH_TPL.push(["{0} Stage","สเตจที่ {0}"],["{0} performance(s)","{0} การแสดง"],["{0} Stage(s)","{0} สเตจ"],["Capacity {0} seats","ความจุ {0} ที่นั่ง"],["{0} members","สมาชิก {0} คน"],["Assign to {0} song(s)","กำหนดให้ {0} เพลง"],["{0} songs","{0} เพลง"],["Adopt for {0}","รับไปใช้กับ {0}"]);
+// Costume colour tools & random stage costumes
+Object.assign(I18N_TH,{
+"🎨 Random colours":"🎨 สุ่มสี","🌀 Random patterns":"🌀 สุ่มลาย","Main colour":"สีหลัก","🎯 Colours from main colour":"🎯 สุ่มสีจากสีหลัก",
+"Random costume":"สุ่มชุด","Random existing costume":"สุ่มชุดที่มีอยู่","🎲 Random costume for all song(s)":"🎲 สุ่มชุดให้ทุกเพลง",
+"Choose a design to edit first.":"เลือกชุดที่จะแก้ไขก่อน","Choose a main colour.":"เลือกสีหลัก","Open or create a costume first.":"เปิดหรือสร้างชุดก่อน",
+"New colours on the same costume. Save to keep them.":"สุ่มสีใหม่ให้ชุดเดิมแล้ว กดบันทึกเพื่อเก็บไว้","New patterns on the same costume. Save to keep them.":"สุ่มลายใหม่ให้ชุดเดิมแล้ว กดบันทึกเพื่อเก็บไว้",
+"Colours built from your main colour (each press gives a new combination). Save to keep them.":"สร้างชุดสีจากสีหลักแล้ว (กดซ้ำได้ชุดสีใหม่) กดบันทึกเพื่อเก็บไว้",
+"The costume library is empty.":"คลังชุดยังว่างอยู่","The costume library is empty. Trainee Theater can only reuse existing costumes.":"คลังชุดยังว่างอยู่ เธียเตอร์เด็กฝึกใช้ได้เฉพาะชุดที่มีอยู่แล้ว"
+});
+I18N_TH_TPL.push(["🎲 Random costume for {0} selected song(s)","🎲 สุ่มชุดให้ {0} เพลงที่เลือก"],["Random costume “{0}” given to {1} song(s).","สุ่มชุด “{0}” ให้ {1} เพลงแล้ว"],["{0}: new random costume “{1}” (edit it any time in Costume Designer).","{0}: สุ่มชุดใหม่ “{1}” (แก้ไขได้ทุกเมื่อใน Costume Designer)"],["{0}: random existing costume “{1}”.","{0}: สุ่มชุดที่มีอยู่ “{1}”"]);

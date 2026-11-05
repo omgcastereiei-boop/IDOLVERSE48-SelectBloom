@@ -153,6 +153,11 @@ Music Production → **Costume Designer** tab (also reachable from each song in 
   Pieces include one-piece dresses, and every piece has a fabric texture (cotton, satin, velvet,
   sequins, denim, tulle, leather, knit) as well as pattern and colours.
 * Designs made with the earlier per-song designer are moved into the library automatically.
+* **Colour tools** (in every costume editor: Costume Designer, single/coupling costume,
+  per-member costumes and Theater costumes): **🎨 Random colours** recolours the same pieces
+  with a harmonious scheme, **🌀 Random patterns** rolls new patterns while keeping the colours,
+  and **🎯 Colours from main colour** builds a palette around the colour you pick. Changes are
+  unsaved until you press Save, so Revert still works.
 
 ## Event images & Roadshows
 
@@ -295,6 +300,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - A Stage gets its number (Team A 1st Stage, 2nd Stage, …) only when it officially debuts.
 - **Formation rows.** Theater formations have several rows like singles (standard rows from the same odd/even rule). Each row's size can be adjusted with −/+, and "Standard rows" restores the default.
 - **Costumes per song & Stage costume.** Every song has **Design new** to create its own costume in the Costume Designer, and a costume can be reused across songs (e.g. M01–M03). The **Stage costume** is chosen from the costumes made or used in that Stage.
+- **🎲 Random costume.** Each song has a 🎲 button that creates a new random costume for it (Trainee theaters pick a random existing costume instead), and **🎲 Random costume for N song(s)** gives one random costume to the selected songs (or all songs).
 - **Encore (optional).**
   - Each Stage can enable or disable an Encore. Encore songs come from the Song Library and are numbered E01, E02 …, separately from M01…; they don't count toward the 20-song limit.
   - They can be added, reordered, replaced and removed, and each is a Whole Team or Unit song using the Stage's own Units.

@@ -672,3 +672,4 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 @media(max-width:700px){.throw .thpos b{font-size:9px}.throw .thpos small{font-size:8px}}
 /* GE ceremony costume */
 .gecosp{flex-wrap:nowrap;align-items:center}.gecosp .gefig{flex:0 0 auto}.gecosg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:6px}.gecos{display:flex;flex-direction:column;gap:4px;padding:8px;border-radius:12px;border:2px solid #eadff6;background:#fff}.gecos.on{border-color:#e9a43a;background:#fff8e8}.gecos select{max-width:100%}
+.czcolt{flex-wrap:wrap;gap:6px;margin:6px 0}.czmc{display:inline-flex;align-items:center;gap:4px}.czmc input{width:34px;height:28px;padding:0;border:0;background:none}
