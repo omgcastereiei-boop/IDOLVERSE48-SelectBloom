@@ -322,8 +322,17 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Team theaters can create original songs (custom or random title); they become real Song Library records.
   - A Stage gets its number (Team A 1st Stage, 2nd Stage, …) only when it officially debuts.
 - **Formation rows.** Theater formations have several rows like singles (standard rows from the same odd/even rule). Each row's size can be adjusted with −/+, and "Standard rows" restores the default.
-- **Costumes per song & Stage costume.** Every song has **Design new** to create its own costume in the Costume Designer, and a costume can be reused across songs (e.g. M01–M03). The **Stage costume** is chosen from the costumes made or used in that Stage.
-- **🎲 Random costume.** Each song has a 🎲 button that creates a new random costume for it (Trainee theaters pick a random existing costume instead), and **🎲 Random costume for N song(s)** gives one random costume to the selected songs (or all songs).
+- **Stage lineup (Senbatsu).** In Units & Performers, choose who performs the Stage: the whole team, the top N by popularity, or member by member (e.g. 16 of a 20-member team). The others are the bench. The lineup at the debut is every performance's default lineup. In Schedule, **✎ Lineup** swaps members for one performance only, using bench members or Trainees. Bench members are also the first automatic replacements when someone is unavailable.
+- **Stage costumes, like Single costumes.** Each song's **👗 Dress up** opens a dressing room where every member can wear her own costume.
+  - It has the same editor and colour tools as the single, plus 🎲 Randomize Costume, 🎲 Random for every member (same design or each different), library designs, presets and "copy to members without a costume".
+  - Songs can reuse costumes with **Same costumes as…** (e.g. M01–M03).
+  - Trainee theaters only reuse existing costumes.
+  - The Stage costume is the costumes of one song of the Stage, and the General Election ceremony can use it, with each member in her own costume.
+  - Performances record every member's exact costume; a replacement wears the costume of the member she replaces.
+  - The Costume library card was removed from the Stage editor.
+- **Centers.** Any song (setlist, per song or Unit) can have **twin Centers**: both are placed in the middle of an even front row. Songs performed by 1–2 members have **no Center**.
+- **Unit formations.** Unit songs always have their own dance formation, edited in Centers & Formation (swap positions, rows, ranking preset).
+- **Debut photos.** On a Stage's debut day, every song gets a photo of the actual performance: members hold microphones in random poses and wear their own costumes. Open the photos from the notice, the Stage details or the performance summary.
 - **Encore (optional).**
   - Each Stage can enable or disable an Encore. Encore songs come from the Song Library and are numbered E01, E02 …, separately from M01…; they don't count toward the 20-song limit.
   - They can be added, reordered, replaced and removed, and each is a Whole Team or Unit song using the Stage's own Units.

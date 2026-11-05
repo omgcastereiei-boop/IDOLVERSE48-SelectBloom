@@ -699,3 +699,13 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 @media (max-width:720px){.gesr{grid-template-columns:40px 28px minmax(0,1fr) 70px;row-gap:3px}.gesr .gesfan{grid-column:1/-1}.gesr .gesbuy{grid-column:1/3}.gesh{display:none}.gegap{display:none}}
 .geprel .gepr .gepv{min-width:64px;text-align:right}.geprel .gegap{width:112px}.geprel .gefx{width:120px;text-align:right}
 @media (max-width:720px){.geprel .gefx{width:auto;min-width:0}}
+/* Theater — lineup, Stage costumes, debut photos */
+.thlu .thlun{font-size:15px;color:#5a2a6e}
+.thlul{display:grid;gap:4px;max-height:60vh;overflow:auto;margin:8px 0}.thlur{gap:8px;flex-wrap:wrap}.thlur b{min-width:120px}
+.thczs{border-top:1px dashed var(--line);padding:8px 0}.thczs:first-of-type{border-top:0}
+.thczpv{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.thczpf{background:linear-gradient(#fde3ec,#eee7fb);border-radius:16px;padding:8px}
+.thpics{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:8px 0}
+.thpic{margin:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#2a1638;cursor:pointer}.thpic svg{display:block;width:100%;height:auto}
+.thpic figcaption{background:var(--card);padding:6px 10px;font-size:12.5px}
+.thpicbig svg{width:100%;height:auto;border-radius:14px}
+.thunq{flex-wrap:wrap;gap:6px}
