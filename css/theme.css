@@ -709,3 +709,21 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 .thpic figcaption{background:var(--card);padding:6px 10px;font-size:12.5px}
 .thpicbig svg{width:100%;height:auto;border-radius:14px}
 .thunq{flex-wrap:wrap;gap:6px}
+/* Member profile button & shared sort bar (game-wide) */
+.mpi{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #d9c2e8;color:#6a55d6;font:700 12px/18px Quicksand,sans-serif;text-align:center;cursor:pointer;box-shadow:0 1px 3px rgba(90,42,110,.25);z-index:3}
+.mpi:hover{background:#6a55d6;color:#fff}
+.mod.pov{z-index:1200}
+.mlbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0;padding:6px 8px;border:1px dashed var(--line);border-radius:12px;background:rgba(255,253,248,.85);font-size:12.5px}
+.mlbar select{min-height:30px;padding:3px 8px;font-size:12.5px}.mlbar label{display:inline-flex;align-items:center;gap:4px;font-weight:700}
+.mlhide{display:none!important}
+/* Theater: Revival, copy, picker, formation panel */
+.threvt{background:linear-gradient(90deg,#ffe1ea,#eee7fb);color:#8a2f6e;font-weight:800;letter-spacing:1px}
+.threvb{gap:8px;flex-wrap:wrap;margin:4px 0}
+.thcpsrc{gap:12px;align-items:center;flex-wrap:nowrap}.thcpcur{display:flex;flex-direction:column;align-items:center;margin-left:auto}.thcpcur small{font-size:10px;color:var(--mut)}
+.czpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;max-height:58vh;overflow:auto;margin-top:8px}
+.czpki{border:1px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:#fffdf8;text-align:center}.czpki small{font-size:11px;color:var(--mut)}.czpki .row{justify-content:center;gap:4px}
+.thczed{margin:6px 2px}
+.thfml{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;margin-top:6px}
+.thfm{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:14px;padding:6px 8px;background:#fffdf8;cursor:pointer;font:inherit;color:var(--ink)}
+.thfm.on{border-color:#e9758f;box-shadow:0 0 0 2px #ffd0dc}.thfm small{display:block;font-size:11px;color:var(--mut)}
+.thfs{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}.thfs i{font-style:normal;font-size:11px;background:#f4eefc;border-radius:8px;padding:1px 6px}

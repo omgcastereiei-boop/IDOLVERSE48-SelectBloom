@@ -45,6 +45,8 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/debut.js` | Automatic group debut on the first single release, anniversary calendar events, debut info in Groups, trainees in Handshake Events |
 | `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
+| `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
+| `js/ui/members-ui.js` | Game-wide member profile overlay (ⓘ) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
 | `js/ui/mv.js` | Music Video production: per-song MV choice, style / location / storyline planning, itemised dynamic budget, Week 3 filming, Release Day publication, daily views and Buzz, MV library |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
@@ -363,10 +365,29 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Ticket sales are capped at 300 and revenue is tickets × your ticket price.
   - Online viewers are unlimited and come from Online Membership packages (name, price, benefits, on/off), billed once a month.
   - Everything is recorded in the ledger.
-- **Transitions, reuse & adoption.**
+- **Transitions, reuse & Revival Stage.**
   - A complete Stage is scheduled by choosing the current Stage's final performance and the new Stage's debut performance (later).
   - Performances in between are cancelled; cancelling the transition restores them.
-  - Reusing a retired Stage keeps its number. Adopting another team's Stage creates an independent copy that receives the adopting team's next number. Unavailable songs or costumes must be replaced.
+  - Reusing a retired Stage keeps its number.
+  - A **Revival Stage** is a new production of any debuted Stage, from this team or another team. It is a separate Stage with its own id, a reference to the original, and a "REVIVAL" tag.
+    - It copies the Setlist order, the Units and their song assignments, the Encore, and every song's costumes, which stay editable.
+    - New performers get the costume of the member who had the same position.
+    - It receives the team's next Stage number at its debut. The original Stage, its number and its history never change.
+- **Costume copy & reuse.** In the dressing room:
+  - **📋 Copy to members…** copies the design in the editor to any member of any song of the Stage, including members who already have a costume (it shows their current costume and asks before replacing). The source is never changed.
+  - **📚 Use existing costume** opens the Costume Library and the costumes of other Stage songs, with previews, names, their Stage or song, and how often each is used. Apply one to one member or to the whole song.
+  - **✦ New costume** starts from a basic preset.
+  - Every assignment is an independent copy, so editing it never changes another song, another Stage or the library design.
+  - Saved Stage costumes are added to the Costume Library with their Stage.
+  - The Single dressing room has the same picker, and its copy dialog shows each member's current costume.
+- **Audience & new fans.**
+  - The live audience (up to the 300 seats) and the online audience (membership broadcast, only when the theater has members) are tracked separately.
+  - Most viewers are existing fans. Only newcomers can become fans, at a low conversion rate that depends on satisfaction, the performers' popularity, vocal and dance, song popularity and how new the Stage is.
+  - Conversion falls as a theater performs more often (shows in the last 30 days).
+  - New fans join through the Aggregate Fanbase System, and each member is credited with the newcomers she drew. Members' recognition grows only a little.
+  - The performance summary has an **Audience Report**, a **Fanbase Report** and a **Performance Report**.
+- **Dance Formation tools.** Under the formation there is a performer list with portrait, team, position, fans, popularity, vocal, dance and variety, using the shared sort and filter bar and ⓘ profiles. Tap a member and then a position to swap.
+  - **⚡ Auto Arrange** orders the real performers by any stat (Dance by default, highest or lowest first), keeps the chosen Center(s) or lets the best-ranked take the Center positions, and uses the standard rows. Everything can still be adjusted by hand.
 - **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
 
 ## Formations & starting a single
@@ -392,6 +413,16 @@ The budget is itemised from these choices: location rental, crew, sets, props an
 - Cancelling before production refunds the budget.
 
 Filming happens in Week 3 and the production check in Week 4 of the unchanged 28-day schedule. The MV is published on its song's Release Day. Views are simulated every day: first-day interest from popularity, fans, Buzz, song sales, Senbatsu and Center, budget and choices, then decay, a long tail, and occasional viral or renewed-interest spikes (budget helps but guarantees nothing). Views add Buzz to the participating members. All MVs with their full history are listed under **Music Production › Music Videos** and in the Song Library.
+
+## Member profiles & sorting (game-wide)
+
+- Every member portrait in a list, selection, assignment or formation screen has an **ⓘ** button.
+  - It opens the existing Member Profile in an overlay above the current screen.
+  - Selections, Unit members, formations and dressing-room work stay exactly as they were when you press ◀ Back.
+- Every list of member cards has the same **sort / filter bar**:
+  - sort by name, any member stat (fanbase, popularity, vocal, dance, performance, variety, passion, …), rarity, generation, team or trend, in either direction
+  - filter by team / Trainee, generation and rarity
+- It only re-orders or hides cards on screen, never the data or any selection. The setting is remembered per screen.
 
 ## Language / ภาษา
 
