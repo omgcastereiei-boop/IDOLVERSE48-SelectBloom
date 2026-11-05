@@ -292,8 +292,15 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Songs can be searched, filtered, picked at random and reordered by drag or ▲▼.
   - Team theaters can create original songs (custom or random title); they become real Song Library records.
   - A Stage gets its number (Team A 1st Stage, 2nd Stage, …) only when it officially debuts.
+- **Units inside a Stage.**
+  - Every song is either a **Whole Team** song (all eligible members of the team, or all Trainees) or a **Unit** song.
+  - Units are created inside each Stage, as many as you like or none, each with a name, an optional description and hand-picked members. A member can be in several Units or in none.
+  - Units never change anyone's team and never carry over to a new Stage.
+  - Songs can be reassigned between Units or switched between Whole Team and Unit at any time. Deleting a Unit turns its songs into Whole Team songs.
+  - A debuted Stage keeps its Units as debuted, and every performance record stores each song's type, Unit and performers.
+  - Older saves are converted automatically. A Stage that was performed by a theater-wide Unit, or songs with hand-picked members, become Stage Units with exactly the same performers.
 - **Members, Centers & formations.**
-  - All members or a Unit (a member can belong to several Units), with per-song participation and MC participants.
+  - MC breaks have their own participants.
   - A Setlist Center with per-song overrides, or individual song Centers.
   - A global or per-song formation (Center, front and back rows, left and right) with click or drag swapping.
   - An optional *Sort by General Election ranking* preset (falls back to popularity).
