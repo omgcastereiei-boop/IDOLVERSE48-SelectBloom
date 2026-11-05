@@ -190,7 +190,7 @@ function geFig(s,rank,opt={}){if(!s)return'';const c=rank&&rank<=3?GE_CAPE[rank]
  const vb=opt.vb||'10 -4 80 202',q=vb.split(' ').map(Number);return`<svg class="gefig${c?' top'+rank:''}" viewBox="${vb}" ${opt.w?`width="${opt.w}" height="${(opt.w*q[3]/q[2]).toFixed(1)}"`:''} role="img" aria-label="${esc(s.name)}" xmlns="http://www.w3.org/2000/svg">${back}${inner}${front}${crown}</svg>`}
 const gePor=(s,rank,w)=>geFig(s,rank,{w,vb:'24 -3 52 70'});
 // arrangement: balanced rows, smallest row in front, group Center front-middle
-function geArrange(ids){const n=ids.length,R=n<=6?1:n<=14?2:n<=26?3:4,base=Math.floor(n/R),ex=n%R,sizes=Array.from({length:R},(_,i)=>base+(i>=R-ex?1:0));let k=0;const rows=sizes.map(sz=>{const r=ids.slice(k,k+sz);k+=sz;return r});
+function geArrange(ids){const n=ids.length,sizes=typeof fxRows=='function'?fxRows(n,1):[n];let k=0;const rows=sizes.map(sz=>{const r=ids.slice(k,k+sz);k+=sz;return r});
  return rows.map(r=>{const o=[];r.forEach((id,i)=>{if(i%2==0)o.push(id);else o.unshift(id)});return o})}
 function gePhotos(e){if(e.photos&&e.photos.length)return e.photos;e.photos=geLineups(e).map(L=>({gi:L.gi,name:L.name,rows:geArrange(L.ids),ed:e.name,year:e.year,day:S.day}));return e.photos}
 function gePhotoSvg(e,ph){const rows=ph.rows,R=rows.length,W=1000,mx=Math.max(...rows.map(r=>r.length)),FW=Math.min(150,(W-60)/Math.max(1,mx)*1.25),H=Math.round(200+FW*2.6+(R-1)*FW*.98);const rk=new Map(e.final.rows.map(r=>[r.id,r]));let fg='';

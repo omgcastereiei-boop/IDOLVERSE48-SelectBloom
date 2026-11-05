@@ -328,6 +328,12 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Reusing a retired Stage keeps its number. Adopting another team's Stage creates an independent copy that receives the adopting team's next number. Unavailable songs or costumes must be replaced.
 - **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
 
+## Formations & starting a single
+
+- New and automatic formations put the smallest row in front and grow toward the back, with the Center(s) exactly in the middle of the front row: 8 → 3-5, 12 → 3-4-5, 16 → 5-5-6, 24 → 7-8-9 (two Centers: 12 → 4-4-4). The General Election group photos use the same rows, with 1st place in the middle. Saved formations are not changed.
+- **Start Single** starts production right away; requirements and funds are still checked.
+- A single whose lineups come from the General Election has no second member reaction at its announcement: the members already reacted at the ceremony. Their Senbatsu record is still updated.
+
 ## Music Videos
 
 For every song of a new single (Songs & tracklist step), choose **Produce Music Video** or **No Music Video**. Each MV has its own plan:
@@ -335,10 +341,9 @@ For every song of a new single (Songs & tracklist step), choose **Produce Music 
 - **Style** (exactly one): Performance, Story, Cinematic, Conceptual, Location or Special Visual.
 - **Filming location**: 14 domestic (studios, school, street, beach, forest, garden, rooftop, amusement park, palace, Kyoto, snowfield, custom set …) or 12 overseas (Seoul, Bangkok, Shanghai, Taipei, Singapore, Hong Kong, Paris, London, Rome, Los Angeles, Hawaii, Bali). Each card shows its rent, travel and hotel costs and the estimated total.
 - **Storyline**: optional; a Story MV unlocks extra storylines. Genre and Concept never restrict any choice.
-- **Production design**: sets, supporting actors, equipment (drone, crane, Steadicam, lighting, weather effects) and VFX.
 - **Participants**: the song's own Senbatsu (Title Track and coupling songs have their own lineups), wearing the costumes assigned to that song in Costume Designer.
 
-The budget is itemised from these choices: location rental, crew, sets, props and equipment, cast, VFX, travel and accommodation, coordination, post-production and other costs. Overseas shoots add flights, hotels and extra days.
+The budget is itemised from these choices: location rental, crew, sets, props and equipment, cast, VFX, travel and accommodation, coordination, post-production and other costs (set-up, equipment and effects follow the chosen style and storyline). The MV cover shows the Senbatsu in random poses against an illustrated backdrop of the location. Overseas shoots add flights, hotels and extra days.
 
 - Confirming pays it once through the ledger, and insufficient funds block confirmation.
 - Revising the plan, or changing the Senbatsu size, charges or refunds only the difference.

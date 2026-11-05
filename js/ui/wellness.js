@@ -180,6 +180,9 @@ function wlRecord(m,pos,key,title,day){const r=srOf(m);if(r.keys.includes(key))r
  r.prev=pos;r.log.push({day,title,pos,key});if(r.log.length>30)r.log.shift();return true}
 function wlReact(p){if(!p||!p.id||!p.ann)return[];S.wlAnn=S.wlAnn||[];if(S.wlAnn.includes(p.id))return[];S.wlAnn.push(p.id);if(S.wlAnn.length>200)S.wlAnn.shift();
  const M=wlPositions(p);if(!M)return[];const title=p.title.trim(),out=[];
+ // a single whose lineups come from the General Election: members already reacted at the ceremony,
+ // so only the Senbatsu record is updated (no second mood / emotional effect)
+ if(p.geNext){M.forEach((pos,id)=>{const m=get(id);if(m)wlRecord(m,pos,p.id,title,S.day)});return[]}
  M.forEach((pos,id)=>{const m=get(id);if(!m)return;const r=srOf(m),sit=wlSit(m,pos,r),em=wlPickMood(m,sit),dmh=wlMhDelta(m,sit,em,r),e=WL.eff[em]||{},line=wlLine(sit,em,m);
   const was=r.prev;wlRecord(m,pos,p.id,title,S.day);
   // trainees expect little: muted effects
