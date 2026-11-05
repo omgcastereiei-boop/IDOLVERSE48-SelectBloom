@@ -277,7 +277,8 @@ Open **General Election** in the menu.
    - Book it on a Saturday or Sunday after the close, at a venue of your choice; the venue cost and ticket revenue apply.
    - On the day, the full-screen ceremony runs: opening, host, announcement, every place from last to 1st (REVEAL RANKING / NEXT MEMBER), group Centers, winner, speeches, group photos, closing.
    - SKIP PRESENTATION jumps ahead without changing any result. Progress is saved after every step.
-   - 1st place wears a red royal cape and crown, 2nd a pink cape and 3rd a light blue cape; everyone else wears the ceremony outfit.
+   - **Ceremony costume:** choose the standard outfit, a library design (or a new one from the Costume Designer), any team's Stage costume, or the costume of a released single (each member wears her own costume from that single). The choice is fixed when the ceremony begins.
+   - 1st place wears a red royal cape and crown, 2nd a pink cape and 3rd a light blue cape, on top of the ceremony costume.
 6. **After the ceremony.**
    - Each member reacts to her result through the existing Mood, Mental Health (including the mandatory leave), Passion and Loyalty systems, based on her previous election and preliminary rank, expectations, personality and history.
    - The ranking groups become the **locked** lineups of the next single: main song = first group, coupling songs = the others, each with its group Center. Other songs use the normal Senbatsu system.
@@ -292,6 +293,8 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Songs can be searched, filtered, picked at random and reordered by drag or ▲▼.
   - Team theaters can create original songs (custom or random title); they become real Song Library records.
   - A Stage gets its number (Team A 1st Stage, 2nd Stage, …) only when it officially debuts.
+- **Formation rows.** Theater formations have several rows like singles (standard rows from the same odd/even rule). Each row's size can be adjusted with −/+, and "Standard rows" restores the default.
+- **Costumes per song & Stage costume.** Every song has **Design new** to create its own costume in the Costume Designer, and a costume can be reused across songs (e.g. M01–M03). The **Stage costume** is chosen from the costumes made or used in that Stage.
 - **Encore (optional).**
   - Each Stage can enable or disable an Encore. Encore songs come from the Song Library and are numbered E01, E02 …, separately from M01…; they don't count toward the 20-song limit.
   - They can be added, reordered, replaced and removed, and each is a Whole Team or Unit song using the Stage's own Units.
@@ -330,7 +333,8 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
 
 ## Formations & starting a single
 
-- New and automatic formations put the smallest row in front and grow toward the back, with the Center(s) exactly in the middle of the front row: 8 → 3-5, 12 → 3-4-5, 16 → 5-5-6, 24 → 7-8-9 (two Centers: 12 → 4-4-4). The General Election group photos use the same rows, with 1st place in the middle. Saved formations are not changed.
+- New and automatic formations alternate odd and even rows so the Center(s) stand exactly in the middle and each row fills the gaps of the row in front. A single Center uses odd–even–odd rows (12 → 3-4-5, 16 → 5-6-5, 20 → 7-6-7, 24 → 7-8-9). Twin Centers use even–odd–even rows (14 → 4-5-5, 16 → 4-5-7); only the last row breaks the pattern when the total makes it impossible. Theater formations and the General Election group photos (1st place in the middle) use the same rows. Saved formations are not changed.
+- New Single Production songs start with a 16-member Senbatsu (or all eligible members when fewer).
 - **Start Single** starts production right away; requirements and funds are still checked.
 - A single whose lineups come from the General Election has no second member reaction at its announcement: the members already reacted at the ceremony. Their Senbatsu record is still updated.
 

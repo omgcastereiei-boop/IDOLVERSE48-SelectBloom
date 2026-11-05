@@ -665,3 +665,10 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 .thencs{margin-top:12px;padding:10px;border-radius:14px;border:2px dashed #d9cce8;background:#fbf9ff}.thencs.on{border-style:solid;border-color:#e9b949;background:linear-gradient(180deg,#fff8e6,#fff)}.thencs h3{margin:0 8px 0 0}
 .thtl li.thsg.enc .thnum{background:linear-gradient(180deg,#f2b84b,#d9822b)}.thtl li.thench{justify-content:center;background:linear-gradient(90deg,#fff1cf,#ffe0ec);border:0;font:800 13px Quicksand;letter-spacing:4px;color:#9a5a12}
 .thsl li.thslm.enc{color:#d9822b}.thsl li.thsle b{color:#9a5a12}.thptr.enc b{color:#d9822b}
+/* theater: multi-row formation, stage costume */
+.throw{display:grid;justify-content:center;gap:4px;margin:2px 0 8px}.throw .thpos{width:100%;min-width:0;padding:4px 2px}.throw .thpos svg{width:100%;max-width:50px;height:auto}.throw .thpos b,.throw .thpos small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.throwl{display:flex;justify-content:center;align-items:center;gap:4px;font-size:10px;color:#f3d7ff}.throwl .b{padding:0 8px;min-height:20px;font-size:11px;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)}.thrl{font-weight:800;letter-spacing:1px}
+.thscz .row{flex-wrap:nowrap;align-items:flex-start}.thscz select{max-width:100%}
+@media(max-width:700px){.throw .thpos b{font-size:9px}.throw .thpos small{font-size:8px}}
+/* GE ceremony costume */
+.gecosp{flex-wrap:nowrap;align-items:center}.gecosp .gefig{flex:0 0 auto}.gecosg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:6px}.gecos{display:flex;flex-direction:column;gap:4px;padding:8px;border-radius:12px;border:2px solid #eadff6;background:#fff}.gecos.on{border-color:#e9a43a;background:#fff8e8}.gecos select{max-width:100%}
