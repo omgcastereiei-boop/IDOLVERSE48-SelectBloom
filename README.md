@@ -292,6 +292,11 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Songs can be searched, filtered, picked at random and reordered by drag or ▲▼.
   - Team theaters can create original songs (custom or random title); they become real Song Library records.
   - A Stage gets its number (Team A 1st Stage, 2nd Stage, …) only when it officially debuts.
+- **Encore (optional).**
+  - Each Stage can enable or disable an Encore. Encore songs come from the Song Library and are numbered E01, E02 …, separately from M01…; they don't count toward the 20-song limit.
+  - They can be added, reordered, replaced and removed, and each is a Whole Team or Unit song using the Stage's own Units.
+  - They are always performed after all regular songs, and every performance record keeps them in order.
+  - New Stages start with the Encore disabled. A Stage without Encore is complete. Disabling the Encore keeps its songs for later, and after the debut the Encore is fixed like the rest of the Setlist.
 - **Units inside a Stage.**
   - Every song is either a **Whole Team** song (all eligible members of the team, or all Trainees) or a **Unit** song.
   - Units are created inside each Stage, as many as you like or none, each with a name, an optional description and hand-picked members. A member can be in several Units or in none.

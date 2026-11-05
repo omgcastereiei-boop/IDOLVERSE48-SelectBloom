@@ -661,3 +661,7 @@ body.gecer-on{overflow:hidden}
 .thptb{display:inline-block;font:800 9px Quicksand;letter-spacing:1px;padding:1px 6px;border-radius:5px;margin-right:4px;background:#ffe0ec;color:#b8406e}.thptb.unit{background:#e3dcff;color:#4b3aa0}
 .thpt{font-size:12px;padding:3px 6px;border-radius:8px;max-width:170px}.thpt.unit{background:#efeaff;border-color:#c9b6ff}.thptr{border-bottom:1px dashed var(--line);padding:4px 0}
 span.thck{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+/* theater: Encore */
+.thencs{margin-top:12px;padding:10px;border-radius:14px;border:2px dashed #d9cce8;background:#fbf9ff}.thencs.on{border-style:solid;border-color:#e9b949;background:linear-gradient(180deg,#fff8e6,#fff)}.thencs h3{margin:0 8px 0 0}
+.thtl li.thsg.enc .thnum{background:linear-gradient(180deg,#f2b84b,#d9822b)}.thtl li.thench{justify-content:center;background:linear-gradient(90deg,#fff1cf,#ffe0ec);border:0;font:800 13px Quicksand;letter-spacing:4px;color:#9a5a12}
+.thsl li.thslm.enc{color:#d9822b}.thsl li.thsle b{color:#9a5a12}.thptr.enc b{color:#d9822b}
