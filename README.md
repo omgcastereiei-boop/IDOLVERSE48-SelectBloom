@@ -274,9 +274,29 @@ Open **General Election** in the menu.
 3. **Voting.**
    - Voting opens on the single's release day and lasts exactly 2 calendar months (Jan 1 → Feb 28).
    - Every CD sold is 1 voting token, and 1 token is 1 vote.
-   - Daily CD sales are simulated from popularity, buzz, fanbase, promotion, competition and the remaining time. Each day is processed once.
-   - Fans in the existing fanbase (Kami Oshi / Oshi patterns, loyalty, engagement, spending) cast the tokens. Votes cast + unused tokens = tokens generated, always.
-   - **Preliminary results** are published on release day and every two weeks.
+   - **Votes come from simulated CD buying, not from fan counts.** The existing aggregate fan segments (`S.fb.segs`) buy CDs. No separate election fanbase is created and no fan record is changed.
+     - Each segment has a buying probability from fan type, loyalty, engagement and whether its Kami Oshi is a candidate.
+     - It also has CDs per buyer, mainly from spending power and loyalty; Kami Oshi fans buy many more.
+     - It has a timing style: early, steady or late buyers.
+     - Its motivation comes from member popularity, buzz, trending surges, preliminary reactions, promotion events and weekends.
+   - A small, loyal, high-spending Kami Oshi fanbase can out-vote a much larger casual one.
+   - **No double counting.** A segment's CDs are generated once and then split: its Kami Oshi first (priority by support pattern), then its other Oshi, with a small share for fans who vote for anyone (by popularity). The ♥ fanbase shown is unique people (Kami Oshi + Oshi fans), never votes.
+   - Release-day CDs come from the existing CD sales system and are attributed to the segments that bought them. That real number sets the scale for the daily simulation, so CD pricing and the sales economy are unchanged.
+   - Every token belongs to this election and one candidate until fans cast it. Votes cast + held tokens = tokens generated, always.
+   - **Exactly two preliminary results:**
+     - **01**, the day after release: ranking, vote totals and gaps.
+     - **02**, one calendar month after voting opens: ranking and ▲▼ movement only; scores are hidden.
+   - **Fan reactions to preliminary results.** Per segment and probabilistic, limited to 0.55×–2.2× and fading over time.
+     - Fans of high-ranked members may relax (😌).
+     - Fans of members below expectation, falling, or in a close race may rally (🔥).
+     - Rising members excite their fans.
+     - Reactions change future buying only; they never change votes already cast or the fanbase.
+   - The voting screen shows:
+     - the election timeline
+     - each candidate's ♥ fanbase and Kami Oshi fans
+     - estimated buying rate and CDs per buyer
+     - activity level and fan mood
+     - the preliminary result history
 4. **Voting close.** Voting closes automatically and unused tokens expire. Final rankings are locked: unique positions, ties broken by who reached her total first. They stay sealed until the ceremony.
 5. **Ceremony.**
    - Book it on a Saturday or Sunday after the close, at a venue of your choice; the venue cost and ticket revenue apply.
@@ -288,6 +308,9 @@ Open **General Election** in the menu.
    - Each member reacts to her result through the existing Mood, Mental Health (including the mandatory leave), Passion and Loyalty systems, based on her previous election and preliminary rank, expectations, personality and history.
    - The ranking groups become the **locked** lineups of the next single: main song = first group, coupling songs = the others, each with its group Center. Other songs use the normal Senbatsu system.
    - Results, reactions, speeches and group photos are kept in the **Election Archive** and in each member's profile.
+7. **Six-month cooldown.** A new General Election can be organized only 6 calendar months after the ceremony is completed (not after voting opens or closes). The Election section shows the next eligible date and the time left. The cooldown is saved with the game.
+
+Saves with an election already in voting keep every vote. Their unused tokens get owners in proportion to the votes, and the old preliminary results stay as history. The archive also shows each member's ♥ supporters next to her votes.
 
 ## Theater (劇場公演)
 

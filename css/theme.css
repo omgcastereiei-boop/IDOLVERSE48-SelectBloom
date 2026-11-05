@@ -673,3 +673,29 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 /* GE ceremony costume */
 .gecosp{flex-wrap:nowrap;align-items:center}.gecosp .gefig{flex:0 0 auto}.gecosg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:6px}.gecos{display:flex;flex-direction:column;gap:4px;padding:8px;border-radius:12px;border:2px solid #eadff6;background:#fff}.gecos.on{border-color:#e9a43a;background:#fff8e8}.gecos select{max-width:100%}
 .czcolt{flex-wrap:wrap;gap:6px;margin:6px 0}.czmc{display:inline-flex;align-items:center;gap:4px}.czmc input{width:34px;height:28px;padding:0;border:0;background:none}
+/* General Election — fan-behaviour voting */
+.gek2{color:#c4457f;font-weight:800}
+.getli{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}
+.getli>div{border:1px solid var(--line);border-radius:12px;padding:6px 10px;background:#fffdf8;display:flex;flex-direction:column;gap:1px}
+.getli>div.ok{opacity:.65;background:#f4f9f5}.getli>div.on{border-color:#d9a441;box-shadow:0 0 0 2px #ffe9b8}
+.getli b{font-size:12.5px}.getli span{font-size:12px;font-weight:700;color:#5a2a6e}.getli small{font-size:11px;color:var(--mut)}
+.gesr{display:grid;grid-template-columns:46px 32px minmax(80px,1fr) minmax(130px,1.4fr) minmax(120px,1.1fr) 76px 92px;align-items:center;gap:8px;padding:4px 6px;border-bottom:1px dashed var(--line);font-size:12.5px}
+.gesr b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gesh{font-size:11px;font-weight:800;color:var(--mut);border-bottom:1px solid var(--line)}
+.gesfan{position:relative;height:22px;border-radius:8px;background:#fdeef4;overflow:hidden;display:flex;align-items:center}
+.gesfan i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#f7bcd2,#ef8fb5);opacity:.55}
+.gesfan em{position:relative;font-style:normal;padding:0 6px;font-size:11.5px;white-space:nowrap}
+.gesbuy{font-size:11.5px;color:var(--ink)}
+.gelvl{font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;text-align:center}
+.gelvl.lo{background:#eee;color:#777}.gelvl.nm{background:#e2f2fc;color:#2d6f99}.gelvl.hi{background:#eee7fb;color:#6a55d6}.gelvl.vh{background:#ffe1ea;color:#c4457f}
+.gemot{font-size:11.5px;font-weight:700}
+.gepv.hid{color:#b9a9c9;letter-spacing:2px}
+.geprel.hid{border-color:#a993e0;background:linear-gradient(180deg,#f8f5ff,#fff)}
+.gehidn{color:#6a55d6;font-weight:700}
+.gegap{font-size:11px;min-width:84px}
+.gefx{font-size:11px;font-weight:700;white-space:nowrap}
+.gecool{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border:2px dashed #a993e0;margin-bottom:10px}
+.gecool>div{display:flex;flex-direction:column;gap:2px;flex:1 1 240px}.gecool.ok{border-color:#3c9a6c}
+@media (max-width:720px){.gesr{grid-template-columns:40px 28px minmax(0,1fr) 70px;row-gap:3px}.gesr .gesfan{grid-column:1/-1}.gesr .gesbuy{grid-column:1/3}.gesh{display:none}.gegap{display:none}}
+.geprel .gepr .gepv{min-width:64px;text-align:right}.geprel .gegap{width:112px}.geprel .gefx{width:120px;text-align:right}
+@media (max-width:720px){.geprel .gefx{width:auto;min-width:0}}
