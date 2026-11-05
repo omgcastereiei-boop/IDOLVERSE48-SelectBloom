@@ -45,6 +45,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/debut.js` | Automatic group debut on the first single release, anniversary calendar events, debut info in Groups, trainees in Handshake Events |
 | `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
+| `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
@@ -280,6 +281,39 @@ Open **General Election** in the menu.
    - Each member reacts to her result through the existing Mood, Mental Health (including the mandatory leave), Passion and Loyalty systems, based on her previous election and preliminary rank, expectations, personality and history.
    - The ranking groups become the **locked** lineups of the next single: main song = first group, coupling songs = the others, each with its group Center. Other songs use the normal Senbatsu system.
    - Results, reactions, speeches and group photos are kept in the **Election Archive** and in each member's profile.
+
+## Theater (劇場公演)
+
+Open **Theater** in the menu. Every team and the Trainees of each group run their own theater: their own Stage numbers, schedule, Units, ticket price, online membership and history. The teams of a group share one physical theater (one performance per time slot, 300 seats).
+
+- **Stages & Setlists.**
+  - A Setlist holds up to 20 songs from the Song Library, plus an optional Overture and any number of MC breaks (neither counts).
+  - Songs can be searched, filtered, picked at random and reordered by drag or ▲▼.
+  - Team theaters can create original songs (custom or random title); they become real Song Library records.
+  - A Stage gets its number (Team A 1st Stage, 2nd Stage, …) only when it officially debuts.
+- **Members, Centers & formations.**
+  - All members or a Unit (a member can belong to several Units), with per-song participation and MC participants.
+  - A Setlist Center with per-song overrides, or individual song Centers.
+  - A global or per-song formation (Center, front and back rows, left and right) with click or drag swapping.
+  - An optional *Sort by General Election ranking* preset (falls back to popularity).
+- **Costumes.**
+  - The same Costume Designer and costume library as Single Production; one design can be used for several songs.
+  - Every performance records the exact costume version worn, and a version can be pinned for a song.
+  - Trainee theaters reuse existing costumes and cannot create new costumes or songs.
+- **Schedule.**
+  - Fixed weekly, random (1–7 per week) or custom weeks.
+  - Always at least 2 weeks ahead; weekdays allow Evening performances only, weekends Afternoon and Evening.
+  - Never on release or launch-event days, Handshake Events or the General Election ceremony. Roadshow days are allowed; the Roadshow members sit out.
+- **Availability.** Before every performance, members on leave, on a Roadshow, in another performance or out of energy sit out. Trainees can replace them, automatically or chosen by you. They stay Trainees, and team membership never changes.
+- **Audience & money.**
+  - Ticket sales are capped at 300 and revenue is tickets × your ticket price.
+  - Online viewers are unlimited and come from Online Membership packages (name, price, benefits, on/off), billed once a month.
+  - Everything is recorded in the ledger.
+- **Transitions, reuse & adoption.**
+  - A complete Stage is scheduled by choosing the current Stage's final performance and the new Stage's debut performance (later).
+  - Performances in between are cancelled; cancelling the transition restores them.
+  - Reusing a retired Stage keeps its number. Adopting another team's Stage creates an independent copy that receives the adopting team's next number. Unavailable songs or costumes must be replaced.
+- **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
 
 ## Language / ภาษา
 
