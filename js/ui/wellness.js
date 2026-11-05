@@ -49,7 +49,7 @@ function wlLeaveEnd(m){const w=wlOf(m),L=w.leave;if(!L)return;L.causes.forEach(k
  wlN(`<li>✿ <b>${esc(m.name)}</b> returned from ${WLT[L.type]}. Physical Health ${Math.round(w.ph)} · Mental Health ${Math.round(w.mh)} · Energy ${m.en}. She is available for activities again.</li>`)}
 // members on leave are removed from everything still to come (draft formations, events, plans)
 function wlStrip(){const A=new Set(S.members.filter(wlAway).map(m=>m.id));if(!A.size)return;
- const p=S.pj;if(p&&p.status=='draft')Object.values(S.songs).forEach(o=>{if(!o||!o.fm||lockedSong(o.id))return;let ch=0;o.fm.sl.forEach(x=>{if(x.m&&A.has(x.m)){x.m=null;ch=1}});if(ch)fmSync(o)});
+ const p=S.pj;if(p&&p.status=='draft')Object.values(S.songs).forEach(o=>{if(!o||!o.fm||lockedSong(o.id)||o.ge)return;let ch=0;o.fm.sl.forEach(x=>{if(x.m&&A.has(x.m)){x.m=null;ch=1}});if(ch)fmSync(o)});
  if(p&&p.hs){if(Array.isArray(p.hs.members))p.hs.members=p.hs.members.filter(id=>!A.has(id));(p.hs.groups||[]).forEach(g=>{if(Array.isArray(g.m))g.m=g.m.filter(id=>!A.has(id))})}
  (S.cal||[]).forEach(e=>{if(e.done||e.type=='release'||e.type=='anniv')return;if(e.type=='handshake'&&e.r1)return;if(e.type=='road'&&(e.d1||e.res))return;if(Array.isArray(e.members))e.members=e.members.filter(id=>!A.has(id));(e.groups||[]).forEach(g=>{if(Array.isArray(g.m))g.m=g.m.filter(id=>!A.has(id))})});
  if(ui.rsp&&Array.isArray(ui.rsp.sel))ui.rsp.sel=ui.rsp.sel.filter(id=>!A.has(id));if(ui.rs&&Array.isArray(ui.rs.sel))ui.rs.sel=ui.rs.sel.filter(id=>!A.has(id));if(ui.mod&&ui.mod.t=='ev'&&Array.isArray(ui.mod.sel))ui.mod.sel=ui.mod.sel.filter(id=>!A.has(id))}
@@ -125,7 +125,7 @@ const _wlRsTog=rsTog;rsTog=function(id){const r=ui.rs,m=get(id);if(r&&!r.sel.inc
 const _wlRsAll=rsAll;rsAll=function(){const r=_wlRsAll.apply(this,arguments);try{wlStrip();render()}catch(e){}return r};
 const _wlRsElig=rsElig;rsElig=function(){return _wlRsElig.apply(this,arguments).filter(id=>!wlAway(get(id)))};
 const _wlHsElig=hsElig;hsElig=function(){return _wlHsElig.apply(this,arguments).filter(id=>!wlAway(get(id)))};
-const _wlReqs=reqs;reqs=function(p){const r=_wlReqs.apply(this,arguments);try{if(p&&p.status=='draft'&&p.types){const ids=new Set();[p.mainId,...p.types.flatMap(t=>t.songs)].forEach(i=>{const o=S.songs[i];if(o&&o.fm)o.fm.sl.forEach(x=>{if(x.m){const m=get(x.m);if(wlAway(m))ids.add(m.name+' is on leave and must be removed from "'+o.title+'".');else if(x.c&&m&&wlOf(m).mh<20)ids.add(m.name+'\'s Mental Health is Critical — choose another Center for "'+o.title+'".')}})});r.push(...ids)}}catch(e){console.error(e)}return r};
+const _wlReqs=reqs;reqs=function(p){const r=_wlReqs.apply(this,arguments);try{if(p&&p.status=='draft'&&p.types){const ids=new Set();[p.mainId,...p.types.flatMap(t=>t.songs)].forEach(i=>{const o=S.songs[i];if(o&&o.fm&&!o.ge)o.fm.sl.forEach(x=>{if(x.m){const m=get(x.m);if(wlAway(m))ids.add(m.name+' is on leave and must be removed from "'+o.title+'".');else if(x.c&&m&&wlOf(m).mh<20)ids.add(m.name+'\'s Mental Health is Critical — choose another Center for "'+o.title+'".')}})});r.push(...ids)}}catch(e){console.error(e)}return r};
 
 // ---- Senbatsu announcement reactions ---------------------------------------------------------------
 const WLTONE=m=>{const t=m.traits||[];if(m.pers=='Shy'||t.includes('Shy'))return'soft';if(m.pers=='Serious')return'firm';if(m.pers=='Cool'||m.pers=='Elegant'||t.includes('Cool')||t.includes('Elegant')||t.includes('Mysterious'))return'calm';return'bright'};

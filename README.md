@@ -44,6 +44,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/member-extras.js` | Member grid columns, profile outfit after each release, Roadshow planning status (Not Planned / Planned / Participated), audition without probability settings |
 | `js/ui/debut.js` | Automatic group debut on the first single release, anniversary calendar events, debut info in Groups, trainees in Handshake Events |
 | `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
+| `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
 | `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
@@ -252,6 +253,33 @@ Passion, Loyalty and Morale stay separate and recoverable.
 - She keeps recovering during the leave and returns automatically on the return date, with a notification.
 
 Older saves load with Physical and Mental Health at 100, a Neutral mood, unchanged Energy, Passion and Loyalty, and a Senbatsu record rebuilt from past releases.
+
+## General Election (総選挙)
+
+Open **General Election** in the menu.
+
+1. **Configure the election.**
+   - Name, edition and year.
+   - Ranking groups: any names and sizes, up to 100 ranked positions in total. Ranges are continuous (e.g. 16 + 16 + 8 = 1st–40th). The first member of each group is its Center.
+   - Groups are limited to 32 members each (the largest Senbatsu formation) and 9 in total (one main song plus 8 coupling songs per single).
+   - Registered participants: trainees and members on leave may take part. Graduated members cannot.
+2. **Make the current single plan the General Election Single** and produce it as usual in Single Production. You choose title, Senbatsu, Center, costumes, CD cover and promotion with the existing tools.
+3. **Voting.**
+   - Voting opens on the single's release day and lasts exactly 2 calendar months (Jan 1 → Feb 28).
+   - Every CD sold is 1 voting token, and 1 token is 1 vote.
+   - Daily CD sales are simulated from popularity, buzz, fanbase, promotion, competition and the remaining time. Each day is processed once.
+   - Fans in the existing fanbase (Kami Oshi / Oshi patterns, loyalty, engagement, spending) cast the tokens. Votes cast + unused tokens = tokens generated, always.
+   - **Preliminary results** are published on release day and every two weeks.
+4. **Voting close.** Voting closes automatically and unused tokens expire. Final rankings are locked: unique positions, ties broken by who reached her total first. They stay sealed until the ceremony.
+5. **Ceremony.**
+   - Book it on a Saturday or Sunday after the close, at a venue of your choice; the venue cost and ticket revenue apply.
+   - On the day, the full-screen ceremony runs: opening, host, announcement, every place from last to 1st (REVEAL RANKING / NEXT MEMBER), group Centers, winner, speeches, group photos, closing.
+   - SKIP PRESENTATION jumps ahead without changing any result. Progress is saved after every step.
+   - 1st place wears a red royal cape and crown, 2nd a pink cape and 3rd a light blue cape; everyone else wears the ceremony outfit.
+6. **After the ceremony.**
+   - Each member reacts to her result through the existing Mood, Mental Health (including the mandatory leave), Passion and Loyalty systems, based on her previous election and preliminary rank, expectations, personality and history.
+   - The ranking groups become the **locked** lineups of the next single: main song = first group, coupling songs = the others, each with its group Center. Other songs use the normal Senbatsu system.
+   - Results, reactions, speeches and group photos are kept in the **Election Archive** and in each member's profile.
 
 ## Language / ภาษา
 
