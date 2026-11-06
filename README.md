@@ -425,20 +425,20 @@ Filming happens in Week 3 and the production check in Week 4 of the unchanged 28
   - filter by team / Trainee, generation and rarity
 - It only re-orders or hides cards on screen, never the data or any selection. The setting is remembered per screen.
 
-### Handshake Events — individual statistics
+### Handshake Events — handshake statistics
 
-After a Handshake Event, the results show an **Individual handshake statistics** table for every participating member:
-- **Handshake Sessions** (จำนวนครั้ง) count every completed handshake, including repeat visits.
-- **Unique Visitors** (จำนวนคน) count each person once per member.
-- **Summary:** total sessions, total unique fan attendees (each person once for the whole event, never the sum of the members' visitors), participating members, and the members with the most sessions and the most visitors (highlighted).
-- **Sorting:** sort by either column in both directions; a member's name or portrait opens her profile.
+The results screen shows handshake statistics according to the event format:
+- **Individual Handshake:** a **member** table. Each member has her own Handshake Sessions (จำนวนครั้ง, every completed handshake including repeat visits) and Unique Visitors (จำนวนคน, each person once per member).
+- **Group Handshake:** a **booth** table. Each booth has its sessions and unique visitors; the members of a booth share these numbers, and they are not split between members.
+- **Group Hi-Touch** (High-Five Event): no handshake statistics are counted or shown. Its event mechanics and tickets are unchanged.
 
-**How it is counted.** The event itself (tickets, redemptions, booth results, attendance, costs and new fans) is unchanged. When it ends, the redeemed tickets are given to a lightweight set of event-level fan identities: exactly the recorded number of attendees, holding exactly the redeemed tickets, so each booth keeps exactly its session count. Fans with several tickets mostly revisit their favourite booth, and sometimes visit another one.
-- **Individual Handshake:** one session per ticket at one member's booth.
-- **Group Handshake:** every member of a booth meets each visitor of that booth.
-- **High-Five:** every visitor greets every member each time she walks the line.
+**Summary.** Total sessions, total unique fan attendees (each person once for the whole event, never the sum of the members' or booths' visitors), the number of members or booths, and the member or booth with the most sessions and the most visitors (highlighted).
 
-The statistics are stored with each event (`res.hsx`), are never recounted, and stay available for every past event. Events finished before this update get theirs reconstructed once from their recorded results.
+**Sorting.** Sort by either column in both directions. In the member table, a name or portrait opens the profile.
+
+**How it is counted.** The event itself (tickets, redemptions, booth results, attendance, costs, new fans) is unchanged. When a handshake event ends, its redeemed tickets are given to a lightweight set of event-level fan identities: exactly the recorded number of attendees, holding exactly the redeemed tickets, so every booth keeps exactly its session count. Fans with several tickets mostly revisit their favourite booth.
+
+**Storage.** The statistics are stored with each event (`res.hsx`) and are never recounted. Events finished before this update get theirs once from their recorded results. Statistics saved by the first version are converted with the same numbers (Group → per booth), and Hi-Touch statistics are removed.
 
 ## Sister Groups & Member Transfer (Company)
 

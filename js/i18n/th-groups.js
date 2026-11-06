@@ -25,3 +25,5 @@ Object.assign(I18N_TH,{"Transfer members":"ย้ายสมาชิกเข�
 // Handshake individual statistics
 Object.assign(I18N_TH,{"Individual handshake statistics":"สถิติจับมือรายบุคคล","Total Handshake Sessions":"จำนวนครั้งจับมือทั้งหมด","Total unique fan attendees":"จำนวนแฟนที่มาร่วมงาน (คน)","each person once":"นับคนละครั้ง","all members":"ทุกเมมเบอร์","Participating members":"เมมเบอร์ที่ร่วมงาน","Most Handshake Sessions":"จับมือมากที่สุด (ครั้ง)","Most Unique Visitors":"คนมาหามากที่สุด (คน)","Handshake Sessions":"จำนวนครั้ง","Unique Visitors":"จำนวนคน","★ Most sessions":"★ ครั้งมากที่สุด","★ Most unique visitors":"★ คนมากที่สุด","★ Most sessions & visitors":"★ ครั้งและคนมากที่สุด"});
 I18N_TH_TPL.push(["{0} sessions","{0} ครั้ง"],["{0} people","{0} คน"]);
+Object.assign(I18N_TH,{"Booth handshake statistics":"สถิติจับมือรายบูธ","Booth":"บูธ","Booths":"จำนวนบูธ","all booths":"ทุกบูธ","Booth with most sessions":"บูธที่จับมือมากที่สุด (ครั้ง)","Booth with most visitors":"บูธที่คนมามากที่สุด (คน)","Member":"เมมเบอร์"});
+I18N_TH_TPL.push(["{0} members","{0} คน"]);
