@@ -880,6 +880,7 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 .thcpk[data-mlsort="pas"] .thfv[data-k="pas"]{display:inline-block}
 .thcpk[data-mlsort="mor"] .thfv[data-k="mor"]{display:inline-block}
 .thcpk[data-mlsort="trend"] .thfv[data-k="trend"]{display:inline-block}
+.thmft{border-collapse:collapse;font-size:12px;min-width:100%}.thmft th,.thmft td{padding:4px 6px;border-bottom:1px solid #eee3f5;text-align:center;white-space:nowrap}.thmft th small{display:block;font-weight:600;color:#8f80a6;font-size:10px}.thmft td.thmxn{text-align:left}
 
 </style>
 </head><body>
@@ -4663,7 +4664,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const snap=thSnapId(thSnapItems(s,res));const rec={id:'pf'+(++H.seq),k:x.k,show:x.id,st:s.id,no:s.no,nm:s.name,day:x.day,sl:x.sl,snap,mem:L.map(m=>m.id),rp:Object.entries(sub).map(([o,n])=>[+o,n]),notes,sold,att,cap:TH_CAP,price:T.price,rev,cost,online,subs,sat,q:Math.round(Q),nf,fx,aud:AUD.rep};
  H.pf.push(rec);x.st='done';x.perf=rec.id;x.used=L.map(m=>m.id);s.perfs=(s.perfs|0)+1;s.att=(s.att|0)+att;s.on=(s.on|0)+online;s.rev=(s.rev|0)+rev;s.lastDay=x.day;
  if(T.trans&&T.trans.final==x.id){s.status='retired';s.final=x.day;T.active=null;thN(`<li>🎭 <b>${esc(thNoTxt(s))} “${esc(s.name)}”</b> gave its final performance (${jd(x.day)}) and is now retired. The new Stage debuts on ${jd(T.trans.dday)}.</li>`)}
- resNote(`<div class="c thres"><b>🎭 ${esc(thNoTxt(s))} — “${esc(s.name)}”</b><div class="st">${thSlotTxt(x)} · ${att}/${TH_CAP} in the theater · ${online.toLocaleString()} online · satisfaction ${sat}% · ${yen(rev)} · +${nf.toLocaleString()} new fan(s)</div>${notes.length?`<div class="st">${notes.map(esc).join(' · ')}</div>`:''}<button class="b s" onclick="thOpenPerf('${rec.id}')">Performance summary</button></div>`)}
+ resNote(`<div class="c thres"><b>🎭 ${esc(thNoTxt(s))} — “${esc(s.name)}”</b><div class="st">${thSlotTxt(x)} · ${att}/${TH_CAP} in the theater · ${online.toLocaleString()} online · satisfaction ${sat}% · ${yen(rev)} · +${nf.toLocaleString()} new member fan(s)</div>${notes.length?`<div class="st">${notes.map(esc).join(' · ')}</div>`:''}<button class="b s" onclick="thOpenPerf('${rec.id}')">Performance summary</button></div>`)}
 
 // ---- online membership (monthly, billed once per month) ---------------------------------------------------
 function thMonthly(key){const T=thOf(key),mk=dt().getFullYear()*12+dt().getMonth();if(T.bill===mk)return;const K=thK(key);if(!K)return;const P=thPool(key),pop=P.length?avg(P.map(m=>m.pop)):0,H=thS(),shows=H.pf.filter(p=>p.k==key&&p.day>S.day-31),sat=shows.length?avg(shows.map(p=>p.sat)):50;
@@ -4894,7 +4895,7 @@ V.tharch=function(){const key=thCur();if(!key)return thEmpty();const K=thKeys(),
 function thItemsHtml(items,res){let n=0,e=0,eh=0;return`<ol class="thtl ro">${items.map(it=>{if(it.k=='ov')return`<li class="thov"><span class="thnum">OV</span><b>${esc(it.name||'Overture')}</b></li>`;if(it.k=='mc')return`<li class="thmc"><span class="thnum">MC</span><b>${esc(it.name)}</b><span class="st">${esc(it.desc||'')}</span><span class="thmcm">${(it.mem||[]).map(id=>thMini(id,20)).join('')}</span></li>`;const hd=it.enc&&!eh++?'<li class="thench"><b>ENCORE</b><span class="st">アンコール</span></li>':'';if(it.enc)e++;else n++;
  const v=it.cz&&it.cz.ver&&S.th.ver[it.cz.ver],c=get(it.center),a=c&&ap(c);return`${hd}<li class="thsg ${it.enc?'enc':''}"><span class="thnum">${it.enc?'E'+String(e).padStart(2,'0'):'M'+String(n).padStart(2,'0')}</span><div class="thsgm"><b>${esc(it.title||(S.songs[it.song]||{}).title||'')}</b><small><span class="thptb ${it.pt=='unit'?'unit':'team'}">${it.pt=='unit'?'UNIT · '+esc((it.unit||{}).name||''):'Team'}</span> Center ${esc(c?c.name:'—')} · 👗 ${v?esc(v.name)+' v'+v.n:esc(thCzName(it.cz))} · rows ${(it.rows||[it.fr]).filter(Boolean).join('-')||'—'}</small></div>${v&&c?`<svg viewBox="10 -2 80 200" width="28">${fig(c,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:v.p})}</svg>`:''}<span class="thmcm">${(it.mem||[]).slice(0,8).map(id=>thMini(id,20)).join('')}${(it.mem||[]).length>8?`<i>+${it.mem.length-8}</i>`:''}</span></li>`}).join('')}</ol>`}
 function thOpenPerf(id){const p=thS().pf.find(z=>z.id==id);if(!p)return;const it=S.th.snap[p.snap]||[];ui.mod={t:'html',h:`<h2 class="ht">🎭 ${p.no?esc(thLabel(p.k))+' '+ordN(p.no)+' Stage':esc(thLabel(p.k))} — “${esc(p.nm)}”</h2><div class="st">${wd(p.day)} · ${TH_SLOT[p.sl]} · ${esc(thOf(p.k).name)}</div>
- <div class="gekg">${thKpi('Physical audience',`${p.att}/${p.cap}`)}${thKpi('Tickets sold',p.sold,`${p.cap-p.sold} seats unsold`)}${thKpi('Ticket revenue',yen(p.rev),`${yen(p.price)} each · cost ${yen(p.cost)}`)}${thKpi('Online viewers',p.online.toLocaleString(),`${p.subs.toLocaleString()} members · included in membership`)}${thKpi('Satisfaction',p.sat+'%',`performance ${p.q}`)}${thKpi('New fans','+'+p.nf.toLocaleString())}</div>
+ <div class="gekg">${thKpi('Physical audience',`${p.att}/${p.cap}`)}${thKpi('Tickets sold',p.sold,`${p.cap-p.sold} seats unsold`)}${thKpi('Ticket revenue',yen(p.rev),`${yen(p.price)} each · cost ${yen(p.cost)}`)}${thKpi('Online viewers',p.online.toLocaleString(),`${p.subs.toLocaleString()} members · included in membership`)}${thKpi('Satisfaction',p.sat+'%',`performance ${p.q}`)}${thKpi('New member fans','+'+p.nf.toLocaleString())}</div>
  ${p.notes.length?`<h3>Availability &amp; replacements</h3><ul class="ms">${p.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}<h3>Setlist as performed</h3>${thItemsHtml(it)}
  <h3>Members</h3><div class="thfx2">${p.fx.map(([mid,dp,df,db,de,rp])=>{const m=get(mid);return`<div class="thfxm">${m?ptc(m,34):''}<b>${esc(m?m.name:'#'+mid)}</b><small>${rp?'Trainee replacement · ':''}Pop ${dp>=0?'+':''}${dp} · Fans +${df} · Buzz +${db} · Energy −${de}</small></div>`}).join('')}</div>`};render()}
 function thOpenStage(id){const s=thStage(id);if(!s)return;const key=thCur(),P=thS().pf.filter(p=>p.st==s.id),own=s.k==key,items=s.orig||thSnapItems(s);
@@ -5661,6 +5662,77 @@ function thCurSl(a){let n=0,e=0;const row=(it,lbl)=>{const o=S.songs[it.song]||{
   const faces=u?M.map(id=>thMini(id,22)).join(''):[c,c2].filter(x=>x!=null).map(id=>thMini(id,22)).join('');return`<li class="thsls ${u?'u':''}"><span class="thsln">${lbl}</span><b>${esc(o.title||'?')}</b>${u?`<small class="thptb unit">UNIT · ${esc((thUnitOf(a,it.unit)||{}).name||'')}</small>`:''}<span class="thmcm">${faces}</span></li>`};
  const mc=it=>`<li class="thslm">${esc(it.k=='ov'?(it.name||'Overture'):(it.name||'MC'))}</li>`;const E=thEncSeq(a);
  return`<ol class="thsl thsl3">${a.items.map(it=>it.k=='song'?row(it,'M'+String(++n).padStart(2,'0')):mc(it)).join('')}${E.length?`<li class="thslm enc">ENCORE</li>${E.map(it=>it.k=='song'?row(it,'E'+String(++e).padStart(2,'0')):mc(it)).join('')}`:''}</ol>`}
+
+</script>
+<script>
+// =====================================================================================
+//  Theater — Member Fan acquisition & Song exposure
+// -------------------------------------------------------------------------------------
+//  · Theater performances build INDIVIDUAL member fanbases (m.fans, the existing member fan
+//    count that drives Popularity). They never create Group Fans (S.fans is not changed, and
+//    the member gain is not turned into group fans by the Aggregate Fanbase System: its member
+//    baseline fb.mf is moved with the gain). In the Aggregate Fanbase System the performance
+//    gives the members exposure (fb.exp), which lets EXISTING fans pick them as Oshi.
+//  · Each participating member gets her own calculation, song by song, using the formation
+//    actually performed for that song:
+//      song gain = eligible audience × base rate
+//                  × position (Center / Front / Middle / Back)
+//                  × song exposure (number of performers)
+//                  × ability (Popularity, Dance, Vocal, Variety, Passion)
+//                  × large-fanbase diminishing return
+//                  × audience saturation (repeats of the Stage, theater frequency)
+//                  × performance quality (satisfaction)
+//      eligible audience = viewers who are not already her fans (live + weighted online).
+//    Songs later in the show give less (attention fatigue) and the total of one performance is
+//    capped at a share of her eligible audience. The expected total is rounded randomly to whole
+//    fans (zero is a valid result) and split back over the songs for the breakdown.
+//  · Applied once per completed performance (the record keeps the per-song breakdown).
+// =====================================================================================
+const TH_MF={
+ pos:{center:1.5,front:1.25,middle:1,back:.8},
+ exp:[[1,1.6],[2,1.4],[4,1.3],[7,1.15],[12,1.05],[16,1],[Infinity,.9]], // [max performers, multiplier]
+ base:.005,          // new fans per eligible viewer per song before multipliers
+ online:.3,           // an online viewer counts this much of a live viewer
+ abil:{pop:.3,dance:.2,sing:.2,variety:.15,pas:.15},abilA:.35,abilB:1.3, // ability factor = A + B × weighted score
+ big:6000, 
+ fanBase:5000,        // share of viewers already her fans = her fans / max(Group Fans, this, 1.2 × her fans)
+           // fanbase size where the diminishing return reaches 1/√2
+ fatigue:.2,          // k-th song of a member in one show: ÷ (1 + fatigue × k)
+ cap:.04,             // at most this share of her eligible audience per performance
+ stFloor:.45,stScale:40, // repeats of the same Stage: floor + (1-floor) × e^(-performances/scale)
+ noise:.2
+};
+const thMfExp=n=>{for(const[k,v]of TH_MF.exp)if(n<=k)return v;return 1};
+// position of every performer in one song as performed: center / front / middle / back
+function thMfPos(s,it,R){const ids=(R&&R.ids)||thMem(s,it),F=thForm(s,it,ids),o=F.o.filter(id=>ids.includes(id)),rows=F.rows&&F.rows.reduce((a,b)=>a+b,0)==o.length?F.rows:[o.length],out={},cen=new Set([R&&R.c,F.c2].filter(x=>x!=null));
+ if(o.length==1){out[o[0]]='center';return out}let i=0;rows.forEach((n,r)=>{for(let k=0;k<n&&i<o.length;k++,i++){const id=o[i];out[id]=o.length>2&&cen.has(id)?'center':r==0?'front':r==rows.length-1?'back':'middle'}});return out}
+const thMfAbil=m=>{const W=TH_MF.abil,sc=(W.pop*(m.pop||0)+W.dance*(m.dance||0)+W.sing*(m.sing||0)+W.variety*(m.variety||0)+W.pas*(m.pas||0))/100;return TH_MF.abilA+TH_MF.abilB*sc};
+// one performance: member fan gains per song (no group fans)
+function thMfCalc(x,s,L,res,A,sat){const ids=new Set(L.map(m=>m.id)),gf=Math.max(1,S.fans|0),perfs=s.perfs|0,st=TH_MF.stFloor+(1-TH_MF.stFloor)*Math.exp(-perfs/TH_MF.stScale),dim=A.dim||1,satF=st*Math.sqrt(dim),qF=.6+.8*(sat||0)/100;
+ const songs=thAll(s).filter(it=>res&&res[it.id]&&(res[it.id].ids||[]).length),cnt={},E={},U={},M={};
+ songs.forEach(it=>{const R=res[it.id],P=thMfPos(s,it,R),n=R.ids.filter(id=>ids.has(id)).length;if(!n)return;const ex=thMfExp(n);R.ids.forEach(id=>{if(!ids.has(id))return;const m=get(id);if(!m)return;
+  if(!M[id]){const p=Math.min(.9,(m.fans||0)/Math.max(gf,TH_MF.fanBase,1.2*(m.fans||0),1)),elig=Math.max(0,A.live-A.liveFan*p)+TH_MF.online*Math.max(0,A.online-A.onFan*p);M[id]={elig,big:1/Math.sqrt(1+(m.fans||0)/TH_MF.big),ab:thMfAbil(m),k:0}}
+  const z=M[id],u=z.elig*TH_MF.base*(TH_MF.pos[P[id]||'middle'])*ex*z.ab*z.big*satF*qF,v=u/(1+TH_MF.fatigue*z.k);(U[id]=U[id]||{})[it.id]={u,pos:P[id]||'middle',n};z.k++;(E[id]=E[id]||{})[it.id]=v;cnt[id]=(cnt[id]||0)+1})});
+ const mem={},bySong={};Object.entries(E).forEach(([id,S1])=>{const z=M[id];let tot=Object.values(S1).reduce((a,b)=>a+b,0);const cap=z.elig*TH_MF.cap;if(tot>cap){const f=cap/tot;Object.keys(S1).forEach(k=>S1[k]*=f);tot=cap}
+  const n=fbRound(tot*(1-TH_MF.noise+2*TH_MF.noise*Math.random()));mem[id]=n;bySong[id]=n?{...Object.fromEntries(Object.keys(S1).map(k=>[k,0])),...thSplitN(n,S1)}:Object.fromEntries(Object.keys(S1).map(k=>[k,0]))});
+ const songsInfo=songs.map(it=>({id:it.id,lbl:thLbl(s,it),title:(S.songs[it.song]||{}).title||'',n:(res[it.id].ids||[]).length}));
+ return{U,mem,bySong,songs:songsInfo,tot:Object.values(mem).reduce((a,b)=>a+b,0),satF:+satF.toFixed(2),stF:+st.toFixed(2)}}
+// audience model (unchanged) + member fans; the newcomers no longer join the group fanbase
+{const f=thAud;thAud=function(x,s,T,L,res,att,online,sat){const A=f.apply(this,arguments);try{const MF=thMfCalc(x,s,L,res,A.rep,sat);A.mem=MF.mem;A.recog=MF.mem;A.nf=MF.tot;Object.assign(A.rep,{mem:MF.mem,mfs:MF.bySong,mfSongs:MF.songs,mfTot:MF.tot,nf:MF.tot,groupNew:0,mfv:1,satF:MF.satF,stF:MF.stF})}catch(e){console.error(e)}return A}}
+// member fans are added once; the Aggregate Fanbase System sees them as member exposure, not as new group fans
+thGainM=function(m,A,sat){if(!A)return;const g=(A.mem&&A.mem[m.id])|0,D=A.done||(A.rep&&A.rep.done)||{};A.done=D;if(A.rep)A.rep.done=D;if(D[m.id])return;D[m.id]=1;
+ if(g>0){m.fans=Math.max(0,Math.round((m.fans||0)+g));try{const fb=S.fb;if(fb&&fb.mf&&fb.mf[m.id]!=null)fb.mf[m.id]=m.fans;if(fb&&typeof fbExp=='function')fbExp(m.id,Math.min(1.5,g/12))}catch(e){}}
+ m.buzz=cl(Math.round(m.buzz+(sat>=60?1:0)+(g>0?1:0)));m.pop=popOf(m)};
+thAudApply=function(x,A){if(A&&A.rep)A.rep.groupNew=0}; // Theater never creates Group Fans
+{const f=thPerform;thPerform=function(x){const H=thS(),n0=H.pf.length,g0=S.fans;const r=f.apply(this,arguments);try{if(H.pf.length>n0){const rec=H.pf.at(-1);if(rec.aud&&rec.aud.mfv)rec.nf=rec.aud.mfTot}}catch(e){console.error(e)}return r}}
+// performance report: member fans with the song breakdown
+function thMfHtml(p,A){if(!A||!A.mfv)return null;const S1=A.mfSongs||[],B=A.mfs||{},ids=(p.mem||[]).slice().sort((a,b)=>((A.mem||{})[b]|0)-((A.mem||{})[a]|0)),K=thKpi;
+ const used=S1.filter(it=>ids.some(id=>(B[id]||{})[it.id]>0));
+ return`<h3>Member Fan Report</h3><div class="gekg">${K('New Member Fans','+'+(A.mfTot|0).toLocaleString(),'total of every participating member')}${K('Stage repetition',`×${A.stF}`,`${A.recent} show(s) in 30 days · audience saturation ×${A.satF}`)}</div>
+ <p class="st">Theater builds each member's own fanbase: one viewer can become a fan of several members. It does not add Group Fans. Gains depend on the viewers who are not yet her fans, her Popularity and skills, her position in each song's formation and how many members perform the song.</p>
+ <div class="wrap"><table class="thmft"><tr><th>Member</th>${used.map(it=>`<th title="${esc(it.title)} · ${it.n} performer(s)">${it.lbl}<small>${it.n==1?'Solo':it.n==2?'Duo':it.n+' mem.'}</small></th>`).join('')}<th>Total</th></tr>
+ ${ids.map(id=>{const m=get(id),b=B[id]||{};return`<tr><td class="thmxn">${m?ptc(m,24):''} ${esc(m?m.name:'#'+id)}</td>${used.map(it=>`<td>${b[it.id]>0?'+'+b[it.id]:b[it.id]===0?'0':'–'}</td>`).join('')}<td><b>+${((A.mem||{})[id]|0).toLocaleString()}</b></td></tr>`}).join('')}</table></div>`}
+{const f=thOpenPerf;thOpenPerf=function(id){const r=f.apply(this,arguments);try{const p=thS().pf.find(z=>z.id==id),h=p&&p.aud&&thMfHtml(p,p.aud);if(h&&ui.mod&&ui.mod.h){const a=ui.mod.h.indexOf('<h3>Fanbase Report</h3>'),b=ui.mod.h.indexOf('<h3>Performance Report</h3>');if(a>=0&&b>a){ui.mod.h=ui.mod.h.slice(0,a)+h+ui.mod.h.slice(b);render()}}}catch(e){console.error(e)}return r}}
 
 </script>
 <script>
@@ -6518,6 +6590,10 @@ I18N_TH_TPL.unshift(["A Stage can have at most {0} songs, Encore songs included.
 Object.assign(I18N_TH,{"The one-piece dress became a blouse in the same colours, so the bottom piece can be seen.":"เปลี่ยนเดรสวันพีซเป็นเบลาส์สีเดิม เพื่อให้เห็นท่อนล่างที่เลือก",
 "The top is a one-piece dress, so no bottom piece is worn. Choosing a bottom piece changes the top to a blouse in the same colours.":"ท่อนบนเป็นเดรสวันพีซ จึงไม่มีท่อนล่าง ถ้าเลือกท่อนล่าง ท่อนบนจะเปลี่ยนเป็นเบลาส์สีเดิม",
 "They are performed after all regular songs, by the whole team or by one of this Stage's Units.":"แสดงหลังเพลงปกติทั้งหมด โดยทั้งทีมหรือยูนิตของสเตจนี้"});
+// Theater member fan acquisition
+Object.assign(I18N_TH,{"Member Fan Report":"รายงานแฟนเมมเบอร์","New Member Fans":"แฟนเมมเบอร์ใหม่","New member fans":"แฟนเมมเบอร์ใหม่","total of every participating member":"รวมทุกเมมเบอร์ที่ขึ้นแสดง","Stage repetition":"การแสดงซ้ำของสเตจ","Member":"เมมเบอร์","Total":"รวม","Solo":"โซโล่","Duo":"ดูโอ้",
+"Theater builds each member's own fanbase: one viewer can become a fan of several members. It does not add Group Fans. Gains depend on the viewers who are not yet her fans, her Popularity and skills, her position in each song's formation and how many members perform the song.":"เธียเตอร์สร้างแฟนของเมมเบอร์แต่ละคน ผู้ชมหนึ่งคนเป็นแฟนได้หลายเมมเบอร์ และไม่เพิ่มแฟนของวง จำนวนที่ได้ขึ้นกับผู้ชมที่ยังไม่ใช่แฟนของเธอ ความนิยมและความสามารถ ตำแหน่งในฟอร์เมชันของแต่ละเพลง และจำนวนคนที่แสดงเพลงนั้น"});
+I18N_TH_TPL.unshift(["{0} mem.","{0} คน"],["{0} show(s) in 30 days · audience saturation ×{1}","{0} รอบใน 30 วัน · ความอิ่มตัวของผู้ชม ×{1}"],["+{0} new member fan(s)","+{0} แฟนเมมเบอร์ใหม่"]);
 
 </script>
 <script>

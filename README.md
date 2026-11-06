@@ -49,6 +49,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
 | `js/ui/theater4.js` | Theater: song add / edit / remove at any time, Center picker cards, whole-day availability with bench and Trainee replacements, performance rescheduling |
 | `js/ui/theater5.js` | Theater: Setlist Center as default Center, MC All Members / Team, Encore MC, performance count, scheduled Formation / Center changes with history |
+| `js/ui/theater-fans.js` | Theater member fan acquisition: per-member, per-song exposure (position, song size, ability, fanbase size, saturation), member fan report; no Group Fans |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -385,12 +386,21 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Every assignment is an independent copy, so editing it never changes another song, another Stage or the library design.
   - Saved Stage costumes are added to the Costume Library with their Stage.
   - The Single dressing room has the same picker, and its copy dialog shows each member's current costume.
-- **Audience & new fans.**
+- **Audience & member fans.**
   - The live audience (up to the 300 seats) and the online audience (membership broadcast, only when the theater has members) are tracked separately.
-  - Most viewers are existing fans. Only newcomers can become fans, at a low conversion rate that depends on satisfaction, the performers' popularity, vocal and dance, song popularity and how new the Stage is.
-  - Conversion falls as a theater performs more often (shows in the last 30 days).
-  - New fans join through the Aggregate Fanbase System, and each member is credited with the newcomers she drew. Members' recognition grows only a little.
-  - The performance summary has an **Audience Report**, a **Fanbase Report** and a **Performance Report**.
+  - **Theater builds each member's own fanbase (member fans) and never adds Group Fans.** One viewer can become a fan of several members. Members who do not perform get nothing.
+  - Every performer is calculated separately, song by song, using the formation actually performed:
+    `viewers not yet her fans × base rate × position × song exposure × ability × fanbase size × audience saturation × show quality`.
+    - **Position**: Center ×1.50 (each twin Center; a solo performer counts as Center), Front Row ×1.25, Middle ×1.00, Back Row ×0.80.
+    - **Song exposure** by number of performers: 1 ×1.60 · 2 ×1.40 · 3–4 ×1.30 · 5–7 ×1.15 · 8–12 ×1.05 · 13–16 ×1.00 · 17+ ×0.90.
+    - **Ability**: Popularity, Dance, Vocal, Variety and Passion.
+    - Members with large fanbases have diminishing returns; small fanbases keep real growth.
+    - Each later song of the same member in one show adds less, and one show gives at most 4% of her eligible audience.
+    - Repeating the same Stage lowers gains gradually (never below about 45%), as does a very busy theater.
+    - The total is rounded to whole fans, so zero is possible.
+  - All values are in `TH_MF` (js/ui/theater-fans.js) for balancing. In the test runs, a 16-member Stage averaged about 2–3 new fans per member per show (≈40 per show).
+  - In the Aggregate Fanbase System the show counts as exposure for the members (existing fans may choose them as Oshi); it is never turned into new group fans.
+  - The performance report has an **Audience Report**, a **Member Fan Report** (each member's new fans per song and in total) and a **Performance Report**. Fans are added once per completed performance; cancelled performances give none.
 - **Dance Formation tools.** Under the formation there is a performer list with portrait, team, position, fans, popularity, vocal, dance and variety, using the shared sort and filter bar; tap a face for the profile. Tap a member's name and then a position to swap.
   - **⚡ Auto Arrange** orders the real performers by any stat (Dance by default, highest or lowest first), keeps the chosen Center(s) or lets the best-ranked take the Center positions, and uses the standard rows. Everything can still be adjusted by hand.
 - **Song management (any time).** Each Setlist and Encore song has **✎ Edit** and **✕ Remove**, and the Setlist has **✦ Add New Song** (Encore: **✦ New Encore song**). This works while drafting, after the debut and while the Stage is running; only retired Stages are read-only.
