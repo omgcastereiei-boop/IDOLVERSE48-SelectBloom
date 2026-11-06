@@ -47,6 +47,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
 | `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
 | `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
+| `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
 | `js/ui/mv.js` | Music Video production: per-song MV choice, style / location / storyline planning, itemised dynamic budget, Week 3 filming, Release Day publication, daily views and Buzz, MV library |
@@ -423,6 +424,21 @@ Filming happens in Week 3 and the production check in Week 4 of the unchanged 28
   - sort by name, any member stat (fanbase, popularity, vocal, dance, performance, variety, passion, …), rarity, generation, team or trend, in either direction
   - filter by team / Trainee, generation and rarity
 - It only re-orders or hides cards on screen, never the data or any selection. The setting is remembered per screen.
+
+### Handshake Events — individual statistics
+
+After a Handshake Event, the results show an **Individual handshake statistics** table for every participating member:
+- **Handshake Sessions** (จำนวนครั้ง) count every completed handshake, including repeat visits.
+- **Unique Visitors** (จำนวนคน) count each person once per member.
+- **Summary:** total sessions, total unique fan attendees (each person once for the whole event, never the sum of the members' visitors), participating members, and the members with the most sessions and the most visitors (highlighted).
+- **Sorting:** sort by either column in both directions; a member's name or portrait opens her profile.
+
+**How it is counted.** The event itself (tickets, redemptions, booth results, attendance, costs and new fans) is unchanged. When it ends, the redeemed tickets are given to a lightweight set of event-level fan identities: exactly the recorded number of attendees, holding exactly the redeemed tickets, so each booth keeps exactly its session count. Fans with several tickets mostly revisit their favourite booth, and sometimes visit another one.
+- **Individual Handshake:** one session per ticket at one member's booth.
+- **Group Handshake:** every member of a booth meets each visitor of that booth.
+- **High-Five:** every visitor greets every member each time she walks the line.
+
+The statistics are stored with each event (`res.hsx`), are never recounted, and stay available for every past event. Events finished before this update get theirs reconstructed once from their recorded results.
 
 ## Sister Groups & Member Transfer (Company)
 
