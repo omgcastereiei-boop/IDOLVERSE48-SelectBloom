@@ -765,3 +765,9 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 @media (max-width:560px){.hsxr{grid-template-columns:minmax(0,1fr) 72px 72px;font-size:12px}.hsxh{font-size:11px}}
 .hsxfs{display:flex;flex:none}.hsxfs>svg{margin-right:-8px}.hsxfs i{font-style:normal;font-size:11px;color:var(--mut);margin-left:10px;align-self:center}
 .hsxm>.hsxfs{flex-direction:row;align-items:center}
+/* Theater: song management, Center picker */
+.thaddrow{gap:10px;align-items:center;margin:4px 0 8px;flex-wrap:wrap}
+.thcpk{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px;max-height:60vh;overflow:auto;margin-top:6px}
+.thcpc{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:14px;padding:6px 8px;background:#fffdf8;cursor:pointer;font:inherit;color:var(--ink)}
+.thcpc.on{border-color:#e9b84a;box-shadow:0 0 0 2px #ffe9b8;background:#fff8e6}.thcpc:disabled{opacity:.55;cursor:not-allowed}.thcpc small{display:block;font-size:11px;color:var(--mut)}
+.thcur{background:#ffe9b8;color:#8a5a00;font-weight:800}.thcbtn{min-width:120px}

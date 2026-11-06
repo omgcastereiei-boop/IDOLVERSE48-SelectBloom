@@ -47,6 +47,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
 | `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
 | `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
+| `js/ui/theater4.js` | Theater: song add / edit / remove at any time, Center picker cards, whole-day availability with bench and Trainee replacements, performance rescheduling |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -390,6 +391,20 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - The performance summary has an **Audience Report**, a **Fanbase Report** and a **Performance Report**.
 - **Dance Formation tools.** Under the formation there is a performer list with portrait, team, position, fans, popularity, vocal, dance and variety, using the shared sort and filter bar; tap a face for the profile. Tap a member's name and then a position to swap.
   - **⚡ Auto Arrange** orders the real performers by any stat (Dance by default, highest or lowest first), keeps the chosen Center(s) or lets the best-ranked take the Center positions, and uses the standard rows. Everything can still be adjusted by hand.
+- **Song management (any time).** Each Setlist and Encore song has **✎ Edit** and **✕ Remove**, and the Setlist has **✦ Add New Song** (Encore: **✦ New Encore song**). This works while drafting, after the debut and while the Stage is running; only retired Stages are read-only.
+  - **Edit** changes the title, Genre and Concept (the same lists as Singles), Whole Team or Unit, and the position.
+  - A song also used by a released single or another Stage is never changed: editing it creates a Theater version for this Stage.
+  - **Remove** asks first, keeps the song in the Song Library and keeps the Units valid.
+  - The Setlist recorded at the debut and every past performance stay as they were.
+- **Center picker.** Center and 2nd Center are chosen from member cards: portrait, team or Trainee, generation, rarity, fans, popularity, vocal, dance, variety and passion. The cards use the shared sort and filter bar; tap a face for the profile. Only the song's performers can be chosen, and the current Center is marked ★.
+- **Member availability on performance days.** Before the first round of a day, every round of that theater on that day is checked against every member's schedule in all groups (MV filming, events, other theaters, reservations, illness and so on).
+  - Unavailable lineup members are replaced by available members of the same team who are not in the lineup first, then by Trainees. Trainees stay Trainees.
+  - If any round cannot reach the Stage's lineup size, **every round of that day is cancelled**. A cancelled day has no audience, revenue, fans, rewards or operating costs.
+  - The reason and the missing members are recorded and shown in Theater › Schedule under **Cancelled performances**, and a notice appears.
+- **Move a performance.** **📅 Move** in Theater › Schedule (and on the theater rows of Company › Calendar) moves any scheduled performance, automatic or manual, to another date and slot.
+  - The dialog shows the original and new date and time, how many performers are available, the replacements and every problem: a past date, a blocked day, a slot already taken, a Stage transition, or not enough members.
+  - An invalid date cannot be confirmed.
+  - The performance keeps its id and history; it is moved, not duplicated, and the automatic schedule does not refill the freed slot. Member schedules follow the new date.
 - **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
 
 ## Formations & starting a single
