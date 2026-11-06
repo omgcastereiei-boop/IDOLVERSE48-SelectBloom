@@ -106,3 +106,21 @@ I18N_TH_TPL.unshift(["Remove {0} “{1}” from this Stage? The song stays in th
  ["Not enough available members on that date: {0} of the {1} required performers. Unavailable without replacement: {2}.","วันนั้นเมมเบอร์ว่างไม่พอ: {0} จาก {1} คนที่ต้องการ ไม่ว่างและไม่มีคนแทน: {2}"],
  ["On that date “{0}” is performed instead of “{1}”; a performance cannot move across a Stage transition.","วันนั้นแสดง “{0}” แทน “{1}” ย้ายการแสดงข้ามการเปลี่ยนสเตจไม่ได้"],
  ["Busy: {0}","ไม่ว่าง: {0}"],["Center · {0}","เซ็นเตอร์ · {0}"],["2nd Center · {0}","เซ็นเตอร์คนที่ 2 · {0}"]);
+
+// default Center, MC options, Encore MC, performance count, scheduled Formation / Center changes
+Object.assign(I18N_TH,{"Team":"ทีม","All Members":"เมมเบอร์ทั้งหมด","Choose members":"เลือกเมมเบอร์","+ Encore MC":"+ MC อังกอร์","MC participants":"ผู้ร่วม MC","Encore":"อังกอร์",
+"Also save my choice as the Stage Setlist Center":"บันทึกเป็นเซ็นเตอร์ของเซ็ตลิสต์สเตจด้วย","Dance Formation":"ฟอร์เมชัน","Planned changes":"การเปลี่ยนแปลงที่กำหนดไว้","none":"ไม่มี","Cancel":"ยกเลิก","Discard changes":"ยกเลิกการแก้ไข","Save for this performance":"บันทึกให้เริ่มรอบนี้",
+"✎ Unsaved Formation / Center changes":"✎ การแก้ไขฟอร์เมชัน / เซ็นเตอร์ที่ยังไม่บันทึก","One formation for every song":"ฟอร์เมชันเดียวทุกเพลง","A formation for each song":"ฟอร์เมชันแยกแต่ละเพลง",
+"completed performances of this Stage (cancelled ones are not counted)":"จำนวนรอบที่แสดงจบแล้วของสเตจนี้ (ไม่นับรอบที่ยกเลิก)",
+"Changes to the Dance Formation or Centers of this running Stage start with a performance you choose, at least 7 days later.":"การแก้ไขฟอร์เมชันหรือเซ็นเตอร์ของสเตจที่กำลังแสดง จะเริ่มใช้ในรอบที่คุณเลือก อย่างน้อย 7 วันหลังจากนี้",
+"Past performances keep the Formation and Center they were performed with (Performance History).":"การแสดงที่ผ่านมาคงฟอร์เมชันและเซ็นเตอร์ที่ใช้จริงในตอนนั้น (ประวัติการแสดง)",
+"There are no unsaved Formation or Center changes.":"ไม่มีการแก้ไขฟอร์เมชันหรือเซ็นเตอร์ที่ยังไม่บันทึก","Choose the first performance that should use the new Formation / Center.":"เลือกรอบแรกที่จะใช้ฟอร์เมชัน / เซ็นเตอร์ใหม่",
+"The new configuration can start at the earliest 7 days from today.":"การตั้งค่าใหม่เริ่มได้เร็วที่สุด 7 วันนับจากวันนี้","Positions changed.":"เปลี่ยนตำแหน่งแล้ว","Discard":"ยกเลิก","Cancel change":"ยกเลิกการเปลี่ยนแปลง",
+"Discard the unsaved Formation / Center changes? The Stage keeps its current configuration.":"ยกเลิกการแก้ไขฟอร์เมชัน / เซ็นเตอร์ที่ยังไม่บันทึก? สเตจจะใช้การตั้งค่าเดิม",
+"No performance of this Stage is scheduled 7 or more days from today. Add performances in the Schedule first.":"ยังไม่มีรอบการแสดงของสเตจนี้ที่ห่างจากวันนี้ 7 วันขึ้นไป เพิ่มรอบในตารางการแสดงก่อน",
+"Enable the Encore first.":"เปิดอังกอร์ก่อน","Encore MC added. Choose its members in Units & Performers.":"เพิ่ม MC อังกอร์แล้ว เลือกเมมเบอร์ได้ที่ยูนิตและผู้แสดง","(currently used)":"(ใช้อยู่)",
+"No Stage Setlist Center is set. Choose a Center for this song, or set the Setlist Center in the Formation tab.":"ยังไม่ได้ตั้งเซ็นเตอร์ของเซ็ตลิสต์ เลือกเซ็นเตอร์ให้เพลงนี้ หรือตั้งเซ็นเตอร์เซ็ตลิสต์ในแท็บฟอร์เมชัน"});
+I18N_TH_TPL.unshift(["{0} — {1} Performances","{0} — แสดงแล้ว {1} รอบ"],["{0} member(s)","{0} คน"],["Use the Setlist Center ({0})","ใช้เซ็นเตอร์ของเซ็ตลิสต์ ({0})"],["Default: the Stage Setlist Center {0}","ค่าเริ่มต้น: เซ็นเตอร์ของเซ็ตลิสต์สเตจ {0}"],
+ ["⚠ The Stage Setlist Center {0} does not perform this song, so she cannot be its Center. Choose another member below.","⚠ เซ็นเตอร์ของเซ็ตลิสต์ {0} ไม่ได้แสดงเพลงนี้ จึงเป็นเซ็นเตอร์ไม่ได้ เลือกเมมเบอร์คนอื่นด้านล่าง"],
+ ["{0} is now also the Stage Setlist Center.","{0} เป็นเซ็นเตอร์ของเซ็ตลิสต์สเตจด้วยแล้ว"],["Cancel the Formation / Center change planned for {0}?","ยกเลิกการเปลี่ยนฟอร์เมชัน / เซ็นเตอร์ที่กำหนดไว้วันที่ {0}?"],
+ ["New Formation / Center saved. It starts with the performance on {0} ({1}); earlier performances keep the current one.","บันทึกฟอร์เมชัน / เซ็นเตอร์ใหม่แล้ว เริ่มใช้ในรอบวันที่ {0} ({1}) รอบก่อนหน้ายังใช้แบบเดิม"]);

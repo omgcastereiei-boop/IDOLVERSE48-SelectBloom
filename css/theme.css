@@ -771,3 +771,7 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 .thcpc{display:flex;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:14px;padding:6px 8px;background:#fffdf8;cursor:pointer;font:inherit;color:var(--ink)}
 .thcpc.on{border-color:#e9b84a;box-shadow:0 0 0 2px #ffe9b8;background:#fff8e6}.thcpc:disabled{opacity:.55;cursor:not-allowed}.thcpc small{display:block;font-size:11px;color:var(--mut)}
 .thcur{background:#ffe9b8;color:#8a5a00;font-weight:800}.thcbtn{min-width:120px}
+/* Theater: Stage details, MC participants */
+.thcfg h3{margin:0}.thcfg .gskv td .thmi{vertical-align:middle}.thcfgw{margin-top:8px}.thcfgw select{max-width:100%}
+.thmcp .thmcr{padding:8px 0;border-top:1px dashed var(--line,#e6d9ef)}.thmcp .thmcr:first-of-type{border-top:0}.thmcp .row{flex-wrap:wrap;gap:6px}
+.thcsv{display:inline-flex;align-items:center;gap:6px}.thmct{margin-right:4px}.thmc.enc{border-left:3px solid var(--accent,#e58fbf)}

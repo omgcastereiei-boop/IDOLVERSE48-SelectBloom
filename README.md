@@ -48,6 +48,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
 | `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
 | `js/ui/theater4.js` | Theater: song add / edit / remove at any time, Center picker cards, whole-day availability with bench and Trainee replacements, performance rescheduling |
+| `js/ui/theater5.js` | Theater: Setlist Center as default Center, MC All Members / Team, Encore MC, performance count, scheduled Formation / Center changes with history |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -397,6 +398,21 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - **Remove** asks first, keeps the song in the Song Library and keeps the Units valid.
   - The Setlist recorded at the debut and every past performance stay as they were.
 - **Center picker.** Center and 2nd Center are chosen from member cards: portrait, team or Trainee, generation, rarity, fans, popularity, vocal, dance, variety and passion. The cards use the shared sort and filter bar; tap a face for the profile. Only the song's performers can be chosen, and the current Center is marked ★.
+- **Default Center.** A song without its own Center uses the Stage Setlist Center whenever she performs that song, and the Center picker opens with her selected.
+  - Choosing someone else changes only that song. The Setlist Center changes only if you tick **Also save my choice as the Stage Setlist Center**.
+  - If the Setlist Center does not perform the song, or is unavailable for the next performance, the picker says so.
+- **MC participants.** Each MC break (Setlist or Encore) has three options:
+  - **All Members**: every full member of the Team who is available that day.
+  - **Team**: everyone performing that show.
+  - **Choose members**: only the members you pick.
+
+  Unavailable members never take part, and the performance record keeps who actually did the MC. Song labels now read **Team** instead of "Whole Team".
+- **Encore MC.** **+ Encore MC** adds an MC segment to the Encore. It is edited, reordered and removed like Encore songs, and is shown in its place in the Encore and in the Performance History.
+- **Performance count.** Stage details show "Team A 1st Stage — 12 Performances". Every completed round counts (two shows on one day count twice). Cancelled performances do not count, and each performance record keeps its number.
+- **Changing Formation / Center of a running Stage.** Edits in Centers & Formation on a running Stage are a draft that performances never use.
+  - Choose the first performance that should use them, at least 7 days from today, and press **Save for this performance**. Before that date the previous Formation and Center are used; from it, the new ones. You can also **Discard changes**.
+  - The Stage, its name, Setlist, history and performance count stay the same: the next show is number 26, not 1.
+  - Stage details list the current Formation and Center, the planned changes (which can be cancelled) and the configuration history. Past performances keep the Formation and Center they were performed with.
 - **Member availability on performance days.** Before the first round of a day, every round of that theater on that day is checked against every member's schedule in all groups (MV filming, events, other theaters, reservations, illness and so on).
   - Unavailable lineup members are replaced by available members of the same team who are not in the lineup first, then by Trainees. Trainees stay Trainees.
   - If any round cannot reach the Stage's lineup size, **every round of that day is cancelled**. A cancelled day has no audience, revenue, fans, rewards or operating costs.
