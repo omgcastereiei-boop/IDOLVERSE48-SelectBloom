@@ -728,3 +728,27 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 .thfm.on{border-color:#e9758f;box-shadow:0 0 0 2px #ffd0dc}.thfm small{display:block;font-size:11px;color:var(--mut)}
 .thfs{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}.thfs i{font-style:normal;font-size:11px;background:#f4eefc;border-radius:8px;padding:1px 6px}
 :where(.mph){position:relative}
+/* Sister groups & company */
+.gssw{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 8px;padding:6px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.gssw select{min-height:32px;font-weight:700}
+.gslogo{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;border-radius:30%;background:radial-gradient(circle at 30% 25%,#fff8,transparent 60%),var(--gc);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18),inset 0 0 0 2px #fff6;vertical-align:middle;line-height:1;flex:none}
+.gslogo i{font-style:normal;font-size:1.2em}.gslogo b{font-size:.75em;letter-spacing:.5px}
+.gscards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px;margin:10px 0}
+.gscard{border-top:6px solid var(--gc)}.gscard.on{box-shadow:0 0 0 3px var(--gc),var(--sh)}.gscard .row{gap:10px;align-items:center}
+.gsnm{font-size:18px;color:#5a2a6e}.gsmain{background:#ffe1ea;color:#a3305f;font-weight:800}.gssis{background:#e2f2fc;color:#2d6f99;font-weight:800}.gsact{background:#d8f3e3;color:#2f8f62;font-weight:800}
+.gsrows{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin:6px 0}.gsrows small{display:block;font-size:11px;color:var(--mut)}.gsrows b{font-size:12.5px;word-break:break-word}
+.gsform{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin:8px 0}.gsform label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:var(--mut)}.gsform .gswide{grid-column:1/-1}.gsform textarea{min-height:60px}
+.gsros{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.gsrm{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-left:5px solid var(--gc);border-radius:12px;padding:6px;background:#fffdf8}.gsrm small{display:block;font-size:11px;color:var(--mut)}
+.gskn{background:#eee7fb;color:#6a55d6;font-weight:800}.gstrt{background:#fff1d6;color:#a06a00;font-weight:800}
+.gskv{border-collapse:collapse;width:100%;font-size:12.5px}.gskv th{text-align:left;color:var(--mut);font-weight:700;padding:3px 8px 3px 0;white-space:nowrap}.gskv td{padding:3px 0}.gsfint td,.gsfint th,.gspart td,.gspart th{padding:4px 6px;border-bottom:1px dashed var(--line)}
+.gssum{border:1px dashed var(--line);border-radius:14px;padding:10px;margin:8px 0;gap:12px;align-items:flex-start}
+.gswarn{border:2px solid #e9a3b5;background:#fff3f6;border-radius:14px;padding:10px;margin:8px 0}.gsok{color:#2f8f62}.gsbad{color:#c4513a}
+.gscfl{display:grid;gap:6px;margin:8px 0}.gscf{display:flex;gap:8px;align-items:center;border:1px solid #f0c2cf;background:#fff6f8;border-radius:12px;padding:6px 8px;flex-wrap:wrap}.gscf small{display:block;font-size:11.5px;color:var(--mut)}
+.gsdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;vertical-align:middle}
+.gstl{border-left:3px solid var(--pk3);padding-left:10px;display:grid;gap:4px;margin:4px 0 8px}.gstl b{color:#5a2a6e;margin-right:6px}
+.gsknr{gap:8px;flex-wrap:wrap;border-bottom:1px dashed var(--line);padding:4px 0}
+.gstx{max-height:60vh;overflow:auto}.gstxr{display:grid;grid-template-columns:70px 90px minmax(90px,1fr) 130px minmax(120px,2fr) 110px;gap:6px;align-items:center;font-size:12px;border-bottom:1px dashed var(--line);padding:3px 0}.gstxd{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gscl{display:grid;gap:4px}.gsce{display:flex;gap:8px;align-items:center;border-left:5px solid var(--gc);background:#fffdf8;border-radius:10px;padding:5px 8px;flex-wrap:wrap;font-size:12.5px}.gsce.done{opacity:.55}.gsce.clash{background:#fff0f3;border-left-color:#d9577f}
+.gstabs{flex-wrap:wrap;gap:4px}
+@media (max-width:720px){.gstxr{grid-template-columns:1fr 1fr;}.gstxr .gstxd{grid-column:1/-1;white-space:normal}.gscards{grid-template-columns:1fr}}

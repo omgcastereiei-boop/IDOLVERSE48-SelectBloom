@@ -46,6 +46,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
 | `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
+| `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (ⓘ) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
 | `js/ui/mv.js` | Music Video production: per-song MV choice, style / location / storyline planning, itemised dynamic budget, Week 3 filming, Release Day publication, daily views and Buzz, MV library |
@@ -423,6 +424,41 @@ Filming happens in Week 3 and the production check in Week 4 of the unchanged 28
   - sort by name, any member stat (fanbase, popularity, vocal, dance, performance, variety, passion, …), rarity, generation, team or trend, in either direction
   - filter by team / Trainee, generation and rarity
 - It only re-orders or hides cards on screen, never the data or any selection. The setting is remembered per screen.
+
+## Sister Groups & Member Transfer (Company)
+
+Open **Company** in the menu. One company runs several independent idol groups: the first group is the **Main Group**, and more are added with **✦ Create Sister Group** (name, short name, logo symbol, identity colour, formation date, headquarters, description). A new group has no members: hold an audition for it or transfer members in.
+
+- **Independent groups.** Every group has its own roster, teams and captains, Trainees, auditions, Single Production (Senbatsu, costumes, CD covers, MVs), Song Library, albums, charts, calendar, Theater, General Election, debut and anniversaries.
+  - The group switcher at the top of every screen chooses the group you manage. The other groups keep working in the background every day, so their productions, releases, elections and events progress in parallel.
+  - Technically, the active group's data sits in the usual save fields and the others are stored with each group. Every existing system therefore works unchanged for the active group.
+- **One Company Funds account.** All income and expenses go to and from the same balance, once.
+  - Every ledger entry also becomes a company transaction (id, group, type, income/expense, amount, date, description).
+  - **Finances** shows each group's revenue, expenses and profit plus a filterable transaction list. Company-wide items (merchandise & streaming, salaries) are split between groups by fans or members.
+  - Group reports are informational only. History stays with the group that generated it.
+- **Independent theaters.** Each team (and each group's Trainees) has its own theater, Stage numbering, Setlists, Units, Encore, schedule and history. Theaters of different groups may perform at the same time.
+- **Concurrent Position (兼任 Kennin).** A full member with a Primary Team can join one team of another group.
+  - She keeps one member record, fanbase and history, appears in both rosters, and can be chosen for both groups' Senbatsu, Centers, MVs, theater (that team's pool) and elections.
+  - Trainees cannot hold one, and only one Concurrent Team is allowed at a time (end or replace it first).
+  - Ending it keeps all history. It is refused while she still has confirmed activities with that group.
+- **Eligibility.** Every group activity only offers its own members plus members holding a Concurrent Position there. This covers Senbatsu and Centers, MV, theater Stages and Units, the General Election participants and event pickers.
+- **Member schedule & conflicts.** Commitments are tracked per member across groups: release days, concerts, handshakes, roadshows and ceremonies (all day), MV filming (Week 3, with a start/end time on the MV plan, default 10:00–16:00), and theater performances (afternoon 14:00–16:00, evening 18:00–20:00).
+  - Activities of **different** groups that need the same member at overlapping times cannot both be confirmed. A conflict screen names the member, activity, group, date and time; nothing is removed or cancelled automatically.
+  - On a performance day a busy member is replaced, and the conflict is noted. A concurrent member performs with her Primary Team when two theaters perform at the same time.
+  - **Calendar** shows each group's calendar, the whole company, and any member's schedule across groups, with conflicts highlighted.
+- **Fans.** The company has one fanbase of unique people. Each group's fanbase is the fans who support its members (or the group); a fan who supports two groups is still one person.
+  - Fan-driven results (CD sales, concerts) use the group's own share of fans.
+  - Concurrent members add impact to a group in proportion to their participation there; their whole personal fanbase is never added to both groups.
+  - New fans are logged with their group and source (**Reports**).
+- **Elections.** Each group has its own election records, participants, results and six-month cooldown (counted from its own ceremony).
+  - **Election fatigue:** fans who support a group that recently held, or is holding, other elections buy fewer election CDs. It is reduced, but not removed, by loyalty, engagement and spending power, and it fades over time.
+  - Fans who do not support the election's group are not affected. Fatigue never changes fan counts or votes already cast.
+- **Member Transfer (移籍).** Choose the source group, the member, the destination group, and either **Trainee / Kenkyuusei** or **Full Member** of a chosen team; optionally assign a generation in the new group.
+  - The summary lists her current group, team and status, the destination, her Concurrent Position (which ends with the transfer) and any commitments that would become invalid. These must be resolved first (remove her from a Stage lineup or a future activity, or wait for a production or election to finish).
+  - Her Member ID, profile, stats, fanbase and every record are kept. Her history shows the transfer, and the previous group keeps its records.
+- **Profiles & rosters.** The profile shows her current and primary group, team, status (Full Member, Trainee, Concurrent Member, Transferred, Graduated), concurrent group and team, transfer and Kennin history, and participation by group.
+  - **Roster** filters a group by all, full, trainees, concurrent and team; the shared bar adds generation and rarity.
+- **Old saves.** The existing group becomes the Main Group and keeps all its data. Other groups start with empty production data (nothing is guessed), all ids are unchanged, and the ledger already present is not re-counted.
 
 ## Language / ภาษา
 
