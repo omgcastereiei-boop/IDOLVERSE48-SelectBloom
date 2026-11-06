@@ -124,3 +124,10 @@ I18N_TH_TPL.unshift(["{0} — {1} Performances","{0} — แสดงแล้�
  ["⚠ The Stage Setlist Center {0} does not perform this song, so she cannot be its Center. Choose another member below.","⚠ เซ็นเตอร์ของเซ็ตลิสต์ {0} ไม่ได้แสดงเพลงนี้ จึงเป็นเซ็นเตอร์ไม่ได้ เลือกเมมเบอร์คนอื่นด้านล่าง"],
  ["{0} is now also the Stage Setlist Center.","{0} เป็นเซ็นเตอร์ของเซ็ตลิสต์สเตจด้วยแล้ว"],["Cancel the Formation / Center change planned for {0}?","ยกเลิกการเปลี่ยนฟอร์เมชัน / เซ็นเตอร์ที่กำหนดไว้วันที่ {0}?"],
  ["New Formation / Center saved. It starts with the performance on {0} ({1}); earlier performances keep the current one.","บันทึกฟอร์เมชัน / เซ็นเตอร์ใหม่แล้ว เริ่มใช้ในรอบวันที่ {0} ({1}) รอบก่อนหน้ายังใช้แบบเดิม"]);
+// Encore songs count as Stage songs; costume designer messages
+I18N_TH_TPL.unshift(["A Stage can have at most {0} songs, Encore songs included.","สเตจมีได้สูงสุด {0} เพลง รวมเพลงอังกอร์"],["A Stage can have at most {0} songs, Encore songs included. MC breaks and the Overture do not count.","สเตจมีได้สูงสุด {0} เพลง รวมเพลงอังกอร์ (ไม่นับ MC และโอเวอร์เจอร์)"],
+ ["A Stage can have at most {0} songs, Encore included (now {1}).","สเตจมีได้สูงสุด {0} เพลง รวมอังกอร์ (ตอนนี้ {1} เพลง)"],["{0}/{1} songs ({2} + {3} Encore)","{0}/{1} เพลง ({2} + อังกอร์ {3})"],
+ ["Encore songs are numbered E01, E02 … and count as songs of the Stage (at most {0} songs together with the Setlist).","เพลงอังกอร์ใช้หมายเลข E01, E02 … และนับเป็นเพลงของสเตจ (รวมกับเซ็ตลิสต์ได้สูงสุด {0} เพลง)"]);
+Object.assign(I18N_TH,{"The one-piece dress became a blouse in the same colours, so the bottom piece can be seen.":"เปลี่ยนเดรสวันพีซเป็นเบลาส์สีเดิม เพื่อให้เห็นท่อนล่างที่เลือก",
+"The top is a one-piece dress, so no bottom piece is worn. Choosing a bottom piece changes the top to a blouse in the same colours.":"ท่อนบนเป็นเดรสวันพีซ จึงไม่มีท่อนล่าง ถ้าเลือกท่อนล่าง ท่อนบนจะเปลี่ยนเป็นเบลาส์สีเดิม",
+"They are performed after all regular songs, by the whole team or by one of this Stage's Units.":"แสดงหลังเพลงปกติทั้งหมด โดยทั้งทีมหรือยูนิตของสเตจนี้"});

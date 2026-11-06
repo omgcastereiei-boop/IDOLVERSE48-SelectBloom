@@ -775,3 +775,26 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 .thcfg h3{margin:0}.thcfg .gskv td .thmi{vertical-align:middle}.thcfgw{margin-top:8px}.thcfgw select{max-width:100%}
 .thmcp .thmcr{padding:8px 0;border-top:1px dashed var(--line,#e6d9ef)}.thmcp .thmcr:first-of-type{border-top:0}.thmcp .row{flex-wrap:wrap;gap:6px}
 .thcsv{display:inline-flex;align-items:center;gap:6px}.thmct{margin-right:4px}.thmc.enc{border-left:3px solid var(--accent,#e58fbf)}
+.thsl3{list-style:none;padding-left:0}.thsl3 li.thslm{margin-left:0}
+.thsls{display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px}.thsln{font:800 11px Quicksand;color:#8f80a6;min-width:28px}.thsls .thptb{font-size:9px}.thsls .thmcm{display:inline-flex;flex-wrap:wrap;gap:2px}
+/* Center picker: only the value the list is sorted by */
+.thcpk .thfv{display:none}
+.thcpk[data-mlsort="fans"] .thfv[data-k="fans"]{display:inline-block}
+.thcpk[data-mlsort="buzz"] .thfv[data-k="buzz"]{display:inline-block}
+.thcpk[data-mlsort="pop"] .thfv[data-k="pop"]{display:inline-block}
+.thcpk[data-mlsort="sing"] .thfv[data-k="sing"]{display:inline-block}
+.thcpk[data-mlsort="dance"] .thfv[data-k="dance"]{display:inline-block}
+.thcpk[data-mlsort="cha"] .thfv[data-k="cha"]{display:inline-block}
+.thcpk[data-mlsort="variety"] .thfv[data-k="variety"]{display:inline-block}
+.thcpk[data-mlsort="aff.cute"] .thfv[data-k="aff.cute"]{display:inline-block}
+.thcpk[data-mlsort="aff.mature"] .thfv[data-k="aff.mature"]{display:inline-block}
+.thcpk[data-mlsort="aff.cool"] .thfv[data-k="aff.cool"]{display:inline-block}
+.thcpk[data-mlsort="aff.pretty"] .thfv[data-k="aff.pretty"]{display:inline-block}
+.thcpk[data-mlsort="aff.dark"] .thfv[data-k="aff.dark"]{display:inline-block}
+.thcpk[data-mlsort="aff.energetic"] .thfv[data-k="aff.energetic"]{display:inline-block}
+.thcpk[data-mlsort="pot"] .thfv[data-k="pot"]{display:inline-block}
+.thcpk[data-mlsort="en"] .thfv[data-k="en"]{display:inline-block}
+.thcpk[data-mlsort="loy"] .thfv[data-k="loy"]{display:inline-block}
+.thcpk[data-mlsort="pas"] .thfv[data-k="pas"]{display:inline-block}
+.thcpk[data-mlsort="mor"] .thfv[data-k="mor"]{display:inline-block}
+.thcpk[data-mlsort="trend"] .thfv[data-k="trend"]{display:inline-block}

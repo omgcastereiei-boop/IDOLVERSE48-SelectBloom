@@ -158,6 +158,7 @@ Music Production → **Costume Designer** tab (also reachable from each song in 
   member stats (the old costume/concept sales bonus was removed in this update).
   Pieces include one-piece dresses, and every piece has a fabric texture (cotton, satin, velvet,
   sequins, denim, tulle, leather, knit) as well as pattern and colours.
+  With a one-piece dress no bottom piece is worn; the Bottoms previews still show each piece, and choosing one turns the dress into a blouse in the same colours.
 * Designs made with the earlier per-song designer are moved into the library automatically.
 * **Colour tools** (in every costume editor: Costume Designer, single/coupling costume,
   per-member costumes and Theater costumes): **🎨 Random colours** recolours the same pieces
@@ -340,7 +341,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
 - **Unit formations.** Unit songs always have their own dance formation, edited in Centers & Formation (swap positions, rows, ranking preset).
 - **Debut photos.** On a Stage's debut day, every song gets a photo of the actual performance: members hold microphones in random poses and wear their own costumes. Open the photos from the notice, the Stage details or the performance summary.
 - **Encore (optional).**
-  - Each Stage can enable or disable an Encore. Encore songs come from the Song Library and are numbered E01, E02 …, separately from M01…; they don't count toward the 20-song limit.
+  - Each Stage can enable or disable an Encore. Encore songs come from the Song Library and are numbered E01, E02 …, separately from M01…. They are songs of the Stage: a Stage has at most 20 songs, Setlist and Encore together (for example 12 + 3 Encore = 15 songs).
   - They can be added, reordered, replaced and removed, and each is a Whole Team or Unit song using the Stage's own Units.
   - They are always performed after all regular songs, and every performance record keeps them in order.
   - New Stages start with the Encore disabled. A Stage without Encore is complete. Disabling the Encore keeps its songs for later, and after the debut the Encore is fixed like the rest of the Setlist.
@@ -397,7 +398,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - A song also used by a released single or another Stage is never changed: editing it creates a Theater version for this Stage.
   - **Remove** asks first, keeps the song in the Song Library and keeps the Units valid.
   - The Setlist recorded at the debut and every past performance stay as they were.
-- **Center picker.** Center and 2nd Center are chosen from member cards: portrait, team or Trainee, generation, rarity, fans, popularity, vocal, dance, variety and passion. The cards use the shared sort and filter bar; tap a face for the profile. Only the song's performers can be chosen, and the current Center is marked ★.
+- **Center picker.** Center and 2nd Center are chosen from member cards: portrait, name, team or Trainee, generation and rarity. A card shows a stat only when the list is sorted by it (e.g. “Dance 74” when sorted by Dance). The cards use the shared sort and filter bar; tap a face for the profile. Only the song's performers can be chosen, and the current Center is marked ★.
 - **Default Center.** A song without its own Center uses the Stage Setlist Center whenever she performs that song, and the Center picker opens with her selected.
   - Choosing someone else changes only that song. The Setlist Center changes only if you tick **Also save my choice as the Stage Setlist Center**.
   - If the Setlist Center does not perform the song, or is unavailable for the next performance, the picker says so.
@@ -408,6 +409,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
 
   Unavailable members never take part, and the performance record keeps who actually did the MC. Song labels now read **Team** instead of "Whole Team".
 - **Encore MC.** **+ Encore MC** adds an MC segment to the Encore. It is edited, reordered and removed like Encore songs, and is shown in its place in the Encore and in the Performance History.
+- **Current Setlist (Theater overview).** Songs are numbered M01 … and E01 … as in the Setlist editor. Unit songs show every member of the Unit; other songs show their Center(s).
 - **Performance count.** Stage details show "Team A 1st Stage — 12 Performances". Every completed round counts (two shows on one day count twice). Cancelled performances do not count, and each performance record keeps its number.
 - **Changing Formation / Center of a running Stage.** Edits in Centers & Formation on a running Stage are a draft that performances never use.
   - Choose the first performance that should use them, at least 7 days from today, and press **Save for this performance**. Before that date the previous Formation and Center are used; from it, the new ones. You can also **Discard changes**.
@@ -451,7 +453,7 @@ Filming happens in Week 3 and the production check in Week 4 of the unchanged 28
 
 - Tapping a member's **face** in any list, selection, assignment or formation screen opens the existing Member Profile in an overlay above the current screen. Tap the rest of the card (name, stats) to select or move her as before.
   - Selections, Unit members, formations and dressing-room work stay exactly as they were when you press ◀ Back.
-- Every list of member cards has the same **sort / filter bar**:
+- Every list of member cards you pick from has the same **sort / filter bar**. Announcements and results that only show faces have none:
   - sort by name, any member stat (fanbase, popularity, vocal, dance, performance, variety, passion, …), rarity, generation, team or trend, in either direction
   - filter by team / Trainee, generation and rarity
 - It only re-orders or hides cards on screen, never the data or any selection. The setting is remembered per screen.
@@ -488,7 +490,7 @@ Open **Company** in the menu. One company runs several independent idol groups: 
   - Trainees cannot hold one, and only one Concurrent Team is allowed at a time (end or replace it first).
   - Ending it keeps all history. It is refused while she still has confirmed activities with that group.
 - **Eligibility.** Every group activity only offers its own members plus members holding a Concurrent Position there. This covers Senbatsu and Centers, MV, theater Stages and Units, the General Election participants and event pickers.
-- **Member schedule & conflicts.** Commitments are tracked per member across groups: release days, concerts, handshakes, roadshows and ceremonies (all day), MV filming (Week 3, with a start/end time on the MV plan, default 10:00–16:00), and theater performances (afternoon 14:00–16:00, evening 18:00–20:00).
+- **Member schedule & conflicts.** Commitments are tracked per member across groups: release days, concerts, handshakes, roadshows and ceremonies (all day), MV filming (Week 3, 10:00–16:00), and theater performances (afternoon 14:00–16:00, evening 18:00–20:00).
   - Activities of **different** groups that need the same member at overlapping times cannot both be confirmed. A conflict screen names the member, activity, group, date and time; nothing is removed or cancelled automatically.
   - On a performance day a busy member is replaced, and the conflict is noted. A concurrent member performs with her Primary Team when two theaters perform at the same time.
   - **Calendar** shows each group's calendar, the whole company, and any member's schedule across groups, with conflicts highlighted.
