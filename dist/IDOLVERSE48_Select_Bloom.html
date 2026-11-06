@@ -834,6 +834,8 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 .gscl{display:grid;gap:4px}.gsce{display:flex;gap:8px;align-items:center;border-left:5px solid var(--gc);background:#fffdf8;border-radius:10px;padding:5px 8px;flex-wrap:wrap;font-size:12.5px}.gsce.done{opacity:.55}.gsce.clash{background:#fff0f3;border-left-color:#d9577f}
 .gstabs{flex-wrap:wrap;gap:4px}
 @media (max-width:720px){.gstxr{grid-template-columns:1fr 1fr;}.gstxr .gstxd{grid-column:1/-1;white-space:normal}.gscards{grid-template-columns:1fr}}
+.gsempty{display:flex;gap:12px;align-items:flex-start;border:2px dashed #e9a3b5;background:#fff6f8;margin-bottom:10px}.gsempty .row{gap:6px;flex-wrap:wrap}
+.gsaudg{gap:10px;align-items:center;margin-bottom:8px}
 
 </style>
 </head><body>
@@ -5571,7 +5573,7 @@ const gsCtx=(gid,k)=>gid==gsAg()?S[k]:((grp(gid)||{}).ctx||{})[k];
 function gsSwitch(gid){if(!S||gid==null||gid==S.ag)return;const to=grp(gid),from=grp(S.ag);if(!to)return;gsLedTag();GS_SW++;
  if(from){from.ctx={};GS_KEYS.forEach(k=>{from.ctx[k]=S[k]})}const c=to.ctx||gsDefCtx(to);GS_KEYS.forEach(k=>{S[k]=c[k]});if(S.songs==null)S.songs={};if(!Array.isArray(S.singles))S.singles=[];if(!Array.isArray(S.cal))S.cal=[];if(!S.ge)S.ge=gsDefCtx(to).ge;delete to.ctx;S.ag=gid}
 function gsWith(gid,fn){if(!S||gid==null||gid==S.ag)return fn();const prev=S.ag;gsSwitch(gid);try{return fn()}finally{gsSwitch(prev)}}
-function gsSelect(gid){gid=+gid;if(!grp(gid)||gid==S.ag)return;const go=()=>{gsSwitch(gid);ui.es=null;ui.scz=null;ui.czE=null;ui.mod=null;ui.thk=null;ui.ths=null;ui.gec=null;if(['senbatsu','songcz','thcz','mvplan'].includes(view))view='music';toast(`Now managing ${grp(gid).name}.`);render()};if(ui.czE&&ui.czE.dirty&&typeof czConfirmLeave=='function')czConfirmLeave(go);else go()}
+function gsSelect(gid){gid=+gid;if(!grp(gid)||gid==S.ag)return;const go=()=>{gsSwitch(gid);try{if(ui.au&&!(S.auds||[]).some(x=>x.id==ui.au.sid))ui.au.gid=gid}catch(e){}ui.es=null;ui.scz=null;ui.czE=null;ui.mod=null;ui.thk=null;ui.ths=null;ui.gec=null;if(['senbatsu','songcz','thcz','mvplan'].includes(view))view='music';toast(`Now managing ${grp(gid).name}.`);render()};if(ui.czE&&ui.czE.dirty&&typeof czConfirmLeave=='function')czConfirmLeave(go);else go()}
 // ---- members & eligibility -----------------------------------------------------------------
 const gsTeam=tid=>{for(const g of S.groups){const t=(g.teams||[]).find(x=>x.id==tid);if(t)return{g,t}}return null};
 const gsIn=(m,gid)=>!!m&&m.status!='graduated'&&(gsGid(m)==gid||(m.kn&&m.kn.gid==gid));
@@ -5767,6 +5769,10 @@ Object.assign(SUBLOC,{gscompany:'Company · Group Management',gsroster:'Company 
 if(typeof ICO=='object')ICO.company=ICO.company||'<path d="M4 20V6l8-3l8 3v14"/><path d="M9 20v-5h6v5"/><path d="M8 9h2M14 9h2M8 12h2M14 12h2"/>';
 // two theaters at the same time: a concurrent member performs with her Primary Team; the other theater replaces her
 {const f=thSlotBusy;thSlotBusy=function(mid,x){const r=f.apply(this,arguments);if(r!='Another theater performance')return r;try{const m=get(mid),K=thKeysAll().find(z=>z.key==x.k);if(!m||!K||!(K.kind=='team'&&K.tid==m.tid))return r;const done=thS().sh.some(z=>z!==x&&z.day==x.day&&z.sl==x.sl&&z.k!=x.k&&z.st=='done'&&(z.used||[]).includes(mid));return done?r:''}catch(e){return r}}}
+// an empty group cannot make a single yet: say why, and where to get members
+{const f=V.music;V.music=function(){const h=f.apply(this,arguments);try{if(!S||S.groups.length<2)return h;const g=grp(gsAg());if(!g||gsMem(g.id).length)return h;const i=h.indexOf('<h2');const card=`<div class="c gsempty">${gsLogo(g,44)}<div><b>${esc(g.name)} has no members yet</b><p class="st">A single needs members for its Senbatsu. Recruit members for ${esc(g.name)} with an audition (choose ${esc(g.name)} as the destination group), move members in with a Transfer, or give a member a Concurrent Position in one of its teams.</p><div class="row"><button class="b s p" onclick="newAud();ui.au=null;AU().gid=${g.id};goView('audition')">Audition for ${esc(g.name)}</button><button class="b s" onclick="ui.gstr={dst:'${g.id}'};goView('gstransfer')">Transfer members</button><button class="b s" onclick="ui.gskn={};goView('gskn')">Concurrent Position</button></div></div></div>`;return i>=0?h.slice(0,i)+card+h.slice(i):card+h}catch(e){return h}}}
+// audition: show which group the recruits will join
+{const f=V.audition;if(f)V.audition=function(){const h=f.apply(this,arguments);try{if(!S||S.groups.length<2||!ui.au)return h;const g=grp(ui.au.gid);if(!g)return h;return`<div class="c gsaudg row">${gsLogo(g,34)}<span>Recruits from this audition join <b>${esc(g.name)}</b>${g.id!=gsAg()?` <span class="tag warn">not the group you are managing (${esc(gsName())})</span>`:''}. Change it with the destination group setting below.</span></div>`+h}catch(e){return h}}}
 
 </script>
 <script>
@@ -6188,6 +6194,8 @@ I18N_TH_TPL.push(["🏢 {0} · Company","🏢 {0} · บริษัท"],["{0} 
  ["Debuted {0}","เดบิวต์ {0}"],["1 Main · {0} Sister","วงหลัก 1 · วงน้อง {0}"],["{0} transaction(s)","{0} รายการ"],["Sister Group {0} created. It has no members yet: hold an audition or transfer members into it.","สร้างวงน้อง {0} แล้ว ยังไม่มีสมาชิก: จัดออดิชันหรือย้ายสมาชิกเข้ามา"],
  ["Schedule conflict: {0} has {1} ({2}) {3}.","ตารางงานชนกัน: {0} มี {1} ({2}) {3}"],["Schedule conflict: {0} has {1} ({2}) on {3}.","ตารางงานชนกัน: {0} มี {1} ({2}) วันที่ {3}"],["Busy: {0} ({1})","ติดงาน: {0} ({1})"],["MV filming — {0}","ถ่าย MV — {0}"],
  ["Concurrent Position in {0} · {1}","ควบตำแหน่งใน {0} · {1}"],["Concurrent Position in {0} · {1} ended","สิ้นสุดการควบตำแหน่งใน {0} · {1}"],["Concurrent Position in {0} · {1} ended ({2})","สิ้นสุดการควบตำแหน่งใน {0} · {1} ({2})"],["Transferred from {0} to {1} as Kenkyuusei / Trainee","ย้ายจาก {0} ไป {1} ในฐานะเคนคิวเซย์ / เด็กฝึก"],["Transferred from {0} to {1} · {2} (Full Member)","ย้ายจาก {0} ไป {1} · {2} (สมาชิกตัวจริง)"],["Assigned to the {0} Generation of {1}","อยู่รุ่นที่ {0} ของ {1}"]);
+I18N_TH_TPL.push(["{0} has no members yet","{0} ยังไม่มีสมาชิก"],["A single needs members for its Senbatsu. Recruit members for {0} with an audition (choose {1} as the destination group), move members in with a Transfer, or give a member a Concurrent Position in one of its teams.","ซิงเกิ้ลต้องมีสมาชิกสำหรับเซ็มบัตสึ รับสมาชิกให้ {0} ด้วยการออดิชัน (เลือก {1} เป็นวงปลายทาง) ย้ายสมาชิกเข้ามา หรือให้สมาชิกควบตำแหน่งในทีมของวงนี้"],["Audition for {0}","ออดิชันให้ {0}"],["Recruits from this audition join {0}","ผู้ที่ผ่านออดิชันนี้จะเข้าวง {0}"],["not the group you are managing ({0})","ไม่ใช่วงที่กำลังจัดการ ({0})"]);
+Object.assign(I18N_TH,{"Transfer members":"ย้ายสมาชิกเข้า","Concurrent Position":"ควบตำแหน่ง",". Change it with the destination group setting below.":" เปลี่ยนได้ที่การตั้งค่าวงปลายทางด้านล่าง"});
 
 </script>
 <script>
