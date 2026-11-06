@@ -47,7 +47,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
 | `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
 | `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
-| `js/ui/members-ui.js` | Game-wide member profile overlay (ⓘ) and the shared sort / filter bar for member lists |
+| `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
 | `js/ui/mv.js` | Music Video production: per-song MV choice, style / location / storyline planning, itemised dynamic budget, Week 3 filming, Release Day publication, daily views and Buzz, MV library |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
@@ -387,7 +387,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Conversion falls as a theater performs more often (shows in the last 30 days).
   - New fans join through the Aggregate Fanbase System, and each member is credited with the newcomers she drew. Members' recognition grows only a little.
   - The performance summary has an **Audience Report**, a **Fanbase Report** and a **Performance Report**.
-- **Dance Formation tools.** Under the formation there is a performer list with portrait, team, position, fans, popularity, vocal, dance and variety, using the shared sort and filter bar and ⓘ profiles. Tap a member and then a position to swap.
+- **Dance Formation tools.** Under the formation there is a performer list with portrait, team, position, fans, popularity, vocal, dance and variety, using the shared sort and filter bar; tap a face for the profile. Tap a member's name and then a position to swap.
   - **⚡ Auto Arrange** orders the real performers by any stat (Dance by default, highest or lowest first), keeps the chosen Center(s) or lets the best-ranked take the Center positions, and uses the standard rows. Everything can still be adjusted by hand.
 - **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
 
@@ -417,8 +417,7 @@ Filming happens in Week 3 and the production check in Week 4 of the unchanged 28
 
 ## Member profiles & sorting (game-wide)
 
-- Every member portrait in a list, selection, assignment or formation screen has an **ⓘ** button.
-  - It opens the existing Member Profile in an overlay above the current screen.
+- Tapping a member's **face** in any list, selection, assignment or formation screen opens the existing Member Profile in an overlay above the current screen. Tap the rest of the card (name, stats) to select or move her as before.
   - Selections, Unit members, formations and dressing-room work stay exactly as they were when you press ◀ Back.
 - Every list of member cards has the same **sort / filter bar**:
   - sort by name, any member stat (fanbase, popularity, vocal, dance, performance, variety, passion, …), rarity, generation, team or trend, in either direction

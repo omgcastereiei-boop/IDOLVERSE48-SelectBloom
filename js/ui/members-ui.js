@@ -1,7 +1,7 @@
 // =====================================================================================
 //  Member information & sorting standard (game-wide)
 // -------------------------------------------------------------------------------------
-//  · Every member portrait carries data-mid. Portraits in lists get an ⓘ button that opens
+//  · Every member portrait carries data-mid. Tapping a member's face in a list opens
 //    the existing Member Profile (profHtml) in an overlay ABOVE the current screen and modal,
 //    so selections, formations and costume work in progress are never lost (ui.pov).
 //  · Every list of member cards gets the shared sort / filter bar. It only re-orders or hides
@@ -21,10 +21,9 @@ function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='rar')return ML
 function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d',team:'all',gen:'all',rar:'all'};if(f=='d')c.d=c.d=='a'?'d':'a';else c[f]=v;render()}
 const ML_SKIP='.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.czlineup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
- // ⓘ profile buttons
+ // member faces open the profile
  const HS=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||HS.some(x=>x[0]===host))return;HS.push([host,sv0])});
- HS.forEach(([host,sv0],i)=>{const b=document.createElement('span');b.className='mpi';b.setAttribute('role','button');b.setAttribute('aria-label','Member profile');b.title='Member profile';b.textContent='ⓘ';
-  b.dataset.mid=sv0.dataset.mid;host.classList.add('mph');host.appendChild(b)});
+ HS.forEach(([host,sv0])=>{sv0.classList.add('mpf');sv0.setAttribute('role','button');sv0.setAttribute('aria-label','Member profile')}); // tap the face → profile
  // sort / filter bars on member lists
  const seen=new Set(),conts=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;let el=sv0;while(el&&el.parentElement&&el.parentElement!==app){const par=el.parentElement;if(par.children.length>=4&&!seen.has(par)){const kids=[...par.children].filter(ch=>ch.matches('svg[data-mid]')?false:ch.querySelectorAll('svg[data-mid]').length==1);if(kids.length>=4&&kids.length>=par.children.length*.6){seen.add(par);conts.push([par,kids]);break}}el=par}});
  let idx=0;conts.forEach(([par,kids])=>{if(par.closest(ML_SKIP)||kids.some(k=>k.matches('.slot,.thpos')||k.querySelector('.slot,.thpos')))return;if(view=='members'&&!ui.mod&&kids.every(k=>k.matches('.mc')))return;
@@ -38,6 +37,6 @@ function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t
   ['onclick','onmousedown','onchange'].forEach(t=>bar.setAttribute(t,'event.stopPropagation()'));
   if(par.tagName=='TBODY'||par.tagName=='TABLE'){const tb=par.closest('table');tb.before(bar)}else par.before(bar)})}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{if(S&&!ui.t){const a=document.getElementById('app');if(a&&ui.pov)a.insertAdjacentHTML('beforeend',mpHtml());mlDecorate()}}catch(e){console.error(e)}return r}}
-// one delegated listener (no per-render closures): ⓘ opens the profile without triggering the card it sits on
-document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('.mpi');if(!b)return;e.stopPropagation();e.preventDefault();mpOpen(b.dataset.mid)},true);
-document.addEventListener('mousedown',e=>{if(e.target&&e.target.closest&&e.target.closest('.mpi'))e.stopPropagation()},true);
+// one delegated listener (no per-render closures): tapping a face opens the profile without triggering the card it sits on
+document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('svg.mpf');if(!b)return;e.stopPropagation();e.preventDefault();mpOpen(b.dataset.mid)},true);
+

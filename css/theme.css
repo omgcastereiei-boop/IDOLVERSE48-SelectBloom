@@ -754,3 +754,4 @@ span.thck{display:inline-flex;align-items:center;justify-content:center;vertical
 @media (max-width:720px){.gstxr{grid-template-columns:1fr 1fr;}.gstxr .gstxd{grid-column:1/-1;white-space:normal}.gscards{grid-template-columns:1fr}}
 .gsempty{display:flex;gap:12px;align-items:flex-start;border:2px dashed #e9a3b5;background:#fff6f8;margin-bottom:10px}.gsempty .row{gap:6px;flex-wrap:wrap}
 .gsaudg{gap:10px;align-items:center;margin-bottom:8px}
+svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px #f7bcd2)}
