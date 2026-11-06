@@ -799,3 +799,8 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 .thcpk[data-mlsort="mor"] .thfv[data-k="mor"]{display:inline-block}
 .thcpk[data-mlsort="trend"] .thfv[data-k="trend"]{display:inline-block}
 .thmft{border-collapse:collapse;font-size:12px;min-width:100%}.thmft th,.thmft td{padding:4px 6px;border-bottom:1px solid #eee3f5;text-align:center;white-space:nowrap}.thmft th small{display:block;font-weight:600;color:#8f80a6;font-size:10px}.thmft td.thmxn{text-align:left}
+/* Theater: member fan report (random acquisition) */
+.thmfl{display:grid;gap:6px}.thmfm{border:1px solid #eee3f5;border-radius:12px;background:#fff;padding:4px 8px}.thmfm summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none}.thmfm summary::-webkit-details-marker{display:none}
+.thmfn{flex:1;min-width:0;display:flex;flex-direction:column}.thmfs{display:flex;flex-wrap:wrap;gap:3px}.thmfc{font-size:10px;background:#f4eefc;border-radius:8px;padding:0 6px;color:#6b5a86}.thmfc.bt{background:#fff1c9;color:#9a6a00}
+.thmft2{display:flex;flex-direction:column;align-items:flex-end}.thmft2 b{font-size:16px}.thmft-zero{background:#eee9f1;color:#8f80a6}.thmft-hi{background:#d7f2e3;color:#2f7a52}.thmft-bt{background:#ffe7a3;color:#8a5a00}
+.thmfm.bt{border-color:#f3c35c;box-shadow:0 0 0 2px #fff1c9}.thmfm.zero{opacity:.8}.thmfd{margin:4px 0 2px;font-size:12px}.thmfd li{display:flex;gap:6px;align-items:baseline}.thmfd li b{margin-left:auto}
