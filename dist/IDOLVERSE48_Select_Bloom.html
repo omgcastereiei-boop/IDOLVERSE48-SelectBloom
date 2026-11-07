@@ -925,6 +925,27 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 .geprel .gepr2 .gepv{min-width:0;text-align:right;font-weight:800;color:#5a2a6e}.geprel .gechg{min-width:0;font-size:12px}.geprel .gechg.up{color:#2f8f62}.geprel .gechg.dn{color:#c4513a}.geprel .gechg.new{color:#b7791f}
 .geprel .gepgh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 @media (max-width:560px){.geprel .gepr2{grid-template-columns:34px 32px minmax(0,1fr) auto 34px;gap:6px}.geprel .gepr2 .geprk{font-size:13px}.geprel .gepr2 .geprn b{font-size:14px}}
+/* ---- game-style picker for every dropdown (replaces the browser list) ---- */
+.gpov{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(40,16,64,.45);backdrop-filter:blur(3px);opacity:0;transition:opacity .16s}
+.gpov.in{opacity:1}
+.gpbox{width:min(440px,calc(100vw - 32px));max-height:min(76vh,620px);display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:radial-gradient(circle at 12% 0%,#ffe3f1 0,transparent 42%),radial-gradient(circle at 100% 10%,#e6e0ff 0,transparent 40%),#fffaf6;border:3px solid #fff;box-shadow:0 0 0 2px #f3c6dd,0 18px 50px rgba(70,20,90,.35);transform:translateY(18px) scale(.97);transition:transform .2s cubic-bezier(.2,1.3,.5,1)}
+.gpov.in .gpbox{transform:none}
+.gphd{position:relative;padding:14px 48px 10px;text-align:center;background:linear-gradient(135deg,#ff8fc4,#b48cff);color:#fff;box-shadow:inset 0 -3px 0 rgba(255,255,255,.35)}
+.gphd b{display:block;font:800 17px Quicksand,sans-serif;letter-spacing:.02em;text-shadow:0 2px 0 rgba(140,40,110,.35)}
+.gporn{display:block;font-size:11px;letter-spacing:2px;opacity:.85;margin-bottom:2px}
+.gpx{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.8);background:rgba(255,255,255,.2);color:#fff;font:800 14px Quicksand;cursor:pointer}
+.gpsr{padding:10px 12px 0}.gpsr input{width:100%;box-sizing:border-box;border-radius:14px;border:2px solid #f0dcea;padding:8px 12px;font:600 14px Quicksand;background:#fff}
+.gpl{overflow:auto;padding:10px 12px 14px;display:grid;gap:7px;-webkit-overflow-scrolling:touch}
+.gph{font:800 11px Quicksand;letter-spacing:.12em;color:#b07aa0;text-transform:uppercase;margin:6px 4px 0}
+.gpo{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;padding:11px 14px;border-radius:16px;border:2px solid #f3e6f0;background:linear-gradient(180deg,#fff,#fdf6fb);color:#4a3560;font:700 15px Quicksand,sans-serif;cursor:pointer;box-shadow:0 2px 0 #eedbe8;transition:transform .08s,box-shadow .08s}
+.gpo:active{transform:translateY(2px);box-shadow:0 0 0 #eedbe8}
+.gpo:hover{border-color:#f5b6d6}
+.gpo.on{background:linear-gradient(135deg,#ff9ccc,#b993ff);color:#fff;border-color:#fff;box-shadow:0 3px 0 #c77bb0,0 6px 16px rgba(190,90,170,.3)}
+.gpo.on i{font-style:normal;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#fff;color:#d35a9c;font-weight:900}
+.gpo[disabled]{opacity:.45;cursor:default}
+@media (max-width:560px){.gpov{align-items:flex-end}.gpbox{width:100%;max-height:78vh;border-radius:26px 26px 0 0;border-bottom:0}.gpov .gpbox{transform:translateY(40px)}.gpov.in .gpbox{transform:none}}
+/* dropdowns look like game buttons */
+select:not([multiple]):not([size]){cursor:pointer}
 
 </style>
 </head><body>
@@ -6564,6 +6585,39 @@ function hsxHtml(P){if(!P||!hsxOn(P.fmt))return'';const X=hsxOf(P);if(!X)return'
 </script>
 <script>
 // =====================================================================================
+//  Game-style picker for every dropdown
+// -------------------------------------------------------------------------------------
+//  Every <select> in the game opens this picker instead of the browser's own list (which looks
+//  like a web page, especially on phones). Nothing in the screens changes: the picker sets the
+//  select's value and fires its normal "change" event, so every existing handler works as before.
+//  Disabled, multiple and list-box selects keep the browser behaviour. Long lists get a search box.
+// =====================================================================================
+const GP={sel:null,t:null};
+const gpTr=s=>typeof tr=='function'?tr(s):s;
+function gpLabel(sel){const a=sel.getAttribute('aria-label');if(a)return a;const l=sel.closest('label');if(l){const t=[...l.childNodes].filter(n=>n.nodeType==3).map(n=>n.textContent).join(' ').trim();if(t)return t}const p=sel.previousElementSibling;if(p&&/^(SPAN|B|SMALL|LABEL)$/.test(p.tagName)&&p.textContent.trim().length<40)return p.textContent.trim();const o=sel.options[0];return o&&/^(All|Choose|Select|Add|Replace|Sort|—)/i.test(o.textContent.trim())?o.textContent.trim().replace(/…$/,''):gpTr('Choose')}
+function gpOpen(sel){if(!sel||sel.disabled||sel.multiple||sel.size>1||!sel.options.length)return;gpClose(1);GP.sel=sel;const cur=sel.value,L=[];let grp=null;
+ [...sel.children].forEach(ch=>{if(ch.tagName=='OPTGROUP'){L.push({h:ch.label});[...ch.children].forEach(o=>L.push({o}))}else L.push({o:ch})});
+ const items=L.map((x,i)=>x.h!=null?`<div class="gph">${esc(x.h)}</div>`:x.o.hidden?'':`<button type="button" class="gpo ${x.o.value==cur&&x.o.selected?'on':''}" ${x.o.disabled?'disabled':''} data-v="${esc(x.o.value)}" data-i="${i}"><span>${esc(x.o.textContent)}</span>${x.o.value==cur&&x.o.selected?'<i>✓</i>':''}</button>`).join('');
+ const el=document.createElement('div');el.className='gpov';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');
+ el.innerHTML=`<div class="gpbox" role="listbox"><div class="gphd"><span class="gporn">✿ ─── ♪ ─── ✿</span><b>${esc(gpLabel(sel))}</b><button type="button" class="gpx" aria-label="${esc(gpTr('Close'))}">✕</button></div>${sel.options.length>12?`<div class="gpsr"><input type="search" placeholder="${esc(gpTr('Search'))}…" aria-label="${esc(gpTr('Search'))}"></div>`:''}<div class="gpl">${items}</div></div>`;
+ document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('in'));
+ el.addEventListener('click',e=>{if(e.target===el||e.target.closest('.gpx'))return gpClose();const b=e.target.closest('.gpo');if(!b||b.disabled)return;gpPick(b.dataset.v,+b.dataset.i)});
+ const q=el.querySelector('.gpsr input');if(q)q.addEventListener('input',()=>{const v=q.value.toLowerCase();el.querySelectorAll('.gpo').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(v)?'':'none')});
+ const on=el.querySelector('.gpo.on');if(on)on.scrollIntoView({block:'center'});GP.t=el}
+function gpPick(v,i){const sel=GP.sel;gpClose(1);if(!sel)return;const opt=[...sel.options].find(o=>o.value===v);if(!opt)return;if(sel.value===v&&opt.selected)return;sel.value=v;opt.selected=true;sel.dispatchEvent(new Event('input',{bubbles:true}));sel.dispatchEvent(new Event('change',{bubbles:true}))}
+function gpClose(now){const el=GP.t;GP.t=null;GP.sel=null;if(!el)return;if(now)return el.remove();el.classList.remove('in');setTimeout(()=>el.remove(),160)}
+const gpOk=t=>t&&t.tagName=='SELECT'&&!t.disabled&&!t.multiple&&!(t.size>1)&&!t.closest('.gpov')&&!t.hasAttribute('data-native');
+// mouse: open on press (the browser list never opens); touch: open on a tap (scrolling still works)
+document.addEventListener('mousedown',e=>{const t=e.target&&e.target.closest&&e.target.closest('select');if(!gpOk(t)||e.button!==0)return;e.preventDefault();t.focus({preventScroll:true});gpOpen(t)},true);
+let GPT=null;
+document.addEventListener('touchstart',e=>{const t=e.target&&e.target.closest&&e.target.closest('select');GPT=gpOk(t)?{t,x:e.touches[0].clientX,y:e.touches[0].clientY}:null},{capture:true,passive:true});
+document.addEventListener('touchend',e=>{if(!GPT)return;const c=e.changedTouches[0],T=GPT;GPT=null;if(Math.abs(c.clientX-T.x)>10||Math.abs(c.clientY-T.y)>10)return;e.preventDefault();gpOpen(T.t)},{capture:true,passive:false});
+document.addEventListener('click',e=>{const t=e.target&&e.target.closest&&e.target.closest('select');if(gpOk(t))e.preventDefault()},true);
+document.addEventListener('keydown',e=>{if(GP.t&&e.key=='Escape'){e.preventDefault();return gpClose()}const t=e.target;if(gpOk(t)&&(e.key=='Enter'||e.key==' '||(e.altKey&&e.key=='ArrowDown'))){e.preventDefault();gpOpen(t)}},true);
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom!  —  Thai translation (ภาษาไทย)
 //  English text -> Thai. Used by js/i18n/i18n.js. Proper nouns (idol names, cities,
 //  countries, generated song titles) are intentionally kept as they are.
@@ -7077,6 +7131,7 @@ I18N_TH_TPL.push(["{0} sessions","{0} ครั้ง"],["{0} people","{0} ค�
 Object.assign(I18N_TH,{"Booth handshake statistics":"สถิติจับมือรายบูธ","Booth":"บูธ","Booths":"จำนวนบูธ","all booths":"ทุกบูธ","Booth with most sessions":"บูธที่จับมือมากที่สุด (ครั้ง)","Booth with most visitors":"บูธที่คนมามากที่สุด (คน)","Member":"เมมเบอร์"});
 I18N_TH_TPL.push(["{0} members","{0} คน"]);
 Object.assign(I18N_TH,{"All Groups":"ทุกวง","Group":"วง"});
+Object.assign(I18N_TH,{"Choose":"เลือก","Search":"ค้นหา","Close":"ปิด"});
 
 </script>
 <script>

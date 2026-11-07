@@ -53,6 +53,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/theater-subs.js` | Theater: substitute formation modes (keep / shift), performance photos (Stage + every Unit song), substitution records, Stage Performance Statistics in Member Profile |
 | `js/ui/song-eval.js` | Song creation (Genre, Concept, Lyrics, randomisers, Song Sheet), Concept Compatibility & Senbatsu Ability per song, release reception factors and member fans |
 | `js/ui/industry.js` | Japanese music industry (AI artists, careers, releases) and Music Charts (weekly, combined, streaming, year-end; Top 20), OMG4ki story rival |
+| `js/ui/picker.js` | Game-style picker for every dropdown (replaces the browser's list; same values and change events) |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
