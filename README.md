@@ -511,6 +511,8 @@ The results screen shows handshake statistics according to the event format:
 
 ## Sister Groups & Member Transfer (Company)
 
+- **Sister-group members in the Main Group.** Full members of a sister group can be chosen for the Main Group's singles (Title Track and Coupling Senbatsu), its General Election and its other activities. They join **handshake events and roadshows** only when they are in the Title Track Senbatsu of that Main Group single. Main Group members still need a Concurrent Position (Kennin) to join a sister group. Schedule conflicts between groups are still checked per member.
+
 Open **Company** in the menu. One company runs several independent idol groups: the first group is the **Main Group**, and more are added with **✦ Create Sister Group** (name, short name, logo symbol, identity colour, formation date, headquarters, description). A new group has no members: hold an audition for it or transfer members in.
 
 - **Independent groups.** Every group has its own roster, teams and captains, Trainees, auditions, Single Production (Senbatsu, costumes, CD covers, MVs), Song Library, albums, charts, calendar, Theater, General Election, debut and anniversaries.
