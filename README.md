@@ -54,6 +54,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/song-eval.js` | Song creation (Genre, Concept, Lyrics, randomisers, Song Sheet), Concept Compatibility & Senbatsu Ability per song, release reception factors and member fans |
 | `js/ui/industry.js` | Japanese music industry (AI artists, careers, releases) and Music Charts (weekly, combined, streaming, year-end; Top 20), OMG4ki story rival |
 | `js/ui/picker.js` | Game-style picker for every dropdown (replaces the browser's list; same values and change events) |
+| `js/ui/theater-xg.js` | Theater: Revival Stage between groups (songs copied as Theater versions); Trainee Stage automatic final performance |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -381,6 +382,8 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Reusing a retired Stage keeps its number.
   - A **Revival Stage** is a new production of any debuted Stage, from this team or another team. It is a separate Stage with its own id, a reference to the original, and a "REVIVAL" tag.
   - Costumes of a Revival Stage follow the original automatically, Unit songs included. Each performer wears her own original costume, otherwise the costume of the original member at the same position. Members who join a Unit or the lineup later get it too; a costume you set yourself is never replaced.
+  - **Between groups**: the Main Group can revive a sister group's Stage and a sister group can revive the Main Group's Stage. Songs the reviving group does not have are copied into its Song Library as Theater versions; the other group's songs, Stage and history never change.
+- **Trainee Stage final performance.** The members of a Trainee Stage's debut lineup keep performing it even after a promotion; graduated members leave their position empty, with no replacement. When the group has fewer Trainees than the Stage's debut lineup (promotions or graduations, not schedule conflicts), the final performance is scheduled automatically: the last performance of the next 14 days. Later performances are cancelled, and the Stage retires after its final performance. A new or revived Stage restarts the schedule.
     - It copies the Setlist order, the Units and their song assignments, the Encore, and every song's costumes, which stay editable.
     - New performers get the costume of the member who had the same position.
     - It receives the team's next Stage number at its debut. The original Stage, its number and its history never change.
