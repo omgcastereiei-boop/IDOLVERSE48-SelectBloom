@@ -1001,3 +1001,16 @@ select:not([multiple]):not([size]){cursor:pointer}
 .orghl{display:flex;flex-direction:column;gap:8px}.orghr{text-align:left;display:flex;flex-direction:column;gap:2px;cursor:pointer;font:inherit;color:inherit}.orghr small{color:var(--mut)}
 .orgrs{margin:4px 0}.orgrst{padding:3px 0;border-bottom:1px dashed var(--line)}.orgrd{margin:4px 0}.orgrdt{padding:3px 0}
 .orgfx{display:flex;flex-direction:column;gap:6px}.orgfxr{display:flex;gap:8px;align-items:flex-start}.orgfxr>div{display:flex;flex-direction:column;gap:2px}.orgfxr small{color:var(--mut)}.orgfxr .orgfan{color:#c0487e}
+/* ---- Sales & Editions / Monthly Sales Chart / MV fans ---- */
+.sesale .setype{border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}.seed{padding:8px;margin:6px 0}.seed.lim{border-left:5px solid #e9b949}.seed.reg{border-left:5px solid #9fd3ff}
+.seed .row{gap:6px;flex-wrap:wrap;align-items:center}.secov{gap:8px}.sehs .row{gap:5px;flex-wrap:wrap}
+.sebox .seedr{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line)}.seedr>div{flex:1;min-width:0;display:flex;flex-direction:column}.seedr small{color:var(--mut);font-size:11px}.sesold{font-weight:800;white-space:nowrap}.sesold small{font-weight:400;color:var(--mut)}
+.seres .row{gap:10px;align-items:center}.sebig{font-size:28px;font-weight:900;color:var(--pk)}.sebig small{font-size:13px}
+.mch{display:flex;flex-direction:column;gap:4px}.mchr{display:grid;grid-template-columns:30px 44px 1fr auto auto;align-items:center;gap:8px;padding:5px 6px;border-radius:12px;background:rgba(255,255,255,.75);border:1px solid var(--line)}
+.mchr svg{width:44px;height:44px}.mchr>div{min-width:0}.mchr b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mchr small{display:block;color:var(--mut);font-size:11px}
+.mchk{font:900 18px 'M PLUS Rounded 1c',sans-serif;text-align:center;color:#6d4bc4}.mchr.t1 .mchk{color:#d4a017}.mchr.t2 .mchk{color:#8a96a3}.mchr.t3 .mchk{color:#a8652f}.mchr.t1{background:linear-gradient(90deg,#fff6d6,#fff)}.mchr.pl{outline:2px solid var(--pk)}
+.mchv{text-align:right;font-weight:800;font-size:13px}.mchv small{font-weight:400}.mchp{text-align:center;min-width:44px;font-size:12px}
+.mchnew{background:#ffd34d;color:#3a2600;font-weight:900;border-radius:5px;padding:0 5px;font-size:10.5px}.mchre{background:#ddd;color:#555;border-radius:5px;padding:0 5px;font-size:10.5px}.mchup{color:#1f9d5a;font-weight:800}.mchdn{color:#d64561;font-weight:800}.mcheq{color:#8a7aa3}
+.mchm{gap:5px;flex-wrap:wrap;margin:6px 0}
+.semvf{display:flex;flex-wrap:wrap;gap:6px}.semvf span{display:flex;flex-direction:column;align-items:center;width:54px;font-size:10.5px}.semvf small{color:#1f9d5a;font-weight:800}
+@media(max-width:600px){.mchr{grid-template-columns:24px 38px 1fr auto;gap:6px}.mchr svg{width:38px;height:38px}.mchp{grid-column:3/5;text-align:left;display:flex;gap:6px;align-items:center}}

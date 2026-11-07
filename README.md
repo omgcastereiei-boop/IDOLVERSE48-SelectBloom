@@ -626,3 +626,16 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
   - Shows in between are suspended.
 - Separate **Team Restructuring History** and **Shuffle Team History**, with before / after structures, every change, the announcement, reactions and theater transitions.
 - **Online Theater Membership** is company-wide: every group and team shows the same numbers.
+
+## Monthly Sales Chart, editions & sales methods, YouTube fans (`js/ui/sales.js`)
+
+- **One official chart: the Monthly Sales Chart.** It ranks singles by physical CD sales in a calendar month (Top 20, all editions combined), with previous rank and NEW. Weekly, streaming and combined charts are no longer shown. A pop-up announces each completed month once; past months stay in the chart history.
+- **Editions:** every Type has a Regular Edition and an optional Limited Edition with its own CD cover, designed in the CD Cover Studio.
+- **Sales method per edition:**
+  - **Limited Quantity:** a stock cap; demand follows the existing sales curve.
+  - **Pre-order:** opening and closing dates, at most 90 days; the result pop-up appears at close.
+- **Daily sales:** revenue, fans, CD units and Handshake tickets follow the real daily sales.
+- **Production lock:** while a group has an open or upcoming pre-order it cannot start another single or album production. Other groups are not affected.
+- **Handshake:** a pre-order longer than one month moves the existing Handshake / Hi-Touch event to a Saturday–Sunday after the latest closing date, chosen by the player.
+- **General Election singles** keep their own voting-period sales.
+- **YouTube MV views** bring new group fans at a balanced, diminishing rate. About 35% of them also become fans of the members in the MV, weighted by position (Center > front > middle > back) and popularity.
