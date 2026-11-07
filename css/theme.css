@@ -909,3 +909,30 @@ select:not([multiple]):not([size]){cursor:pointer}
 .mod [role=dialog] .mbtop{position:sticky;top:0;z-index:3;margin:0 0 6px;box-shadow:0 2px 6px rgba(80,40,120,.15)}
 .rtpmap{margin:6px 0 10px}.rtpmap .row{gap:6px;align-items:center}.rtpmap .rsmap{overflow-x:auto}
 .rtpslm{gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}.rtpsl{margin-top:2px}
+/* election ceremony: TOP number, change tags, results line; photo step scrolls from the top */
+.gebody{align-items:flex-start}.gebody>.gestage{margin-top:auto;margin-bottom:auto}
+.gernum .getopw{font:inherit;color:inherit}.gernum.sm .getopw,.gernum.sm b{font-size:inherit}
+.gernum .gechg2,.gernum .getag{font-size:.42em;vertical-align:middle;margin-left:.3em;letter-spacing:0}
+.gechg2{font-weight:800}.gechg2.up{color:#7dffb0}.gechg2.dn{color:#ff9aa8}
+.getag{display:inline-block;padding:.05em .45em;border-radius:.4em;font-weight:900;letter-spacing:.04em}.getag.new{background:#ffd34d;color:#3a2600}.getag.cb{background:#9aa0aa;color:#fff}
+.gerhist{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:13px;color:#f3d7ff;margin-top:4px}.gerhist b{color:#fff}.gerhist b.nr{color:#c9b8d8;font-weight:600}.gerhist .gechg2{font-size:12px}
+.gephoto.solo{max-width:420px;margin:0 auto;display:block}
+/* profile: latest election rank and frame */
+.gepfb{display:inline-flex;align-items:center;gap:6px;margin:2px 0 4px;padding:2px 10px 2px 2px;border-radius:999px;background:#f4eefc;font-size:12.5px}
+.gepfr{background:#6d4bc4;color:#fff;font-weight:800;border-radius:999px;padding:1px 8px;letter-spacing:.03em}
+.gepfb-1 .gepfr{background:linear-gradient(135deg,#ffe58a,#d4a017);color:#3a2600}.gepfb-2 .gepfr{background:linear-gradient(135deg,#f4f6f8,#9aa6b2);color:#2a3038}.gepfb-3 .gepfr{background:linear-gradient(135deg,#f0c49a,#a8652f);color:#fff}
+.gepfb-k7 .gepfr{background:linear-gradient(135deg,#d58cff,#7b2cbf)}.gepfb-sen .gepfr{background:linear-gradient(135deg,#ffb3cf,#ff5c95)}
+.pf.gefr{border-radius:18px;padding:8px;margin:-4px}
+.pf.gefr-1{border:4px solid #e2b13c;box-shadow:0 0 0 3px #fff3c4,0 0 22px rgba(226,177,60,.75);background:linear-gradient(135deg,#fff8dc,#fff)}
+.pf.gefr-2{border:4px solid #a9b4bf;box-shadow:0 0 0 3px #f3f6f9,0 0 18px rgba(150,165,180,.7);background:linear-gradient(135deg,#f5f7fa,#fff)}
+.pf.gefr-3{border:4px solid #b9773f;box-shadow:0 0 0 3px #fbe6d3,0 0 18px rgba(185,119,63,.6);background:linear-gradient(135deg,#fdf0e4,#fff)}
+.pf.gefr-k7{border:4px solid #9b4dd6;box-shadow:0 0 0 3px #f1defe,0 0 16px rgba(155,77,214,.55);background:linear-gradient(135deg,#f7ecff,#fff)}
+.pf.gefr-sen{border:3px solid #ff8fb8;box-shadow:0 0 10px rgba(255,120,170,.35);background:linear-gradient(135deg,#fff2f7,#fff)}
+.mod>div:has(.gefr-1){border-color:#f3d27a;outline-color:#d4a017}.mod>div:has(.gefr-2){border-color:#dfe4ea;outline-color:#9aa6b2}.mod>div:has(.gefr-3){border-color:#f0c9a5;outline-color:#a8652f}.mod>div:has(.gefr-k7){border-color:#e3c4fb;outline-color:#8a3fc8}
+/* TOP has the same size and colour as the number */
+.gernum .getopw{font-size:1em!important;letter-spacing:0!important;font-weight:800}
+.gernum:not(.sm) .getopw{color:#fff}
+.gernum.sm .getopw{color:inherit!important}.top1 .gernum.sm .getopw{background:linear-gradient(180deg,#fff6c4,#e9b949);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.gernum.sm .getag,.gernum.sm .gechg2{font-size:.34em;letter-spacing:.04em;vertical-align:middle}
+.gernum.sm .getag.new{background:#ffd34d;color:#3a2600}.gernum.sm .getag.cb{background:#9aa0aa;color:#fff}
+.gernum.sm .gechg2.up{color:#7dffb0}.gernum.sm .gechg2.dn{color:#ff9aa8}.gernum.sm .gechg2{color:#fff}

@@ -991,6 +991,33 @@ select:not([multiple]):not([size]){cursor:pointer}
 .mod [role=dialog] .mbtop{position:sticky;top:0;z-index:3;margin:0 0 6px;box-shadow:0 2px 6px rgba(80,40,120,.15)}
 .rtpmap{margin:6px 0 10px}.rtpmap .row{gap:6px;align-items:center}.rtpmap .rsmap{overflow-x:auto}
 .rtpslm{gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}.rtpsl{margin-top:2px}
+/* election ceremony: TOP number, change tags, results line; photo step scrolls from the top */
+.gebody{align-items:flex-start}.gebody>.gestage{margin-top:auto;margin-bottom:auto}
+.gernum .getopw{font:inherit;color:inherit}.gernum.sm .getopw,.gernum.sm b{font-size:inherit}
+.gernum .gechg2,.gernum .getag{font-size:.42em;vertical-align:middle;margin-left:.3em;letter-spacing:0}
+.gechg2{font-weight:800}.gechg2.up{color:#7dffb0}.gechg2.dn{color:#ff9aa8}
+.getag{display:inline-block;padding:.05em .45em;border-radius:.4em;font-weight:900;letter-spacing:.04em}.getag.new{background:#ffd34d;color:#3a2600}.getag.cb{background:#9aa0aa;color:#fff}
+.gerhist{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 12px;font-size:13px;color:#f3d7ff;margin-top:4px}.gerhist b{color:#fff}.gerhist b.nr{color:#c9b8d8;font-weight:600}.gerhist .gechg2{font-size:12px}
+.gephoto.solo{max-width:420px;margin:0 auto;display:block}
+/* profile: latest election rank and frame */
+.gepfb{display:inline-flex;align-items:center;gap:6px;margin:2px 0 4px;padding:2px 10px 2px 2px;border-radius:999px;background:#f4eefc;font-size:12.5px}
+.gepfr{background:#6d4bc4;color:#fff;font-weight:800;border-radius:999px;padding:1px 8px;letter-spacing:.03em}
+.gepfb-1 .gepfr{background:linear-gradient(135deg,#ffe58a,#d4a017);color:#3a2600}.gepfb-2 .gepfr{background:linear-gradient(135deg,#f4f6f8,#9aa6b2);color:#2a3038}.gepfb-3 .gepfr{background:linear-gradient(135deg,#f0c49a,#a8652f);color:#fff}
+.gepfb-k7 .gepfr{background:linear-gradient(135deg,#d58cff,#7b2cbf)}.gepfb-sen .gepfr{background:linear-gradient(135deg,#ffb3cf,#ff5c95)}
+.pf.gefr{border-radius:18px;padding:8px;margin:-4px}
+.pf.gefr-1{border:4px solid #e2b13c;box-shadow:0 0 0 3px #fff3c4,0 0 22px rgba(226,177,60,.75);background:linear-gradient(135deg,#fff8dc,#fff)}
+.pf.gefr-2{border:4px solid #a9b4bf;box-shadow:0 0 0 3px #f3f6f9,0 0 18px rgba(150,165,180,.7);background:linear-gradient(135deg,#f5f7fa,#fff)}
+.pf.gefr-3{border:4px solid #b9773f;box-shadow:0 0 0 3px #fbe6d3,0 0 18px rgba(185,119,63,.6);background:linear-gradient(135deg,#fdf0e4,#fff)}
+.pf.gefr-k7{border:4px solid #9b4dd6;box-shadow:0 0 0 3px #f1defe,0 0 16px rgba(155,77,214,.55);background:linear-gradient(135deg,#f7ecff,#fff)}
+.pf.gefr-sen{border:3px solid #ff8fb8;box-shadow:0 0 10px rgba(255,120,170,.35);background:linear-gradient(135deg,#fff2f7,#fff)}
+.mod>div:has(.gefr-1){border-color:#f3d27a;outline-color:#d4a017}.mod>div:has(.gefr-2){border-color:#dfe4ea;outline-color:#9aa6b2}.mod>div:has(.gefr-3){border-color:#f0c9a5;outline-color:#a8652f}.mod>div:has(.gefr-k7){border-color:#e3c4fb;outline-color:#8a3fc8}
+/* TOP has the same size and colour as the number */
+.gernum .getopw{font-size:1em!important;letter-spacing:0!important;font-weight:800}
+.gernum:not(.sm) .getopw{color:#fff}
+.gernum.sm .getopw{color:inherit!important}.top1 .gernum.sm .getopw{background:linear-gradient(180deg,#fff6c4,#e9b949);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.gernum.sm .getag,.gernum.sm .gechg2{font-size:.34em;letter-spacing:.04em;vertical-align:middle}
+.gernum.sm .getag.new{background:#ffd34d;color:#3a2600}.gernum.sm .getag.cb{background:#9aa0aa;color:#fff}
+.gernum.sm .gechg2.up{color:#7dffb0}.gernum.sm .gechg2.dn{color:#ff9aa8}.gernum.sm .gechg2{color:#fff}
 
 </style>
 </head><body>
@@ -4363,7 +4390,9 @@ function geArrange(ids){const n=ids.length,sizes=typeof fxRows=='function'?fxRow
  return rows.map(r=>{const o=[];r.forEach((id,i)=>{if(i%2==0)o.push(id);else o.unshift(id)});return o})}
 function gePhotos(e){if(e.photos&&e.photos.length)return e.photos;e.photos=geLineups(e).map(L=>({gi:L.gi,name:L.name,rows:geArrange(L.ids),ed:e.name,year:e.year,day:S.day}));return e.photos}
 function gePhotoSvg(e,ph){GE_CTX=e;const rows=ph.rows,R=rows.length,W=1000,mx=Math.max(...rows.map(r=>r.length)),FW=Math.min(150,(W-60)/Math.max(1,mx)*1.25),H=Math.round(200+FW*2.6+(R-1)*FW*.98);const rk=new Map(e.final.rows.map(r=>[r.id,r]));let fg='';
- rows.slice().reverse().forEach((row,ri)=>{const back=R-1-ri,sc=1-back*.1,fw=FW*sc,fh=fw*2.525,y=H-110-fh-back*FW*.98,gap=Math.min(fw*.92,(W-60)/Math.max(1,row.length+.5)),x0=W/2-gap*(row.length-1)/2+(back%2&&rows[0]&&row.length>=rows[0].length?gap/2:0);
+ // each row stands in the gaps of the row in front (half a step sideways when both rows would line up)
+ const SH=[0];for(let k=1;k<R;k++){const sc2=1-k*.1,fw2=FW*sc2,g2=Math.min(fw2*.92,(W-60)/Math.max(1,rows[k].length+.5));SH[k]=(rows[k].length-rows[k-1].length)%2==0?(SH[k-1]>0?SH[k-1]-g2/2:SH[k-1]+g2/2):SH[k-1]}
+ rows.slice().reverse().forEach((row,ri)=>{const back=R-1-ri,sc=1-back*.1,fw=FW*sc,fh=fw*2.525,y=H-110-fh-back*FW*.98,gap=Math.min(fw*.92,(W-60)/Math.max(1,row.length+.5)),x0=W/2-gap*(row.length-1)/2+(SH[back]||0);
   row.forEach((id,i)=>{const r=rk.get(id),s=e.snap[id],cen=r&&r.center,w2=cen?fw*1.16:fw,x=x0+gap*i-w2/2,yy=cen?y-fw*.2:y;fg+=`<g transform="translate(${x.toFixed(1)} ${yy.toFixed(1)})">${geFig(s,r&&r.top,{w:w2.toFixed(1),ex:cen?3:2})}</g>`})});
  const cen=rows[0]&&rows[0].length?rows[0][Math.floor(rows[0].length/2)]:null,cn=cen&&rk.get(cen);
  return`<svg class="gephoto" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(ph.name)} group photo"><defs><linearGradient id="gpb${ph.gi}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1844"/><stop offset=".55" stop-color="#5a2a6e"/><stop offset="1" stop-color="#c2789a"/></linearGradient><radialGradient id="gps${ph.gi}" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="#fff6d6" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></radialGradient></defs>
@@ -7152,6 +7181,60 @@ function mbBack(){const p=MB.stack.pop();if(!p){ui.mod=null;return render()}ui.m
 </script>
 <script>
 // =====================================================================================
+//  General Election — ceremony card, photos, profile rank frames
+// -------------------------------------------------------------------------------------
+//  · Rank reveal: "TOP 48" (TOP as large as the number, no ordinal suffix); next to it the change vs the
+//    previous election (▲ / ▼ / ＝), NEW (yellow: never ranked before / first election) or Comeback (grey:
+//    ranked before, not ranked last time).
+//  · Member line: Group Team (Group 1st Gen); Concurrent Position members show both groups. No supporters.
+//  · Results line: previous election · Preliminary 01 · Preliminary 02 (with the change vs Preliminary 01);
+//    "Not Ranked" when not ranked.
+//  · Photos: solo photos of TOP 1, TOP 2, TOP 3 and a Kami 7 group photo, before the ranking-group photos.
+//  · Profile: the member's latest election rank, with a frame — TOP 1 gold, TOP 2 silver, TOP 3 bronze,
+//    TOP 4–7 Kami 7 colour, Title Track Senbatsu highlighted (less than Kami 7). Unranked: nothing.
+// =====================================================================================
+const geTopN=n=>`<span class="getopw">TOP</span> <b>${n}</b>`;
+function gePreOf(e,n){const L=(e.prelim||[]),p=L.find(z=>z.n2==n)||(L.some(z=>z.n2)?null:L[n-1]);return p||null}
+function geHistOf(e,r){const m=get(r.id)||(S.alumni||[]).find(a=>a.id==r.id)||{},prevE=gePrevDone(e),pr=prevE?(prevE.final.rows.find(z=>z.id==r.id)||null):undefined,prevRank=pr===undefined?undefined:pr?pr.rank||null:null;
+ const past=(m.geRec||[]).filter(h=>h.eid!=e.id),everRanked=past.some(h=>h.rank),p1=gePreOf(e,1),p2=gePreOf(e,2),rk=(p,id)=>{if(!p)return undefined;const z=p.rows.find(y=>y.id==id);return z&&z.rank?z.rank:null};
+ return{prevE,prevRank,everRanked,p1:rk(p1,r.id),p2:rk(p2,r.id),hasP1:!!p1,hasP2:!!p2}}
+const geArrow=(from,to)=>{if(from==null||to==null)return'';const d=from-to;return`<span class="gechg2 ${d>0?'up':d<0?'dn':''}">${d>0?'▲'+d:d<0?'▼'+(-d):'＝'}</span>`};
+function geBadge(e,r){if(!r.rank)return'';const H=geHistOf(e,r);if(!H.everRanked)return'<span class="getag new">NEW</span>';if(H.prevRank==null)return'<span class="getag cb">Comeback</span>';return geArrow(H.prevRank,r.rank)}
+// member line: Group Team (Group 1st Gen) / Group B Team B
+geMeta=function(r){const m=r&&(get(r.id)||(S.alumni||[]).find(a=>a.id==r.id));if(!m)return r?`${esc(r.trainee?TL():r.team||'')}`:'';const g=grp(m.group),t=teamOf(m),tn=t&&isAct(m)?t.name:TL();
+ let s=`${esc(g?g.name:'')} ${esc(tn)}`;if(m.kn){const kg=grp(m.kn.gid),kt=kg&&(kg.teams||[]).find(x=>x.id==m.kn.tid);if(kg)s+=` / ${esc(kg.name)} ${esc(kt?kt.name:'')}`}return`${s} (${esc(g?g.name:'')} ${ordN(m.gen||1)} Gen)`};
+// results line under the votes
+geChg=function(r){const e=GE_CTX;if(!e||!r)return'';const H=geHistOf(e,r),it=[],v=x=>x?`<b>TOP ${x}</b>`:'<b class="nr">Not Ranked</b>';
+ if(H.prevE)it.push(`<span>Last election ${v(H.prevRank)}</span>`);if(H.hasP1)it.push(`<span>Preliminary 01 ${v(H.p1)}</span>`);if(H.hasP2)it.push(`<span>Preliminary 02 ${v(H.p2)} ${geArrow(H.p1,H.p2)}</span>`);
+ return it.length?`<div class="gerhist">${it.join('')}</div>`:''};
+gePrevTxt=function(){return''};
+{const f=geCerHtml;geCerHtml=function(e){let h=f.apply(this,arguments);try{const St=geSteps(e),s=St[Math.min(e.cp.i,St.length-1)];if(s&&s.k=='r'){const r=geRow(e,s.id);
+ h=h.replace(/<div class="gernum">[\s\S]*?<\/div><div class="gerl">PLACE<\/div>/,`<div class="gernum">${geTopN(r.rank)}</div>`)
+  .replace(/<div class="gernum sm">[\s\S]*?<span>PLACE<\/span><\/div>/,`<div class="gernum sm">${geTopN(r.rank)} ${geBadge(e,r)}</div>`)}}catch(err){console.error(err)}return h}}
+// ---- photos: TOP 1 / TOP 2 / TOP 3 solo photos and Kami 7 ---------------------------------------------------------
+{const f=gePhotos;gePhotos=function(e){const P=f.apply(this,arguments);try{if(e&&e.final&&Array.isArray(P)&&!P.some(p=>p.kind)){const R=e.final.rows.filter(r=>r.rank).sort((a,b)=>a.rank-b.rank),ex=[];
+ R.slice(0,3).forEach(r=>ex.push({kind:'solo',gi:'s'+r.rank,rank:r.rank,id:r.id,name:`TOP ${r.rank} · ${r.stage}`,ed:e.name,year:e.year,day:S.day}));
+ if(R.length>=4)ex.push({kind:'kami7',gi:'k7',name:R.length>=7?'Kami 7':'Top members',rows:geArrange(R.slice(0,7).map(r=>r.id)),ed:e.name,year:e.year,day:S.day});P.unshift(...ex)}}catch(err){console.error(err)}return P}}
+function gePhotoSolo(e,ph){GE_CTX=e;const W=600,H=900,r=e.final.rows.find(z=>z.id==ph.id)||{},c=GE_CAPE[ph.rank]||{l:'#fff',c:'#e9c46a',d:'#a87810',n:''},id='gso'+ph.rank+'_'+(++PTC[0]);
+ return`<svg class="gephoto solo" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(ph.name)}"><defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d0f33"/><stop offset=".6" stop-color="#4b2160"/><stop offset="1" stop-color="${c.d}"/></linearGradient><radialGradient id="${id}s" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#fff6d6" stop-opacity=".75"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></radialGradient></defs>
+ <rect width="${W}" height="${H}" fill="url(#${id}b)"/><path d="M${W/2-60} 0L${W/2-230} ${H-150}H${W/2+230}L${W/2+60} 0Z" fill="#fff6d6" opacity=".12"/><rect width="${W}" height="${H}" fill="url(#${id}s)"/>${Array.from({length:30},(_,i)=>`<circle cx="${(i*97)%W}" cy="${(i*53)%(H*.55)}" r="${1+i%3}" fill="#fff" opacity="${.3+(i%4)*.12}"/>`).join('')}
+ <ellipse cx="${W/2}" cy="${H-165}" rx="210" ry="26" fill="#000" opacity=".35"/><g transform="translate(${W/2-150} 90)">${geFig(e.snap[ph.id],ph.rank,{w:300,ex:3})}</g>
+ <rect x="0" y="${H-140}" width="${W}" height="140" fill="#140a24" opacity=".88"/><rect x="0" y="${H-140}" width="${W}" height="4" fill="${c.c}"/>
+ <text x="${W/2}" y="${H-82}" text-anchor="middle" font-size="46" font-weight="800" fill="${c.l}" font-family="sans-serif" letter-spacing="3">TOP ${ph.rank}</text><text x="${W/2}" y="${H-44}" text-anchor="middle" font-size="28" font-weight="700" fill="#fff" font-family="sans-serif">${esc(r.stage||'')}</text><text x="${W/2}" y="${H-14}" text-anchor="middle" font-size="16" fill="#f3d7ff">${esc(ph.ed)} · ${ph.year} · ${(r.votes||0).toLocaleString()} votes</text></svg>`}
+{const f=gePhotoSvg;gePhotoSvg=function(e,ph){if(ph&&ph.kind=='solo')return gePhotoSolo(e,ph);return f.apply(this,arguments)}}
+// past elections get the new photos too
+function geArchPhotos(){if(!S||!S.groups)return;S.groups.forEach(g=>{try{gsWith(g.id,()=>{((S.ge&&S.ge.list)||[]).forEach(e=>{if(e.final&&e.st=='done'&&Array.isArray(e.photos)&&e.photos.length)gePhotos(e)})})}catch(err){console.error(err)}})}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{geArchPhotos()}catch(e){console.error(e)}return r}}
+// ---- profile: latest election rank and frame --------------------------------------------------------------------------
+function geProfRank(m){if(!m||!S||!S.groups)return null;let best=null;S.groups.forEach(g=>{const G=gsCtx(g.id,'ge');const E=((G&&G.list)||[]).filter(e=>e.st=='done'&&e.final).sort((a,b)=>(b.vEnd||0)-(a.vEnd||0))[0];if(!E)return;const row=E.final.rows.find(r=>r.id==m.id&&!r.withdrawn);if(!row)return;if(!best||(E.vEnd||0)>(best.e.vEnd||0))best={e:E,row,g}});
+ if(!best||!best.row.rank)return null;const k=best.row.rank<=3?String(best.row.rank):best.row.rank<=7?'k7':best.row.gi==0?'sen':'rk';return{...best,k}}
+{const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{if(cand)return h;const P=geProfRank(m);if(!P)return h;const lab={'1':'Kami 7 · 1st place','2':'Kami 7 · 2nd place','3':'Kami 7 · 3rd place',k7:'Kami 7',sen:'Senbatsu',rk:''}[P.k];
+ const badge=`<div class="gepfb gepfb-${P.k}"><span class="gepfr">TOP ${P.row.rank}</span><span>${esc(P.e.name)}${S.groups.length>1?' · '+esc(P.g.name):''}${lab?` · <b>${lab}</b>`:''}</span></div>`;
+ if(P.k!='rk')h=h.replace('<div class="pf">',`<div class="pf gefr gefr-${P.k}">`);h=h.replace('</h2>','</h2>'+badge)}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom!  —  Thai translation (ภาษาไทย)
 //  English text -> Thai. Used by js/i18n/i18n.js. Proper nouns (idol names, cities,
 //  countries, generated song titles) are intentionally kept as they are.
@@ -7461,6 +7544,8 @@ I18N_TH_TPL.push(["Costume by team ({0} costumes)","ชุดแยกตาม�
 Object.assign(I18N_TH,{"Choose a costume":"เลือกชุด","Single":"ซิงเกิ้ล","Stage":"สเตจ","Library":"คลังชุด","Tap to choose":"แตะเพื่อเลือก","👗 Choose costume (with preview)":"👗 เลือกชุด (ดูตัวอย่าง)","Ceremony dress":"ชุดพิธี","Song costume":"ชุดเพลง","Under Girls: Under costume":"อันเดอร์: ชุดอันเดอร์","Nothing here yet.":"ยังไม่มี","Everyone":"ทุกคน"});
 I18N_TH_TPL.push(["Single ({0})","ซิงเกิ้ล ({0})"],["Stage ({0})","สเตจ ({0})"],["Library ({0})","คลังชุด ({0})"],["Single #{0} · each member's own costume","ซิงเกิ้ล #{0} · ใส่ชุดของตัวเองในซิงเกิ้ลนั้น"],["{0} · preview on {1}","{0} · ตัวอย่างบน {1}"],["{0} · Stage costume","{0} · ชุดสเตจ"]);
 Object.assign(I18N_TH,{"Open General Election":"เปิดหน้าเลือกตั้ง"});
+Object.assign(I18N_TH,{"Last election":"เลือกตั้งครั้งก่อน","Preliminary 01":"ผลด่วน 01","Preliminary 02":"ผลด่วน 02","Not Ranked":"ไม่ติดอันดับ","Kami 7":"คามิ 7","Top members":"อันดับต้น"});
+I18N_TH_TPL.push(["Kami 7 · {0} place","คามิ 7 · อันดับ {0}"]);
 
 </script>
 <script>

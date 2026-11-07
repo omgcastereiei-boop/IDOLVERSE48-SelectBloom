@@ -61,3 +61,5 @@ I18N_TH_TPL.push(["Costume by team ({0} costumes)","ชุดแยกตาม�
 Object.assign(I18N_TH,{"Choose a costume":"เลือกชุด","Single":"ซิงเกิ้ล","Stage":"สเตจ","Library":"คลังชุด","Tap to choose":"แตะเพื่อเลือก","👗 Choose costume (with preview)":"👗 เลือกชุด (ดูตัวอย่าง)","Ceremony dress":"ชุดพิธี","Song costume":"ชุดเพลง","Under Girls: Under costume":"อันเดอร์: ชุดอันเดอร์","Nothing here yet.":"ยังไม่มี","Everyone":"ทุกคน"});
 I18N_TH_TPL.push(["Single ({0})","ซิงเกิ้ล ({0})"],["Stage ({0})","สเตจ ({0})"],["Library ({0})","คลังชุด ({0})"],["Single #{0} · each member's own costume","ซิงเกิ้ล #{0} · ใส่ชุดของตัวเองในซิงเกิ้ลนั้น"],["{0} · preview on {1}","{0} · ตัวอย่างบน {1}"],["{0} · Stage costume","{0} · ชุดสเตจ"]);
 Object.assign(I18N_TH,{"Open General Election":"เปิดหน้าเลือกตั้ง"});
+Object.assign(I18N_TH,{"Last election":"เลือกตั้งครั้งก่อน","Preliminary 01":"ผลด่วน 01","Preliminary 02":"ผลด่วน 02","Not Ranked":"ไม่ติดอันดับ","Kami 7":"คามิ 7","Top members":"อันดับต้น"});
+I18N_TH_TPL.push(["Kami 7 · {0} place","คามิ 7 · อันดับ {0}"]);
