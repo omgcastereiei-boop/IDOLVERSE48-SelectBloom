@@ -864,3 +864,5 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 @media (max-width:560px){.gpov{align-items:flex-end}.gpbox{width:100%;max-height:78vh;border-radius:26px 26px 0 0;border-bottom:0}.gpov .gpbox{transform:translateY(40px)}.gpov.in .gpbox{transform:none}}
 /* dropdowns look like game buttons */
 select:not([multiple]):not([size]){cursor:pointer}
+.plczm{position:relative}.plczp{position:absolute;top:-6px;left:50%;transform:translateX(-50%);white-space:nowrap;font:800 9px Quicksand;font-style:normal;background:#efe6fa;color:#6b5a86;border-radius:8px;padding:1px 6px;z-index:1}.plczp.c{background:linear-gradient(135deg,#ff9ccc,#b993ff);color:#fff}
+.plczs{padding-top:8px}
