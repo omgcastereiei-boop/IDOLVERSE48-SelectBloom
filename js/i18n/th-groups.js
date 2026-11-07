@@ -29,3 +29,6 @@ Object.assign(I18N_TH,{"Booth handshake statistics":"สถิติจับม
 I18N_TH_TPL.push(["{0} members","{0} คน"]);
 Object.assign(I18N_TH,{"All Groups":"ทุกวง","Group":"วง"});
 Object.assign(I18N_TH,{"Choose":"เลือก","Search":"ค้นหา","Close":"ปิด"});
+// Song Senbatsu list (Results / Discography / Song Library)
+Object.assign(I18N_TH,{"Dance Positions":"ตำแหน่งเต้น","First Time":"ครั้งแรก"});
+I18N_TH_TPL.push(["{0} members · Center: {1}","{0} คน · เซ็นเตอร์: {1}"],["Released {0} · {1} sold","วางจำหน่าย {0} · ขายได้ {1}"]);

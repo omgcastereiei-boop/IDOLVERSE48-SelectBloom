@@ -885,3 +885,10 @@ select:not([multiple]):not([size]){cursor:pointer}
 .rtpg .rtpc{cursor:pointer;padding:4px}.rtpg .rtpc.on{outline:3px solid var(--pk);outline-offset:1px}
 .rspe h3{margin:0 0 6px}.rspeg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}.rspek{margin:0;display:flex;flex-direction:column;gap:2px}.rspek small{font:800 11px Quicksand;color:#8f80a6}.rspek b{font:900 26px Quicksand;color:#3c2d55}.rspek b i{font-style:normal;font-size:13px;color:#a99bbd}
 .rspem{display:grid;gap:4px;margin-top:6px}.rspemr{display:grid;grid-template-columns:30px 1fr auto;gap:6px;align-items:center;background:#fff;border:1px solid #f1eaf8;border-radius:10px;padding:3px 6px}.rspemr span{display:flex;flex-direction:column;min-width:0}.rspemr small{font-size:11px;color:#8f80a6}.rspemr em{font-style:normal;font:900 16px Quicksand;color:#5a2a6e}
+/* song Senbatsu list (Results / Discography / Song Library) */
+.slrel{text-align:left;margin-top:8px}.slsong{margin:6px 0;padding:8px 10px}.slsong h3{font-size:14px;margin:0 0 4px}
+.slbox{margin:2px 0 6px}.slg{font-weight:800;color:var(--pk);margin:6px 0 2px;font-size:13px}
+.sll{margin:2px 0;padding-left:18px}.sll li{margin:2px 0;line-height:1.5;font-size:13px}.sll li::marker{color:var(--tc)}.sll li>b{color:var(--tc);filter:brightness(.8)}
+.sln.slcen{font-weight:800;color:var(--pk)}.slft{font-style:normal;font-size:10px;font-weight:700;background:#d5f5e3;color:#1d7a4a;border-radius:6px;padding:0 4px;margin-left:2px;white-space:nowrap}
+.slfts{margin-top:4px;font-size:12.5px}.slfts b{margin-right:4px}
+.slpos summary{cursor:pointer;font-weight:700;font-size:12.5px;color:var(--mut);margin:4px 0}
