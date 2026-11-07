@@ -134,6 +134,6 @@ function modal(){const M=ui.mod;if(!M)return'';let h='';
  return`<div class="mod t-${M.t}" onclick="if(event.target==this){ui.mod=null;render()}"><div role="dialog" aria-modal="true">${h}<div class="row" style="margin-top:10px"><button class="b" onclick="ui.mod=null;render()">Close</button></div></div></div>`}
 function render(){const a=$('#app');
  if(ui.t||!S){const ok=!!load();a.innerHTML=titleScreen(ok);document.body.dataset.view='title';return}
- save();document.body.dataset.view=view;
+ if(typeof svAuto=="function")svAuto();else save();document.body.dataset.view=view;
  a.innerHTML=chrome(V[view]())+modal();rsCenter()}
 applyPrefs();render();setTimeout(()=>{const s=document.getElementById('splash');if(s)s.remove()},1800);
