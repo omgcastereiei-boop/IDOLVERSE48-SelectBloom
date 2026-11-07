@@ -64,3 +64,4 @@ Object.assign(I18N_TH,{"Open General Election":"เปิดหน้าเล�
 Object.assign(I18N_TH,{"Last election":"เลือกตั้งครั้งก่อน","Preliminary 01":"ผลด่วน 01","Preliminary 02":"ผลด่วน 02","Not Ranked":"ไม่ติดอันดับ","Kami 7":"คามิ 7","Top members":"อันดับต้น"});
 I18N_TH_TPL.push(["Kami 7 · {0} place","คามิ 7 · อันดับ {0}"]);
 Object.assign(I18N_TH,{"Sister-group rankings":"จัดอันดับวงน้อง","Preliminary results":"ผลด่วน","Title Track Senbatsu of the next single":"เซ็มบัตสึเพลงหลักซิงเกิ้ลถัดไป","Unranked":"ไม่ติดอันดับ"});
+Object.assign(I18N_TH,{"Election Rank":"อันดับเลือกตั้ง"});
