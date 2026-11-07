@@ -866,3 +866,9 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 select:not([multiple]):not([size]){cursor:pointer}
 .plczm{position:relative}.plczp{position:absolute;top:-6px;left:50%;transform:translateX(-50%);white-space:nowrap;font:800 9px Quicksand;font-style:normal;background:#efe6fa;color:#6b5a86;border-radius:8px;padding:1px 6px;z-index:1}.plczp.c{background:linear-gradient(135deg,#ff9ccc,#b993ff);color:#fff}
 .plczs{padding-top:8px}
+.thlug{grid-template-columns:repeat(var(--cols,3),minmax(0,1fr))!important;gap:8px}.thlug .thluc{min-width:0}.thlug .thluc svg{max-width:100%;height:auto}.thlug .thluc .st{font-size:11px;line-height:1.35;overflow:hidden;width:100%}.thlug .thluc .st b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thlug[style*="--cols:5"] .thluc .st{font-size:9.5px}.thlug[style*="--cols:4"] .thluc .st{font-size:10.5px}
+.thlucols{gap:6px}.thlucols .b.on{background:var(--grad);color:#fff;border:0}
+.thlug .thluc .tag{max-width:100%;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thlug[style*="--cols:4"] .thluc .tag{font-size:9px;padding:1px 5px}.thlug[style*="--cols:5"] .thluc .tag{font-size:8px;padding:1px 3px;letter-spacing:-.02em}
+.thlug[style*="--cols:5"] .thluc{padding:3px!important}
