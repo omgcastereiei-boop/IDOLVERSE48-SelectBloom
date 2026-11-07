@@ -6867,6 +6867,9 @@ function gsProfFix(){if(!S||S.groups.length<2)return;let bad=0;S.members.forEach
 // (and its Concurrent Position members); sister members can join the Title Track Senbatsu but are not Under Girls here
 {const f=plSczMembers;plSczMembers=function(){const r=f.apply(this,arguments);try{if(S.groups.length<2)return r;const gid=gsAg();return r.filter(m=>gsIn(m,gid))}catch(e){console.error(e);return r}}}
 {const f=plProfSave;plProfSave=function(mid){const m=get(mid);if(m&&S.groups.length>1&&!gsIn(m,gsAg()))return false;return f.apply(this,arguments)}}
+// Trainees of the single's group can take part in its Roadshows (not while away)
+{const f=rsElig;rsElig=function(x){const r=f.apply(this,arguments);try{const multi=S.groups.length>1,gid=multi?gsAg():null,g=multi?null:new Set(singleMembersX(x).map(id=>get(id)?.group).filter(v=>v!=null));
+ const add=S.members.filter(m=>m.status=='trainee'&&(multi?gsGid(m)==gid:g.has(m.group))&&!(typeof wlAway=='function'&&wlAway(m))).map(m=>m.id);return[...new Set([...r,...add])]}catch(e){console.error(e);return r}}}
 
 </script>
 <script>
