@@ -6278,9 +6278,9 @@ function gsSelect(gid){gid=+gid;if(!grp(gid)||gid==S.ag)return;const go=()=>{gsS
 const gsTeam=tid=>{for(const g of S.groups){const t=(g.teams||[]).find(x=>x.id==tid);if(t)return{g,t}}return null};
 const gsIn=(m,gid)=>!!m&&m.status!='graduated'&&(gsGid(m)==gid||(m.kn&&m.kn.gid==gid));
 const gsMem=gid=>S.members.filter(m=>gsIn(m,gid));
-// sister groups → Main Group: full members of a sister group may take part in the Main Group's singles (Senbatsu), elections
+// sister groups → Main Group: full members and Trainees of a sister group may take part in the Main Group's singles (Senbatsu), elections
 // and other activities; handshake events and roadshows only when they are in the Main Group single's Title Track Senbatsu
-const gsSis=(m,gid)=>!!m&&S.groups.length>1&&gid==(gsMain()||{}).id&&gsGid(m)!=gid&&m.status!='graduated'&&m.status!='trainee'&&isAct(m)&&!!m.tid;
+const gsSis=(m,gid)=>!!m&&S.groups.length>1&&gid==(gsMain()||{}).id&&gsGid(m)!=gid&&(m.status=='trainee'||(isAct(m)&&!!m.tid)); // full members and Trainees of a sister group
 const gsJoin=(m,gid)=>gsIn(m,gid)||gsSis(m,gid);
 const gsJoinMem=gid=>S.members.filter(m=>gsJoin(m,gid));
 function gsElig(o){const gid=gsAg(),M=gsJoinMem(gid);if(!(o&&o.tm))return M;return M.filter(m=>m.team==o.tm||(m.kn&&m.kn.gid==gid&&((gsTeam(m.kn.tid)||{}).t||{}).name==o.tm))}
