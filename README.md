@@ -612,3 +612,17 @@ Open **Company** in the menu. One company runs several independent idol groups: 
 Choose **ไทย** or **English** on the title screen (top right) or in Management & Settings → Display.
 The choice is a display preference (stored with the UI prefs, not in the save) and can be switched any time.
 Names, song titles and CD-cover text typed by the player are never translated.
+
+## Team Structure: Team Restructuring & Shuffle Team
+
+Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
+
+- **Team Restructuring**: specific changes such as promotion, demotion, team transfer, group transfer, Concurrent Member (start / end), and Captain / Vice-Captain (appoint, replace, remove). Several changes can be added; a Change Summary lets you edit or remove each one and shows conflicts before you confirm.
+- **Shuffle Team**: a board for one group with Move here, Clear Team, Clear All Teams (draft only), Captains, promote / demote, group transfer and Concurrent. Every move is tracked as old → new.
+- Draft → Confirmed → Scheduled → Announced. Confirming does not change anything. The announcement is either on a custom date or at an existing event (Handshake, Roadshow, Theater, Debut, Launch); the event decides the date. On that day the changes take effect, with an official announcement (event announcements show the members at the event), member reactions and fan response.
+- **Theater transition** per affected team: the old lineup performs the current Stage until its final performance (at least 14 days after the announcement).
+  - **Option A**: continue the current Setlist. Formation, Centers and Units must be edited; songs, order and costumes are kept. The first new-team show can come straight after the final. The performance count continues.
+  - **Option B**: a new Setlist Stage, which debuts at least 14 days ahead and after the final. Its count starts at 0.
+  - Shows in between are suspended.
+- Separate **Team Restructuring History** and **Shuffle Team History**, with before / after structures, every change, the announcement, reactions and theater transitions.
+- **Online Theater Membership** is company-wide: every group and team shows the same numbers.

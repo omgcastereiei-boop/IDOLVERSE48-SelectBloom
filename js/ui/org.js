@@ -1,0 +1,126 @@
+// =====================================================================================
+//  Team Structure — Team Restructuring and Shuffle Team (Part 1: drafts and change tracking)
+// -------------------------------------------------------------------------------------
+//  Two separate features under Group & Team:
+//  · Team Restructuring — specific changes: promotion, demotion, team transfer, group transfer,
+//    Concurrent Position (start / end), Captain / Vice-Captain (appoint, replace, remove).
+//  · Shuffle Team — reorganise every team of one group from scratch on a board: move members,
+//    Clear Team, Clear All Teams (draft only), promote / demote, Captains, group transfer / Concurrent.
+//  Both build a DRAFT of target assignments (nothing changes in the game). Every change is tracked
+//  (old → new, exact wording). Confirm All Changes only confirms the plan: the announcement and the
+//  Theater transition (org2.js) decide when it takes effect. No conditions, no automatic decisions.
+// =====================================================================================
+function orgS(){S.org=S.org&&typeof S.org=='object'?S.org:{};const O=S.org;O.seq=+O.seq||0;O.n=O.n||{rs:0,sh:0};O.plans=Array.isArray(O.plans)?O.plans:[];O.dr=O.dr||{};return O}
+const orgCurA=m=>({gid:gsGid(m),tid:isAct(m)&&m.tid?m.tid:null,kn:m.kn?{gid:m.kn.gid,tid:m.kn.tid}:null});
+const orgJ=a=>JSON.stringify(a||null);
+function orgTeam(tid){for(const g of S.groups){const t=(g.teams||[]).find(x=>x.id==tid);if(t)return{g,t}}return null}
+function orgPos(a){if(!a)return'—';const g=grp(a.gid),T=a.tid&&a.tid!='_none'?orgTeam(a.tid):null;return`${g?g.name:'?'} · ${a.tid=='_none'?'No team (cleared)':T?T.t.name:TL()}`}
+function orgKnTxt(k){if(!k)return'';const T=orgTeam(k.tid);return T?`${T.g.name} · ${T.t.name}`:'?'}
+function orgLeadNow(tid){const T=orgTeam(tid);if(!T)return{cap:null,vice:null};const L=(T.g.tl||{})[tid]||{};return{cap:L.cap||null,vice:L.vice||null}}
+// ---- the draft ---------------------------------------------------------------------------------------------------------
+function orgDr(kind){const O=orgS();if(!O.dr[kind])O.dr[kind]={kind,gid:gsAg(),asg:{},lead:{},log:[]};return O.dr[kind]}
+const orgTo=(D,m)=>D.asg[m.id]?{...D.asg[m.id]}:orgCurA(m);
+const orgLeadTo=(D,tid)=>D.lead[tid]?{...orgLeadNow(tid),...D.lead[tid]}:orgLeadNow(tid);
+function orgSet(D,mid,a){const m=get(mid);if(!m)return;const c=orgCurA(m);if(orgJ(a)==orgJ(c))delete D.asg[mid];else D.asg[mid]=a;
+ // Captains / Vice-Captains who leave their team (or become Trainees) lose the role in the draft
+ Object.keys(orgLeadsAll(D)).forEach(tid=>{const L=orgLeadTo(D,tid);['cap','vice'].forEach(r=>{if(L[r]==mid&&(a.tid!=tid)){D.lead[tid]={...(D.lead[tid]||{}),[r]:null}}})})}
+function orgLeadsAll(D){const o={};S.groups.forEach(g=>(g.teams||[]).forEach(t=>{o[t.id]=1}));return o}
+function orgLeadSet(D,tid,role,mid){const cur=orgLeadNow(tid),L={...(D.lead[tid]||{})},other=role=='cap'?'vice':'cap';mid=mid?+mid:null;L[role]=mid;if(mid&&orgLeadTo(D,tid)[other]==mid)L[other]=null;
+ ['cap','vice'].forEach(r=>{if(r in L&&L[r]==cur[r])delete L[r]});if(Object.keys(L).length)D.lead[tid]=L;else delete D.lead[tid]}
+// ---- change tracking ---------------------------------------------------------------------------------------------------
+function orgChanges(D){const out=[];Object.entries(D.asg).forEach(([mid,a])=>{const m=get(+mid);if(!m)return;const f=orgCurA(m),nm=m.name,tN=x=>x.tid&&x.tid!='_none'?(orgTeam(x.tid)||{t:{name:'?'}}).t.name:TL();
+  if(a.tid=='_none'){out.push({mid:+mid,k:'clear',txt:`${nm} — removed from ${tN(f)} (no team yet: assign a team or make her a ${TL()})`,from:f,to:a});return}
+  if(f.gid!=a.gid)out.push({mid:+mid,k:'group',txt:`${nm} — Group transfer from ${orgPos(f)} to ${orgPos(a)}`,from:f,to:a});
+  else if(!f.tid&&a.tid)out.push({mid:+mid,k:'promote',txt:`${nm} — Promoted from ${TL()} to Full Member (${tN(a)})`,from:f,to:a});
+  else if(f.tid&&!a.tid)out.push({mid:+mid,k:'demote',txt:`${nm} — Demoted from ${tN(f)} to ${TL()}`,from:f,to:a});
+  else if(f.tid!=a.tid)out.push({mid:+mid,k:'team',txt:`${nm} — Transferred from ${tN(f)} to ${tN(a)}`,from:f,to:a});
+  if(orgJ(f.kn)!=orgJ(a.kn)){if(a.kn&&!f.kn)out.push({mid:+mid,k:'kn',txt:`${nm} — Assigned as a Concurrent Member from ${orgPos(a)} to ${orgKnTxt(a.kn)}`,from:f,to:a});else if(!a.kn&&f.kn)out.push({mid:+mid,k:'knend',txt:`${nm} — Concurrent Position in ${orgKnTxt(f.kn)} ended`,from:f,to:a});else out.push({mid:+mid,k:'kn',txt:`${nm} — Concurrent Position changed from ${orgKnTxt(f.kn)} to ${orgKnTxt(a.kn)}`,from:f,to:a})}});
+ Object.entries(D.lead).forEach(([tid,L])=>{const T=orgTeam(tid);if(!T)return;const cur=orgLeadNow(tid);[['cap','Captain'],['vice','Vice-Captain']].forEach(([r,lab])=>{if(!(r in L)||L[r]==cur[r])return;const a=get(L[r]),b=get(cur[r]);
+  if(a)out.push({mid:a.id,k:r,tid,txt:`${a.name} — Appointed as ${T.t.name} ${lab}${b?` (replacing ${b.name})`:''}`});if(b)out.push({mid:b.id,k:r+'out',tid,txt:`${b.name} — ${a?'Replaced':'Removed'} as ${T.t.name} ${lab}`})})});return out}
+// ---- validation --------------------------------------------------------------------------------------------------------
+function orgErrs(D){const E=[],W=[],busy=new Set(orgS().plans.filter(p=>p.st=='confirmed'||p.st=='scheduled').flatMap(p=>Object.keys(p.asg||{}).map(Number)));
+ Object.entries(D.asg).forEach(([mid,a])=>{const m=get(+mid);if(!m){E.push('A member in the plan no longer exists.');return}if(m.status=='graduated')E.push(`${m.name} has graduated.`);
+  if(busy.has(+mid))E.push(`${m.name} is already part of another restructuring that has not been announced yet.`);
+  const g=grp(a.gid);if(!g)E.push(`${m.name}: the destination group does not exist.`);if(a.tid=='_none')E.push(`${m.name} has no team in the draft: assign a team or make her a ${TL()}.`);
+  else if(a.tid&&!(g&&(g.teams||[]).some(t=>t.id==a.tid)))E.push(`${m.name}: the team does not belong to ${g?g.name:'the group'}.`);
+  if(a.kn){const K=orgTeam(a.kn.tid);if(!a.tid||a.tid=='_none')E.push(`${m.name}: a Concurrent Member must be a Full Member of a team first.`);if(a.kn.gid==a.gid)E.push(`${m.name}: the Concurrent Position must be in another group.`);if(!K||K.g.id!=a.kn.gid)E.push(`${m.name}: choose a team of the Concurrent group.`)}
+  const f=orgCurA(m);if(f.gid!=a.gid&&typeof gsTrCheck=='function'){try{gsTrCheck(m,a.gid).filter(c=>c.src!='th').forEach(c=>E.push(`${m.name}: ${c.label}${c.day!=null?' ('+jd(c.day)+')':''} — resolve it before the group transfer.`))}catch(e){}}});
+ Object.entries(D.lead).forEach(([tid,L])=>{const T=orgTeam(tid);if(!T)return;const X=orgLeadTo(D,tid);['cap','vice'].forEach(r=>{const id=X[r];if(!id)return;const m=get(id);if(!m)return E.push('A leader no longer exists.');const a=orgTo(D,m);if(a.tid!=tid)E.push(`${m.name} cannot be ${T.t.name} ${r=='cap'?'Captain':'Vice-Captain'}: she is not a Full Member of ${T.t.name} in the plan.`)});if(X.cap&&X.cap==X.vice)E.push(`${T.t.name}: the Captain and the Vice-Captain must be different members.`)});
+ // teams left empty
+ const touched=new Set(Object.values(D.asg).map(a=>a.tid).concat(Object.keys(D.asg).map(id=>{const m=get(+id);return m?orgCurA(m).tid:null})).filter(Boolean));
+ touched.forEach(tid=>{const T=orgTeam(tid);if(!T||tid=='_none')return;const n=S.members.filter(m=>m.status!='graduated'&&orgTo(D,m).tid==tid).length;if(!n)W.push(`${T.t.name} would have no members.`)});
+ return{E:[...new Set(E)],W:[...new Set(W)]}}
+// ---- shared change form (both features) --------------------------------------------------------------------------------
+const ORG_ACT=[['promote','Promote to Full Member'],['demote',`Demote to ${'Trainee'}`],['team','Team transfer'],['group','Group transfer'],['kn','Concurrent Member'],['knend','End Concurrent Position'],['cap','Appoint Team Captain'],['vice','Appoint Vice-Captain'],['rmlead','Remove Captain / Vice-Captain']];
+function orgFormHtml(kind){const D=orgDr(kind),F=ui.orgf=ui.orgf||{kind},m=get(+F.mid),op=(L,v)=>L.map(([k,n])=>`<option value="${k}" ${String(k)==String(v)?'selected':''}>${esc(n)}</option>`).join('');
+ const pool=S.members.filter(x=>x.status!='graduated'&&(kind!='sh'||gsGid(x)==D.gid)).sort((a,b)=>(gsGid(a)-gsGid(b))||a.name.localeCompare(b.name));
+ const a=m?orgTo(D,m):null,acts=m?ORG_ACT.filter(([k])=>k=='promote'?!a.tid:k=='demote'||k=='team'||k=='kn'||k=='cap'||k=='vice'?!!a.tid:k=='knend'?!!a.kn:true):[];
+ const g=m&&grp(a.gid),teams=g?g.teams:[],dg=grp(+F.gid),sis=S.groups.filter(x=>m&&x.id!=a.gid);
+ let ex='';if(m&&(F.act=='promote'||F.act=='team'))ex=`<label>Team<select onchange="ui.orgf.tid=this.value;render()"><option value="">Choose…</option>${op(teams.filter(t=>t.id!=a.tid).map(t=>[t.id,t.name]),F.tid)}</select></label>`;
+ if(m&&F.act=='group')ex=`<label>Destination group<select onchange="ui.orgf.gid=this.value;ui.orgf.tid='';render()"><option value="">Choose…</option>${op(sis.map(x=>[x.id,x.name]),F.gid)}</select></label>${dg?`<label>Status<select onchange="ui.orgf.tid=this.value;render()"><option value="">Choose…</option>${op([['tr',TL()],...dg.teams.map(t=>[t.id,'Full Member · '+t.name])],F.tid)}</select></label>`:''}`;
+ if(m&&F.act=='kn')ex=`<label>Concurrent group<select onchange="ui.orgf.gid=this.value;ui.orgf.tid='';render()"><option value="">Choose…</option>${op(sis.map(x=>[x.id,x.name]),F.gid)}</select></label>${dg?`<label>Team<select onchange="ui.orgf.tid=this.value;render()"><option value="">Choose…</option>${op(dg.teams.map(t=>[t.id,t.name]),F.tid)}</select></label>`:''}`;
+ if(m&&F.act=='rmlead'){const L=orgLeadTo(D,a.tid);ex=`<label>Role<select onchange="ui.orgf.role=this.value;render()"><option value="">Choose…</option>${op([L.cap==m.id?['cap','Captain']:null,L.vice==m.id?['vice','Vice-Captain']:null].filter(Boolean),F.role)}</select></label>`}
+ return`<div class="c orgform"><h3>${F.edit?'Edit change':'Add a change'}</h3><div class="gsform"><label>Member<select onchange="ui.orgf={kind:'${kind}',mid:this.value};render()"><option value="">Choose…</option>${op(pool.map(x=>[x.id,`${x.name} · ${orgPos(orgTo(D,x))}${x.kn?' · Concurrent':''}`]),F.mid)}</select></label>
+ ${m?`<label>Change<select onchange="ui.orgf.act=this.value;ui.orgf.tid='';ui.orgf.gid='';render()"><option value="">Choose…</option>${op(acts,F.act)}</select></label>`:''}${ex}</div>
+ ${m?`<div class="row orgfm">${ptc(m,48)}<span class="st">Now: <b>${esc(orgPos(orgCurA(m)))}</b>${m.kn?' · Concurrent '+esc(orgKnTxt(m.kn)):''}<br>In this plan: <b>${esc(orgPos(a))}</b>${a.kn?' · Concurrent '+esc(orgKnTxt(a.kn)):''}</span></div>`:''}
+ <div class="row"><button class="b p" ${m&&F.act?'':'disabled'} onclick="orgFormAdd('${kind}')">${F.edit?'Save change':'Add to the plan'}</button>${F.mid?`<button class="b s" onclick="ui.orgf={kind:'${kind}'};render()">Clear</button>`:''}</div></div>`}
+function orgFormAdd(kind){const D=orgDr(kind),F=ui.orgf||{},m=get(+F.mid);if(!m)return;const a=orgTo(D,m);
+ if(F.act=='promote'||F.act=='team'){if(!F.tid)return toast('Choose the team.','err');a.tid=F.tid;orgSet(D,m.id,a)}
+ else if(F.act=='demote'){a.tid=null;a.kn=null;orgSet(D,m.id,a)}
+ else if(F.act=='group'){if(!F.gid||!F.tid)return toast('Choose the destination group and status.','err');a.gid=+F.gid;a.tid=F.tid=='tr'?null:F.tid;if(a.kn&&a.kn.gid==a.gid)a.kn=null;if(!a.tid)a.kn=null;orgSet(D,m.id,a)}
+ else if(F.act=='kn'){if(!F.gid||!F.tid)return toast('Choose the Concurrent group and team.','err');a.kn={gid:+F.gid,tid:F.tid};orgSet(D,m.id,a)}
+ else if(F.act=='knend'){a.kn=null;orgSet(D,m.id,a)}
+ else if(F.act=='cap'||F.act=='vice'){if(!a.tid)return toast(`${TL()}s cannot be Captains or Vice-Captains.`,'err');orgLeadSet(D,a.tid,F.act,m.id)}
+ else if(F.act=='rmlead'){if(!F.role)return toast('Choose the role to remove.','err');orgLeadSet(D,a.tid,F.role,null)}
+ else return toast('Choose the change.','err');
+ ui.orgf={kind};toast('Added to the plan (nothing changes until the announcement).');render()}
+function orgUndo(kind,mid,k,tid){const D=orgDr(kind);if(k=='cap'||k=='vice'||k=='capout'||k=='viceout'){const r=k.replace('out','');const L=D.lead[tid];if(L){delete L[r];if(!Object.keys(L).length)delete D.lead[tid]}}else{delete D.asg[mid]}render()}
+function orgEdit(kind,mid){ui.orgf={kind,mid:String(mid),edit:1};render();setTimeout(()=>{const e=document.querySelector('.orgform');if(e)e.scrollIntoView({block:'start'})},30)}
+function orgSumHtml(kind){const D=orgDr(kind),C=orgChanges(D),V=orgErrs(D);if(!C.length)return'<p class="st">No changes yet.</p>';
+ const rows=C.map(c=>{const m=get(c.mid);return`<div class="orgch k-${c.k}">${m?ptc(m,40):''}<div><b>${esc(c.txt)}</b>${c.from&&c.to?`<small>${esc(orgPos(c.from))} → ${esc(orgPos(c.to))}</small>`:''}</div><span class="orgchb"><button class="b s" title="Edit" onclick="orgEdit('${kind}',${c.mid})">✎</button><button class="b s" title="Remove" onclick="orgUndo('${kind}',${c.mid},'${c.k}','${c.tid||''}')">✕</button></span></div>`}).join('');
+ return`${rows}${V.E.length?`<div class="c geerr"><b>Conflicts to resolve:</b><ul class="ms">${V.E.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`:''}${V.W.length?`<ul class="ms">${V.W.map(e=>`<li>⚠ ${esc(e)}</li>`).join('')}</ul>`:''}`}
+// ---- confirm: the plan is confirmed, not applied -----------------------------------------------------------------------
+function orgRoster(gids){const o={};gids.forEach(gid=>{const g=grp(gid);if(!g)return;o[gid]={name:g.name,teams:(g.teams||[]).map(t=>{const L=(g.tl||{})[t.id]||{};return{tid:t.id,name:t.name,color:t.color,ids:S.members.filter(m=>m.status!='graduated'&&isAct(m)&&m.tid==t.id).map(m=>m.id),cap:L.cap||null,vice:L.vice||null}}),tr:S.members.filter(m=>m.status=='trainee'&&m.group==gid).map(m=>m.id),kn:S.members.filter(m=>m.kn&&m.kn.gid==gid).map(m=>({id:m.id,tid:m.kn.tid}))}});return o}
+function orgConfirm(kind){const D=orgDr(kind),C=orgChanges(D);if(!C.length)return toast('There are no changes in the plan.','err');const V=orgErrs(D);if(V.E.length)return toast(V.E[0],'err');
+ const gids=[...new Set([D.gid,...Object.values(D.asg).flatMap(a=>[a.gid,a.kn&&a.kn.gid]),...Object.keys(D.asg).flatMap(id=>{const m=get(+id);return m?[gsGid(m),m.kn&&m.kn.gid]:[]}),...Object.keys(D.lead).map(tid=>(orgTeam(tid)||{g:{}}).g.id)].filter(v=>v!=null))];
+ ask(`Confirm ${C.length} change(s)? This only confirms the plan: the current structure stays active until the announcement you choose next.`,()=>{const O=orgS();O.n[kind]=(O.n[kind]||0)+1;
+  const p={id:'org'+(++O.seq),kind,no:O.n[kind],gid:D.gid,gids,st:'confirmed',made:S.day,asg:JSON.parse(JSON.stringify(D.asg)),lead:JSON.parse(JSON.stringify(D.lead)),ch:C.map(c=>({...c})),before:orgRoster(gids),log:(D.log||[]).slice()};
+  O.plans.push(p);delete O.dr[kind];ui.orgf=null;ui.orgsel=null;ui.orgp=p.id;view='organn';toast('Plan confirmed. Now choose how and when it is announced.');render()},'Confirm All Changes')}
+// ---- page: Team Restructuring ------------------------------------------------------------------------------------------
+function orgPlansCard(kind){const L=orgS().plans.filter(p=>p.kind==kind&&(p.st=='confirmed'||p.st=='scheduled'||(p.st=='announced'&&typeof orgTrPending=='function'&&orgTrPending(p))));if(!L.length)return'';
+ return`<div class="c orgpl"><h3>In progress</h3>${L.map(p=>`<div class="row orgplr"><b>${kind=='sh'?'Shuffle Team':'Team Restructuring'} #${p.no}</b><span class="tag orgst-${p.st}">${ORG_ST[p.st]}</span><span class="st">${p.ch.length} change(s)${p.ann?` · announcement ${jd(p.ann.day)}`:''}</span>${p.st=='confirmed'?`<button class="b s p" onclick="ui.orgp='${p.id}';goView('organn')">Announcement settings</button>`:''}${p.st=='scheduled'?`<button class="b s" onclick="ui.orgp='${p.id}';goView('organn')">Change announcement</button><button class="b s" onclick="orgCancel('${p.id}')">Cancel plan</button>`:''}${p.st=='announced'?`<button class="b s p" onclick="ui.orgp='${p.id}';goView('orgtr')">Theater transition</button>`:''}<button class="b s" onclick="orgOpen('${p.id}')">Details</button></div>`).join('')}</div>`}
+const ORG_ST={draft:'Draft',confirmed:'Confirmed',scheduled:'Scheduled',announced:'Announced',cancelled:'Cancelled'};
+function orgCancel(pid){const p=orgS().plans.find(z=>z.id==pid);if(!p||p.st=='announced')return;ask('Cancel this plan? Nothing has changed yet; the plan is kept in the history as cancelled.',()=>{p.st='cancelled';p.cancelled=S.day;render()},'Cancel plan')}
+V.orgrs=function(){const D=orgDr('rs');return`<h2 class="ht">Team Restructuring</h2><div class="c"><p class="st">Make specific changes — promotions, demotions, team or group transfers, Concurrent Members, Captains and Vice-Captains. You decide everything; there are no requirements. Add as many changes as you like, review them, then confirm. Nothing changes until the announcement.</p><div class="row"><button class="b s" onclick="goView('orgsh')">Shuffle Team (reorganise all teams) →</button><button class="b s" onclick="goView('orghr')">Restructuring History</button></div></div>
+ ${orgPlansCard('rs')}${orgFormHtml('rs')}<div class="c"><h3>Change Summary <small class="st">${orgChanges(D).length} change(s)</small></h3>${orgSumHtml('rs')}<div class="row"><button class="b p" ${orgChanges(D).length?'':'disabled'} onclick="orgConfirm('rs')">Review &amp; Confirm All Changes</button>${orgChanges(D).length?`<button class="b s" onclick="orgDiscard('rs')">Discard draft</button>`:''}</div></div>`};
+function orgDiscard(kind){ask('Discard the whole draft?',()=>{delete orgS().dr[kind];ui.orgf=null;ui.orgsel=null;render()},'Discard')}
+// ---- page: Shuffle Team (board) ---------------------------------------------------------------------------------------
+function orgShGroup(gid){const O=orgS();if(O.dr.sh&&Object.keys(O.dr.sh.asg).length&&O.dr.sh.gid!=gid)return ask('Switching group discards the current Shuffle draft. Continue?',()=>{delete O.dr.sh;orgDr('sh').gid=+gid;render()},'Switch');const D=orgDr('sh');D.gid=+gid;render()}
+function orgPick(mid){ui.orgsel=ui.orgsel==mid?null:mid;render()}
+function orgMoveTo(tid){const D=orgDr('sh'),m=get(ui.orgsel);if(!m)return toast('Tap a member first.','err');const a=orgTo(D,m);if(a.gid!=D.gid)return toast('This member leaves the group in the plan.','err');a.tid=tid=='tr'?null:tid;if(!a.tid)a.kn=null;orgSet(D,m.id,a);D.log.push({day:S.day,op:'move',mid:m.id,to:tid});ui.orgsel=null;render()}
+function orgClearTeam(tid){const D=orgDr('sh');let n=0;S.members.forEach(m=>{if(m.status=='graduated')return;const a=orgTo(D,m);if(a.gid==D.gid&&a.tid==tid){a.tid='_none';orgSet(D,m.id,a);n++}});D.log.push({day:S.day,op:'clear',tid,n});toast(`${n} member(s) taken out of ${(orgTeam(tid)||{t:{}}).t.name} in the draft. They stay Full Members.`);render()}
+function orgClearAll(){const D=orgDr('sh'),g=grp(D.gid);ask(`Clear every team of ${g.name} in the draft? Members are not deleted or demoted — they wait in “No team yet” until you place them.`,()=>{let n=0;S.members.forEach(m=>{if(m.status=='graduated')return;const a=orgTo(D,m);if(a.gid==D.gid&&a.tid&&a.tid!='_none'){a.tid='_none';orgSet(D,m.id,a);n++}});D.log.push({day:S.day,op:'clearall',n});toast(`${n} member(s) are waiting for a team.`);render()},'Clear All Teams')}
+function orgChip(D,m){const a=orgTo(D,m),c=orgCurA(m),moved=orgJ(a)!=orgJ(c),T=moved&&c.tid?orgTeam(c.tid):null;return`<button class="orgchip ${ui.orgsel==m.id?'on':''} ${moved?'mv':''}" onclick="orgPick(${m.id})">${ptc(m,40)}<span>${esc(m.name.split(' ')[0])}</span>${moved?`<small>${c.tid?'from '+esc(T?T.t.name:'?'):'was '+esc(TL())}</small>`:''}${m.kn||a.kn?'<i class="orgkn">KN</i>':''}</button>`}
+V.orgsh=function(){const D=orgDr('sh'),g=grp(D.gid)||grp(gsAg());if(!g)return'';const op=(L,v)=>L.map(([k,n])=>`<option value="${k}" ${String(k)==String(v)?'selected':''}>${esc(n)}</option>`).join('');
+ const M=S.members.filter(m=>m.status!='graduated'&&(orgTo(D,m).gid==g.id||gsGid(m)==g.id)),inT=tid=>M.filter(m=>orgTo(D,m).gid==g.id&&orgTo(D,m).tid==tid),sel=get(ui.orgsel);
+ const col=(tid,name,color,list,lead)=>{const L=lead?orgLeadTo(D,tid):null,full=list;return`<div class="c orgcol" style="--tc:${color||'#cdbdf5'}"><div class="orgcolh"><b>${esc(name)}</b><span class="st">${list.length} member(s)</span>${sel?`<button class="b s p" onclick="orgMoveTo('${tid}')">Move here</button>`:''}${lead?`<button class="b s" onclick="orgClearTeam('${tid}')">Clear Team</button>`:''}</div>
+  ${lead?`<div class="row orglead"><label class="st">Captain<select onchange="orgLeadSet(orgDr('sh'),'${tid}','cap',this.value);render()"><option value="">—</option>${op(full.map(m=>[m.id,m.name]),L.cap)}</select></label><label class="st">Vice<select onchange="orgLeadSet(orgDr('sh'),'${tid}','vice',this.value);render()"><option value="">—</option>${op(full.map(m=>[m.id,m.name]),L.vice)}</select></label></div>`:''}
+  <div class="orgchips rtpm">${list.map(m=>orgChip(D,m)).join('')||'<span class="st">Empty</span>'}</div></div>`};
+ const none=M.filter(m=>orgTo(D,m).tid=='_none'),out=M.filter(m=>orgTo(D,m).gid!=g.id);
+ return`<h2 class="ht">Shuffle Team</h2><div class="c"><p class="st">Reorganise the teams of a group from scratch. Tap a member, then “Move here” on a team (or on ${esc(TL())}s to demote). Clear Team / Clear All Teams only empty the draft — no member is deleted or demoted. Nothing changes until the announcement.</p>
+ <div class="row"><label class="st">Group <select onchange="orgShGroup(this.value)">${op(S.groups.map(x=>[x.id,x.name]),g.id)}</select></label><button class="b s" onclick="orgClearAll()">Clear All Teams</button><button class="b s" onclick="goView('orgrs')">Team Restructuring →</button><button class="b s" onclick="goView('orgshh')">Shuffle Team History</button></div>
+ ${sel?`<div class="orgselbar">${ptc(sel,36)}<b>${esc(sel.name)}</b><span class="st">selected — tap “Move here” on a team</span><button class="b s" onclick="ui.orgf={kind:'sh',mid:'${sel.id}'};ui.orgsel=null;render();setTimeout(()=>{const e=document.querySelector('.orgform');if(e)e.scrollIntoView()},30)">Group transfer / Concurrent…</button><button class="b s" onclick="ui.orgsel=null;render()">Cancel</button></div>`:''}</div>
+ ${orgPlansCard('sh')}
+ ${none.length?col('_none','No team yet (cleared)','#ffd6dc',none,false):''}
+ <div class="orgboard">${(g.teams||[]).map(t=>col(t.id,t.name,t.color,inT(t.id),true)).join('')}${col('tr',TL()+'s',CFG.trBg,inT(null),false)}</div>
+ ${out.length?`<div class="c"><h3>Leaving ${esc(g.name)} in the plan</h3><div class="orgchips rtpm">${out.map(m=>orgChip(D,m)).join('')}</div></div>`:''}
+ ${orgFormHtml('sh')}
+ <div class="c"><h3>Change Tracking <small class="st">${orgChanges(D).length} change(s)</small></h3>${orgSumHtml('sh')}<div class="row"><button class="b p" ${orgChanges(D).length?'':'disabled'} onclick="orgReview('sh')">Review Changes</button><button class="b p" ${orgChanges(D).length?'':'disabled'} onclick="orgConfirm('sh')">Confirm All Changes</button>${orgChanges(D).length?`<button class="b s" onclick="orgDiscard('sh')">Discard draft</button>`:''}</div></div>`};
+function orgRosterDiffHtml(before,D){return Object.entries(before).map(([gid,R])=>`<div class="orgrd"><h4>${esc(R.name)}</h4>${R.teams.map(t=>{const now=S.members.filter(m=>m.status!='graduated'&&orgTo(D,m).gid==gid&&orgTo(D,m).tid==t.tid).map(m=>m.id),add=now.filter(id=>!t.ids.includes(id)),rm=t.ids.filter(id=>!now.includes(id));
+ return`<div class="orgrdt"><b>${esc(t.name)}</b> <span class="st">${t.ids.length} → ${now.length}</span>${add.length?`<div class="st">+ ${add.map(id=>esc((get(id)||{}).name||'')).join(', ')}</div>`:''}${rm.length?`<div class="st">− ${rm.map(id=>esc((get(id)||{}).name||'')).join(', ')}</div>`:''}</div>`}).join('')}</div>`).join('')}
+function orgReview(kind){const D=orgDr(kind),gids=[...new Set([D.gid,...Object.values(D.asg).map(a=>a.gid)])],C=orgChanges(D),by=k=>C.filter(c=>c.k==k||(k=='cap'&&c.k=='capout')||(k=='vice'&&c.k=='viceout'));
+ const sec=(k,t)=>{const L=by(k);return L.length?`<h4>${t} (${L.length})</h4><ul class="ms">${L.map(c=>`<li>${esc(c.txt)}</li>`).join('')}</ul>`:''};
+ ui.mod={t:'html',h:`<h2 class="ht">Review changes</h2><h3>Team membership (previous → new)</h3>${orgRosterDiffHtml(orgRoster(gids),D)}${sec('team','Team transfers')}${sec('promote','Promotions')}${sec('demote','Demotions')}${sec('group','Group transfers')}${sec('kn','Concurrent Members')}${sec('knend','Concurrent Positions ended')}${sec('cap','Captain changes')}${sec('vice','Vice-Captain changes')}${sec('clear','Still without a team')}<div class="row"><button class="b p" onclick="ui.mod=null;orgConfirm('${kind}')">Confirm All Changes</button></div>`};render()}
+// ---- navigation ----------------------------------------------------------------------------------------------------------
+(function(){const G=SECS.find(s=>s.k=='groups');if(!G)return;G.v.push(['orgrs','Team Restructuring'],['orgsh','Shuffle Team'],['orghr','Restructuring History'],['orgshh','Shuffle History']);G.hid=[...(G.hid||[]),'organn','orgtr'];
+ Object.assign(SUBLOC,{orgrs:'Team Board · Team Restructuring',orgsh:'Team Board · Shuffle Team',orghr:'Team Board · Team Restructuring History',orgshh:'Team Board · Shuffle Team History',organn:'Team Board · Announcement',orgtr:'Theater · Team Transition'})})();
