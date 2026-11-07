@@ -265,3 +265,16 @@ function gsProfFix(){if(!S||S.groups.length<2)return;let bad=0;S.members.forEach
 // Trainees of the single's group can take part in its Roadshows (not while away)
 {const f=rsElig;rsElig=function(x){const r=f.apply(this,arguments);try{const multi=S.groups.length>1,gid=multi?gsAg():null,g=multi?null:new Set(singleMembersX(x).map(id=>get(id)?.group).filter(v=>v!=null));
  const add=S.members.filter(m=>m.status=='trainee'&&(multi?gsGid(m)==gid:g.has(m.group))&&!(typeof wlAway=='function'&&wlAway(m))).map(m=>m.id);return[...new Set([...r,...add])]}catch(e){console.error(e);return r}}}
+// ---- Regional Fanbase Growth (Roadshow map %) is kept per group -------------------------------------------------------
+// Each group has its own S.rs (growth per prefecture / country and Roadshow history), switched with the group context.
+// Existing saves: the shared history is split by the group of each Roadshow's single; a sister group's growth is its
+// starting value plus its own Roadshow gains, the Main Group keeps the rest.
+GS_KEYS.push('rs');
+{const f=gsDefCtx;gsDefCtx=function(g){const c=f.apply(this,arguments);c.rs=null;return c}}
+{const f=gsSwitch;gsSwitch=function(gid){const r=f.apply(this,arguments);try{if(S&&(!S.rs||!S.rs.loc))rsMigrate()}catch(e){console.error(e)}return r}}
+function gsRsSplit(){if(!S||S.rsSplit)return;if(S.groups.length<2){S.rsSplit=1;return}if(!S.rs||!S.rs.loc)rsMigrate();const all=S.rs,ridG=new Map(),main=(gsMain()||{}).id;
+ S.groups.forEach(g=>(gsCtx(g.id,'singles')||[]).forEach(x=>ridG.set(x.rid,g.id)));const gOf=h=>ridG.get(h&&h.rid)??main,gain=H=>H.reduce((a,h)=>a+((h.fin&&+h.fin.gain)||0),0);
+ S.groups.forEach(g=>{const R={loc:{},hist:{}};Object.values(RSL).forEach(l=>{const A=all.hist[l.id]||[],H=A.filter(h=>gOf(h)==g.id),c=all.loc[l.id]||{},init=c.init??rsIG(l);
+   const gg=g.id==main?(c.g??init)-gain(A.filter(h=>gOf(h)!=main)):init+gain(H);R.loc[l.id]={g:+Math.max(init,gg).toFixed(1),visits:H.length,init};R.hist[l.id]=H});
+  if(g.id==S.ag)S.rs=R;else{g.ctx=g.ctx||gsDefCtx(g);g.ctx.rs=R}});S.rsSplit=1}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{gsRsSplit()}catch(e){console.error(e)}return r}}
