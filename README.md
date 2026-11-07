@@ -491,7 +491,7 @@ Filming happens in Week 3 and the production check in Week 4 of the unchanged 28
   - Selections, Unit members, formations and dressing-room work stay exactly as they were when you press ◀ Back.
 - Every list of member cards you pick from has the same **sort / filter bar**. Announcements and results that only show faces have none:
   - sort by name, any member stat (fanbase, popularity, vocal, dance, performance, variety, passion, …), rarity, generation, team or trend, in either direction
-  - filter by team / Trainee, generation and rarity
+  - filter by team / Trainee, generation and group (when the company has several groups); sort by group too. Rarity is not used for sorting or filtering
 - It only re-orders or hides cards on screen, never the data or any selection. The setting is remembered per screen.
 
 ### Handshake Events — handshake statistics

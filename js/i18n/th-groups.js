@@ -27,3 +27,4 @@ Object.assign(I18N_TH,{"Individual handshake statistics":"สถิติจั�
 I18N_TH_TPL.push(["{0} sessions","{0} ครั้ง"],["{0} people","{0} คน"]);
 Object.assign(I18N_TH,{"Booth handshake statistics":"สถิติจับมือรายบูธ","Booth":"บูธ","Booths":"จำนวนบูธ","all booths":"ทุกบูธ","Booth with most sessions":"บูธที่จับมือมากที่สุด (ครั้ง)","Booth with most visitors":"บูธที่คนมามากที่สุด (คน)","Member":"เมมเบอร์"});
 I18N_TH_TPL.push(["{0} members","{0} คน"]);
+Object.assign(I18N_TH,{"All Groups":"ทุกวง","Group":"วง"});
