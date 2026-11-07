@@ -44,3 +44,26 @@ function gecOpts(sel){const L=czLib().ds,stg=typeof thStage=='function'?Object.v
 // costume designer opened from General Election: random costume
 {const f=V.costume;V.costume=function(){const h=f.apply(this,arguments);return ui.geBack?h.replace('← Back to General Election</button>','← Back to General Election</button><button class="b s" onclick="geCzRandEd()">🎲 Random costume</button>'):h}}
 function geCzRandEd(){if(!ui.czE)return;ui.czE.p=czRandom();ui.czE.dirty=1;toast('Random costume generated. Edit any piece, then press Save.');render()}
+// ---- visual costume picker: 3 columns of previews, sorted into Single / Stage / Library -----------------------
+function gecThumb(p,m){if(!m)return'';const a=ap(m);return`<svg viewBox="10 -2 80 200" role="img" aria-hidden="true">${fig(m,{pose:0,of:p?a.of:GE_OUT[0],oh:p?a.oh:GE_OUT[1],ac:a.ac,ex:2,...(p?{cd:p}:{})})}</svg>`}
+function gecModel(e,key){const P=e.parts.map(get).filter(Boolean).sort((a,b)=>b.pop-a.pop);if(key&&key!='__main'&&e.cos&&e.cos.k=='by')return P.find(m=>gecKey(m,e.cos.by)==key)||P[0];return P[0]}
+function gecSpecP(e,c,m){if(!m||!c||c.k=='std')return null;if(c.k=='latest')return m.profCz&&m.profCz.p||null;return geCzLive({...e,cos:c},m.id)}
+function gecItems(e,m){const L=czLib().ds,stg=typeof thStage=='function'?Object.values((S.th&&S.th.st)||{}).filter(st=>thStageCz(st)):[],songT=new Set(Object.values(S.songs||{}).map(o=>o.title));
+ const single=[...S.singles.slice().reverse().map(x=>({v:'single:'+x.rid,n:x.title,s:`Single #${x.num} · each member's own costume`})),...L.filter(d=>d.auto||(!d.stg&&songT.has(String(d.name).split(' — ')[0]))).slice().reverse().map(d=>({v:'design:'+d.id,n:String(d.name).split(' — ')[0],s:String(d.name).split(' — ')[1]||'Song costume',p:d.p}))];
+ const stage=[...stg.map(st=>({v:'stage:'+st.id,n:st.name,s:`${thNoTxt(st)} · Stage costume`})),...L.filter(d=>d.stg).slice().reverse().map(d=>({v:'design:'+d.id,n:d.name,s:'Stage costume',p:d.p}))];
+ const used=new Set([...single,...stage].map(x=>x.v)),other=L.filter(d=>!used.has('design:'+d.id)).slice().reverse().map(d=>({v:'design:'+d.id,n:d.name,s:'Costume library',p:d.p}));
+ const fill=a=>a.map(x=>({...x,p:x.p!==undefined?x.p:gecSpecP(e,GEC_DEC(x.v),m)}));return{single:fill(single),stage:fill(stage),other:fill(other)}}
+function gecPickHtml(){const P=ui.gecp,e=geActive();if(!P||!e)return'';const m=gecModel(e,P.key),cur=P.key=='__main'?GEC_ENC(e.cos):GEC_ENC(((e.cos||{}).map||{})[P.key]),I=gecItems(e,m),tab=P.tab||(cur.startsWith('stage')?'stage':'single');
+ const card=x=>`<button class="gecpc ${x.v==cur?'on':''}" data-n="${esc((x.n+' '+(x.s||'')).toLowerCase())}" onclick="gecPickSet('${x.v}')">${gecThumb(x.p,m)}<b>${esc(x.n)}</b><small>${esc(x.s||'')}</small></button>`;
+ const base=[{v:'std',n:'Standard outfit',s:'Ceremony dress',p:null},{v:'latest',n:'Latest single costume',s:'Under Girls: Under costume',p:gecSpecP(e,{k:'latest'},m)}];
+ const T=[['single','Single',I.single],['stage','Stage',I.stage],['other','Library',I.other]],cur2=T.find(t=>t[0]==tab)||T[0];
+ return`<h2 class="ht">Choose a costume</h2><p class="st">${P.key=='__main'?'Everyone':esc(gecLabel(P.key,e.cos.by))} · preview on ${esc(m?m.name:'')}</p><div class="gecpg">${base.map(card).join('')}</div>
+ <div class="row gecpt">${T.map(([k,n,a])=>`<button class="b s ${k==cur2[0]?'on':''}" onclick="ui.gecp.tab='${k}';ui.mod.h=gecPickHtml();render()">${n} (${a.length})</button>`).join('')}</div>
+ <input class="gecpq" placeholder="Search…" oninput="const q=this.value.toLowerCase();this.nextElementSibling.querySelectorAll('.gecpc').forEach(c=>c.style.display=c.dataset.n.includes(q)?'':'none')">
+ <div class="gecpg">${cur2[2].map(card).join('')||'<p class="st">Nothing here yet.</p>'}</div>`}
+function gecPick(key){const e=geActive();if(gecLocked(e))return toast('The ceremony costume is fixed once the ceremony begins.','err');ui.gecp={key,tab:null};ui.mod={t:'html',h:gecPickHtml()};render()}
+function gecPickSet(v){const P=ui.gecp,e=geActive();if(!P||gecLocked(e))return;ui.mod=null;if(P.key=='__main'){const c=GEC_DEC(v);if(c.k=='std'||c.k=='latest')geCosSet(c.k);else geCosSet(c.k,c.did||c.sid||c.rid)}else geCosMap(P.key,v)}
+// rows and main card use the visual picker
+{const f=geCosHtml;geCosHtml=function(e){let h=f.apply(this,arguments);try{const c=e.cos||{k:'std'},dis=gecLocked(e)?'disabled':'';
+ h=h.replace(/<select ([^>]*)onchange="geCosMap\('([^']+)',this.value\)">[\s\S]*?<\/select>/g,(s,a,key)=>{const sp=(c.map||{})[key],m=gecModel(e,key);return`<button class="gecpick" ${dis} onclick="gecPick('${key}')">${gecThumb(gecSpecP(e,sp||{k:'std'},m),m)}<span><b>${esc(gecSpecName(sp))}</b><small class="st">Tap to choose</small></span><i>▾</i></button>`});
+ h=h.replace('<div class="gecosg">',`<div class="gecosg"><button class="b p gecmain" ${dis} onclick="gecPick('__main')">👗 Choose costume (with preview)</button>`)}catch(err){console.error(err)}return h}}
