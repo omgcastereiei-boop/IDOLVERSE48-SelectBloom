@@ -1018,6 +1018,32 @@ select:not([multiple]):not([size]){cursor:pointer}
 .gernum.sm .getag,.gernum.sm .gechg2{font-size:.34em;letter-spacing:.04em;vertical-align:middle}
 .gernum.sm .getag.new{background:#ffd34d;color:#3a2600}.gernum.sm .getag.cb{background:#9aa0aa;color:#fff}
 .gernum.sm .gechg2.up{color:#7dffb0}.gernum.sm .gechg2.dn{color:#ff9aa8}.gernum.sm .gechg2{color:#fff}
+/* ---- member cards: short; election frames on the portrait only ---- */
+.mc .np .mteam{display:block;font-size:11px;line-height:1.3}
+.c.m[data-mt]{text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}.c.m[data-mt] .mtline{font-size:11px;line-height:1.3}.c.m[data-mt] select.act{width:100%;margin-top:2px}
+.gsv{display:none!important}
+.mtart{position:relative;display:inline-block;border-radius:14px;line-height:0}
+.mod>div:has(.gefr-1),.mod>div:has(.gefr-2),.mod>div:has(.gefr-3),.mod>div:has(.gefr-k7){border-color:var(--pk2)!important;outline-color:var(--pk)!important}
+.gedc{position:relative;--g1:#fff;--g2:#ccc;--g3:#999;--gc:#999}
+.gedc::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:4px;background:linear-gradient(135deg,var(--g1),var(--g2) 35%,var(--g3) 55%,var(--g2) 75%,var(--g1));background-size:220% 220%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);z-index:5;pointer-events:none;box-shadow:inset 0 0 12px rgba(255,255,255,.5)}
+.gedc::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 0 18px var(--gl,transparent);z-index:4;pointer-events:none}
+.gedc-1,.gedc-2,.gedc-3{--gl:rgba(255,255,255,.35)}.gedc-1::before,.gedc-2::before,.gedc-3::before{animation:gedcsh 4s ease-in-out infinite}
+@keyframes gedcsh{0%,100%{background-position:0 0}50%{background-position:100% 100%}}
+.gedc-1{--g1:#fff7cf;--g2:#f1c84b;--g3:#b8860b;--gc:#d8a521;--gl:rgba(255,214,90,.55)}
+.gedc-2{--g1:#ffffff;--g2:#cfd6de;--g3:#8a96a3;--gc:#9fabb7;--gl:rgba(200,210,222,.6)}
+.gedc-3{--g1:#ffe2c4;--g2:#d4935a;--g3:#8c4f22;--gc:#b8743d;--gl:rgba(212,147,90,.5)}
+.gedc-k7{--g1:#f6e2ff;--g2:#b56ce8;--g3:#6d22a8;--gc:#9b4dd6;--gl:rgba(181,108,232,.45)}
+.gedc-sen{--g1:#ffe6f0;--g2:#ff9cc2;--g3:#ff6a9e;--gc:#ff7fb0}.gedc-sen::before{padding:3px}
+.gedc-rk::before,.gedc-rk::after{display:none}
+.gedc-c{position:absolute;width:22px;height:22px;color:var(--gc);z-index:6;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));line-height:0}
+.gedc-c svg{width:100%;height:100%}.gedc-c.tl{top:1px;left:1px}.gedc-c.tr{top:1px;right:1px;transform:scaleX(-1)}.gedc-c.bl{bottom:1px;left:1px;transform:scaleY(-1)}.gedc-c.br{bottom:1px;right:1px;transform:scale(-1,-1)}
+.gedc-sen .gedc-c{width:16px;height:16px;opacity:.85}
+.gedc-ic{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:34px;height:22px;color:var(--gc);z-index:7;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3));line-height:0}
+.gedc-ic svg{width:100%;height:100%}.gedc-k7 .gedc-ic{width:22px;height:22px;top:-2px}.gedc-sen .gedc-ic{width:26px;height:17px;top:-1px}
+.gedc-rib{position:absolute;left:50%;bottom:5px;transform:translateX(-50%);z-index:7;font:900 10.5px/1 Quicksand,sans-serif;letter-spacing:.06em;color:#fff;padding:3px 9px 3px;border-radius:999px;background:linear-gradient(135deg,var(--g2),var(--g3));box-shadow:0 1px 3px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.55);white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.gedc-1 .gedc-rib{color:#3a2600;text-shadow:none;background:linear-gradient(135deg,#fff2b0,#e9b949)}.gedc-2 .gedc-rib{color:#2a3038;text-shadow:none;background:linear-gradient(135deg,#fff,#b9c3cd)}
+.gedc-rk .gedc-rib{background:rgba(70,50,110,.82);font-size:9.5px}
+.mc .mart.gedc{border-radius:14px 14px 0 0}.pfart.gedc{border-radius:18px}.pfart.gedc .gedc-c{width:30px;height:30px}.pfart.gedc .gedc-ic{width:48px;height:30px;top:-6px}.pfart.gedc .gedc-rib{font-size:13px;bottom:10px}
 
 </style>
 </head><body>
@@ -7231,6 +7257,38 @@ function geProfRank(m){if(!m||!S||!S.groups)return null;let best=null;S.groups.f
 {const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{if(cand)return h;const P=geProfRank(m);if(!P)return h;const lab={'1':'Kami 7 · 1st place','2':'Kami 7 · 2nd place','3':'Kami 7 · 3rd place',k7:'Kami 7',sen:'Senbatsu',rk:''}[P.k];
  const badge=`<div class="gepfb gepfb-${P.k}"><span class="gepfr">TOP ${P.row.rank}</span><span>${esc(P.e.name)}${S.groups.length>1?' · '+esc(P.g.name):''}${lab?` · <b>${lab}</b>`:''}</span></div>`;
  if(P.k!='rk')h=h.replace('<div class="pf">',`<div class="pf gefr gefr-${P.k}">`);h=h.replace('</h2>','</h2>'+badge)}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  Member cards (Members and Groups pages) and election rank frames
+// -------------------------------------------------------------------------------------
+//  · Cards are short: portrait, name, "Group 1st Gen Team" (Concurrent Position: + other group & team).
+//    No popularity heart, no stat values / bars, no "Joined team" line (still in the profile history).
+//  · The latest General Election rank decorates the PORTRAIT only (not the text): TOP 1 gold, TOP 2 silver,
+//    TOP 3 bronze (crown + corner flourishes + shimmer), TOP 4–7 Kami 7 (star), Title Track Senbatsu (bow).
+//    A "TOP n" ribbon sits on the portrait. Unranked / not running: nothing. Same frame in the profile.
+// =====================================================================================
+const mcLine=m=>{const g=grp(m.group),t=teamOf(m),tn=t&&isAct(m)?t.name:TL();let s=`${esc(g?g.name:'')} ${ord(m.gen||1)} Gen ${esc(tn)}`;
+ if(m.kn){const kg=grp(m.kn.gid),kt=kg&&(kg.teams||[]).find(x=>x.id==m.kn.tid);if(kg)s+=` · ${esc(kg.name)} ${esc(kt?kt.name:'')}`}return s};
+const GEDC_C='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 22V9Q2 2 9 2H22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.5 18V10.5Q6.5 6.5 10.5 6.5H18" fill="none" stroke="currentColor" stroke-width="1.3" opacity=".75" stroke-linecap="round"/><circle cx="4.2" cy="4.2" r="2.8" fill="currentColor"/><circle cx="4.2" cy="4.2" r="1.1" fill="#fff" opacity=".85"/></svg>';
+const GEDC_TOP={crown:'<svg viewBox="0 0 40 26" aria-hidden="true"><path d="M3 22L6 7L14 15L20 2L26 15L34 7L37 22Z" fill="currentColor" stroke="rgba(0,0,0,.25)" stroke-width="1"/><rect x="3" y="21" width="34" height="4" rx="1.5" fill="currentColor" stroke="rgba(0,0,0,.25)" stroke-width="1"/><circle cx="20" cy="3" r="2.3" fill="#fff"/><circle cx="6" cy="7.5" r="1.8" fill="#fff"/><circle cx="34" cy="7.5" r="1.8" fill="#fff"/><circle cx="20" cy="18" r="2" fill="#e8213b"/></svg>',
+ star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5l3.1 6.7 7.3.8-5.5 4.9 1.6 7.2L12 17.4 5.5 21.1l1.6-7.2L1.6 9l7.3-.8z" fill="currentColor" stroke="rgba(0,0,0,.2)" stroke-width=".8"/><circle cx="12" cy="11.5" r="2.2" fill="#fff" opacity=".8"/></svg>',
+ bow:'<svg viewBox="0 0 32 20" aria-hidden="true"><path d="M16 10C11 3 3 1 2 6S8 17 16 10ZM16 10C21 3 29 1 30 6S24 17 16 10Z" fill="currentColor" stroke="rgba(0,0,0,.18)" stroke-width=".8"/><circle cx="16" cy="10" r="3" fill="currentColor" stroke="#fff" stroke-width="1"/><path d="M14 12L11 19M18 12L21 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'};
+function geDeco(m){let P=null;try{P=typeof geProfRank=='function'?geProfRank(m):null}catch(e){}if(!P)return null;const k=P.k,ic=k=='1'||k=='2'||k=='3'?'crown':k=='k7'?'star':k=='sen'?'bow':'';
+ const corners=k=='rk'?'':['tl','tr','bl','br'].map(c=>`<i class="gedc-c ${c}">${GEDC_C}</i>`).join('');
+ return{k,cls:`gedc gedc-${k}`,html:`${corners}${ic?`<i class="gedc-ic">${GEDC_TOP[ic]}</i>`:''}<span class="gedc-rib">TOP ${P.row.rank}</span>`}}
+// Members page card
+{const f=mcard;mcard=function(m){let h=f.apply(this,arguments);try{h=h.replace(/<span class="mcpop"[^>]*>[\s\S]*?<\/span>/,'').replace(/<span class="mst">[\s\S]*?<\/span>/,'').replace(/<div class="mini">[\s\S]*?<\/div>/,'').replace(/<span class="mteam">[\s\S]*?<\/span>/,`<span class="mteam">${mcLine(m)}</span>`);
+ const D=geDeco(m);if(D)h=h.replace('<div class="mart">',`<div class="mart ${D.cls}">${D.html}`)}catch(e){console.error(e)}return h}}
+// Groups page card
+{const f=mcardT;mcardT=function(m){let h=f.apply(this,arguments);try{
+ h=h.replace(/<div class="st">\d+(?:st|nd|rd|th) Gen[^<]*<\/div>/,`<div class="st mtline">${mcLine(m)}</div>`).replace(/<div class="st">(?:Joined team:[^<]*|[^<]* since [^<]*|)<\/div>/,'')
+  .replace('<span class="tag" style="">Active</span>','').replace(`<span class="tag" style="background:#ffe3a8">${esc(TL())}</span>`,'');
+ const a=h.indexOf('<div class="c m"');if(a>=0){const i=h.indexOf('>',a)+1,j=h.indexOf('<div>',i);if(j>i){const D=geDeco(m);h=h.slice(0,i)+`<div class="mtart ${D?D.cls:''}">${D?D.html:''}${h.slice(i,j)}</div>`+h.slice(j)}}
+ h=h.replace('<div class="c m" style="padding:6px;','<div class="c m" data-mt="1" style="padding:6px;')}catch(e){console.error(e)}return h}}
+// profile: the frame goes on the portrait only
+{const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{h=h.replace(/<div class="pf gefr gefr-[^"]*">/,'<div class="pf">');if(cand)return h;const D=geDeco(m);if(D)h=h.replace(/<div class="pfart"([^>]*)>/,(x,a)=>`<div class="pfart ${D.cls}"${a}>${D.html}`)}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
