@@ -441,7 +441,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
 - **Encore MC.** **+ Encore MC** adds an MC segment to the Encore. It is edited, reordered and removed like Encore songs, and is shown in its place in the Encore and in the Performance History.
 - **Current Setlist (Theater overview).** Songs are numbered M01 … and E01 … as in the Setlist editor. Unit songs show every member of the Unit; other songs show their Center(s).
 - **Performance count.** Stage details show "Team A 1st Stage — 12 Performances". Every completed round counts (two shows on one day count twice). Cancelled performances do not count, and each performance record keeps its number.
-- **Changing Formation / Center of a running Stage.** Edits in Centers & Formation on a running Stage are a draft that performances never use.
+- **Changing lineup, Units, Formation or Center of a running Stage.** Edits of the lineup (who performs), Unit members, Formation or Centers on a running Stage are a draft that performances never use. Members taken out of the lineup are removed from their Units automatically.
   - Choose the first performance that should use them, at least 7 days from today, and press **Save for this performance**. Before that date the previous Formation and Center are used; from it, the new ones. You can also **Discard changes**.
   - The Stage, its name, Setlist, history and performance count stay the same: the next show is number 26, not 1.
   - Stage details list the current Formation and Center, the planned changes (which can be cancelled) and the configuration history. Past performances keep the Formation and Center they were performed with.

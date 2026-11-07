@@ -54,5 +54,6 @@ function hsHistRec(ev){if(!ev||!ev.done||!ev.plan||!Array.isArray(ev.plan.rows))
  m.hsHist.push({ev:ev.id,rid:ev.rid,title:x?x.title:(ev.st||''),day:ev.day,fmt:ev.fmt||(ev.plan.fmt)||null,gain:r.gain||0,inter:r.inter||0,trainee:m.status=='trainee'})})}
 function hsHistBackfill(){(S.cal||[]).forEach(e=>{if(e.type=='handshake'&&e.v==2)hsHistRec(e)})}
 const _dbHs2=hsRun2;hsRun2=function(ev){const r=_dbHs2.apply(this,arguments);try{hsHistRec(ev)}catch(e){console.error(e)}return r};
-const _dbProf=profHtml;profHtml=function(m,cand){const h=_dbProf.apply(this,arguments);if(cand||!m||!(m.hsHist||[]).length)return h;const L=m.hsHist.slice().sort((a,b)=>a.day-b.day);
+// the member profile no longer lists handshake events (they stay in each member's m.hsHist and in the handshake event records)
+const _dbProf=profHtml;profHtml=function(m,cand){const h=_dbProf.apply(this,arguments);if(true||cand||!m||!(m.hsHist||[]).length)return h;const L=m.hsHist.slice().sort((a,b)=>a.day-b.day);
  return h+`<div class="c hshist"><h3>Handshake Events</h3><ul>${L.map(x=>`<li><b>${esc(x.title)}</b> <span class="st">· ${dayDate(x.day).toLocaleDateString('en-US',{month:'short',year:'numeric'})} · ${esc((HSF[x.fmt]||{}).n||'Handshake')}${x.trainee?' · as '+esc(TL()):''}</span> <span class="st">+${(x.gain||0).toLocaleString()} fans · ${(x.inter||0).toLocaleString()} greetings</span></li>`).join('')}</ul></div>`};

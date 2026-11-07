@@ -872,3 +872,6 @@ select:not([multiple]):not([size]){cursor:pointer}
 .thlug .thluc .tag{max-width:100%;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .thlug[style*="--cols:4"] .thluc .tag{font-size:9px;padding:1px 5px}.thlug[style*="--cols:5"] .thluc .tag{font-size:8px;padding:1px 3px;letter-spacing:-.02em}
 .thlug[style*="--cols:5"] .thluc{padding:3px!important}
+/* member profile: Stage statistics as a wrapping list (no sideways scroll on phones) */
+.thmpl{display:grid;gap:6px;margin-top:6px}.thmpr{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #efe6f7;border-radius:12px;padding:6px 10px;min-width:0}.thmpr span{flex:1;min-width:0;display:flex;flex-direction:column}.thmpr span small{color:#8f80a6;font-size:11px}.thmpr span b{overflow-wrap:anywhere;font-size:13px}.thmpr em{font-style:normal;font:900 18px Quicksand;color:#5a2a6e}
+.thmps .gekg{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.pov .c{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
