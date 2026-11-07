@@ -804,3 +804,6 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 .thmfn{flex:1;min-width:0;display:flex;flex-direction:column}.thmfs{display:flex;flex-wrap:wrap;gap:3px}.thmfc{font-size:10px;background:#f4eefc;border-radius:8px;padding:0 6px;color:#6b5a86}.thmfc.bt{background:#fff1c9;color:#9a6a00}
 .thmft2{display:flex;flex-direction:column;align-items:flex-end}.thmft2 b{font-size:16px}.thmft-zero{background:#eee9f1;color:#8f80a6}.thmft-hi{background:#d7f2e3;color:#2f7a52}.thmft-bt{background:#ffe7a3;color:#8a5a00}
 .thmfm.bt{border-color:#f3c35c;box-shadow:0 0 0 2px #fff1c9}.thmfm.zero{opacity:.8}.thmfd{margin:4px 0 2px;font-size:12px}.thmfd li{display:flex;gap:6px;align-items:baseline}.thmfd li b{margin-left:auto}
+/* Stage lineup cards: like the Single Senbatsu cards */
+.thlug .thluc{cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center}.thlug .thluc.on{outline:3px solid var(--pk);outline-offset:1px}.thlug .thluc:not(.on){opacity:.78}
+.thluon{background:#d7f2e3;color:#2f7a52}.thluoff{background:#eee9f1;color:#8f80a6}
