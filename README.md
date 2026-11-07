@@ -379,6 +379,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - Performances in between are cancelled; cancelling the transition restores them.
   - Reusing a retired Stage keeps its number.
   - A **Revival Stage** is a new production of any debuted Stage, from this team or another team. It is a separate Stage with its own id, a reference to the original, and a "REVIVAL" tag.
+  - Costumes of a Revival Stage follow the original automatically, Unit songs included. Each performer wears her own original costume, otherwise the costume of the original member at the same position. Members who join a Unit or the lineup later get it too; a costume you set yourself is never replaced.
     - It copies the Setlist order, the Units and their song assignments, the Encore, and every song's costumes, which stay editable.
     - New performers get the costume of the member who had the same position.
     - It receives the team's next Stage number at its debut. The original Stage, its number and its history never change.
