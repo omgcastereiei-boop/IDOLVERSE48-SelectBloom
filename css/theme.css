@@ -962,3 +962,12 @@ select:not([multiple]):not([size]){cursor:pointer}
 .gedc-1 .gedc-rib{color:#3a2600;text-shadow:none;background:linear-gradient(135deg,#fff2b0,#e9b949)}.gedc-2 .gedc-rib{color:#2a3038;text-shadow:none;background:linear-gradient(135deg,#fff,#b9c3cd)}
 .gedc-rk .gedc-rib{background:rgba(70,50,110,.82);font-size:9.5px}
 .mc .mart.gedc{border-radius:14px 14px 0 0}.pfart.gedc{border-radius:18px}.pfart.gedc .gedc-c{width:30px;height:30px}.pfart.gedc .gedc-ic{width:48px;height:30px;top:-6px}.pfart.gedc .gedc-rib{font-size:13px;bottom:10px}
+/* election archive rows / sister rankings */
+.gearch .gear .geprk{min-width:64px;display:flex;flex-direction:column;align-items:center;line-height:1.15;font-weight:800;white-space:nowrap}
+.gearch .gear .gearc{font-style:normal;font-size:10.5px}.gearch .gear .gearc .getag{font-size:9.5px;padding:0 5px}
+.gearch .gear small{display:block;white-space:normal;line-height:1.25}
+.gearch .gear .gechg2.up{color:#1f9d5a}.gearch .gear .gechg2.dn{color:#d64561}.gearch .gear .gechg2{color:#8a7aa3}
+.gepgh.sub{background:linear-gradient(90deg,#5b3b8f,#8b5cc4)}
+.gearpre{display:flex;flex-direction:column;gap:10px}
+.gesubr{gap:8px;align-items:center;flex-wrap:wrap;margin:4px 0}
+.gesubl{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}.gesubc{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.08);border-radius:12px;padding:6px;font-size:12px}.gesubc b{color:#ffe08a}.gesubc small{opacity:.75}.gesubc.t1{background:rgba(233,185,73,.25)}
