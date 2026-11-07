@@ -892,3 +892,6 @@ select:not([multiple]):not([size]){cursor:pointer}
 .sln.slcen{font-weight:800;color:var(--pk)}.slft{font-style:normal;font-size:10px;font-weight:700;background:#d5f5e3;color:#1d7a4a;border-radius:6px;padding:0 4px;margin-left:2px;white-space:nowrap}
 .slfts{margin-top:4px;font-size:12.5px}.slfts b{margin-right:4px}
 .slpos summary{cursor:pointer;font-weight:700;font-size:12.5px;color:var(--mut);margin:4px 0}
+/* ceremony costume by team / group */
+.gecby .gecrow{display:flex;flex-direction:column;gap:3px;margin:6px 0;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.6)}
+.gecby .gecrow b{font-size:13px}.gecby .gecrow .row{flex-wrap:nowrap;gap:6px}.gecby .gecrow select{flex:1;min-width:0}
