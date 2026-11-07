@@ -51,6 +51,8 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/theater5.js` | Theater: Setlist Center as default Center, MC All Members / Team, Encore MC, performance count, scheduled Formation / Center changes with history |
 | `js/ui/theater-fans.js` | Theater random member fan acquisition: songs (position, song size, skills, popularity), MC (Variety), Encore, Performance Quality, Breakthroughs, saturation; Member Fan Report; never Group Fans |
 | `js/ui/theater-subs.js` | Theater: substitute formation modes (keep / shift), performance photos (Stage + every Unit song), substitution records, Stage Performance Statistics in Member Profile |
+| `js/ui/song-eval.js` | Song creation (Genre, Concept, Lyrics, randomisers, Song Sheet), Concept Compatibility & Senbatsu Ability per song, release reception factors and member fans |
+| `js/ui/industry.js` | Japanese music industry (AI artists, careers, releases) and Music Charts (weekly, combined, streaming, year-end; Top 20), OMG4ki story rival |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -541,6 +543,38 @@ Open **Company** in the menu. One company runs several independent idol groups: 
 - **Profiles & rosters.** The profile shows her current and primary group, team, status (Full Member, Trainee, Concurrent Member, Transferred, Graduated), concurrent group and team, transfer and Kennin history, and participation by group.
   - **Roster** filters a group by all, full, trainees, concurrent and team; the shared bar adds generation and rarity.
 - **Old saves.** The existing group becomes the Main Group and keeps all its data. Other groups start with empty production data (nothing is guessed), all ids are unchanged, and the ledger already present is not re-counted.
+
+## Song creation & Senbatsu evaluation
+
+- **Song creation**: every song is built from three things only:
+  - **Genre**;
+  - **Concept** (exactly one);
+  - **Lyrics**: a Theme (First Love, Friendship, Dreams, …) and a Mood (Happy, Nostalgic, Passionate, …).
+
+  Each part has its own 🎲 Random button, and **🎲 Randomize all** re-rolls everything; you can re-roll as often as you like until production is confirmed. Every Genre / Concept combination is allowed. There is no lyric writing, no BPM or instruments, no staff selection and no production quality.
+- **📄 Song sheet** (opens when a new song is added) shows the artwork, Genre, Concept, Lyrics, production status, duration and cost, then **Proceed to Senbatsu Selection**. It never shows Compatibility before a Senbatsu exists.
+- **After choosing the Senbatsu**, every song (Title Track and each Coupling) is evaluated on its own. The Senbatsu screen shows the evaluation live, and saving the Senbatsu shows the results page.
+  - **Concept Compatibility**: each member's Concept Fit (Cute / Sexy / Cool / Pretty), weighted by the song's Concept, as a percentage, with a per-member list and a high / moderate / low distribution.
+  - **Senbatsu Ability**: (Vocal + Dance + Variety + Passion) ÷ 4 per member, averaged, with no Center bonus and no popularity or fans; the four averages are shown too.
+- **Effects** (separate calculations; never added as raw percentages):
+  - **Song reception**: the release formula uses a Compatibility factor (×0.8 – ×1.4) and the Ability score, replacing the old personality fit and genre skills. Albums use the average of their songs. Chart streaming uses each song's own result.
+  - **Member fans**: every Senbatsu member of every new song gets her own random member fans. These depend on the song's sales, her own Compatibility, abilities, popularity and formation position (Coupling songs count less).
+
+## Music Charts (Japan)
+
+- **A living industry.** It has female / male idol groups, female / male soloists, bands and K-pop groups promoting in Japan, with unique names (never "48"), labels, members, genres, fans and release histories.
+  - New artists keep debuting; the rate falls when the market is crowded.
+  - Careers move through Debut → Rising → Established → Declining → Hiatus / Disbanded, and disbanded artists keep their releases and chart history.
+  - Every artist releases Singles and Albums on its own schedule.
+- **Charts** (Top 20 only, closed every Sunday):
+  - Weekly Singles Sales, Albums Sales and Digital Streaming;
+  - Combined Singles (CD + downloads + streams ÷ 150) and Combined Albums (CD + downloads + streams ÷ 1,200);
+  - Year-End Singles / Albums.
+
+  Each entry shows rank, last week's rank, movement (NEW / ▲ / ▼ / — / RE-ENTRY), cover, title, artist, sales or streams, peak and weeks on chart. Tap an entry for First Day, Week 1 and Total sales, streams, peaks, weeks at No.1 and weekly history.
+- **Your releases** chart with their real sales: week 1 is the release sales, then a small tail that counts for the charts only, not money. Streaming comes from each song's Compatibility, Ability and its MV. **My Releases** shows your best Single / Album, weeks in the Top 20 and weeks at No.1.
+- **OMG4ki** is the story rival: Japan's biggest girl group, with huge First Day sales, usually Top 10 and often No.1. It is never guaranteed No.1: a Single that sells more beats it. **Naevis, Tongjae and Sefira** are reserved for Story Mode. There is no news system yet.
+- Only the Top 20 of the last 60 weeks is kept as full tables. Peaks, weeks on chart, rank history, totals and year-end points are kept for every release.
 
 ## Language / ภาษา
 

@@ -61,7 +61,7 @@ const _rpSched=scheduleSingle;scheduleSingle=function(p){const r=_rpSched.apply(
 // ---- album release --------------------------------------------------------------------------
 function plAlbumRelease(){const p=S.pj;if(!p||p.status!='producing'||!plAlb(p))return;const ids=plTracks(p),reu=new Set(ids.filter(i=>S.songs[i].rel)),nw=ids.filter(i=>!reu.has(i));p.status='released';
  const ps=ids.map(i=>avg((S.songs[i].slots||[]).filter(x=>x).map(j=>get(j)?.pop||0))||0);let sales=0;
- const calc=()=>{sales=Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*ids.length)*rnd(90,115)/100)};if(typeof fbWith=='function')fbWith('album',calc);else calc();
+ const calc=()=>{sales=Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*ids.length)*rnd(90,115)/100*seAlbumF(ids))};if(typeof fbWith=='function')fbWith('album',calc);else calc();
  const rev=sales*250,fans=Math.round(sales*.15);earn(rev,'Album sales: '+p.title);S.fans+=fans;const rl=[];
  nw.forEach(i=>{const o=S.songs[i];rl.push(...grantRep(o,2+sales/3000));o.rel='Album: '+p.title;o.relDay=S.day});
  const covers={};p.types.forEach(t=>{covers[t.name]=JSON.parse(JSON.stringify(S.cov[t.name]));delete S.cov[t.name]});covers['Album Cover']=covers['Album Cover']||covers[p.types[0].name];
