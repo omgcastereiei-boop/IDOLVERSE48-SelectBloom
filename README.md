@@ -55,6 +55,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/industry.js` | Japanese music industry (AI artists, careers, releases) and Music Charts (weekly, combined, streaming, year-end; Top 20), OMG4ki story rival |
 | `js/ui/picker.js` | Game-style picker for every dropdown (replaces the browser's list; same values and change events) |
 | `js/ui/theater-xg.js` | Theater: Revival Stage between groups (songs copied as Theater versions); Trainee Stage automatic final performance |
+| `js/ui/rs-planner.js` | Roadshow Tour Planner (multi-location, sources, requirements, ranking, Balanced / Grouped / Random distribution, manual editing) and Roadshow Performance Efficiency |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -582,6 +583,29 @@ Open **Company** in the menu. One company runs several independent idol groups: 
 - **Your releases** chart with their real sales: week 1 is the release sales, then a small tail that counts for the charts only, not money. Streaming comes from each song's Compatibility, Ability and its MV. **My Releases** shows your best Single / Album, weeks in the Top 20 and weeks at No.1.
 - **OMG4ki** is the story rival: Japan's biggest girl group, with huge First Day sales, usually Top 10 and often No.1. It is never guaranteed No.1: a Single that sells more beats it. **Naevis, Tongjae and Sefira** are reserved for Story Mode. There is no news system yet.
 - Only the Top 20 of the last 60 weeks is kept as full tables. Peaks, weeks on chart, rank history, totals and year-end points are kept for every release.
+
+## Roadshow Tour Planner & Performance Efficiency
+
+- **🗺 Roadshow Tour Planner** (button on the Roadshow screen) plans several locations at once. Each location has its own date and number of members, and the total number of assignments is shown.
+  - Every location is booked like a normal 2-day Roadshow: the same costs, random setlists, 7 days' notice, one Roadshow per location per single and conflict rules.
+- **Members**:
+  - **Sources**: selected pool, Senbatsu (Title Track), Senbatsu first then Under Girls, or all eligible members.
+  - **Eligibility**: available members only, or include members with plans; optionally include members who already did a Roadshow for this single.
+  - **Required assignments**: Exactly or At least N for chosen members. They are placed first, and unmet requirements are explained.
+- **Ranking and distribution**:
+  - **Ranking**: fully random, Popularity, Ability (Vocal, Dance, Variety, Passion) or any stat (with a little randomness).
+  - **Distribution**: Balanced (round-robin: #1 to the first location, #2 to the second …), Grouped (fill one location first) or Fully random. Locations go in listed or random order.
+- **Preview and confirm**:
+  - Randomize / Random Again keep every setting; 🎲 on one location re-rolls only that location.
+  - Members can always be added, removed, replaced or moved by hand, and the counts, dates and locations changed; manual edits are never re-randomised.
+  - The preview shows assignments, repeats (×2), unfilled slots, conflicts (existing plans, overlapping locations) and requirement status, plus each location's skill and Energy / Physical / Mental averages and an estimate.
+  - Confirm books every location once (no duplicates).
+- **Performance Efficiency** is calculated when each Roadshow day happens, for each location separately:
+  - **Stage** = Vocal 35%, Dance 35%, Passion 30%. **MC** = Variety 65%, Passion 35%.
+  - **Readiness** = Energy 40%, Physical Health 30%, Mental Health 30%. Values below 60 give a chance of a penalty: the lower the value, the more likely and the stronger, but never a guaranteed bad show.
+  - **Overall** = 80% Stage / MC (weighted by the day's songs and MC) + 20% Readiness. Popularity, fans, rarity and Center do not count.
+  - Each member's efficiency is blended into her existing performance quality, which already drives that day's fans, audience impression, attendance and regional growth. No fixed fan rewards; costs and income formulas unchanged.
+  - The results show **ROADSHOW PERFORMANCE** (Overall, Stage, MC, Readiness) per day and in total, with each member's contribution and penalties.
 
 ## Language / ภาษา
 

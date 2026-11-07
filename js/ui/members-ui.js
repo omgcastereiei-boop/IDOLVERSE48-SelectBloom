@@ -19,7 +19,7 @@ const ML_RAR={UR:4,SR:3,R:2,N:1};
 const ML_KEYS=()=>[['','Default order'],['name','Name'],...STATS.map(x=>[x[0],x[1]]),...(S&&S.groups&&S.groups.length>1?[['grp','Group']]:[]),['gen','Generation'],['team','Team'],['trend','Trend (Buzz)']];
 function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='rar')return ML_RAR[rar(m)]||0;if(k=='grp'){const g=S.groups.find(x=>x.id==m.group);return g?g.name:'~'}if(k=='gen')return m.gen||1;if(k=='team'){const t=teamOf(m);return m.status=='trainee'?'~':t?t.name:'~~'}if(k=='trend')return m.buzz||0;const v=sv(m,k);return typeof v=='number'?v:+v||0}
 function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d',team:'all',gen:'all',rar:'all',grp:'all'};if(f=='d')c.d=c.d=='a'?'d':'a';else c[f]=v;render()}
-const ML_SKIP='.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.czlineup';
+const ML_SKIP='.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.czlineup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
  // member faces open the profile
  const HS=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||HS.some(x=>x[0]===host))return;HS.push([host,sv0])});

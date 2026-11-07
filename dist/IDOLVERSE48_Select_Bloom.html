@@ -957,6 +957,16 @@ select:not([multiple]):not([size]){cursor:pointer}
 /* member profile: Stage statistics as a wrapping list (no sideways scroll on phones) */
 .thmpl{display:grid;gap:6px;margin-top:6px}.thmpr{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #efe6f7;border-radius:12px;padding:6px 10px;min-width:0}.thmpr span{flex:1;min-width:0;display:flex;flex-direction:column}.thmpr span small{color:#8f80a6;font-size:11px}.thmpr span b{overflow-wrap:anywhere;font-size:13px}.thmpr em{font-style:normal;font:900 18px Quicksand;color:#5a2a6e}
 .thmps .gekg{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.pov .c{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+/* Roadshow Tour Planner & Performance Efficiency */
+.rtpentry{background:linear-gradient(135deg,#fff3fa,#f3eeff)}
+.rtpl{margin:8px 0}.rtplh{gap:6px;flex-wrap:wrap}.rtpn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 13px Quicksand}
+.rtpm{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.rtpchip{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;width:64px;padding:4px;border-radius:12px;border:2px solid #efe6f7;background:#fff;cursor:pointer;font:600 11px Quicksand;color:#4a3560}
+.rtpchip span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rtpchip i{position:absolute;top:-6px;right:-4px;font-style:normal;background:#f3c35c;color:#5a3d00;border-radius:8px;padding:0 4px;font-size:10px}
+.rtpchip.rep{border-color:#f3c35c}.rtpchip.bad{border-color:#e46a7a;background:#fff2f4}.rtpchip.empty{border-style:dashed;color:#b8a7cf;font-size:20px;justify-content:center;min-height:56px}
+.rtpo{gap:6px;flex-wrap:wrap;margin:6px 0}.rtpo .b.on{background:var(--grad);color:#fff;border:0}.rtpr{gap:6px;flex-wrap:wrap}.rtpest{margin-top:4px}
+.rtpg .rtpc{cursor:pointer;padding:4px}.rtpg .rtpc.on{outline:3px solid var(--pk);outline-offset:1px}
+.rspe h3{margin:0 0 6px}.rspeg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}.rspek{margin:0;display:flex;flex-direction:column;gap:2px}.rspek small{font:800 11px Quicksand;color:#8f80a6}.rspek b{font:900 26px Quicksand;color:#3c2d55}.rspek b i{font-style:normal;font-size:13px;color:#a99bbd}
+.rspem{display:grid;gap:4px;margin-top:6px}.rspemr{display:grid;grid-template-columns:30px 1fr auto;gap:6px;align-items:center;background:#fff;border:1px solid #f1eaf8;border-radius:10px;padding:3px 6px}.rspemr span{display:flex;flex-direction:column;min-width:0}.rspemr small{font-size:11px;color:#8f80a6}.rspemr em{font-style:normal;font:900 16px Quicksand;color:#5a2a6e}
 
 </style>
 </head><body>
@@ -2188,6 +2198,7 @@ function rsCostL(l,ids,day,x){const n=ids.length,intl=l.kind=='as',d=rsDist(l),e
 function rsRun(ev,part){const k='d'+part;if(ev[k])return;if(part==2&&!ev.d1)rsRun(ev,1);const l=RSL[ev.loc],x=S.singles.find(s=>s.rid==ev.rid),ids=ev.members.filter(id=>get(id)),sl=part==1?ev.sl1:(ev.sl2||ev.sl1);if(!x||!l)return;
  const fb=S.fans,gb0=rsGBuzz(ids),songs=sl.filter(z=>z.k=='s').map(z=>S.songs[z.id]).filter(Boolean),rows=[];
  ids.forEach(id=>{const m=get(id);let en=m.en,used=0,rec=0,qs=[],low=en;sl.forEach(z=>{if(z.k=='mc'){const r=Math.min(CFG.rs.mc,100-en);en+=r;rec+=r;return}const o=S.songs[z.id];if(!o)return;const sk=avg(GEN[o.genre].map(k=>m[k])),f=en>=40?1:.55+.45*en/40;qs.push(sk*f);const c=Math.round((CFG.rs.INT[o.genre]||6)*(1.25-m.dance/200));const u=Math.min(c,en);en-=u;used+=u;low=Math.min(low,en)});rows.push({mid:id,name:m.name,en0:m.en,used,rec,en,q:Math.round(avg(qs)),low,f0:m.fans,b0:m.buzz})});
+ if(typeof rsPEApply=='function')rsPEApply(ev,part,ids,rows,sl); // Performance Efficiency (rs-planner.js): skills + readiness at event time
  const Q=Math.round(avg(rows.map(r=>r.q))),A=rsDay(l,ev.day+part-1,ids,x,part==2&&ev.d1?ev.d1.Q:null),pop=avg(ids.map(id=>get(id).pop)),g=rsG(l.id),gb=gb0;
  const buyers=Math.round(A.att*(.12+.1*pop/100+.05*Math.min(g/100,2)+.05*gb/100)),merch=Math.round(buyers*CFG.rs.merch*rnd(85,115)/100),ht=Math.round(A.att*(.03+.06*pop/100+.01*Math.min(g/100,3))),htRev=ht*CFG.rs.ht,htc=Math.min(25,4+Math.ceil(ht/150));
  const newG=Math.round(A.local*(.03+.04*Q/100)+A.trav*.01);
@@ -6237,6 +6248,140 @@ function indMine(){const I=S.ind,mine=Object.values(I.R).filter(r=>(I.A[r.aid]||
 </script>
 <script>
 // =====================================================================================
+//  Automatic Roadshow Planner (multi-location) & Roadshow Performance Efficiency
+// -------------------------------------------------------------------------------------
+//  PLANNER (view 'rstour'): several Roadshow locations in one session, each with its own date
+//  and number of members. Every location is booked exactly like a single Roadshow (rsBook):
+//  same 2-day event, costs, random setlists, 7-day notice, one Roadshow per location per single,
+//  schedule-conflict rules. Randomisation only fills a preview; everything stays editable by
+//  hand until Confirm, and manual edits are never overwritten except by an explicit Random Again.
+//   · Sources: Selected pool · Senbatsu (Title Track) · Senbatsu first then Under Girls · All.
+//   · Eligibility: available only / include members with plans; include previous participants.
+//   · Custom requirements per member: Exactly / At least N assignments (placed first).
+//   · Ranking: Fully random · Popularity · Ability (Vocal, Dance, Variety, Passion) · any stat
+//     (with a little randomness). Distribution: Balanced (round-robin), Grouped, Random.
+//  PERFORMANCE EFFICIENCY (at event time, each location and day separately; no popularity):
+//   · Stage = Vocal 35% · Dance 35% · Passion 30%;  MC = Variety 65% · Passion 35%.
+//   · Readiness = Energy 40% · Physical Health 30% · Mental Health 30%. Values below 60 give a
+//     chance of a penalty (the lower, the likelier and stronger) — never a guaranteed bad show.
+//   · Overall = 80% (Stage and MC weighted by the day's songs / MC share) + 20% Readiness.
+//   · Each member's efficiency is blended into her existing performance quality, which already
+//     drives the existing fan, attendance and regional-growth formulas (no fixed fan rewards).
+// =====================================================================================
+const RTP_SK={pop:'Popularity',abil:'Ability',rand:'Fully random',stat:'By selected stat'};
+const rtpX=()=>{const P=ui.rtp;return P&&S.singles.find(s=>s.rid==P.rid)};
+const rtpDays=d=>[d,d+1];
+const rtpUid=()=>'L'+Math.random().toString(36).slice(2,8);
+function rtpOpen(){const L=typeof latestSingle=='function'?latestSingle():S.singles.at(-1);if(!L)return toast('Release a single first: Roadshows promote a released single.','err');
+ if(!ui.rtp||ui.rtp.rid!=L.rid)ui.rtp={rid:L.rid,locs:[],src:'all',pool:[],avail:'avail',prev:1,req:[],meth:'pop',stat:'dance',dist:'bal',ord:'set'};view='rstour';render()}
+// ---- eligibility ----------------------------------------------------------------------------------------
+const rtpTT=x=>new Set(typeof plTTInfo=='function'?[...plTTInfo(x).keys()]:((S.songs[x.mainId]||{}).slots||[]).filter(Boolean));
+function rtpBase(x){const P=ui.rtp,E=rsElig(x),tt=rtpTT(x);if(P.src=='sel')return E.filter(id=>P.pool.includes(id));if(P.src=='sen')return E.filter(id=>tt.has(id));return E}
+const rtpBusy=(id,day)=>busy(id,rtpDays(day));
+const rtpOverlap=(a,b)=>Math.abs(a-b)<=1; // two 2-day events overlap
+function rtpOk(id,L,x,strict){const P=ui.rtp,m=get(id);if(!m||!rsElig(x).includes(id))return false;if(L.ids.includes(id))return false;if(!P.prev&&rsParted(x.rid).has(id))return false;
+ if(P.avail=='avail'&&L.day!=null&&rtpBusy(id,L.day).length)return false;if(L.day!=null&&P.locs.some(o=>o!==L&&o.day!=null&&o.ids.includes(id)&&rtpOverlap(o.day,L.day)))return false;return true}
+// ---- ranking --------------------------------------------------------------------------------------------------
+const rtpAb=m=>((m.sing||0)+(m.dance||0)+(m.variety||0)+(m.pas||0))/4;
+function rtpScore(m){const P=ui.rtp;if(P.meth=='rand')return Math.random();if(P.meth=='pop')return(m.pop||0)*1e6+(m.fans||0);if(P.meth=='abil')return rtpAb(m)+Math.random()*1e-3;return(+sv(m,P.stat)||0)*(.88+Math.random()*.24)}
+function rtpRank(ids,x){const P=ui.rtp,tt=rtpTT(x),sc=new Map(ids.map(id=>[id,rtpScore(get(id))]));return ids.slice().sort((a,b)=>P.src=='senu'?((tt.has(b)?1:0)-(tt.has(a)?1:0)||sc.get(b)-sc.get(a)):sc.get(b)-sc.get(a))}
+// ---- randomisation ---------------------------------------------------------------------------------------------
+const rtpCnt=id=>ui.rtp.locs.reduce((a,L)=>a+(L.ids.includes(id)?1:0),0);
+const rtpReq=id=>ui.rtp.req.find(r=>r.mid==id);
+function rtpOrder(){const P=ui.rtp,L=P.locs.slice();if(P.ord=='rand')for(let i=L.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[L[i],L[j]]=[L[j],L[i]]}return L}
+function rtpPick(L,cands,x){const ok=cands.filter(id=>rtpOk(id,L,x)&&!(rtpReq(id)&&rtpReq(id).mode=='exact'&&rtpCnt(id)>=rtpReq(id).n));if(!ok.length)return null;const P=ui.rtp,minC=Math.min(...ok.map(rtpCnt)),pool=ok.filter(id=>rtpCnt(id)==minC);return P.dist=='rand'?pool[Math.floor(Math.random()*pool.length)]:pool[0]}
+function rtpFill(Ls,x){const P=ui.rtp,base=rtpRank(rtpBase(x),x),free=L=>L.ids.length<L.n;let rr=0,guard=0;
+ const next=()=>{const F=Ls.filter(free);if(!F.length)return null;if(P.dist=='grp')return F[0];if(P.dist=='rand')return F[Math.floor(Math.random()*F.length)];for(let k=0;k<Ls.length;k++){const L=Ls[(rr+k)%Ls.length];if(free(L)){rr=(Ls.indexOf(L)+1)%Ls.length;return L}}return null};
+ const stuck=new Set();while(guard++<5000){const F=Ls.filter(L=>free(L)&&!stuck.has(L));if(!F.length)break;let L=next();if(!L||stuck.has(L)){L=F[0]}const id=rtpPick(L,base,x);if(id==null){stuck.add(L);continue}L.ids.push(id)}}
+function rtpReqPlace(Ls,x){const P=ui.rtp,miss=[];const R=rtpRank(P.req.map(r=>r.mid).filter(id=>get(id)),x).map(id=>rtpReq(id));const max=Math.max(0,...R.map(r=>r.n));let rr=0;
+ for(let k=1;k<=max;k++)R.forEach(r=>{if(r.n<k||rtpCnt(r.mid)>=r.n)return;const order=P.dist=='grp'?Ls:P.dist=='rand'?Ls.slice().sort(()=>Math.random()-.5):[...Ls.slice(rr),...Ls.slice(0,rr)];const L=order.find(L=>L.ids.length<L.n&&rtpOk(r.mid,L,x));if(L){L.ids.push(r.mid);if(P.dist=='bal')rr=(Ls.indexOf(L)+1)%Ls.length}else miss.push(r.mid)});return miss}
+function rtpRandom(){const P=ui.rtp,x=rtpX();if(!P||!x)return;if(!P.locs.length)return toast('Add at least one location first.','err');P.locs.forEach(L=>{L.ids=[]});const Ls=rtpOrder();rtpReqPlace(Ls,x);rtpFill(Ls,x);P.asg=1;toast('Random assignment ready. Review and edit it before confirming.');render()}
+function rtpRandomOne(uid){const P=ui.rtp,x=rtpX(),L=P&&P.locs.find(z=>z.uid==uid);if(!L||!x)return;L.ids=[];
+ P.req.forEach(r=>{const m=get(r.mid);if(!m)return;const need=r.n-rtpCnt(r.mid);if(need>0&&L.ids.length<L.n&&rtpOk(r.mid,L,x))L.ids.push(r.mid)});rtpFill([L],x);P.asg=1;render()}
+// ---- editing ----------------------------------------------------------------------------------------------------
+const rtpD0=()=>S.day+7;
+function rtpAddLoc(){const P=ui.rtp,x=rtpX();const used=new Set(P.locs.map(L=>L.loc));const free=Object.values(RSL).filter(l=>!used.has(l.id)&&!rsUsed(x.rid,l.id));if(!free.length)return toast('Every location already has a Roadshow for this single.','err');
+ const last=P.locs.at(-1);P.locs.push({uid:rtpUid(),loc:(free.find(l=>l.kind=='jp')||free[0]).id,day:last&&last.day!=null?last.day+2:rtpD0(),n:last?last.n:6,ids:[]});render()}
+function rtpSet(uid,k,v){const P=ui.rtp,L=P.locs.find(z=>z.uid==uid);if(!L)return;if(k=='loc'&&RSL[v])L.loc=v;if(k=='n')L.n=Math.max(1,Math.min(EV.concert?EV.concert.max||16:16,Math.round(+v)||1));if(k=='day'){const d=dateDay(new Date(v+'T00:00:00'));if(Number.isFinite(d))L.day=d}render()}
+function rtpMv(uid,d){const P=ui.rtp,i=P.locs.findIndex(z=>z.uid==uid),j=i+d;if(i<0||j<0||j>=P.locs.length)return;[P.locs[i],P.locs[j]]=[P.locs[j],P.locs[i]];render()}
+function rtpRmLoc(uid){const P=ui.rtp;P.locs=P.locs.filter(z=>z.uid!=uid);render()}
+function rtpRm(uid,id){const L=ui.rtp.locs.find(z=>z.uid==uid);if(!L)return;L.ids=L.ids.filter(x=>x!=id);ui.mod=null;render()}
+function rtpMoveTo(uid,id,to){const P=ui.rtp,A=P.locs.find(z=>z.uid==uid),B=P.locs.find(z=>z.uid==to);if(!A||!B)return;if(B.ids.includes(id))return toast('She is already in that location.','err');A.ids=A.ids.filter(x=>x!=id);B.ids.push(id);ui.mod=null;render()}
+function rtpMem(uid,id){const P=ui.rtp,L=P.locs.find(z=>z.uid==uid),m=get(id);if(!L||!m)return;ui.mod={t:'html',h:`<h2 class="ht">${esc(m.name)}</h2><p class="st">${esc(RSL[L.loc].n)} · ${L.day!=null?wd(L.day):'—'}</p>${rtpCardHtml(id,L,rtpX(),1)}<div class="row"><button class="b s" onclick="rtpPickOpen('${uid}',${id})">⇄ Replace</button>${P.locs.filter(o=>o!==L).map(o=>`<button class="b s" onclick="rtpMoveTo('${uid}',${id},'${o.uid}')">→ ${esc(RSL[o.loc].n)}</button>`).join('')}<button class="b s" onclick="rtpRm('${uid}',${id})">✕ Remove</button><button class="b s" onclick="mpOpen(${id})">Profile</button></div><div class="row"><button class="b" onclick="ui.mod=null;render()">Close</button></div>`};render()}
+// member picker: add to a location, replace a member, or choose the pool
+function rtpPickOpen(uid,rep){ui.rtpk={uid,rep:rep??null};ui.mod={t:'html',h:rtpPickHtml()};render()}
+function rtpPoolOpen(){ui.rtpk={pool:1};ui.mod={t:'html',h:rtpPickHtml()};render()}
+function rtpPickHtml(){const P=ui.rtp,k=ui.rtpk||{},x=rtpX(),L=k.uid&&P.locs.find(z=>z.uid==k.uid),E=rsElig(x);
+ return`<h2 class="ht">${k.pool?'Member pool':k.rep!=null?'Replace '+esc((get(k.rep)||{}).name||''):'Add a member'}${L?' · '+esc(RSL[L.loc].n):''}</h2><p class="st">${k.pool?'Random assignment uses only the members you select here.':'Any eligible member can be added by hand; warnings are shown but you decide.'}</p>
+ <div class="g rtpg">${E.map(id=>{const on=k.pool?P.pool.includes(id):L&&L.ids.includes(id);return`<div class="c m rtpc ${on?'on':''}" onclick="rtpPickSet(${id})">${rtpCardHtml(id,L,x)}</div>`}).join('')}</div><div class="row"><button class="b p" onclick="ui.mod=null;render()">Done</button></div>`}
+function rtpPickSet(id){const P=ui.rtp,k=ui.rtpk||{};if(k.pool){const i=P.pool.indexOf(id);if(i>=0)P.pool.splice(i,1);else P.pool.push(id);if(ui.mod)ui.mod.h=rtpPickHtml();return render()}
+ const L=P.locs.find(z=>z.uid==k.uid);if(!L)return;if(k.rep!=null){const i=L.ids.indexOf(k.rep);if(L.ids.includes(id)&&id!=k.rep)return toast('She is already in this location.','err');if(i>=0)L.ids[i]=id;ui.mod=null;return render()}
+ if(L.ids.includes(id))L.ids=L.ids.filter(z=>z!=id);else L.ids.push(id);if(ui.mod)ui.mod.h=rtpPickHtml();render()}
+// custom requirements
+function rtpReqAdd(){const P=ui.rtp,x=rtpX(),E=rsElig(x).filter(id=>!P.req.some(r=>r.mid==id));if(!E.length)return;P.req.push({mid:E[0],n:2,mode:'exact'});render()}
+function rtpReqSet(i,k,v){const r=ui.rtp.req[i];if(!r)return;if(k=='mid')r.mid=+v;if(k=='n')r.n=Math.max(1,Math.round(+v)||1);if(k=='mode')r.mode=v=='least'?'least':'exact';render()}
+function rtpReqRm(i){ui.rtp.req.splice(i,1);render()}
+// ---- validation -----------------------------------------------------------------------------------------------------
+function rtpCheck(){const P=ui.rtp,x=rtpX(),out={err:[],warn:[],loc:{},req:[]};if(!x){out.err.push('No released single.');return out}
+ if(!P.locs.length)out.err.push('Add at least one location.');const seen=new Set();
+ P.locs.forEach(L=>{const l=RSL[L.loc],E=[],W=[];if(!l)E.push('Choose a location.');else{if(seen.has(L.loc))E.push(`${l.n} is in the plan twice.`);seen.add(L.loc);if(rsUsed(x.rid,L.loc))E.push(`${l.n} already hosted (or is booked for) a Roadshow for this single.`)}
+  if(L.day==null||L.day<S.day+7)E.push('The date must be at least 7 days from today.');if(!L.ids.length)E.push('No members assigned.');else if(L.ids.length<L.n)W.push(`${L.n-L.ids.length} of ${L.n} slot(s) unfilled.`);else if(L.ids.length>L.n)W.push(`${L.ids.length} members assigned (required ${L.n}).`);
+  L.ids.forEach(id=>{const m=get(id);if(!m)return;if(!rsElig(x).includes(id))E.push(`${m.name} is not eligible for this single's Roadshows.`);if(L.day!=null){const b=rtpBusy(id,L.day);if(b.length)E.push(`${m.name} already has a plan: ${b[0].title}.`);const o=P.locs.find(z=>z!==L&&z.day!=null&&z.ids.includes(id)&&rtpOverlap(z.day,L.day));if(o)E.push(`${m.name} is also at ${RSL[o.loc].n} on overlapping days.`)}});
+  out.loc[L.uid]={err:E,warn:W};out.err.push(...E.map(e=>`${l?l.n:'Location'}: ${e}`));out.warn.push(...W.map(w=>`${l?l.n:'Location'}: ${w}`))});
+ P.req.forEach(r=>{const m=get(r.mid),c=rtpCnt(r.mid),ok=r.mode=='exact'?c==r.n:c>=r.n;let why='';if(!ok){const free=P.locs.filter(L=>!L.ids.includes(r.mid)&&rtpOk(r.mid,L,x)).length;why=r.mode=='exact'&&c>r.n?`assigned ${c} times (more than ${r.n})`:P.locs.length<r.n?`only ${P.locs.length} location(s) for ${r.n} assignments`:free?'not placed yet — add her by hand or randomise again':'no further location fits her dates, availability or the free slots'}
+  out.req.push({r,m,c,ok,why});if(!ok)out.warn.push(`${m?m.name:'#'+r.mid}: ${r.mode=='exact'?'exactly':'at least'} ${r.n}, assigned ${c} — ${why}`)});
+ const rep=[...new Set(P.locs.flatMap(L=>L.ids))].filter(id=>rtpCnt(id)>1);if(rep.length)out.warn.push(`Repeated assignments: ${rep.map(id=>`${(get(id)||{}).name} ×${rtpCnt(id)}`).join(', ')}.`);
+ const cost=P.locs.reduce((a,L)=>a+(RSL[L.loc]&&L.ids.length&&L.day!=null?rsCostL(RSL[L.loc],L.ids,L.day,x).L.reduce((s,y)=>s+y[1],0):0),0);out.cost=cost;if(cost>S.money)out.err.push(`Not enough money for all locations (${yen(cost)}).`);return out}
+function rtpConfirm(){const P=ui.rtp,x=rtpX(),C=rtpCheck();if(C.err.length)return toast(C.err[0],'err');
+ const go=()=>{if(P.busyBook)return;P.busyBook=1;let n=0;try{P.locs.slice().sort((a,b)=>a.day-b.day).forEach(L=>{const l=RSL[L.loc];if(rsUsed(x.rid,l.id))return;const ids=L.ids.slice(),c=rsCostL(l,ids,L.day,x),tot=c.L.reduce((a,y)=>a+y[1],0);if(!spend(tot,`Roadshow booking: ${l.n} (${x.title})`))return;
+   S.cal.push({id:'rs'+(++S.sid),type:'road',v:2,rid:x.rid,st:x.title,loc:l.id,kind:l.kind,title:`Roadshow — ${l.n} (${x.title})`,venue:l.venue,vt:l.vt,day:L.day,dur:2,members:ids,mode:'sel',smode:'random',sl1:rsRandSl(x),sl2:rsRandSl(x),est:c.L,cost:tot,booked:S.day,done:false,d1:null,d2:null,tour:P.tid||(P.tid='T'+S.day+'-'+Math.random().toString(36).slice(2,6))});n++})}finally{P.busyBook=0}
+  ui.mod=null;ui.rtp=null;view='roadshow';toast(`${n} Roadshow(s) booked.`);render()};
+ ask(`Book ${P.locs.length} Roadshow location(s) for “${x.title}” (${yen(C.cost)} in total)?${C.warn.length?' Warnings: '+C.warn.join(' · '):''}`,go,'Book Roadshows')}
+// ---- Performance Efficiency ------------------------------------------------------------------------------------------
+const RS_PE={stage:{sing:.35,dance:.35,pas:.3},mc:{variety:.65,pas:.35},ready:{en:.4,ph:.3,mh:.3},cut:60,mix:.8,blend:.5};
+function rsPEcalc(ids,sl,det){const songs=(sl||[]).filter(z=>z.k=='s').length,mcs=(sl||[]).filter(z=>z.k=='mc').length,wM=songs+mcs?Math.max(.15,Math.min(.4,mcs/(songs+mcs))):.25,wS=1-wM,mem={};
+ ids.map(get).filter(Boolean).forEach(m=>{const w=typeof wlOf=='function'?wlOf(m):{ph:100,mh:100},R={en:m.en??100,ph:w.ph??100,mh:w.mh??100},st0=RS_PE.stage.sing*(m.sing||0)+RS_PE.stage.dance*(m.dance||0)+RS_PE.stage.pas*(m.pas||0),mc0=RS_PE.mc.variety*(m.variety||0)+RS_PE.mc.pas*(m.pas||0);
+  let fs=1,fm=1;const notes=[];[['en','Low Energy'],['ph','Physical fatigue'],['mh','Low focus (Mental Health)']].forEach(([k,lbl])=>{const v=R[k];if(v>=RS_PE.cut)return;const t=(RS_PE.cut-v)/RS_PE.cut,ch=.85*t,sev=.06+.24*t,mcW=k=='mh'?1.3:1;if(det){fs*=1-ch*sev*.75;fm*=1-ch*sev*.75*mcW}else if(Math.random()<ch){const s=sev*(.5+.5*Math.random());fs*=1-s;fm*=Math.max(.3,1-s*mcW);notes.push(lbl)}});
+  if(!det){const j=1+(Math.random()-.5)*.1*(1.3-R.mh/100);fs*=j;fm*=j}const rd=RS_PE.ready.en*R.en+RS_PE.ready.ph*R.ph+RS_PE.ready.mh*R.mh,st=Math.min(100,st0*fs),mc=Math.min(100,mc0*fm),c=RS_PE.mix*(wS*st+wM*mc)+(1-RS_PE.mix)*rd;
+  mem[m.id]={st:Math.round(st),mc:Math.round(mc),rd:Math.round(rd),c:Math.round(c),notes,R}});
+ const V=Object.values(mem),a=k=>V.length?Math.round(avg(V.map(v=>v[k]))):0,Stage=a('st'),MC=a('mc'),Ready=a('rd');return{Stage,MC,Ready,Overall:Math.round(RS_PE.mix*(wS*Stage+wM*MC)+(1-RS_PE.mix)*Ready),wS:+wS.toFixed(2),wM:+wM.toFixed(2),mem}}
+const rsPEword=v=>v>=80?'Electric — a strong impression':v>=65?'Warm reception':v>=50?'Mixed reaction':'Flat — the audience stayed reserved';
+// called by rsRun (game-systems.js) after the per-member rows are built, before the day's quality is averaged
+function rsPEApply(ev,part,ids,rows,sl){try{const P=rsPEcalc(ids,sl,false);rows.forEach(r=>{const z=P.mem[r.mid];if(z)r.q=Math.round((1-RS_PE.blend)*r.q+RS_PE.blend*z.c)});ev['pe'+part]=P}catch(e){console.error(e)}}
+function rsPEHtml(P,title){if(!P)return'';const K=(a,b,c)=>`<div class="c rspek"><small>${a}</small><b>${b}<i>/100</i></b>${c?`<span class="st">${c}</span>`:''}</div>`,M=Object.entries(P.mem||{}).sort((a,b)=>b[1].c-a[1].c);
+ return`<div class="c rspe"><h3>ROADSHOW PERFORMANCE${title?` <small class="st">${esc(title)}</small>`:''}</h3><div class="rspeg">${K('Overall Performance Efficiency',P.Overall,rsPEword(P.Overall))}${K('Stage Performance',P.Stage,'Vocal · Dance · Passion')}${K('MC Performance',P.MC,'Variety · Passion')}${K('Member Readiness',P.Ready,'Energy · Physical · Mental Health')}</div>
+ <details><summary class="st">Member contributions (${M.length})</summary><div class="rspem">${M.map(([id,z])=>{const m=get(+id);return`<div class="rspemr">${m?ptc(m,28):''}<span><b>${esc(m?m.name:'#'+id)}</b><small>Stage ${z.st} · MC ${z.mc} · Ready ${z.rd}${z.notes&&z.notes.length?` · <span class="thwarn">${esc(z.notes.join(', '))}</span>`:''}</small></span><em>${z.c}</em></div>`}).join('')}</div></details>
+ <p class="st">Popularity does not change this score; it still brings the audience. The efficiency feeds each member's performance quality, which drives the existing fan and attendance results.</p></div>`}
+{const f=rsResHtml;rsResHtml=function(id,tab){let h=f.apply(this,arguments);try{const e=rsGet(id);if(!e)return h;const T=tab||(e.done?'region':'d1');let P=null,t='';if(T=='d1'||T=='d2'){P=e['pe'+(T=='d1'?1:2)];t=T=='d1'?'Day 1':'Day 2'}else if(e.pe1){const B=[e.pe1,e.pe2].filter(Boolean),a=k=>Math.round(avg(B.map(b=>b[k])));P={Stage:a('Stage'),MC:a('MC'),Ready:a('Ready'),Overall:a('Overall'),mem:Object.fromEntries(Object.keys(e.pe1.mem).map(k=>{const L=B.map(b=>b.mem[k]).filter(Boolean),q=kk=>Math.round(avg(L.map(z=>z[kk])));return[k,{st:q('st'),mc:q('mc'),rd:q('rd'),c:q('c'),notes:[...new Set(L.flatMap(z=>z.notes||[]))]}]}))};t='both days'}
+ if(!P)return h;const pe=rsPEHtml(P,`${RSL[e.loc]?RSL[e.loc].n:''} · ${t}`),i=h.indexOf('</div>',h.indexOf('>Members</button>'));return i>=0?h.slice(0,i+6)+pe+h.slice(i+6):h+pe}catch(x){console.error(x);return h}}}
+// ---- planner UI --------------------------------------------------------------------------------------------------------
+function rtpCardHtml(id,L,x,big){const m=get(id);if(!m)return'';const w=typeof wlOf=='function'?wlOf(m):{ph:100,mh:100},b=L&&L.day!=null?rtpBusy(id,L.day):[],ov=L&&L.day!=null&&ui.rtp.locs.find(o=>o!==L&&o.day!=null&&o.ids.includes(id)&&rtpOverlap(o.day,L.day)),tt=x&&rtpTT(x).has(id),n=rtpCnt(id),pr=x&&rsParted(x.rid).has(id);
+ return`${ptc(m,big?56:40)}<div class="st"><b>${esc(m.name)}</b><br><span class="tag ${tt?'thluon':'thluoff'}">${tt?'Senbatsu':'Under'}</span>${n?` <span class="tag">×${n}</span>`:''}${pr?' <span class="tag">done before</span>':''}<br>Pop ${m.pop} · Ability ${Math.round(rtpAb(m))}<br><span class="${m.en<60?'thwarn':''}">E ${m.en}</span> · <span class="${w.ph<60?'thwarn':''}">PH ${w.ph}</span> · <span class="${w.mh<60?'thwarn':''}">MH ${w.mh}</span>${big?`<br>Vocal ${m.sing} · Dance ${m.dance} · Variety ${m.variety} · Passion ${m.pas}`:''}${b.length?`<br><span class="thwarn">Plan: ${esc(b[0].title)}</span>`:''}${ov?`<br><span class="thwarn">Also at ${esc(RSL[ov.loc].n)}</span>`:''}</div>`}
+V.rstour=function(){const P=ui.rtp,x=rtpX();if(!P||!x)return`<h2 class="ht">Roadshow Tour Planner</h2><p class="st">Release a single first.</p><button class="b" onclick="view='roadshow';render()">◀ Back</button>`;const C=rtpCheck(),E=rsElig(x),tot=P.locs.reduce((a,L)=>a+L.n,0),btn=(k,v,n)=>`<button class="b s ${P[k]==v?'on':''}" onclick="ui.rtp.${k}='${v}';render()">${n}</button>`,used=new Set(P.locs.map(L=>L.loc));
+ const opts=L=>Object.values(RSL).filter(l=>l.id==L.loc||(!used.has(l.id)&&!rsUsed(x.rid,l.id))).sort((a,b)=>(a.kind=='jp'?0:1)-(b.kind=='jp'?0:1)).map(l=>`<option value="${l.id}" ${l.id==L.loc?'selected':''}>${esc(l.n)}${l.kind=='as'?' (Asia)':''}</option>`).join('');
+ const locRows=P.locs.map((L,i)=>{const R=C.loc[L.uid]||{err:[],warn:[]},est=L.ids.length?rsPEcalc(L.ids,null,true):null,av=k=>L.ids.length?Math.round(avg(L.ids.map(get).filter(Boolean).map(m=>k=='ph'||k=='mh'?wlOf(m)[k]:m[k]))):0;
+  return`<div class="c rtpl"><div class="row rtplh"><b class="rtpn">${i+1}</b><select onchange="rtpSet('${L.uid}','loc',this.value)" aria-label="Location">${opts(L)}</select><input type="date" value="${L.day!=null?thDateStr(L.day):''}" min="${thDateStr(rtpD0())}" onchange="rtpSet('${L.uid}','day',this.value)" aria-label="Date"><label class="st">Members <input type="number" min="1" max="16" value="${L.n}" style="width:56px" onchange="rtpSet('${L.uid}','n',this.value)"></label><span class="st">${L.day!=null?`${wd(L.day)} – ${wd(L.day+1)}`:''}</span><span style="flex:1"></span><button class="b s" onclick="rtpRandomOne('${L.uid}')">🎲 This location</button><button class="b s" onclick="rtpMv('${L.uid}',-1)">▲</button><button class="b s" onclick="rtpMv('${L.uid}',1)">▼</button><button class="b s" onclick="rtpRmLoc('${L.uid}')">✕</button></div>
+  <div class="rtpm">${L.ids.map(id=>{const m=get(id);return m?`<button class="rtpchip ${rtpCnt(id)>1?'rep':''} ${R.err.some(e=>e.startsWith(m.name))?'bad':''}" onclick="rtpMem('${L.uid}',${id})">${ptc(m,30)}<span>${esc(m.name.split(' ')[0])}</span>${rtpCnt(id)>1?`<i>×${rtpCnt(id)}</i>`:''}</button>`:''}).join('')}${Array.from({length:Math.max(0,L.n-L.ids.length)},()=>`<button class="rtpchip empty" onclick="rtpPickOpen('${L.uid}')">＋</button>`).join('')}<button class="b s" onclick="rtpPickOpen('${L.uid}')">+ Add member</button></div>
+  <div class="st rtps">${L.ids.length}/${L.n} assigned${L.ids.length?` · Vocal ${av('sing')} · Dance ${av('dance')} · Variety ${av('variety')} · Passion ${av('pas')} · Energy ${av('en')} · Physical ${av('ph')} · Mental ${av('mh')}`:''}</div>
+  ${est?`<div class="st rtpest">Estimate (preview only, decided on the day): Stage ${est.Stage} · MC ${est.MC} · Readiness ${est.Ready} · <b>Efficiency ≈ ${est.Overall}</b></div>`:''}${R.err.map(e=>`<div class="st thwarn">✗ ${esc(e)}</div>`).join('')}${R.warn.map(e=>`<div class="st">⚠ ${esc(e)}</div>`).join('')}</div>`}).join('');
+ const reqRows=P.req.map((r,i)=>`<div class="row rtpr"><select onchange="rtpReqSet(${i},'mid',this.value)">${E.map(id=>`<option value="${id}" ${id==r.mid?'selected':''}>${esc(get(id).name)}</option>`).join('')}</select><select onchange="rtpReqSet(${i},'mode',this.value)"><option value="exact" ${r.mode=='exact'?'selected':''}>Exactly</option><option value="least" ${r.mode=='least'?'selected':''}>At least</option></select><input type="number" min="1" max="20" value="${r.n}" style="width:56px" onchange="rtpReqSet(${i},'n',this.value)"><span class="st">time(s) · assigned ${rtpCnt(r.mid)}</span><button class="b s" onclick="rtpReqRm(${i})">✕</button></div>`).join('');
+ const stats=[['pop','Popularity'],['fans','Fans'],['sing','Vocal'],['dance','Dance'],['variety','Variety'],['pas','Passion'],['cha','Performance'],['pot','Potential']];
+ return`<h2 class="ht">🗺 Roadshow Tour Planner</h2><div class="c"><div class="row"><span class="pill">Promoting: <b>#${x.num||''} ${esc(x.title)}</b></span><span style="flex:1"></span><button class="b" onclick="view='roadshow';render()">◀ Back to Roadshows</button></div><p class="st">Plan several locations at once. Every location is a normal 2-day Roadshow (costs, random setlists, 7 days' notice, one Roadshow per location per single). Randomisation only fills the plan; you can change everything by hand until you confirm.</p></div>
+ <div class="c"><h3>1 · Locations <small class="st">${P.locs.length} location(s) · ${tot} assignment(s)</small></h3>${locRows||'<p class="st">No locations yet.</p>'}<div class="row"><button class="b p" onclick="rtpAddLoc()">+ Add location</button></div></div>
+ <div class="c"><h3>2 · Members</h3><div class="row rtpo"><span class="st">Source</span>${btn('src','sel','Selected pool')}${btn('src','sen','Senbatsu')}${btn('src','senu','Senbatsu → Under Girls')}${btn('src','all','All members')}${P.src=='sel'?`<button class="b s" onclick="rtpPoolOpen()">Choose pool (${P.pool.length})</button>`:''}</div>
+ <div class="row rtpo"><span class="st">Eligibility</span>${btn('avail','avail','Available members only')}${btn('avail','plans','Include members with plans')}<label class="st"><input type="checkbox" ${P.prev?'checked':''} onchange="ui.rtp.prev=this.checked?1:0;render()"> Include members who already did a Roadshow for this single</label></div>
+ <div class="row rtpo"><span class="st">Ranking</span>${btn('meth','rand','Fully random')}${btn('meth','pop','Popularity')}${btn('meth','abil','Ability')}${btn('meth','stat','By stat')}${P.meth=='stat'?`<select onchange="ui.rtp.stat=this.value;render()">${stats.map(([k,n])=>`<option value="${k}" ${P.stat==k?'selected':''}>${n}</option>`).join('')}</select>`:''}</div>
+ <div class="row rtpo"><span class="st">Distribution</span>${btn('dist','bal','Balanced')}${btn('dist','grp','Grouped')}${btn('dist','rand','Fully random')}<span class="st">Location order</span>${btn('ord','set','As listed')}${btn('ord','rand','Random')}</div>
+ <h3>Required assignments <small class="st">placed before everyone else</small></h3>${reqRows||'<p class="st">None — everyone is assigned by the randomiser.</p>'}<div class="row"><button class="b s" onclick="rtpReqAdd()">+ Required member</button></div>
+ <div class="row"><button class="b p" onclick="rtpRandom()">🎲 ${P.asg?'Random Again':'Randomize'}</button><span class="st">Random Again keeps your locations, dates, counts and settings and replaces all assignments.</span></div></div>
+ ${P.req.length?`<div class="c"><h3>Requirements</h3>${C.req.map(z=>`<div class="st">${z.ok?'✔':'✗'} ${esc(z.m?z.m.name:'')} — ${z.r.mode=='exact'?'exactly':'at least'} ${z.r.n}, assigned ${z.c}${z.ok?'':' · '+esc(z.why)}</div>`).join('')}</div>`:''}
+ <div class="c"><h3>3 · Confirm</h3><div class="st">Total expenses ${yen(C.cost)} (paid at booking) · funds ${yen(S.money)}</div>${C.err.length?`<ul class="ms">${C.err.map(e=>`<li class="thwarn">✗ ${esc(e)}</li>`).join('')}</ul>`:''}${C.warn.length?`<ul class="ms">${C.warn.map(e=>`<li>⚠ ${esc(e)}</li>`).join('')}</ul>`:''}${!C.err.length&&!C.warn.length?'<p class="ok">✔ Ready to book</p>':''}<div class="row"><button class="b p" ${C.err.length?'disabled':''} onclick="rtpConfirm()">Confirm ${P.locs.length} Roadshow(s)</button></div></div>`};
+// entry point on the Roadshow screen
+{const f=V.roadshow;V.roadshow=function(){const h=f.apply(this,arguments);try{if(!S.singles.length)return h;const card=`<div class="c rtpentry"><div class="row"><b>🗺 Roadshow Tour Planner</b><span class="st">Plan several locations at once with automatic member assignment.</span><span style="flex:1"></span><button class="b p" onclick="rtpOpen()">Open planner</button></div></div>`;const i=h.indexOf('</h2>');return i>=0?h.slice(0,i+5)+card+h.slice(i+5):card+h}catch(e){return h}}}
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom! — stability & data-safety layer
 // -------------------------------------------------------------------------------------
 //  SAVE SAFETY
@@ -6339,7 +6484,7 @@ const ML_RAR={UR:4,SR:3,R:2,N:1};
 const ML_KEYS=()=>[['','Default order'],['name','Name'],...STATS.map(x=>[x[0],x[1]]),...(S&&S.groups&&S.groups.length>1?[['grp','Group']]:[]),['gen','Generation'],['team','Team'],['trend','Trend (Buzz)']];
 function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='rar')return ML_RAR[rar(m)]||0;if(k=='grp'){const g=S.groups.find(x=>x.id==m.group);return g?g.name:'~'}if(k=='gen')return m.gen||1;if(k=='team'){const t=teamOf(m);return m.status=='trainee'?'~':t?t.name:'~~'}if(k=='trend')return m.buzz||0;const v=sv(m,k);return typeof v=='number'?v:+v||0}
 function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d',team:'all',gen:'all',rar:'all',grp:'all'};if(f=='d')c.d=c.d=='a'?'d':'a';else c[f]=v;render()}
-const ML_SKIP='.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.czlineup';
+const ML_SKIP='.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.czlineup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
  // member faces open the profile
  const HS=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||HS.some(x=>x[0]===host))return;HS.push([host,sv0])});
@@ -7172,6 +7317,19 @@ Object.assign(I18N_TH,{"Lyrics theme":"ธีมเนื้อเพลง","Ly
 "🇯🇵 Japan market · Global market coming later":"🇯🇵 ตลาดญี่ปุ่น · ตลาดโลกจะมาในอนาคต","Current rank":"อันดับปัจจุบัน","Peak position":"อันดับสูงสุด","First Day Sales":"ยอดขายวันแรก","Week 1 Sales":"ยอดขายสัปดาห์แรก","Total Sales":"ยอดขายรวม","Streams":"สตรีม","Chart history":"ประวัติชาร์ต","Weekly history":"ประวัติรายสัปดาห์","Artist":"ศิลปิน","Peak":"สูงสุด","Latest":"ล่าสุด","Reserved for Story Mode":"สงวนไว้สำหรับโหมดเนื้อเรื่อง","Your chart history":"ประวัติชาร์ตของเรา","Best Single":"ซิงเกิลที่ดีที่สุด","Best Album":"อัลบั้มที่ดีที่สุด","Weeks in the Top 20":"สัปดาห์ใน Top 20","Weeks at No.1":"สัปดาห์ที่อันดับ 1",
 "Female Idol Group":"วงไอดอลหญิง","Male Idol Group":"วงไอดอลชาย","Female Solo Artist":"ศิลปินเดี่ยวหญิง","Male Solo Artist":"ศิลปินเดี่ยวชาย","Band":"วงดนตรี","K-pop Group (Japan)":"วงเคป็อป (ญี่ปุ่น)","Your group":"วงของเรา","Debut":"เดบิวต์","Rising":"กำลังมาแรง","Established":"มั่นคง","Declining":"ขาลง","Hiatus":"พักกิจกรรม","Disbanded":"ยุบวง","Active":"ยังทำกิจกรรม","All categories":"ทุกประเภท","All statuses":"ทุกสถานะ","out of Top 20":"นอก Top 20","The first chart closes on Sunday.":"ชาร์ตแรกจะปิดวันอาทิตย์","No chart data for this year yet.":"ยังไม่มีข้อมูลชาร์ตปีนี้"});
 I18N_TH_TPL.unshift(["Week of {0}","สัปดาห์ {0}"],["{0} week(s) on chart · {1} week(s) at No.1","อยู่ในชาร์ต {0} สัปดาห์ · อันดับ 1 {1} สัปดาห์"],["{0} artist(s) · {1} in the industry","{0} ศิลปิน · ในวงการทั้งหมด {1}"],["Live evaluation · {0}","ผลประเมินสด · {0}"],["Senbatsu results · {0}","ผลเซ็มบัตสึ · {0}"],["{0} member(s) · {1} Center(s)","{0} คน · เซ็นเตอร์ {1} คน"],["{0} high","สูง {0}"],["{0} moderate","ปานกลาง {0}"],["{0} low","ต่ำ {0}"]);
+
+</script>
+<script>
+// Thai text: Roadshow Tour Planner & Roadshow Performance Efficiency
+Object.assign(I18N_TH,{"🗺 Roadshow Tour Planner":"🗺 วางแผนทัวร์โร้ดโชว์","Roadshow Tour Planner":"วางแผนทัวร์โร้ดโชว์","Open planner":"เปิดตัววางแผน","Plan several locations at once with automatic member assignment.":"วางแผนหลายสถานที่พร้อมกัน พร้อมจัดเมมเบอร์อัตโนมัติ","◀ Back to Roadshows":"◀ กลับไปโร้ดโชว์",
+"+ Add location":"+ เพิ่มสถานที่","🎲 This location":"🎲 สุ่มเฉพาะที่นี่","+ Add member":"+ เพิ่มเมมเบอร์","Members":"เมมเบอร์","Source":"แหล่งเมมเบอร์","Selected pool":"เมมเบอร์ที่เลือก","Senbatsu":"เซ็มบัตสึ","Senbatsu → Under Girls":"เซ็มบัตสึ → อันเดอร์","All members":"ทุกคน","Eligibility":"สิทธิ์","Available members only":"เฉพาะคนที่ว่าง","Include members with plans":"รวมคนที่มีแผนแล้ว",
+"Include members who already did a Roadshow for this single":"รวมคนที่เคยไปโร้ดโชว์ของซิงเกิลนี้แล้ว","Ranking":"การจัดอันดับ","Fully random":"สุ่มทั้งหมด","Popularity":"ความนิยม","Ability":"ความสามารถ","By stat":"ตามค่าสถานะ","Distribution":"การกระจาย","Balanced":"กระจายสมดุล","Grouped":"เรียงเป็นกลุ่ม","Location order":"ลำดับสถานที่","As listed":"ตามรายการ","Random":"สุ่ม",
+"Required assignments":"กำหนดจำนวนครั้งเอง","placed before everyone else":"จัดก่อนคนอื่น","+ Required member":"+ เมมเบอร์ที่กำหนด","Exactly":"พอดี","At least":"อย่างน้อย","Requirements":"เงื่อนไขที่กำหนด","✔ Ready to book":"✔ พร้อมจอง","Member pool":"กลุ่มเมมเบอร์","Add a member":"เพิ่มเมมเบอร์","⇄ Replace":"⇄ เปลี่ยนตัว","✕ Remove":"✕ เอาออก","Profile":"โปรไฟล์",
+"Random Again keeps your locations, dates, counts and settings and replaces all assignments.":"สุ่มใหม่จะคงสถานที่ วันที่ จำนวนคน และการตั้งค่าไว้ แล้วแทนที่การจัดเมมเบอร์ทั้งหมด","Random assignment ready. Review and edit it before confirming.":"สุ่มเสร็จแล้ว ตรวจสอบและแก้ไขได้ก่อนยืนยัน",
+"ROADSHOW PERFORMANCE":"ผลการแสดงโร้ดโชว์","Overall Performance Efficiency":"ประสิทธิภาพการแสดงรวม","Stage Performance":"การแสดงบนเวที","MC Performance":"การพูด MC","Member Readiness":"ความพร้อมของเมมเบอร์","Vocal · Dance · Passion":"ร้อง · เต้น · ความตั้งใจ","Variety · Passion":"วาไรตี้ · ความตั้งใจ","Energy · Physical · Mental Health":"พลังงาน · สุขภาพกาย · สุขภาพใจ",
+"Low Energy":"พลังงานต่ำ","Physical fatigue":"ร่างกายล้า","Low focus (Mental Health)":"ขาดสมาธิ (สุขภาพใจ)","Electric — a strong impression":"ยอดเยี่ยม — ผู้ชมประทับใจมาก","Warm reception":"ผู้ชมตอบรับดี","Mixed reaction":"ผู้ชมตอบรับปานกลาง","Flat — the audience stayed reserved":"เงียบ — ผู้ชมยังไม่อิน","Under":"อันเดอร์","done before":"เคยไปแล้ว",
+"Popularity does not change this score; it still brings the audience. The efficiency feeds each member's performance quality, which drives the existing fan and attendance results.":"ความนิยมไม่มีผลกับคะแนนนี้ แต่ยังช่วยดึงผู้ชม ประสิทธิภาพนี้รวมเข้ากับคุณภาพการแสดงของแต่ละคน ซึ่งใช้คำนวณแฟนและผู้ชมตามระบบเดิม"});
+I18N_TH_TPL.unshift(["{0} of {1} slot(s) unfilled.","ยังว่าง {0} จาก {1} ที่"],["Confirm {0} Roadshow(s)","ยืนยัน {0} โร้ดโชว์"],["{0} Roadshow(s) booked.","จองโร้ดโชว์แล้ว {0} แห่ง"],["Member contributions ({0})","ผลงานของแต่ละคน ({0})"],["{0} location(s) · {1} assignment(s)","{0} สถานที่ · {1} ตำแหน่ง"]);
 
 </script>
 <script>

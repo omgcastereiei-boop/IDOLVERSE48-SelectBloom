@@ -875,3 +875,13 @@ select:not([multiple]):not([size]){cursor:pointer}
 /* member profile: Stage statistics as a wrapping list (no sideways scroll on phones) */
 .thmpl{display:grid;gap:6px;margin-top:6px}.thmpr{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #efe6f7;border-radius:12px;padding:6px 10px;min-width:0}.thmpr span{flex:1;min-width:0;display:flex;flex-direction:column}.thmpr span small{color:#8f80a6;font-size:11px}.thmpr span b{overflow-wrap:anywhere;font-size:13px}.thmpr em{font-style:normal;font:900 18px Quicksand;color:#5a2a6e}
 .thmps .gekg{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.pov .c{max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+/* Roadshow Tour Planner & Performance Efficiency */
+.rtpentry{background:linear-gradient(135deg,#fff3fa,#f3eeff)}
+.rtpl{margin:8px 0}.rtplh{gap:6px;flex-wrap:wrap}.rtpn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#fff;font:800 13px Quicksand}
+.rtpm{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.rtpchip{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;width:64px;padding:4px;border-radius:12px;border:2px solid #efe6f7;background:#fff;cursor:pointer;font:600 11px Quicksand;color:#4a3560}
+.rtpchip span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rtpchip i{position:absolute;top:-6px;right:-4px;font-style:normal;background:#f3c35c;color:#5a3d00;border-radius:8px;padding:0 4px;font-size:10px}
+.rtpchip.rep{border-color:#f3c35c}.rtpchip.bad{border-color:#e46a7a;background:#fff2f4}.rtpchip.empty{border-style:dashed;color:#b8a7cf;font-size:20px;justify-content:center;min-height:56px}
+.rtpo{gap:6px;flex-wrap:wrap;margin:6px 0}.rtpo .b.on{background:var(--grad);color:#fff;border:0}.rtpr{gap:6px;flex-wrap:wrap}.rtpest{margin-top:4px}
+.rtpg .rtpc{cursor:pointer;padding:4px}.rtpg .rtpc.on{outline:3px solid var(--pk);outline-offset:1px}
+.rspe h3{margin:0 0 6px}.rspeg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}.rspek{margin:0;display:flex;flex-direction:column;gap:2px}.rspek small{font:800 11px Quicksand;color:#8f80a6}.rspek b{font:900 26px Quicksand;color:#3c2d55}.rspek b i{font-style:normal;font-size:13px;color:#a99bbd}
+.rspem{display:grid;gap:4px;margin-top:6px}.rspemr{display:grid;grid-template-columns:30px 1fr auto;gap:6px;align-items:center;background:#fff;border:1px solid #f1eaf8;border-radius:10px;padding:3px 6px}.rspemr span{display:flex;flex-direction:column;min-width:0}.rspemr small{font-size:11px;color:#8f80a6}.rspemr em{font-style:normal;font:900 16px Quicksand;color:#5a2a6e}

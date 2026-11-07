@@ -587,6 +587,7 @@ function rsCostL(l,ids,day,x){const n=ids.length,intl=l.kind=='as',d=rsDist(l),e
 function rsRun(ev,part){const k='d'+part;if(ev[k])return;if(part==2&&!ev.d1)rsRun(ev,1);const l=RSL[ev.loc],x=S.singles.find(s=>s.rid==ev.rid),ids=ev.members.filter(id=>get(id)),sl=part==1?ev.sl1:(ev.sl2||ev.sl1);if(!x||!l)return;
  const fb=S.fans,gb0=rsGBuzz(ids),songs=sl.filter(z=>z.k=='s').map(z=>S.songs[z.id]).filter(Boolean),rows=[];
  ids.forEach(id=>{const m=get(id);let en=m.en,used=0,rec=0,qs=[],low=en;sl.forEach(z=>{if(z.k=='mc'){const r=Math.min(CFG.rs.mc,100-en);en+=r;rec+=r;return}const o=S.songs[z.id];if(!o)return;const sk=avg(GEN[o.genre].map(k=>m[k])),f=en>=40?1:.55+.45*en/40;qs.push(sk*f);const c=Math.round((CFG.rs.INT[o.genre]||6)*(1.25-m.dance/200));const u=Math.min(c,en);en-=u;used+=u;low=Math.min(low,en)});rows.push({mid:id,name:m.name,en0:m.en,used,rec,en,q:Math.round(avg(qs)),low,f0:m.fans,b0:m.buzz})});
+ if(typeof rsPEApply=='function')rsPEApply(ev,part,ids,rows,sl); // Performance Efficiency (rs-planner.js): skills + readiness at event time
  const Q=Math.round(avg(rows.map(r=>r.q))),A=rsDay(l,ev.day+part-1,ids,x,part==2&&ev.d1?ev.d1.Q:null),pop=avg(ids.map(id=>get(id).pop)),g=rsG(l.id),gb=gb0;
  const buyers=Math.round(A.att*(.12+.1*pop/100+.05*Math.min(g/100,2)+.05*gb/100)),merch=Math.round(buyers*CFG.rs.merch*rnd(85,115)/100),ht=Math.round(A.att*(.03+.06*pop/100+.01*Math.min(g/100,3))),htRev=ht*CFG.rs.ht,htc=Math.min(25,4+Math.ceil(ht/150));
  const newG=Math.round(A.local*(.03+.04*Q/100)+A.trav*.01);
