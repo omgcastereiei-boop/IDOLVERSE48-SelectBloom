@@ -6762,13 +6762,18 @@ const gsRidGid=rid=>{for(const g of S.groups){if((gsCtx(g.id,'singles')||[]).som
   all.forEach(m=>{if(gsGid(m)==gid||!(tt.has(m.id)||(m.kn&&m.kn.gid==gid)))return;m.czHist=m.czHist||[];if(m.czHist.some(h=>h.rid==x.rid))return;let p,kind;
    if(tt.has(m.id)){p=czFor(mn,m.id);kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
    m.czHist.push({p:czClone(p),title:x.title,rid:x.rid,pk:x.pkey||null,day:x.relDay??x.day??S.day,kind,gid,gname:gn});if(m.czHist.length>30)m.czHist.shift()})}catch(e){console.error(e)}return n}}
+const gsPkGid=pk=>{if(!pk)return null;for(const g of S.groups){const pj=gsCtx(g.id,'pj');if((pj&&pj.key==pk)||(gsCtx(g.id,'singles')||[]).some(x=>x.pkey==pk))return g.id}return null};
 // repair saves: a profile outfit from another group's single goes back to the costume history
 // (not for a member who transferred after that single: she keeps it until her new group releases one)
-function gsProfFix(){if(!S||S.groups.length<2)return;let bad=0;S.members.forEach(m=>{const pc=m.profCz;if(!pc||!pc.rid)return;const g=pc.gid??gsRidGid(pc.rid);if(g==null||g==gsGid(m))return;if((m.mh||[]).some(e=>e&&e.t=='transfer'&&e.day>=(pc.day||0)))return;bad++;pc.gid=g;pc.gname=(grp(g)||{}).name||'';
+function gsProfFix(){if(!S||S.groups.length<2)return;let bad=0;S.members.forEach(m=>{const pc=m.profCz;if(!pc||!(pc.rid||pc.pk))return;const g=pc.gid??(pc.rid?gsRidGid(pc.rid):gsPkGid(pc.pk));if(g==null||g==gsGid(m))return;if((m.mh||[]).some(e=>e&&e.t=='transfer'&&e.day>=(pc.day||0)))return;bad++;pc.gid=g;pc.gname=(grp(g)||{}).name||'';
   m.czHist=m.czHist||[];const i=m.czHist.map(h=>h.rid&&(h.gid??gsRidGid(h.rid))==gsGid(m)).lastIndexOf(true);m.profCz=i<0?null:m.czHist.splice(i,1)[0];m.czHist.push(pc)});
  S.members.forEach(m=>{if(!Array.isArray(m.czHist))return;const seen=new Set(m.profCz&&m.profCz.rid?[m.profCz.rid]:[]);m.czHist=m.czHist.slice().reverse().filter(h=>!h||!h.rid?!!h:!seen.has(h.rid)&&seen.add(h.rid)).reverse()});
  if(bad)S.groups.forEach(g=>gsWith(g.id,()=>{const x=latestSingle();if(x)profSync(x)}))}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{gsProfFix()}catch(e){console.error(e)}return r}}
+// the Single Costume (Under Girls) is designed only for the releasing group's own members
+// (and its Concurrent Position members); sister members can join the Title Track Senbatsu but are not Under Girls here
+{const f=plSczMembers;plSczMembers=function(){const r=f.apply(this,arguments);try{if(S.groups.length<2)return r;const gid=gsAg();return r.filter(m=>gsIn(m,gid))}catch(e){console.error(e);return r}}}
+{const f=plProfSave;plProfSave=function(mid){const m=get(mid);if(m&&S.groups.length>1&&!gsIn(m,gsAg()))return false;return f.apply(this,arguments)}}
 
 </script>
 <script>
