@@ -68,7 +68,7 @@ function thMfCalc(x,s,L,res,A,sat,opt){opt=opt||{};const pf=new Set(L.map(m=>m.i
   items.push({id:it.id,kind:'song',enc:enc?1:0,lbl:thLbl(s,it),title:(S.songs[it.song]||{}).title||'',n:ids.length});
   ids.forEach(id=>{const m=get(id),z=pool(m),ps=P[id]||'middle',mul=Math.min(TH_MF.stack,TH_MF.pos[ps]*ex),u=z.elig*TH_MF.base*mul*z.ab*z.pop*z.big*satF*Q.f;(U[id]=U[id]||{})[it.id]={u,pos:ps,n:ids.length,kind:'song'};z.lam[it.id]=u/(1+TH_MF.fatigue*z.k);z.k++;z.pos[it.id]=ps})});
  // MC segments (Setlist and Encore): only the actual participants
- const X=opt.x||(typeof TH5_X!='undefined'&&TH5_X)||x,MCs=[...s.items.filter(i=>i.k=='mc').map(i=>[i,0]),...thEncSeq(s).filter(i=>i.k=='mc').map(i=>[i,1])];const mcq={};
+ if(typeof thMcAll=='function')thMcAll(s);const X=opt.x||(typeof TH5_X!='undefined'&&TH5_X)||x,MCs=[...s.items.filter(i=>i.k=='mc').map(i=>[i,0]),...thEncSeq(s).filter(i=>i.k=='mc').map(i=>[i,1])];const mcq={};
  MCs.forEach(([it,enc])=>{let ids=opt.mc&&opt.mc[it.id]?opt.mc[it.id]:typeof thMcIds=='function'?thMcIds(s,it,X,res):(it.mem||[]);ids=ids.filter(id=>get(id));if(!ids.length)return;const talk=Math.min(1.3,Math.sqrt(4/ids.length));
   items.push({id:it.id,kind:'mc',enc,lbl:enc?'Encore MC':'MC',title:it.name||'MC',n:ids.length,mm:it.mm||null});
   ids.forEach(id=>{const m=get(id),z=pool(m),q=thMfMcQ(m),u=z.elig*TH_MF.mcBase*z.mc*z.pop*z.big*satF*talk*q[1];(mcq[id]=mcq[id]||{})[it.id]=q[0];(U[id]=U[id]||{})[it.id]={u,n:ids.length,kind:'mc',q:q[0]};z.lam[it.id]=u/(1+TH_MF.mcFatigue*z.j);z.j++})});

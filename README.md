@@ -45,7 +45,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/debut.js` | Automatic group debut on the first single release, anniversary calendar events, debut info in Groups, trainees in Handshake Events |
 | `js/ui/wellness.js` | Member emotions & wellness: Physical/Mental Health, Mood, Senbatsu reactions and history, lesson costs, recovery activities, mandatory 3-month leave |
 | `js/ui/election.js` | General Election: configuration, election single, daily sales → voting tokens → fan votes, preliminary/final results, weekend ceremony, Top 3 capes, group photos, reactions, locked next-single lineups, archive |
-| `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, twin Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
+| `js/ui/theater2.js`, `js/ui/theater3.js` | Theater extensions: Stage lineup, per-member Stage costumes, debut photos, double Centers, costume copy & reuse, Revival Stage, audience & fan acquisition, formation tools |
 | `js/ui/groups.js` | Sister groups: company & group context, Concurrent Positions, transfers, member schedule & conflicts, company transactions, group fans, election fatigue, company screens |
 | `js/ui/theater4.js` | Theater: song add / edit / remove at any time, Center picker cards, whole-day availability with bench and Trainee replacements, performance rescheduling |
 | `js/ui/theater5.js` | Theater: Setlist Center as default Center, MC All Members / Team, Encore MC, performance count, scheduled Formation / Center changes with history |
@@ -343,7 +343,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - The Stage costume is the costumes of one song of the Stage, and the General Election ceremony can use it, with each member in her own costume.
   - Performances record every member's exact costume; a replacement wears the costume of the member she replaces.
   - The Costume library card was removed from the Stage editor.
-- **Centers.** Any song (setlist, per song or Unit) can have **twin Centers**: both are placed in the middle of an even front row. Songs performed by 1–2 members have **no Center**.
+- **Centers.** Any song (setlist, per song or Unit) can have **double Centers**: both are placed in the middle of an even front row. Songs performed by 1–2 members have **no Center**.
 - **Unit formations.** Unit songs always have their own dance formation, edited in Centers & Formation (swap positions, rows, ranking preset).
 - **Debut photos.** On a Stage's debut day, every song gets a photo of the actual performance: members hold microphones in random poses and wear their own costumes. Open the photos from the notice, the Stage details or the performance summary.
 - **Encore (optional).**
@@ -432,7 +432,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
 - **Default Center.** A song without its own Center uses the Stage Setlist Center whenever she performs that song, and the Center picker opens with her selected.
   - Choosing someone else changes only that song. The Setlist Center changes only if you tick **Also save my choice as the Stage Setlist Center**.
   - If the Setlist Center does not perform the song, or is unavailable for the next performance, the picker says so.
-- **MC participants.** Each MC break (Setlist or Encore) has three options:
+- **MC participants.** Each MC break (Setlist or Encore) has three options; new MC breaks start with **All Members**:
   - **All Members**: every full member of the Team who is available that day.
   - **Team**: everyone performing that show.
   - **Choose members**: only the members you pick.
@@ -468,7 +468,7 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
 
 ## Formations & starting a single
 
-- New and automatic formations alternate odd and even rows so the Center(s) stand exactly in the middle and each row fills the gaps of the row in front. A single Center uses odd–even–odd rows (12 → 3-4-5, 16 → 5-6-5, 20 → 7-6-7, 24 → 7-8-9). Twin Centers use even–odd–even rows (14 → 4-5-5, 16 → 4-5-7); only the last row breaks the pattern when the total makes it impossible. Theater formations and the General Election group photos (1st place in the middle) use the same rows. Saved formations are not changed.
+- New and automatic formations alternate odd and even rows so the Center(s) stand exactly in the middle and each row fills the gaps of the row in front. A single Center uses odd–even–odd rows (12 → 3-4-5, 16 → 5-6-5, 20 → 7-6-7, 24 → 7-8-9). Double Centers use even–odd–even rows (14 → 4-5-5, 16 → 4-5-7); only the last row breaks the pattern when the total makes it impossible. Theater formations and the General Election group photos (1st place in the middle) use the same rows. Saved formations are not changed.
 - New Single Production songs start with a 16-member Senbatsu (or all eligible members when fewer).
 - **Start Single** starts production right away; requirements and funds are still checked.
 - A single whose lineups come from the General Election has no second member reaction at its announcement: the members already reacted at the ceremony. Their Senbatsu record is still updated.

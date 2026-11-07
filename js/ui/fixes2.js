@@ -1,6 +1,6 @@
 // =====================================================================================
 //  IDOLVERSE48: Select Bloom! — small gameplay fixes
-//  · Default dance formation rows alternate odd / even (single Center) or even / odd (twin Centers)
+//  · Default dance formation rows alternate odd / even (single Center) or even / odd (double Centers)
 //    so the Center(s) stand exactly in the middle: 12 → 3-4-5, 16 → 5-6-5, 24 → 7-8-9.
 //    Used by every new / auto-generated formation and the Theater (saved formations unchanged).
 //  · New Single Production songs start with a 16-member Senbatsu.
@@ -8,7 +8,7 @@
 //    are still checked by startSingle).
 // =====================================================================================
 // rows alternate parity so the Center(s) are always exactly in the middle and every row stands in
-// the gaps of the row in front: single Center → odd, even, odd …; twin Centers → even, odd, even …
+// the gaps of the row in front: single Center → odd, even, odd …; double Centers → even, odd, even …
 // (only the last row may break the pattern when the total makes it impossible). Rows grow gently to the back.
 function fxRows(n,nc){n=Math.max(1,n|0);nc=Math.max(1,Math.min(nc|0||1,n));let R=n<=5?1:n<=10?2:n<=24?3:n<=34?4:5;R=Math.min(R,CFG.maxRows||5);if(R==1)return[n];
  const par=i=>((nc%2?0:1)+i)%2==0?1:0;let best=null,bs=1e9;const t=i=>n/R+(i-(R-1)/2)*.5;
