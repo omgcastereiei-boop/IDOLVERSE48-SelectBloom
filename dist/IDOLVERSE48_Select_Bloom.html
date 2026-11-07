@@ -4628,6 +4628,12 @@ function geSupHtml(e){const live=geLive(e),PS=new Set(live),T=Math.max(1,e.vEnd-
 {const f=geMeta;geMeta=function(r){const h=f.apply(this,arguments);return r&&r.fans!=null?h+` · <span class="gek2">♥ ${r.fans.toLocaleString()} supporters</span>`:h}}
 {const f=V.ge;V.ge=function(){let h=f.apply(this,arguments);const e=geCur();if(!e||e.st=='done'){const c=geCool(),L=geCoolLeft();if(c){const card=`<div class="c gecool ${L?'':'ok'}"><span class="geprb">${L?'COOLDOWN':'READY'}</span><div><b>${L?`Next General Election possible on ${longDate(c.until)}`:'A new General Election can be organized'}</b><span class="st">${L?`${geSpanTxt(S.day,c.until)} left · `:''}Elections are held at least ${GE2.COOL} months apart, counted from the end of the last ceremony (${longDate(c.from)}).</span></div></div>`;
   h=h.replace('<div class="c gestart">',card+'<div class="c gestart">');if(L)h=h.replace(/<button class="b p" onclick="geNew\(\)">/,'<button class="b p" disabled onclick="geNew()">')}}return h}}
+// ---- Preliminary Result pop-up: the results page opens by itself on the day it is announced --------------------------
+// If another results window opens the same day, it follows when the pop-up is closed.
+{const f=gePrelimN;gePrelimN=function(e,n){const p=f.apply(this,arguments);try{if(p&&e&&!ui.t){const g0=ui.gep;ui.gep=null;let h;try{h=gePrelimHtml(e)}finally{ui.gep=g0}
+  const gn=S.groups.length>1?((grp(gsAg())||{}).name||''):'';ui.gePopQ=ui.gePopQ||[];ui.gePopQ.push(`<h2 class="ht">${esc(e.name)}${gn?` · ${esc(gn)}`:''}</h2>${h}<div class="row"><button class="b p" onclick="ui.mod=null;ui.modNext=null;${S.groups.length>1?`gsSelect(${gsAg()});`:''}goView('ge')">Open General Election</button></div>`)}}catch(err){console.error(err)}return p}}
+{const f=adv;adv=function(){const r=f.apply(this,arguments);try{const Q=ui.gePopQ;if(Q&&Q.length){ui.gePopQ=[];if(ui.mod&&!ui.mod.gePop)ui.modNext=ui.mod;ui.mod={t:'html',gePop:1,h:Q.join('<hr>')};render()}}catch(e){console.error(e)}return r}}
+{const f=render;render=function(){try{if(S&&!ui.t&&!ui.mod&&ui.modNext){ui.mod=ui.modNext;ui.modNext=null}}catch(e){}return f.apply(this,arguments)}}
 
 </script>
 <script>
@@ -7454,6 +7460,7 @@ I18N_TH_TPL.push(["Costume by team ({0} costumes)","ชุดแยกตาม�
 ["🎲 Random costume for every team","🎲 สุ่มชุดให้ทุกทีม"],["🎲 Random costume for every group","🎲 สุ่มชุดให้ทุกวง"],["Random costume “{0}” created and saved to the costume library.","สุ่มชุด “{0}” แล้ว และบันทึกไว้ในคลังชุด"],["Random costume for {0}.","สุ่มชุดให้ {0} แล้ว"]);
 Object.assign(I18N_TH,{"Choose a costume":"เลือกชุด","Single":"ซิงเกิ้ล","Stage":"สเตจ","Library":"คลังชุด","Tap to choose":"แตะเพื่อเลือก","👗 Choose costume (with preview)":"👗 เลือกชุด (ดูตัวอย่าง)","Ceremony dress":"ชุดพิธี","Song costume":"ชุดเพลง","Under Girls: Under costume":"อันเดอร์: ชุดอันเดอร์","Nothing here yet.":"ยังไม่มี","Everyone":"ทุกคน"});
 I18N_TH_TPL.push(["Single ({0})","ซิงเกิ้ล ({0})"],["Stage ({0})","สเตจ ({0})"],["Library ({0})","คลังชุด ({0})"],["Single #{0} · each member's own costume","ซิงเกิ้ล #{0} · ใส่ชุดของตัวเองในซิงเกิ้ลนั้น"],["{0} · preview on {1}","{0} · ตัวอย่างบน {1}"],["{0} · Stage costume","{0} · ชุดสเตจ"]);
+Object.assign(I18N_TH,{"Open General Election":"เปิดหน้าเลือกตั้ง"});
 
 </script>
 <script>
