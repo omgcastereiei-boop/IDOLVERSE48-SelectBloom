@@ -49,7 +49,7 @@ const thMfR={u:()=>Math.random(),gamma(k){let s=0;for(let i=0;i<k;i++)s-=Math.lo
  pois(l){if(!(l>0))return 0;if(l>30)return Math.max(0,Math.round(l+Math.sqrt(l)*(Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random()))));const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return k-1},
  draw(l){return thMfR.pois(l*thMfR.gamma(TH_MF.shape))}};
 // position of every performer in one song as performed: center / front / middle / back
-function thMfPos(s,it,R){const ids=(R&&R.ids)||thMem(s,it),F=thForm(s,it,ids),o=F.o.filter(id=>ids.includes(id)),rows=F.rows&&F.rows.reduce((a,b)=>a+b,0)==o.length?F.rows:[o.length],out={},cen=new Set([R&&R.c,F.c2].filter(x=>x!=null));
+function thMfPos(s,it,R){const ids=(R&&R.ids)||thMem(s,it),F=thForm(s,it,ids),o=(R&&R.o?R.o:F.o).filter(id=>ids.includes(id)),rows=F.rows&&F.rows.reduce((a,b)=>a+b,0)==o.length?F.rows:[o.length],out={},cen=new Set([R&&R.c,R&&R.o?R.c2:F.c2].filter(x=>x!=null));
  if(o.length==1){out[o[0]]='center';return out}let i=0;rows.forEach((n,r)=>{for(let k=0;k<n&&i<o.length;k++,i++){const id=o[i];out[id]=o.length>2&&cen.has(id)?'center':r==0?'front':r==rows.length-1?'back':'middle'}});return out}
 const thMfSkill=m=>{const W=TH_MF.skill;return(W.dance*(m.dance||0)+W.sing*(m.sing||0)+W.variety*(m.variety||0)+W.pas*(m.pas||0))/100};
 const thMfAbil=m=>TH_MF.skA+TH_MF.skB*thMfSkill(m);

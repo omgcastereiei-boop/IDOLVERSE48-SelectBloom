@@ -807,3 +807,9 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 /* Stage lineup cards: like the Single Senbatsu cards */
 .thlug .thluc{cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center}.thlug .thluc.on{outline:3px solid var(--pk);outline-offset:1px}.thlug .thluc:not(.on){opacity:.78}
 .thluon{background:#d7f2e3;color:#2f7a52}.thluoff{background:#eee9f1;color:#8f80a6}
+/* Theater: substitutes, performance photos, member statistics */
+.thsubm{gap:6px;flex-wrap:wrap;margin:6px 0}.thsubm .b.on{background:var(--grad);color:#fff;border:0}
+.thsubp .thsubs{margin:6px 0;padding:6px;border-radius:10px;background:#faf6ff}.thsubr{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;margin:2px 0}
+.thsubf{position:relative;display:inline-block;border-radius:50%}.thsubf.sub{box-shadow:0 0 0 2px #f3c35c}.thsubf i{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font:800 8px Quicksand;background:#f3c35c;color:#5a3d00;border-radius:6px;padding:0 3px;font-style:normal}.thsubf i.c{bottom:auto;top:-4px;background:var(--pk,#e58fbf);color:#fff}
+.thsubl{display:grid;gap:6px}.thsubi{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #eee3f5;border-radius:12px;padding:6px 10px}.thsubi span{display:flex;flex-direction:column;align-items:center;flex:1;text-align:center}.thsubi small{font-size:10px;color:#8f80a6}.thsubi i{font-style:normal;font-weight:800;color:#b7791f}
+.thpicm{flex-wrap:wrap;gap:4px}.thmps .gskv th{font-weight:600}

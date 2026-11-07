@@ -50,6 +50,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/theater4.js` | Theater: song add / edit / remove at any time, Center picker cards, whole-day availability with bench and Trainee replacements, performance rescheduling |
 | `js/ui/theater5.js` | Theater: Setlist Center as default Center, MC All Members / Team, Encore MC, performance count, scheduled Formation / Center changes with history |
 | `js/ui/theater-fans.js` | Theater random member fan acquisition: songs (position, song size, skills, popularity), MC (Variety), Encore, Performance Quality, Breakthroughs, saturation; Member Fan Report; never Group Fans |
+| `js/ui/theater-subs.js` | Theater: substitute formation modes (keep / shift), performance photos (Stage + every Unit song), substitution records, Stage Performance Statistics in Member Profile |
 | `js/ui/handshake-stats.js` | Handshake Events: individual member sessions and unique visitors, event attendees, results table |
 | `js/ui/members-ui.js` | Game-wide member profile overlay (tap a face) and the shared sort / filter bar for member lists |
 | `js/ui/theater.js` | Theater Management: per-team and Trainee theaters, Stages and numbering, Setlist editor, Units, Centers, formations, costumes with versions, schedules, availability and Trainee replacement, audience, online membership, transitions, reuse, adoption, archive |
@@ -445,6 +446,17 @@ Open **Theater** in the menu. Every team and the Trainees of each group run thei
   - The dialog shows the original and new date and time, how many performers are available, the replacements and every problem: a past date, a blocked day, a slot already taken, a Stage transition, or not enough members.
   - An invalid date cannot be confirmed.
   - The performance keeps its id and history; it is moved, not duplicated, and the automatic schedule does not refill the freed slot. Member schedules follow the new date.
+- **Substitutes in the formation.** When a member is replaced (bench, Trainee or a manual swap), choose how the substitute enters each song's formation. Set a Stage default in Units & Performers, and change it for one performance in Schedule or ✎ Lineup, which shows the planned formation with SUB and C marks.
+  - **📌 Keep original positions**: nobody moves; the substitute takes the absent member's exact position, her Center spot too.
+  - **⤴ Shift positions**: the remaining members move up (the next one becomes Center) and the substitutes take the last positions.
+
+  Only that performance changes; the Stage formation stays as it is. Every performer has exactly one position. The record keeps every replacement (main member → actual performer) and the report shows them under **Substitutions**.
+- **Performance photos.** Every completed performance has:
+  - one Stage photo of everyone who actually performed, in the costume of the first Team song;
+  - one photo for every Unit song, with substitutes instead of absent members.
+
+  They are drawn from the performance record, so later formation, member or costume changes never alter them. They appear in the performance report, which opens from the day's results ("📸 Photos & performance report") and from Performance History.
+- **Member Profile → Stage Performance Statistics.** This shows total completed Stage performances, the times she performed as a substitute, and a breakdown by Stage. It is counted from the performance records: once per performance (songs, Encore and MC included), substitutes count, absent members and cancelled or scheduled performances do not.
 - **History & archive.** Every performance keeps its Setlist, members, replacements, formations, costume versions, audience, money and member effects exactly as performed. The archive lists every Stage with its original Setlist and totals.
 
 ## Formations & starting a single

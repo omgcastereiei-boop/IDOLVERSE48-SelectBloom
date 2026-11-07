@@ -889,6 +889,12 @@ svg.mpf{cursor:zoom-in}svg.mpf:hover{filter:brightness(1.05) drop-shadow(0 0 3px
 /* Stage lineup cards: like the Single Senbatsu cards */
 .thlug .thluc{cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center}.thlug .thluc.on{outline:3px solid var(--pk);outline-offset:1px}.thlug .thluc:not(.on){opacity:.78}
 .thluon{background:#d7f2e3;color:#2f7a52}.thluoff{background:#eee9f1;color:#8f80a6}
+/* Theater: substitutes, performance photos, member statistics */
+.thsubm{gap:6px;flex-wrap:wrap;margin:6px 0}.thsubm .b.on{background:var(--grad);color:#fff;border:0}
+.thsubp .thsubs{margin:6px 0;padding:6px;border-radius:10px;background:#faf6ff}.thsubr{display:flex;justify-content:center;flex-wrap:wrap;gap:3px;margin:2px 0}
+.thsubf{position:relative;display:inline-block;border-radius:50%}.thsubf.sub{box-shadow:0 0 0 2px #f3c35c}.thsubf i{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font:800 8px Quicksand;background:#f3c35c;color:#5a3d00;border-radius:6px;padding:0 3px;font-style:normal}.thsubf i.c{bottom:auto;top:-4px;background:var(--pk,#e58fbf);color:#fff}
+.thsubl{display:grid;gap:6px}.thsubi{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #eee3f5;border-radius:12px;padding:6px 10px}.thsubi span{display:flex;flex-direction:column;align-items:center;flex:1;text-align:center}.thsubi small{font-size:10px;color:#8f80a6}.thsubi i{font-style:normal;font-weight:800;color:#b7791f}
+.thpicm{flex-wrap:wrap;gap:4px}.thmps .gskv th{font-weight:600}
 
 </style>
 </head><body>
@@ -4644,13 +4650,13 @@ function thDebut(T,s,x){const v=thErr(s);if(v.length){x.st='cancel';x.why='New S
  s.status='active';s.runs=s.runs||[];s.runs.push({from:x.day});T.active=s.id;const tr=T.trans;T.trans=null;(thS().sh).forEach(z=>{if(z.pin==tr.stage||z.pin==1)delete z.pin});
  thN(`<li>🎭 <b>${esc(thNoTxt(s))}: “${esc(s.name)}”</b> ${s.reuse?'returns to the stage':'officially debuts'} today (${jd(x.day)}).</li>`);return true}
 function thSnapItems(s,res){const sf=it=>{if(it.k=='ov')return{k:'ov',name:it.name||'Overture'};if(it.k=='mc')return{k:'mc',name:it.name,desc:it.desc||'',mem:(it.mem||[]).slice()};
- const R=res&&res[it.id],f=thForm(s,it,R?R.ids:null),cz=it.cz?{did:it.cz.did,ver:it.cz.ver||(thVerOf(it.cz.did)||{}).id||null}:null;const u=thPt(it)=='unit'?thUnitOf(s,it.unit):null;return{k:'song',song:it.song,title:(S.songs[it.song]||{}).title||'',pt:thPt(it),unit:u?{id:u.id,name:u.name}:null,mem:f.o.slice(),center:R?R.c:thCen(s,it),fr:f.fr,rows:f.rows.slice(),cz}};return[...s.items.map(sf),...thEncSeq(s).map(it=>({...sf(it),enc:1}))]}
+ const R=res&&res[it.id],f0=thForm(s,it,R?R.ids:null),f=R&&R.o?{...f0,o:R.o.slice()}:f0,cz=it.cz?{did:it.cz.did,ver:it.cz.ver||(thVerOf(it.cz.did)||{}).id||null}:null;const u=thPt(it)=='unit'?thUnitOf(s,it.unit):null;return{k:'song',song:it.song,title:(S.songs[it.song]||{}).title||'',pt:thPt(it),unit:u?{id:u.id,name:u.name}:null,mem:f.o.slice(),center:R?R.c:thCen(s,it),fr:f.fr,rows:f.rows.slice(),cz}};return[...s.items.map(sf),...thEncSeq(s).map(it=>({...sf(it),enc:1}))]}
 function thSnapId(items){const H=thS(),j=JSON.stringify(items),h='sn'+thHash(j);if(!H.snap[h])H.snap[h]=JSON.parse(j);return h}
 function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForbid(x.day);if(T.bill==null)thMonthly(x.k);if(f){x.st='cancel';x.why=f;thN(`<li>🎭 ${esc(thLabel(x.k))} — the ${TH_SLOT[x.sl]} performance on ${jd(x.day)} was cancelled: ${esc(f)}.</li>`);return}
  let s=thStageFor(T,x);if(s&&T.trans&&s.id==T.trans.stage&&T.active!=s.id){if(!thDebut(T,s,x))return}
  if(!s||s.status!='active'){x.st='cancel';x.why='No active Stage';if(!T._nsw||T._nsw<S.day-6){T._nsw=S.day;thN(`<li>🎭 <b>${esc(thLabel(x.k))}</b> has no active Stage, so the performance on ${jd(x.day)} was cancelled. Create a Stage and schedule its debut in Theater › Stages.</li>`)}return}
  const C=thCheck(x),out=new Set(C.miss.map(z=>z.id)),sub=C.rp,notes=[];C.miss.forEach(z=>{const m=get(z.id);if(sub[z.id])notes.push(`${get(sub[z.id]).name}${get(sub[z.id]).status=='trainee'?' (Trainee)':''} replaced ${m?m.name:'#'+z.id} — ${z.why}`);else notes.push(`${m?m.name:'#'+z.id} could not perform (${z.why}); no Trainee replacement`)});
- const res={},used=new Set();thAll(s).forEach(it=>{let ids=thForm(s,it).o.map(id=>out.has(id)?sub[id]:id).filter(Boolean);ids=[...new Set(ids)];let c=thCen(s,it);if(x.cen&&ids.includes(x.cen))c=x.cen;if(!c||out.has(c)||!ids.includes(c)){const nc=ids.find(id=>!sub[id]&&!Object.values(sub).includes(id))||ids[0];if(c&&nc!=c)notes.push(`Center of “${(S.songs[it.song]||{}).title}” changed to ${(get(nc)||{}).name} (${(get(c)||{}).name} unavailable)`);c=nc}if(c){ids=[c,...ids.filter(i=>i!=c)]}res[it.id]={ids,c};ids.forEach(i=>used.add(i))});
+ const res={},used=new Set();thAll(s).forEach(it=>{const R=thSubRes(s,it,x,out,sub,notes);res[it.id]=R;R.ids.forEach(i=>used.add(i))}); // substitutes: Keep original positions or Shift positions (theater-subs.js)
  const L=[...used].map(get).filter(Boolean);if(!L.length){x.st='cancel';x.why='No available performers';thN(`<li>🎭 ${esc(thLabel(x.k))} — no member could perform on ${jd(x.day)}; the performance was cancelled.</li>`);return}
  // energy & quality: existing setlist rules (per-song intensity, MC recovery, low-energy performance factor)
  const rows=new Map(L.map(m=>[m.id,{m,en0:m.en,en:m.en,q:[]}]));thSeq(s).forEach(it=>{if(it.k=='mc'){rows.forEach(r=>{const g=Math.min(CFG.rs.mc,100-r.en);r.en+=g});return}if(it.k!='song')return;const o=S.songs[it.song],R=res[it.id];if(!o||!R)return;const sk=GEN[plG(o.genre)]||['sing','dance'],conc=CONC[plC(o.concept)]||[];
@@ -5724,7 +5730,7 @@ const thMfR={u:()=>Math.random(),gamma(k){let s=0;for(let i=0;i<k;i++)s-=Math.lo
  pois(l){if(!(l>0))return 0;if(l>30)return Math.max(0,Math.round(l+Math.sqrt(l)*(Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random()))));const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return k-1},
  draw(l){return thMfR.pois(l*thMfR.gamma(TH_MF.shape))}};
 // position of every performer in one song as performed: center / front / middle / back
-function thMfPos(s,it,R){const ids=(R&&R.ids)||thMem(s,it),F=thForm(s,it,ids),o=F.o.filter(id=>ids.includes(id)),rows=F.rows&&F.rows.reduce((a,b)=>a+b,0)==o.length?F.rows:[o.length],out={},cen=new Set([R&&R.c,F.c2].filter(x=>x!=null));
+function thMfPos(s,it,R){const ids=(R&&R.ids)||thMem(s,it),F=thForm(s,it,ids),o=(R&&R.o?R.o:F.o).filter(id=>ids.includes(id)),rows=F.rows&&F.rows.reduce((a,b)=>a+b,0)==o.length?F.rows:[o.length],out={},cen=new Set([R&&R.c,R&&R.o?R.c2:F.c2].filter(x=>x!=null));
  if(o.length==1){out[o[0]]='center';return out}let i=0;rows.forEach((n,r)=>{for(let k=0;k<n&&i<o.length;k++,i++){const id=o[i];out[id]=o.length>2&&cen.has(id)?'center':r==0?'front':r==rows.length-1?'back':'middle'}});return out}
 const thMfSkill=m=>{const W=TH_MF.skill;return(W.dance*(m.dance||0)+W.sing*(m.sing||0)+W.variety*(m.variety||0)+W.pas*(m.pas||0))/100};
 const thMfAbil=m=>TH_MF.skA+TH_MF.skB*thMfSkill(m);
@@ -5782,6 +5788,81 @@ function thMfHtml(p,A){if(!A||!A.mfv)return null;if(A.mfv<2)return thMfHtml1(p,A
 function thMfHtml1(p,A){const S1=A.mfSongs||[],B=A.mfs||{},ids=(p.mem||[]).slice().sort((a,b)=>((A.mem||{})[b]|0)-((A.mem||{})[a]|0)),used=S1.filter(it=>ids.some(id=>(B[id]||{})[it.id]>0));
  return`<h3>Member Fan Report</h3><div class="gekg">${thKpi('New Member Fans','+'+(A.mfTot|0).toLocaleString(),'total of every participating member')}</div><div class="wrap"><table class="thmft"><tr><th>Member</th>${used.map(it=>`<th>${it.lbl}<small>${it.n==1?'Solo':it.n==2?'Duo':it.n+' mem.'}</small></th>`).join('')}<th>Total</th></tr>${ids.map(id=>{const m=get(id),b=B[id]||{};return`<tr><td class="thmxn">${m?ptc(m,24):''} ${esc(m?m.name:'#'+id)}</td>${used.map(it=>`<td>${b[it.id]>0?'+'+b[it.id]:b[it.id]===0?'0':'–'}</td>`).join('')}<td><b>+${((A.mem||{})[id]|0)}</b></td></tr>`}).join('')}</table></div>`}
 {const f=thOpenPerf;thOpenPerf=function(id){const r=f.apply(this,arguments);try{const p=thS().pf.find(z=>z.id==id),h=p&&p.aud&&thMfHtml(p,p.aud);if(h&&ui.mod&&ui.mod.h){const a=ui.mod.h.indexOf('<h3>Fanbase Report</h3>'),b=ui.mod.h.indexOf('<h3>Performance Report</h3>');if(a>=0&&b>a){ui.mod.h=ui.mod.h.slice(0,a)+h+ui.mod.h.slice(b);render()}}}catch(e){console.error(e)}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  Theater — substitute formations, performance photos, Stage performance statistics
+// -------------------------------------------------------------------------------------
+//  · Substitutes (bench members, Trainees, manual swaps) can enter a song's formation in two
+//    ways, chosen per performance (x.fmo) with a Stage default (s.subMode):
+//      Keep original positions — nobody moves; the substitute takes the absent member's exact
+//                                position (her Center spot too).
+//      Shift positions         — the remaining main members move up to fill the gap (the next
+//                                member becomes Center) and the substitutes take the last positions.
+//    Only the performance is affected: the Stage's own formation is never changed.
+//  · The performance snapshot keeps the actual positions, Centers and every replacement
+//    (orig → substitute), so history shows who really performed where.
+//  · Performance photos: one group photo of everyone who actually performed (in the Stage costume
+//    of the first Team song) and one photo for every Unit song. They are drawn from the immutable
+//    performance snapshot with a seed from the performance id, so they never change later.
+//  · Member Profile → Stage Performance Statistics: counted from the completed performance records
+//    (once per performance, songs / Encore / MC included), never from a separate counter.
+// =====================================================================================
+const TH_SUBM={keep:['Keep original positions','The substitute takes the absent member\'s exact position (her Center spot too); nobody else moves.'],shift:['Shift positions','The remaining members move up to fill the gap (the next member becomes Center); substitutes take the last positions.']};
+const thSubMode=(x,s)=>(x&&(x.fmo=='shift'||x.fmo=='keep')?x.fmo:null)||(s&&s.subMode)||'keep';
+// formation of one song in one performance, with substitutes
+function thSubRes(s,it,x,out,sub,notes){const F=thForm(s,it),o=F.o.slice(),n=o.length,mode=thSubMode(x,s),pairs=[];let c=F.c!==undefined?F.c:thCen(s,it),c2=F.c2!==undefined?F.c2:null,ids;
+ if(mode=='shift'){const main=o.filter(id=>!out.has(id)),subs=o.filter(id=>out.has(id)).map(id=>{if(sub[id])pairs.push([id,sub[id]]);return sub[id]}).filter(Boolean);ids=[...new Set([...main,...subs])];
+  if(c!=null&&out.has(c))c=main[0]??ids[0]??null;if(c2!=null&&(out.has(c2)||c2==c))c2=main.find(id=>id!=c)??null}
+ else{ids=[...new Set(o.map(id=>{if(!out.has(id))return id;if(sub[id])pairs.push([id,sub[id]]);return sub[id]||null}).filter(Boolean))];if(c!=null&&out.has(c))c=sub[c]||null;if(c2!=null&&out.has(c2))c2=sub[c2]||null}
+ const c0=F.c!==undefined?F.c:thCen(s,it);if(x&&x.cen&&ids.includes(x.cen)&&x.cen!=c){if(c2==x.cen)c2=c;c=x.cen}
+ if(ids.length<=2){c=null;c2=null}else{if(c==null||!ids.includes(c))c=ids[0];if(c2!=null&&(!ids.includes(c2)||c2==c))c2=null;
+  // Centers in the Center spots (swap, so everyone keeps exactly one position)
+  const put=(id,k)=>{const i=ids.indexOf(id);if(i>=0&&i!=k){[ids[i],ids[k]]=[ids[k],ids[i]]}};put(c,0);if(c2!=null)put(c2,1)}
+ if(c0!=null&&c!=c0&&out.has(c0))notes.push(`Center of “${(S.songs[it.song]||{}).title}” ${c?`is ${(get(c)||{}).name}`:'—'} (${(get(c0)||{}).name} unavailable · ${TH_SUBM[mode][0]})`);
+ return{ids,o:ids.slice(),c,c2,sub:pairs,mode}}
+// snapshot: actual Centers and the replacements of every song
+let TH_SUBRES=null;
+{const f=thSnapItems;thSnapItems=function(s,res){const r=f.apply(this,arguments);try{if(res){const L=[...s.items,...thEncSeq(s)];r.forEach((x,i)=>{const it=L[i],R=it&&res[it.id];if(!R||x.k!='song'||!R.o)return;x.mem=R.o.slice();x.center=R.c;x.c2=(R.o.length>2&&R.c2!=null)?R.c2:null;x.sub=(R.sub||[]).map(p=>p.slice());x.subm=R.mode})}}catch(e){console.error(e)}return r}}
+// performance record: the substitution mode and every replacement (original main member → actual performer)
+{const f=thPerform;thPerform=function(x){const H=thS(),n0=H.pf.length,mode=x&&thSubMode(x,thStageFor(thOf(x.k),x));const r=f.apply(this,arguments);try{if(H.pf.length>n0){const rec=H.pf.at(-1);rec.subm=mode;rec.subs=(rec.rp||[]).map(([o,n])=>({o:+o,n:+n,on:(get(o)||{}).name||'',nn:(get(n)||{}).name||''}));
+  if(typeof resNote=='function')resNote(`<div class="row"><button class="b s" onclick="thOpenPerf('${rec.id}')">📸 Photos &amp; performance report — ${esc(thNoTxt(thStage(rec.st)||{k:rec.k,no:rec.no}))}</button></div>`)}}catch(e){console.error(e)}return r}}
+// ---- choose the substitute mode -------------------------------------------------------------------
+function thSubSet(sid,mode){const x=thS().sh.find(z=>z.id==sid);if(!x||x.st!='sched'||!TH_SUBM[mode])return;x.fmo=mode;if(ui.mod&&ui.mod.t=='html'&&ui.thsl==sid)ui.mod.h=thShowLuHtml(x);render()}
+function thSubDef(mode){const s=thEd();if(!s||!TH_SUBM[mode])return;s.subMode=mode;toast(`Substitutes: ${TH_SUBM[mode][0]} (default of this Stage).`);render()}
+const thSubBtns=(x,s)=>{const m=thSubMode(x,s);return`<div class="row thsubm"><span class="st">Substitutes</span>${Object.entries(TH_SUBM).map(([k,[n,d]])=>`<button class="b s ${m==k?'on':''}" title="${esc(d)}" onclick="thSubSet('${x.id}','${k}')">${k=='keep'?'📌':'⤴'} ${n}</button>`).join('')}</div>`};
+// planned formation of a performance (who stands where, substitutes included)
+function thSubPlan(x){const T=thOf(x.k),s=thStageFor(T,x);if(!s)return null;const C=thCheck(x),out=new Set(C.miss.map(z=>z.id)),sub=C.rp,n=[];return{s,out,sub,R:thAll(s).map(it=>[it,thSubRes(s,it,x,out,sub,n)])}}
+function thSubPlanHtml(x){const P=thSubPlan(x);if(!P||!P.out.size)return'';const subIds=new Set(Object.values(P.sub).map(Number));
+ return`<div class="c thsubp"><h3>Formation for this performance</h3><p class="st">${esc(TH_SUBM[thSubMode(x,P.s)][1])}</p>${P.R.filter(([it,R])=>R.sub.length||R.ids.some(id=>subIds.has(id))).map(([it,R])=>{const F=thForm(P.s,it,R.ids),rows=F.rows&&F.rows.reduce((a,b)=>a+b,0)==R.o.length?F.rows:[R.o.length];let i=0;
+  return`<div class="thsubs"><b>${thLbl(P.s,it)} ${esc((S.songs[it.song]||{}).title||'')}</b>${rows.map(k=>`<div class="thsubr">${R.o.slice(i,i+=k).map(id=>{const m=get(id),isS=subIds.has(id),orig=isS?R.sub.find(p=>p[1]==id):null;return`<span class="thsubf ${isS?'sub':''} ${id==R.c||id==R.c2?'cen':''}" title="${esc(m?m.name:'')}${orig?` (for ${esc((get(orig[0])||{}).name||'')})`:''}">${m?ptc(m,30):''}${isS?'<i>SUB</i>':''}${id==R.c||id==R.c2?'<i class="c">C</i>':''}</span>`}).join('')}</div>`).join('')}</div>`}).join('')||'<p class="st">No song changes.</p>'}</div>`}
+{const f=thShowLuHtml;thShowLuHtml=function(x){let h=f.apply(this,arguments);try{ui.thsl=x.id;const s=thStageFor(thOf(x.k),x);if(s){const i=h.lastIndexOf('<div class="row"><button class="b s" onclick="thSwReset');const add=thSubBtns(x,s)+thSubPlanHtml(x);h=i>=0?h.slice(0,i)+add+h.slice(i):h+add}}catch(e){console.error(e)}return h}}
+{const f=V.thsched;V.thsched=function(){let h=f.apply(this,arguments);try{h=h.replace(/<button class="b s" onclick="thMoveOpen\('([^']+)'\)">📅 Move<\/button>/g,(a,id)=>{const x=thS().sh.find(z=>z.id==id);if(!x)return a;const s=thStageFor(thOf(x.k),x);let miss=0;try{miss=thCheck(x).miss.length}catch(e){}return miss&&s?a+'</div>'+thSubBtns(x,s)+'<div class="row">':a})}catch(e){console.error(e)}return h}}
+// Stage default (Units & Performers tab)
+{const f=thLuHtml;thLuHtml=function(s){const h=f.apply(this,arguments);try{const m=s.subMode||'keep';return h.replace(/<\/div>$/,`<div class="row thsubm"><span class="st">When a member is replaced</span>${Object.entries(TH_SUBM).map(([k,[n,d]])=>`<button class="b s ${m==k?'on':''}" title="${esc(d)}" onclick="thSubDef('${k}')">${k=='keep'?'📌':'⤴'} ${n}</button>`).join('')}</div><p class="st">${esc(TH_SUBM[m][1])} You can change it for one performance in Schedule (✎ Lineup).</p></div>`)}catch(e){console.error(e)}return h}}
+// ---- performance photos -----------------------------------------------------------------------------
+const thSeed=str=>{let h=2166136261;for(const c of String(str)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return()=>{h^=h<<13;h^=h>>>17;h^=h<<5;return((h>>>0)%100000)/100000}};
+function thPerfPics(rec){const items=(S.th.snap[rec.snap]||[]).filter(x=>x.k=='song');if(!items.length)return[];const rnd=thSeed(rec.id),pose=ids=>{const po={};ids.forEach(id=>po[id]=TH_MICP[Math.floor(rnd()*TH_MICP.length)]);return po};
+ const used=new Set(items.flatMap(x=>x.mem||[])),act=(rec.mem||[]).filter(id=>used.has(id)),lead=items.find(x=>x.pt!='unit')||items[0],o=[...(lead.mem||[]).filter(id=>act.includes(id)),...act.filter(id=>!(lead.mem||[]).includes(id))],cm={};
+ o.forEach(id=>{const x=[lead,...items].find(z=>(z.cm||{})[id]);if(x)cm[id]=x.cm[id]});const nc=o.length<=2?0:lead.c2!=null&&o[1]==lead.c2?2:1;
+ const P=[{lbl:'Stage',title:rec.nm||'',grp:1,o,rows:(lead.mem||[]).length==o.length&&lead.rows?lead.rows.slice():fxRows(o.length,Math.max(1,nc)),nc,cm,po:pose(o),hue:Math.floor(rnd()*360),day:rec.day}];
+ let n=0,e=0;items.forEach(x=>{const lbl=x.enc?'E'+String(++e).padStart(2,'0'):'M'+String(++n).padStart(2,'0');if(x.pt!='unit')return;const m=(x.mem||[]).slice();P.push({lbl,title:x.title||(S.songs[x.song]||{}).title||'',unit:x.unit?x.unit.name:'Unit',o:m,rows:(x.rows||[]).slice(),nc:m.length<=2?0:x.c2!=null?2:1,cm:{...(x.cm||{})},po:pose(m),hue:Math.floor(rnd()*360),day:rec.day,sub:(x.sub||[]).map(p=>p[1])})});return P}
+function thPerfPicsHtml(rec){const L=thPerfPics(rec);if(!L.length)return'';const subs=new Set((rec.subs||[]).map(z=>z.n));
+ return`<h3>📸 Performance photos</h3><div class="thpics">${L.map((p,i)=>`<figure class="thpic" onclick="thPerfPicBig('${rec.id}',${i})">${thPicSvg(p)}<figcaption>${p.grp?`<b>Stage</b> ${p.o.length} performer(s)${p.o.some(id=>subs.has(id))?` · incl. ${p.o.filter(id=>subs.has(id)).length} substitute(s)`:''}`:`<b>${p.lbl}</b> ${esc(p.title)} <span class="thptb unit">UNIT · ${esc(p.unit)}</span>`}</figcaption></figure>`).join('')}</div>`}
+function thPerfPicBig(pid,i){const rec=thS().pf.find(z=>z.id==pid),p=rec&&thPerfPics(rec)[i];if(!p)return;const subs=new Set((rec.subs||[]).map(z=>z.n));ui.mod={t:'html',h:`<h2 class="ht">${p.grp?'📸 Stage photo':`${p.lbl} ${esc(p.title)}`}</h2><p class="st">${esc(rec.nm||'')} · ${wd(rec.day)} · ${TH_SLOT[rec.sl]}${p.unit?' · Unit '+esc(p.unit):''}</p><div class="thpicbig">${thPicSvg(p)}</div>
+ <div class="row thpicm">${p.o.map(id=>{const m=get(id);return m?`<span class="thmfc ${subs.has(id)?'bt':''}">${esc(m.name)}${subs.has(id)?' · substitute':''}</span>`:''}).join('')}</div><div class="row"><button class="b s" onclick="thOpenPerf('${pid}')">◀ Performance report</button></div>`};render()}
+// substitutions in the report: original main member → actual performer
+function thSubsHtml(rec){const L=rec.subs||(rec.rp||[]).map(([o,n])=>({o:+o,n:+n}));if(!L.length)return'';return`<h3>Substitutions</h3><p class="st">${esc(TH_SUBM[rec.subm||'keep'][0])}: ${esc(TH_SUBM[rec.subm||'keep'][1])}</p><div class="thsubl">${L.map(z=>{const a=get(z.o),b=get(z.n);return`<div class="thsubi"><span>${a?ptc(a,30):''}<small>Main member</small><b>${esc(a?a.name:z.on||'#'+z.o)}</b></span><i>→</i><span>${b?ptc(b,30):''}<small>Performed</small><b>${esc(b?b.name:z.nn||'#'+z.n)}</b>${b&&b.status=='trainee'?'<small>Trainee</small>':''}</span></div>`}).join('')}</div>`}
+{const f=thOpenPerf;thOpenPerf=function(id){const r=f.apply(this,arguments);try{const rec=thS().pf.find(z=>z.id==id);if(rec&&ui.mod&&ui.mod.h){const s=thStage(rec.st);let h=ui.mod.h;if(rec.pics&&s){const old=thPicsHtml(s);if(old)h=h.split(old).join('')}const add=thPerfPicsHtml(rec)+thSubsHtml(rec),k=h.indexOf('<h3>Setlist as performed</h3>');h=k>=0?h.slice(0,k)+add+h.slice(k):h+add;ui.mod.h=h;render()}}catch(e){console.error(e)}return r}}
+// ---- Member Profile: Stage Performance Statistics (from the completed performance records) -----------
+let THST_C={n:-1,id:null,m:null};
+function thMemPerfStats(){const P=thS().pf;if(THST_C.n==P.length&&THST_C.id==(P.at(-1)||{}).id)return THST_C.m;const M={};
+ P.forEach(p=>{const who=new Set(p.mem||[]);(S.th.snap[p.snap]||[]).forEach(x=>{if(x.k=='mc')(x.mem||[]).forEach(id=>who.add(id))});who.forEach(id=>{const z=M[id]=M[id]||{n:0,st:{},sub:0,first:p.day,last:p.day};z.n++;const k=p.st;(z.st[k]=z.st[k]||{n:0,nm:p.nm,k:p.k,no:p.no}).n++;z.last=Math.max(z.last,p.day);z.first=Math.min(z.first,p.day);if((p.rp||[]).some(r=>+r[1]==id))z.sub++})});
+ THST_C={n:P.length,id:(P.at(-1)||{}).id,m:M};return M}
+function thMemPerfHtml(m){const z=(thMemPerfStats()||{})[m.id];return`<div class="c thmps"><h3>🎭 Stage Performance Statistics</h3>${z?`<div class="gekg">${thKpi('Total Stage Performances',z.n.toLocaleString(),`completed performances · ${jd(z.first)} – ${jd(z.last)}`)}${thKpi('As a substitute',z.sub.toLocaleString(),'performances where she replaced a member')}</div>
+ <table class="gskv">${Object.entries(z.st).sort((a,b)=>b[1].n-a[1].n).map(([sid,v])=>`<tr><th>${esc(v.no?thLabel(v.k)+' '+ordN(v.no)+' Stage':thLabel(v.k))} “${esc(v.nm||'')}”</th><td>${v.n.toLocaleString()} performance(s)</td></tr>`).join('')}</table>`:'<p class="st">No completed Stage performances yet. Only performances that actually took place count (once per performance).</p>'}</div>`}
+{const f=profHtml;profHtml=function(m,cand){const h=f.apply(this,arguments);try{if(!cand&&m&&S&&S.th&&(ui.ptab||'stats')=='stats')return h+thMemPerfHtml(m)}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -6651,6 +6732,14 @@ Object.assign(I18N_TH,{"Performance Quality":"คุณภาพการแส�
 I18N_TH_TPL.unshift(["Songs +{0}","เพลง +{0}"],["MC +{0}","MC +{0}"],["Encore +{0}","อังกอร์ +{0}"],["Encore MC +{0}","MC อังกอร์ +{0}"],["{0} members","{0} คน"],["MC · {0} member(s)","MC · {0} คน"],
  ["{0} caught the audience's attention at {1} ({2}): +{3} extra member fan(s).","{0} ดึงความสนใจผู้ชมที่ {1} ({2}): ได้แฟนเมมเบอร์เพิ่ม +{3}"],["songs +{0} · MC +{1} · Encore +{2} · Encore MC +{3}","เพลง +{0} · MC +{1} · อังกอร์ +{2} · MC อังกอร์ +{3}"]);
 Object.assign(I18N_TH,{"Tap a member's card to add or remove her (like the Single Senbatsu); tap her face for the profile.":"แตะการ์ดเมมเบอร์เพื่อเพิ่มหรือเอาออก (เหมือนเซ็มบัตสึของซิงเกิล) แตะที่ใบหน้าเพื่อดูโปรไฟล์","✔ Performs":"✔ ขึ้นแสดง","Bench":"สำรอง"});
+// substitutes, performance photos, Stage performance statistics
+Object.assign(I18N_TH,{"Keep original positions":"คงตำแหน่งเดิม","Shift positions":"เลื่อนตำแหน่ง","Substitutes":"ตัวแทน","When a member is replaced":"เมื่อมีเมมเบอร์ถูกแทน","Formation for this performance":"ฟอร์เมชันของรอบนี้","No song changes.":"ไม่มีเพลงที่เปลี่ยน",
+"The substitute takes the absent member's exact position (her Center spot too); nobody else moves.":"ตัวแทนยืนตำแหน่งเดิมของคนที่ขาด (รวมถึงเซ็นเตอร์) คนอื่นไม่ขยับ",
+"The remaining members move up to fill the gap (the next member becomes Center); substitutes take the last positions.":"เมมเบอร์ที่เหลือเลื่อนขึ้นมาแทนที่ (คนถัดไปเป็นเซ็นเตอร์) ตัวแทนอยู่ตำแหน่งท้ายสุด",
+"📸 Performance photos":"📸 ภาพการแสดง","📸 Stage photo":"📸 ภาพสเตจ","Substitutions":"การแทนตัว","Main member":"เมมเบอร์หลัก","Performed":"ขึ้นแสดงจริง","◀ Performance report":"◀ รายงานการแสดง",
+"🎭 Stage Performance Statistics":"🎭 สถิติการแสดงสเตจ","Total Stage Performances":"จำนวนการแสดงสเตจทั้งหมด","As a substitute":"ขึ้นแทน","performances where she replaced a member":"รอบที่ขึ้นแสดงแทนเมมเบอร์",
+"No completed Stage performances yet. Only performances that actually took place count (once per performance).":"ยังไม่มีการแสดงสเตจที่จบแล้ว นับเฉพาะรอบที่แสดงจริง (รอบละ 1 ครั้ง)"});
+I18N_TH_TPL.unshift(["{0} performer(s) · incl. {1} substitute(s)","ผู้แสดง {0} คน · ตัวแทน {1} คน"],["{0} performer(s)","ผู้แสดง {0} คน"],["{0} performance(s)","{0} รอบ"],["completed performances · {0} – {1}","รอบที่แสดงจบแล้ว · {0} – {1}"],["Substitutes: {0} (default of this Stage).","ตัวแทน: {0} (ค่าเริ่มต้นของสเตจนี้)"],["You can change it for one performance in Schedule (✎ Lineup).","เปลี่ยนเฉพาะรอบได้ในตารางการแสดง (✎ Lineup)"]);
 
 </script>
 <script>
