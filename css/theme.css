@@ -1014,3 +1014,8 @@ select:not([multiple]):not([size]){cursor:pointer}
 .mchm{gap:5px;flex-wrap:wrap;margin:6px 0}
 .semvf{display:flex;flex-wrap:wrap;gap:6px}.semvf span{display:flex;flex-direction:column;align-items:center;width:54px;font-size:10.5px}.semvf small{color:#1f9d5a;font-weight:800}
 @media(max-width:600px){.mchr{grid-template-columns:24px 38px 1fr auto;gap:6px}.mchr svg{width:38px;height:38px}.mchp{grid-column:3/5;text-align:left;display:flex;gap:6px;align-items:center}}
+/* restructuring: multi-select, change tags, grouped changes */
+.orgself{display:inline-flex;gap:2px;align-items:center}.orgself svg{width:28px;height:auto}.orgself i{font-style:normal;font-size:11px;color:var(--mut)}
+.orgchip .ogt{display:block;font-size:9px;line-height:1.2;font-weight:700;color:#b8860b;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ogt-up{color:#1f9d5a!important}.ogt-dn{color:#c0485e!important}.ogt-grp{color:#6d3fc0!important}.ogt-kn,.ogt-knk{color:#2d7dd2!important}.ogt-kne{color:#8a7aa3!important}.ogt-cap{color:#d4a017!important}.ogt-clr{color:#c0485e!important}
+.orgg .orggf{display:flex;flex-wrap:wrap;gap:2px;flex:0 0 auto;max-width:46%}.orgg .orggf svg{width:32px;height:auto}.orggm{border:0;background:none;padding:0;cursor:pointer}.orgpkb{gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px}

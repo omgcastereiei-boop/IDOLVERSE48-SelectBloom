@@ -29,7 +29,7 @@ const seEdKey=(p,e)=>{const t=p.types[e.ti];return t?(e.kind=='lim'?t.name+' Lim
 const seEdName=(p,e)=>{const t=p.types[e.ti];return`${t?t.name:'?'} — ${e.kind=='lim'?'Limited Edition':'Regular Edition'}`};
 function seEst(p){try{const mn=S.songs[p.mainId],L=(mn.slots||[]).filter(Boolean).map(get).filter(Boolean),pop=L.length?avg(L.map(m=>m.pop)):30;return Math.max(1000,Math.round((pop*90+S.fans*.12)*(L.length/16+.5)*(1+.15*(p.types.length-1))))}catch(e){return 5000}}
 function seSale(p){if(!p||plAlb&&plAlb(p))return null;if(!p.sale)p.sale={eds:[],hsDay:null};const SL=p.sale;SL.eds=SL.eds.filter(e=>p.types[e.ti]);p.types.forEach((t,i)=>{if(!SL.eds.some(e=>e.ti==i&&e.kind=='reg'))SL.eds.push({id:'ed'+(++S.sid),ti:i,kind:'reg',m:'qty',cap:Math.max(10000,Math.round(seEst(p)*3/1000)*1000),od:0,len:30})});SL.eds.sort((a,b)=>a.ti-b.ti||(a.kind=='reg'?-1:1));return SL}
-const seRel=p=>p.releaseDay!=null?p.releaseDay:S.day+(CFG.prodDays||28);
+const seRel=p=>{const mn=S.day+(CFG.prodDays||28);return p.releaseDay!=null?p.releaseDay:(p.relPick!=null&&p.relPick>=mn?p.relPick:mn)};
 function seEdSet(id,k,v){const p=S.pj,SL=seSale(p);if(!SL)return;if(p.status=='released')return;const e=SL.eds.find(z=>z.id==id);if(!e)return;const R=seRel(p);
  if(k=='m')e.m=v=='pre'?'pre':'qty';else if(k=='cap'){const n=Math.round(+v);if(!(n>=1))return toast('The stock must be at least 1 CD.','err');e.cap=Math.min(5000000,n)}
  else if(k=='open'){const d=dateDay(new Date(v+'T00:00:00'));if(!Number.isFinite(d))return;if(d<R)return toast(`Pre-orders open on Release Day (${jd(R)}) at the earliest.`,'err');const close=R+e.od+e.len-1;e.od=d-R;e.len=Math.max(1,Math.min(SE_MAXPRE,close-d+1))}

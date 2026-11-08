@@ -1096,6 +1096,11 @@ select:not([multiple]):not([size]){cursor:pointer}
 .mchm{gap:5px;flex-wrap:wrap;margin:6px 0}
 .semvf{display:flex;flex-wrap:wrap;gap:6px}.semvf span{display:flex;flex-direction:column;align-items:center;width:54px;font-size:10.5px}.semvf small{color:#1f9d5a;font-weight:800}
 @media(max-width:600px){.mchr{grid-template-columns:24px 38px 1fr auto;gap:6px}.mchr svg{width:38px;height:38px}.mchp{grid-column:3/5;text-align:left;display:flex;gap:6px;align-items:center}}
+/* restructuring: multi-select, change tags, grouped changes */
+.orgself{display:inline-flex;gap:2px;align-items:center}.orgself svg{width:28px;height:auto}.orgself i{font-style:normal;font-size:11px;color:var(--mut)}
+.orgchip .ogt{display:block;font-size:9px;line-height:1.2;font-weight:700;color:#b8860b;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ogt-up{color:#1f9d5a!important}.ogt-dn{color:#c0485e!important}.ogt-grp{color:#6d3fc0!important}.ogt-kn,.ogt-knk{color:#2d7dd2!important}.ogt-kne{color:#8a7aa3!important}.ogt-cap{color:#d4a017!important}.ogt-clr{color:#c0485e!important}
+.orgg .orggf{display:flex;flex-wrap:wrap;gap:2px;flex:0 0 auto;max-width:46%}.orgg .orggf svg{width:32px;height:auto}.orggm{border:0;background:none;padding:0;cursor:pointer}.orgpkb{gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 
 </style>
 </head><body>
@@ -7560,14 +7565,14 @@ function orgClearTeam(tid){const D=orgDr('sh');let n=0;S.members.forEach(m=>{if(
 function orgClearAll(){const D=orgDr('sh'),g=grp(D.gid);ask(`Clear every team of ${g.name} in the draft? Members are not deleted or demoted — they wait in “No team yet” until you place them.`,()=>{let n=0;S.members.forEach(m=>{if(m.status=='graduated')return;const a=orgTo(D,m);if(a.gid==D.gid&&a.tid&&a.tid!='_none'){a.tid='_none';orgSet(D,m.id,a);n++}});D.log.push({day:S.day,op:'clearall',n});toast(`${n} member(s) are waiting for a team.`);render()},'Clear All Teams')}
 function orgChip(D,m){const a=orgTo(D,m),c=orgCurA(m),moved=orgJ(a)!=orgJ(c),T=moved&&c.tid?orgTeam(c.tid):null;return`<button class="orgchip ${ui.orgsel==m.id?'on':''} ${moved?'mv':''}" onclick="orgPick(${m.id})">${ptc(m,40)}<span>${esc(m.name.split(' ')[0])}</span>${moved?`<small>${c.tid?'from '+esc(T?T.t.name:'?'):'was '+esc(TL())}</small>`:''}${m.kn||a.kn?'<i class="orgkn">KN</i>':''}</button>`}
 V.orgsh=function(){const D=orgDr('sh'),g=grp(D.gid)||grp(gsAg());if(!g)return'';const op=(L,v)=>L.map(([k,n])=>`<option value="${k}" ${String(k)==String(v)?'selected':''}>${esc(n)}</option>`).join('');
- const M=S.members.filter(m=>m.status!='graduated'&&(orgTo(D,m).gid==g.id||gsGid(m)==g.id)),inT=tid=>M.filter(m=>orgTo(D,m).gid==g.id&&orgTo(D,m).tid==tid),sel=get(ui.orgsel);
+ const M=S.members.filter(m=>m.status!='graduated'&&(orgTo(D,m).gid==g.id||gsGid(m)==g.id)),inT=tid=>M.filter(m=>orgTo(D,m).gid==g.id&&orgTo(D,m).tid==tid).sort(orgSortF),SELL=orgSelL(),sel=SELL[0];
  const col=(tid,name,color,list,lead)=>{const L=lead?orgLeadTo(D,tid):null,full=list;return`<div class="c orgcol" style="--tc:${color||'#cdbdf5'}"><div class="orgcolh"><b>${esc(name)}</b><span class="st">${list.length} member(s)</span>${sel?`<button class="b s p" onclick="orgMoveTo('${tid}')">Move here</button>`:''}${lead?`<button class="b s" onclick="orgClearTeam('${tid}')">Clear Team</button>`:''}</div>
   ${lead?`<div class="row orglead"><label class="st">Captain<select onchange="orgLeadSet(orgDr('sh'),'${tid}','cap',this.value);render()"><option value="">—</option>${op(full.map(m=>[m.id,m.name]),L.cap)}</select></label><label class="st">Vice<select onchange="orgLeadSet(orgDr('sh'),'${tid}','vice',this.value);render()"><option value="">—</option>${op(full.map(m=>[m.id,m.name]),L.vice)}</select></label></div>`:''}
   <div class="orgchips rtpm">${list.map(m=>orgChip(D,m)).join('')||'<span class="st">Empty</span>'}</div></div>`};
- const none=M.filter(m=>orgTo(D,m).tid=='_none'),out=M.filter(m=>orgTo(D,m).gid!=g.id);
+ const none=M.filter(m=>orgTo(D,m).tid=='_none').sort(orgSortF),out=M.filter(m=>orgTo(D,m).gid!=g.id).sort(orgSortF);
  return`<h2 class="ht">Shuffle Team</h2><div class="c"><p class="st">Reorganise the teams of a group from scratch. Tap a member, then “Move here” on a team (or on ${esc(TL())}s to demote). Clear Team / Clear All Teams only empty the draft — no member is deleted or demoted. Nothing changes until the announcement.</p>
- <div class="row"><label class="st">Group <select onchange="orgShGroup(this.value)">${op(S.groups.map(x=>[x.id,x.name]),g.id)}</select></label><button class="b s" onclick="orgClearAll()">Clear All Teams</button><button class="b s" onclick="goView('orgrs')">Team Restructuring →</button><button class="b s" onclick="goView('orgshh')">Shuffle Team History</button></div>
- ${sel?`<div class="orgselbar">${ptc(sel,36)}<b>${esc(sel.name)}</b><span class="st">selected — tap “Move here” on a team</span><button class="b s" onclick="ui.orgf={kind:'sh',mid:'${sel.id}'};ui.orgsel=null;render();setTimeout(()=>{const e=document.querySelector('.orgform');if(e)e.scrollIntoView()},30)">Group transfer / Concurrent…</button><button class="b s" onclick="ui.orgsel=null;render()">Cancel</button></div>`:''}</div>
+ <div class="row"><label class="st">Group <select onchange="orgShGroup(this.value)">${op(S.groups.map(x=>[x.id,x.name]),g.id)}</select></label><button class="b s" onclick="orgClearAll()">Clear All Teams</button>${orgSortSel()}<button class="b s" onclick="goView('orgrs')">Team Restructuring →</button><button class="b s" onclick="goView('orgshh')">Shuffle Team History</button></div>
+ ${sel?`<div class="orgselbar"><span class="orgself">${SELL.slice(0,8).map(m=>ptc(m,30)).join('')}${SELL.length>8?`<i>+${SELL.length-8}</i>`:''}</span><b>${SELL.length} selected</b><span class="st">tap more members, then “Move here” on a team</span><button class="b s" onclick="ui.orgf={kind:'sh',mid:'${sel.id}',mids:${JSON.stringify(SELL.map(m=>m.id))}};ui.orgsel=null;render();setTimeout(()=>{const e=document.querySelector('.orgform');if(e)e.scrollIntoView()},30)">Group transfer / Concurrent…</button><button class="b s" onclick="ui.orgsel=null;render()">Cancel</button></div>`:''}</div>
  ${orgPlansCard('sh')}
  ${none.length?col('_none','No team yet (cleared)','#ffd6dc',none,false):''}
  <div class="orgboard">${(g.teams||[]).map(t=>col(t.id,t.name,t.color,inT(t.id),true)).join('')}${col('tr',TL()+'s',CFG.trBg,inT(null),false)}</div>
@@ -7740,6 +7745,56 @@ function orgOpen(pid){const p=orgP(pid);if(!p)return;const fx=Object.values(p.fx
 </script>
 <script>
 // =====================================================================================
+//  Team Restructuring / Shuffle Team — sort, multi-select, change labels, grouped changes
+// -------------------------------------------------------------------------------------
+//  · Shuffle board: a Sort for every team column; tap several members, then “Move here” moves them all.
+//  · Under each member: what changes for her (From Team A · Promoted · Demoted · To OMG48 Team M ·
+//    OMG48 Team M Kennin · Kennin ended).
+//  · Team Restructuring: “Choose members…” opens a member picker (with the usual sort / filter bar);
+//    one change can be applied to several members at once.
+//  · Changes are listed grouped, with faces and stage names:
+//    “Sakura, Min-ji and Emi — Promoted from Kenkyusei to Full Member (Team W)”.
+// =====================================================================================
+const orgNm=m=>m?(m.stage||m.name):'';
+const orgSelL=()=>{let L=ui.orgsel;if(L!=null&&!Array.isArray(L))L=ui.orgsel=[L];return(L||[]).map(get).filter(Boolean)};
+const ORG_SORT=[['','Default order'],['name','Name'],['geRk','Election Rank'],['pop','Popularity Index'],['fans','Fanbase'],['gen','Generation'],['sing','Vocal'],['dance','Dance'],['cha','Performance']];
+function orgSortF(a,b){const k=ui.orgsort||'';if(!k)return 0;if(k=='name')return orgNm(a).localeCompare(orgNm(b));if(k=='gen')return(a.gen||1)-(b.gen||1)||orgNm(a).localeCompare(orgNm(b));const v=m=>{const x=sv(m,k);return typeof x=='number'?x:+x||0};return v(b)-v(a)}
+const orgSortSel=()=>`<label class="st">Sort <select onchange="ui.orgsort=this.value;render()">${ORG_SORT.map(([k,n])=>`<option value="${k}" ${(ui.orgsort||'')==k?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`;
+orgPick=function(mid){const L=(orgSelL().map(m=>m.id));const i=L.indexOf(mid);if(i>=0)L.splice(i,1);else L.push(mid);ui.orgsel=L.length?L:null;render()};
+orgMoveTo=function(tid){const D=orgDr('sh'),L=orgSelL();if(!L.length)return toast('Tap a member first.','err');let n=0,skip=0;L.forEach(m=>{const a=orgTo(D,m);if(a.gid!=D.gid){skip++;return}a.tid=tid=='tr'?null:tid;if(!a.tid)a.kn=null;orgSet(D,m.id,a);D.log.push({day:S.day,op:'move',mid:m.id,to:tid});n++});ui.orgsel=null;if(skip)toast(`${skip} member(s) leave the group in the plan and were not moved.`);else if(n>1)toast(`${n} members moved.`);render()};
+// what changes for one member (shown under her name)
+function orgTags(D,m){const a=orgTo(D,m),c=orgCurA(m),out=[],tn=tid=>{const T=orgTeam(tid);return T?T.t.name:'?'};
+ if(a.tid=='_none')out.push(['clr','No team yet']);else if(a.gid!=c.gid){const g=grp(a.gid);out.push(['grp',`To ${g?g.name:'?'} ${a.tid?tn(a.tid):TL()}`])}
+ else if(!c.tid&&a.tid)out.push(['up','Promoted']);else if(c.tid&&!a.tid)out.push(['dn','Demoted']);else if(c.tid!=a.tid)out.push(['tm',`From ${tn(c.tid)}`]);
+ if(orgJ(a.kn)!=orgJ(c.kn)){if(a.kn){const T=orgTeam(a.kn.tid);out.push(['kn',`${T?T.g.name+' '+T.t.name:'?'} Kennin`])}else out.push(['kne','Kennin ended'])}else if(a.kn){const T=orgTeam(a.kn.tid);out.push(['knk',`${T?T.g.name+' '+T.t.name:''} Kennin`])}
+ Object.keys(D.lead).forEach(tid=>{const L=orgLeadTo(D,tid),N=orgLeadNow(tid);if(L.cap==m.id&&N.cap!=m.id)out.push(['cap','Captain']);if(L.vice==m.id&&N.vice!=m.id)out.push(['cap','Vice-Captain'])});return out}
+orgChip=function(D,m){const T=orgTags(D,m),sel=orgSelL().some(x=>x.id==m.id),moved=T.some(t=>t[0]!='knk');return`<button class="orgchip ${sel?'on':''} ${moved?'mv':''}" onclick="orgPick(${m.id})">${ptc(m,40)}<span>${esc(orgNm(m))}</span>${T.map(([k,t])=>`<small class="ogt ogt-${k}">${esc(t)}</small>`).join('')}</button>`};
+// ---- grouped changes ---------------------------------------------------------------------------------------------------
+function orgJoin(L){return L.length<2?L.join(''):L.slice(0,-1).join(', ')+' and '+L.at(-1)}
+function orgGroup(C){const M=new Map();C.forEach(c=>{const ph=String(c.txt).split(' — ').slice(1).join(' — ')||c.txt,k=c.k+'|'+ph;if(!M.has(k))M.set(k,{k:c.k,ph,ids:[],items:[]});const g=M.get(k);if(!g.ids.includes(c.mid)){g.ids.push(c.mid);g.items.push(c)}});return[...M.values()]}
+function orgGroupHtml(C,opt={}){return orgGroup(C).map(g=>{const ms=g.ids.map(id=>get(id)||(S.alumni||[]).find(a=>a.id==id)).filter(Boolean);return`<div class="orgch k-${g.k} orgg"><div class="orggf">${ms.slice(0,12).map(m=>opt.kind?`<button class="orggm" title="${esc(m.name)} — edit" onclick="orgEdit('${opt.kind}',${m.id})">${ptc(m,32)}</button>`:`<span title="${esc(m.name)}">${ptc(m,32)}</span>`).join('')}${ms.length>12?`<i>+${ms.length-12}</i>`:''}</div><div><b>${esc(orgJoin(ms.map(orgNm)))} — ${esc(g.ph)}</b>${opt.kind?'':''}</div>${opt.kind?`<span class="orgchb"><button class="b s" title="Remove" onclick="orgUndoG('${opt.kind}','${g.k}',${JSON.stringify(g.items.map(c=>[c.mid,c.tid||''])).replace(/"/g,'&quot;')})">✕</button></span>`:''}</div>`}).join('')}
+function orgUndoG(kind,k,L){L.forEach(([mid,tid])=>{const D=orgDr(kind);if(k=='cap'||k=='vice'||k=='capout'||k=='viceout'){const r=k.replace('out','');const X=D.lead[tid];if(X){delete X[r];if(!Object.keys(X).length)delete D.lead[tid]}}else delete D.asg[mid]});render()}
+orgSumHtml=function(kind){const D=orgDr(kind),C=orgChanges(D),V=orgErrs(D);if(!C.length)return'<p class="st">No changes yet.</p>';
+ return`${orgGroupHtml(C,{kind})}<p class="st">Tap a face to edit that member's change.</p>${V.E.length?`<div class="c geerr"><b>Conflicts to resolve:</b><ul class="ms">${V.E.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></div>`:''}${V.W.length?`<ul class="ms">${V.W.map(e=>`<li>⚠ ${esc(e)}</li>`).join('')}</ul>`:''}`};
+orgReview=function(kind){const D=orgDr(kind),gids=[...new Set([D.gid,...Object.values(D.asg).map(a=>a.gid)])],C=orgChanges(D);
+ ui.mod={t:'html',h:`<h2 class="ht">Review changes</h2><h3>Team membership (previous → new)</h3>${orgRosterDiffHtml(orgRoster(gids),D)}<h3>All changes</h3>${orgGroupHtml(C)}<div class="row"><button class="b p" onclick="ui.mod=null;orgConfirm('${kind}')">Confirm All Changes</button></div>`};render()};
+{const f=orgOpen;orgOpen=function(pid){f.apply(this,arguments);try{const p=orgP(pid);if(p&&ui.mod&&ui.mod.t=='html')ui.mod.h=ui.mod.h.replace(/<h3>All changes<\/h3><ul class="ms">[\s\S]*?<\/ul>/,`<h3>All changes</h3>${orgGroupHtml(p.ch)}`)}catch(e){console.error(e)}}}
+{const f=V.organn;V.organn=function(){let h=f.apply(this,arguments);try{const p=orgP(ui.orgp);const i=h.indexOf('<div class="c"><h3>Members and changes</h3>'),j=h.indexOf('<div class="row"><button class="b p" onclick="orgAnnSave');if(p&&i>=0&&j>i)h=h.slice(0,i)+`<div class="c"><h3>Members and changes</h3>${orgGroupHtml(p.ch)}</div>\n `+h.slice(j)}catch(e){console.error(e)}return h}}
+// ---- one change for several members (Team Restructuring and Shuffle Team) -----------------------------------------------
+function orgPkHtml(kind){const D=orgDr(kind),F=ui.orgf||{kind},sel=new Set((F.mids||[]).map(Number)),pool=S.members.filter(x=>x.status!='graduated'&&(kind!='sh'||gsGid(x)==D.gid));
+ return`<h2 class="ht">Choose members</h2><p class="st">${sel.size} selected · the same change is applied to each of them.</p><div class="g msel">${pool.map(m=>{const on=sel.has(m.id),a=orgTo(D,m);return`<div class="c m ${on?'msel-on':''}" onclick="orgPkTog('${kind}',${m.id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,44)}<div class="st"><b>${esc(orgNm(m))}</b><br>${esc(orgPos(a))}${a.kn?'<br>Kennin '+esc(orgKnTxt(a.kn)):''}</div></div>`}).join('')}</div><div class="row"><button class="b p" onclick="ui.mod=null;render()">Done (${sel.size})</button><button class="b s" onclick="ui.orgf.mids=[];ui.orgf.mid='';ui.mod.h=orgPkHtml('${kind}');render()">Clear</button></div>`}
+function orgPkOpen(kind){ui.orgf=ui.orgf||{kind};ui.orgf.kind=kind;ui.orgf.mids=ui.orgf.mids||(ui.orgf.mid?[+ui.orgf.mid]:[]);ui.mod={t:'html',h:orgPkHtml(kind)};render()}
+function orgPkTog(kind,id){const F=ui.orgf;F.mids=F.mids||[];const i=F.mids.indexOf(id);if(i>=0)F.mids.splice(i,1);else F.mids.push(id);F.mid=F.mids[0]?String(F.mids[0]):'';F.act='';ui.mod.h=orgPkHtml(kind);render()}
+{const f=orgFormHtml;orgFormHtml=function(kind){const F=ui.orgf=ui.orgf||{kind};if(F.mids&&F.mids.length&&String(F.mid)!=String(F.mids[0]))F.mid=String(F.mids[0]);let h=f.apply(this,arguments);try{const L=(F.mids||[]).map(get).filter(Boolean),btn=`<button class="b s" onclick="orgPkOpen('${kind}')">👥 Choose ${L.length>1?'members ('+L.length+')':'several members'}…</button>`;
+ h=h.replace('<div class="gsform">',`<div class="row orgpkb">${btn}${L.length>1?`<span class="orgself">${L.slice(0,10).map(m=>ptc(m,28)).join('')}</span><span class="st">${esc(orgJoin(L.map(orgNm)))}</span>`:''}</div><div class="gsform">`);
+ if(L.length>1)h=h.replace(/<div class="row orgfm">[\s\S]*?<\/span><\/div>/,`<p class="st">The change is applied to each of the ${L.length} members (members it does not fit are skipped).</p>`).replace(/<label>Member<select[\s\S]*?<\/select><\/label>/,'')}catch(e){console.error(e)}return h}}
+{const f=orgFormAdd;orgFormAdd=function(kind){const F=ui.orgf||{};const L=(F.mids||[]).map(Number);if(L.length<2)return f.apply(this,arguments);const keep={...F},t0=toast,r0=render;let ok=0,bad=[];
+ try{toast=(m,k)=>{if(k=='err')bad.push(m)};render=()=>{};L.forEach(id=>{ui.orgf={...keep,mid:String(id),mids:null};const before=JSON.stringify(orgDr(kind));const nb=bad.length;f.call(this,kind);if(bad.length==nb&&JSON.stringify(orgDr(kind))!=before)ok++})}finally{toast=t0;render=r0}
+ ui.orgf={kind};toast(`${ok} member(s) added to the plan${bad.length?` · ${bad.length} skipped (${bad[0]})`:''}.`);render()}}
+
+</script>
+<script>
+// =====================================================================================
 //  Monthly Sales Chart · Single sales (editions, Limited Quantity / Pre-order) · YouTube fans
 // -------------------------------------------------------------------------------------
 //  PART 1 — one official chart: the Monthly Sales Chart (physical single CD sales of a calendar month,
@@ -7770,7 +7825,7 @@ const seEdKey=(p,e)=>{const t=p.types[e.ti];return t?(e.kind=='lim'?t.name+' Lim
 const seEdName=(p,e)=>{const t=p.types[e.ti];return`${t?t.name:'?'} — ${e.kind=='lim'?'Limited Edition':'Regular Edition'}`};
 function seEst(p){try{const mn=S.songs[p.mainId],L=(mn.slots||[]).filter(Boolean).map(get).filter(Boolean),pop=L.length?avg(L.map(m=>m.pop)):30;return Math.max(1000,Math.round((pop*90+S.fans*.12)*(L.length/16+.5)*(1+.15*(p.types.length-1))))}catch(e){return 5000}}
 function seSale(p){if(!p||plAlb&&plAlb(p))return null;if(!p.sale)p.sale={eds:[],hsDay:null};const SL=p.sale;SL.eds=SL.eds.filter(e=>p.types[e.ti]);p.types.forEach((t,i)=>{if(!SL.eds.some(e=>e.ti==i&&e.kind=='reg'))SL.eds.push({id:'ed'+(++S.sid),ti:i,kind:'reg',m:'qty',cap:Math.max(10000,Math.round(seEst(p)*3/1000)*1000),od:0,len:30})});SL.eds.sort((a,b)=>a.ti-b.ti||(a.kind=='reg'?-1:1));return SL}
-const seRel=p=>p.releaseDay!=null?p.releaseDay:S.day+(CFG.prodDays||28);
+const seRel=p=>{const mn=S.day+(CFG.prodDays||28);return p.releaseDay!=null?p.releaseDay:(p.relPick!=null&&p.relPick>=mn?p.relPick:mn)};
 function seEdSet(id,k,v){const p=S.pj,SL=seSale(p);if(!SL)return;if(p.status=='released')return;const e=SL.eds.find(z=>z.id==id);if(!e)return;const R=seRel(p);
  if(k=='m')e.m=v=='pre'?'pre':'qty';else if(k=='cap'){const n=Math.round(+v);if(!(n>=1))return toast('The stock must be at least 1 CD.','err');e.cap=Math.min(5000000,n)}
  else if(k=='open'){const d=dateDay(new Date(v+'T00:00:00'));if(!Number.isFinite(d))return;if(d<R)return toast(`Pre-orders open on Release Day (${jd(R)}) at the earliest.`,'err');const close=R+e.od+e.len-1;e.od=d-R;e.len=Math.max(1,Math.min(SE_MAXPRE,close-d+1))}
@@ -7870,6 +7925,65 @@ function seMvFans(o,dv){const v=o.mv;const rate=.0022/(1+Math.sqrt(Math.max(0,v.
 {const f=mvOpen;mvOpen=function(id){f.apply(this,arguments);try{const o=S.songs[id],v=o&&o.mv;if(v&&ui.mod&&ui.mod.t=='html'){const L=Object.entries(v.mf||{}).map(([k,n])=>[get(+k),n]).filter(x=>x[0]).sort((a,b)=>b[1]-a[1]);ui.mod.h+=`<div class="c"><h3>Fans from this MV</h3><p class="st">New group fans: <b>${(v.yf||0).toLocaleString()}</b>. Part of them became fans of the members in the MV (by formation position and popularity).</p><div class="semvf">${L.map(([m,n])=>`<span>${ptc(m,34)}<b>${esc(m.name.split(' ')[0])}</b><small>+${n.toLocaleString()}</small></span>`).join('')||'<span class="st">None yet.</span>'}</div></div>`;render()}}catch(e){console.error(e)}}}
 // CD Cover Studio: Limited Edition covers are editions of their own (designed and saved separately)
 {const f=syncEds;syncEds=function(){const keep=ui.cd,ed=ui.ed;const r=f.apply(this,arguments);try{const p=S.pj;if(ui.cvCtx!='album'&&p&&p.sale&&!(plAlb&&plAlb(p))){p.sale.eds.filter(e=>e.kind=='lim').forEach(e=>{const k=seEdKey(p,e);if(!EDS.includes(k))EDS.push(k)});if(!ui.cd&&keep&&EDS.includes(ed))ui.cd=keep}}catch(e){console.error(e)}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  Single release follow-up: announcement in the history, Release Day, Limited stock, Handshake,
+//  election ceremony date
+// -------------------------------------------------------------------------------------
+//  · Discography: the Senbatsu announcement of each single (lists by group / team) can be opened again.
+//  · Release Day: the player chooses the Release / Launch Day (at least the usual production time
+//    ahead — production still takes CFG.prodDays days). Theater shows of the group on that day are
+//    cancelled; other activities that clash with a member's schedule block the date.
+//  · Limited Quantity editions keep selling (a slow tail never stops) until they are sold out.
+//  · Handshake / Hi-Touch: tickets = CDs sold up to Day 2 of the event (Day 2 is recalculated).
+//  · General Election: the Ranking Announcement Ceremony (date and venue) must be chosen before the
+//    election single is released; it is booked automatically when voting closes. That single's
+//    Handshake / Hi-Touch moves to the weekend after the ceremony.
+// =====================================================================================
+// ---- 1. the announcement in the single's history ----------------------------------------------------------------------
+function seAnnOpen(i){const x=S.singles[i];if(!x||!x.ann)return toast('No announcement was recorded for this single.','err');const pd=CFG.prodDays||28;
+ ui.mod={t:'html',h:plAnnounce({title:x.title,num:x.num,ann:x.ann,startDay:x.relDay-pd,releaseDay:x.relDay,id:x.pid})};render()}
+{const f=showEds;showEds=function(i){f.apply(this,arguments);try{const x=S.singles[i];if(x&&x.ann&&ui.mod&&ui.mod.t=='html')ui.mod.h=ui.mod.h.replace('</h2>',`</h2><div class="row"><button class="b s p" onclick="seAnnOpen(${i})">📣 Senbatsu announcement</button></div>`)}catch(e){console.error(e)}}}
+// ---- 2. Release Day ----------------------------------------------------------------------------------------------------
+const seRelMin=()=>S.day+(CFG.prodDays||28);
+function seRelMembers(p){return[...new Set((typeof usedSongs=='function'?usedSongs(p):[p.mainId]).flatMap(i=>(S.songs[i]&&S.songs[i].slots||[]).filter(Boolean)))]}
+function seRelConf(p,d){const out=[];seRelMembers(p).forEach(id=>{const m=get(id);if(!m)return;busy(id,[d]).filter(e=>!(p.id&&e.pid==p.id)).forEach(e=>out.push(`${m.name}: ${e.title||e.type} (${jd(d)})`))});return[...new Set(out)]}
+function seRelShows(d){try{return thKeys().filter(K=>K.gid==gsAg()).flatMap(K=>thShowsOf(K.key).filter(x=>x.st=='sched'&&x.day==d).map(x=>({x,K})))}catch(e){return[]}}
+function seRelSet(v){const p=S.pj;if(!p||p.status!='draft')return;const d=dateDay(new Date(v+'T00:00:00'));if(!Number.isFinite(d))return;if(d<seRelMin())return toast(`Production takes ${CFG.prodDays} days: the earliest Release Day is ${jd(seRelMin())}.`,'err');p.relPick=d;render()}
+function seRelCard(p){if(!p||p.status!='draft')return'';const d=seRel(p),C=seRelConf(p,d),SH=seRelShows(d);
+ return`<div class="c serel"><h3>Release / Launch Day</h3><p class="st">Production takes ${CFG.prodDays} days. Choose the day the single goes on sale and its launch event is held (earliest ${jd(seRelMin())}).</p><label class="st">Release Day <input type="date" min="${thDateStr(seRelMin())}" value="${thDateStr(d)}" onchange="seRelSet(this.value)"></label> <b>${jd(d)}</b>
+ ${SH.length?`<p class="st">⚠ ${SH.length} Theater performance(s) that day (${SH.map(z=>esc(z.K.label)+' '+TH_SLOT[z.x.sl]).join(', ')}) will be cancelled.</p>`:''}${C.length?`<div class="c geerr"><b>Members are busy that day:</b><ul class="ms">${C.slice(0,6).map(c=>`<li>${esc(c)}</li>`).join('')}</ul>Choose another day.</div>`:''}</div>`}
+{const f=reqs;reqs=function(p){const r=f.apply(this,arguments);try{if(p&&p.status=='draft'){if(p.relPick!=null&&p.relPick<seRelMin())r.push(`Release Day ${jd(p.relPick)} is too early now (earliest ${jd(seRelMin())}): choose it again.`);const C=seRelConf(p,seRel(p));if(C.length)r.push(`Release Day ${jd(seRel(p))}: ${C[0]}`)}}catch(e){console.error(e)}return r}}
+{const f=startSingle;startSingle=function(){const p=S.pj,was=p&&p.status,pick=p&&p.relPick;const r=f.apply(this,arguments);try{if(p&&was=='draft'&&p.status=='producing'&&pick!=null&&pick>p.releaseDay){const old=p.releaseDay,dd=pick-old;p.releaseDay=pick;if(S.prod)S.prod.left=pick-S.day;
+  (S.cal||[]).forEach(e=>{if(e.done||e.pid!=p.id)return;if(e.day==old){e.day=pick;if(e.day2!=null)e.day2+=dd}});if(p.hs&&hsOn(p))try{hsSched2(p,null)}catch(e){}}
+  if(p&&was=='draft'&&p.status=='producing')seRelShows(p.releaseDay).forEach(({x})=>{x.st='cancel';x.why=`Release Day of “${p.title}”`})}catch(e){console.error(e)}return r}}
+// shows added later on the Release Day are cancelled too
+{const f=thPerform;thPerform=function(x){try{if(x&&x.st=='sched'&&S.pj&&S.pj.status=='producing'&&S.pj.releaseDay==x.day){const K=thKeys().find(k=>k.key==x.k);if(K&&K.gid==gsAg()){x.st='cancel';x.why=`Release Day of “${S.pj.title}”`;return}}}catch(e){}return f.apply(this,arguments)}}
+{const f=V.music;V.music=function(){let h=f.apply(this,arguments);try{const p=S.pj;if(p&&p.status=='draft'&&!(plAlb&&plAlb(p))){const c=seRelCard(p),i=h.indexOf('<div class="c sesale">');h=i>=0?h.slice(0,i)+c+h.slice(i):h+c}}catch(e){console.error(e)}return h}}
+// ---- 3. Limited Quantity: keeps selling until sold out --------------------------------------------------------------
+seCurve=function(t){if(t<0)return 0;if(t==0)return .55;if(t<7)return .45*IND_D[t-1];return Math.max(.0004,.12*Math.pow(.6,Math.floor(t/7)-1)/7)};
+{const f=seDay;seDay=function(x,d){if(x&&x.sale)x.sale.eds.forEach(e=>{if(e.m=='qty'&&e.st=='ended')e.st='selling'});return f.apply(this,arguments)}}
+// ---- 4. Handshake: tickets sold up to Day 2 ----------------------------------------------------------------------------
+{const f=hsRun2;hsRun2=function(ev,part){const x=ev&&S.singles.find(s=>s.rid==ev.rid);try{if(x&&x.sale&&typeof seDay=='function')seDay(x,S.day)}catch(e){}
+ if(part==2&&x&&ev.plan&&!ev.r2){try{const T0=ev.plan.tickets||0,T1=(x.cd&&x.cd.tickets)||0;if(T1>T0){const N=hsGo(ev,x),P=ev.plan;P.rows.forEach(r=>{const n=N.rows.find(z=>z.mid==r.mid);if(n){r.g2=Math.max(r.g2,n.gain-r.g1);r.gain=r.g1+r.g2}});Object.assign(P,{tickets:N.tickets,want:N.want,red:Math.max(P.red,N.red),att:Math.max(P.att,N.att),lost:N.lost,orders:N.orders,cds:N.cds,t2:1})}}catch(e){console.error(e)}}
+ return f.apply(this,arguments)}}
+// ---- 5. General Election: ceremony chosen before the election single is released ---------------------------------------
+function geCerPlanHtml(e){const p=S.pj;if(!e||!p||p.ge!=e.id||p.status!='producing')return'';const vE=geEnd(p.releaseDay),D=[];for(let d=vE+1;d<=vE+70;d++)if(geIsWE(d))D.push(d);const P=e.cerPlan||{};
+ return`<div class="c gesched"><h3>Ranking Announcement Ceremony</h3><p class="st">Choose the ceremony now — before the election single is released. Voting closes ${longDate(vE)}; the ceremony is booked automatically then (venue paid at booking). The single's Handshake / Hi-Touch takes place the weekend after the ceremony.</p>
+ <div class="row"><label class="st">Date <select onchange="geCerPlanSet('day',this.value)"><option value="">Choose…</option>${D.map(d=>`<option value="${d}" ${d==P.day?'selected':''}>${dayDate(d).toLocaleDateString('en-US',{weekday:'short'})}, ${longDate(d)}</option>`).join('')}</select></label><label class="st">Venue <select onchange="geCerPlanSet('ven',this.value)"><option value="">Choose…</option>${GE_VEN.map(z=>`<option value="${z.id}" ${z.id==P.ven?'selected':''}>${esc(z.n)} · ${z.cap.toLocaleString()} seats · ${yen(z.cost)}</option>`).join('')}</select></label></div>${P.day&&P.ven?`<p class="st">✔ ${longDate(P.day)} · ${esc((GE_VEN.find(z=>z.id==P.ven)||{}).n||'')} · Handshake ${longDate(geHsDay(P.day))}</p>`:'<p class="st thwarn">Required before Release Day.</p>'}</div>`}
+const geHsDay=c=>{let d=c+1;while(dowOf(d)!=6||d<=c+1)d++;return d};
+function geCerPlanSet(k,v){const e=geCur();if(!e)return;e.cerPlan=e.cerPlan||{};e.cerPlan[k]=k=='day'?(+v||null):(v||null);render()}
+{const f=readiness;readiness=function(p){const r=f.apply(this,arguments);try{if(p&&p.ge){const e=geGet(p.ge);if(e&&!(e.cerPlan&&e.cerPlan.day&&e.cerPlan.ven))r.push('General Election: choose the Ranking Announcement Ceremony date and venue before the election single is released.')}}catch(x){console.error(x)}return r}}
+{const f=V.ge;V.ge=function(){let h=f.apply(this,arguments);try{const e=geCur();if(e&&e.st=='producing'){const c=geCerPlanHtml(e);const i=h.indexOf('<div class="c gecosc">');h=i>=0?h.slice(0,i)+c+h.slice(i):h+c}}catch(x){console.error(x)}return h}}
+{const f=V.music;V.music=function(){let h=f.apply(this,arguments);try{const p=S.pj;if(p&&p.ge&&p.status=='producing'){const e=geGet(p.ge);h=geCerPlanHtml(e)+h}}catch(x){console.error(x)}return h}}
+// the election single's Handshake / Hi-Touch: the weekend after the ceremony
+{const f=doRelease;doRelease=function(){const p=S.pj;let H=null;try{if(p&&p.ge){const e=geGet(p.ge);if(e&&e.cerPlan&&e.cerPlan.day)H={pid:p.id,day:geHsDay(e.cerPlan.day)}}}catch(x){}GE_HSF=H;try{return f.apply(this,arguments)}finally{GE_HSF=null}}}
+let GE_HSF=null;
+{const f=scheduleHS;scheduleHS=function(o){const ev=f.apply(this,arguments);try{const H=GE_HSF;if(H&&ev&&o&&o.pid==H.pid&&!ev.done&&!ev.r1){ev.day=H.day;ev.day2=H.day+1;ev.geAfter=1}}catch(x){}return ev}}
+// voting closes → the planned ceremony is booked automatically
+{const f=geClose;geClose=function(e){const r=f.apply(this,arguments);try{if(e&&e.st=='closed'&&e.cerPlan&&e.cerPlan.day&&e.cerPlan.ven&&!e.cer){const d=e.cerPlan.day>S.day?e.cerPlan.day:geDates(e)[0];const g0=[ui.gecd,ui.gecv];ui.gecd=d;ui.gecv=e.cerPlan.ven;const cur=geS().cur;geS().cur=e.id;try{geBook()}finally{ui.gecd=g0[0];ui.gecv=g0[1];geS().cur=cur}}}catch(x){console.error(x)}return r}}
 
 </script>
 <script>
@@ -8363,6 +8477,8 @@ Object.assign(I18N_TH,{"Lyrics theme":"ธีมเนื้อเพลง","Ly
 I18N_TH_TPL.unshift(["Week of {0}","สัปดาห์ {0}"],["{0} week(s) on chart · {1} week(s) at No.1","อยู่ในชาร์ต {0} สัปดาห์ · อันดับ 1 {1} สัปดาห์"],["{0} artist(s) · {1} in the industry","{0} ศิลปิน · ในวงการทั้งหมด {1}"],["Live evaluation · {0}","ผลประเมินสด · {0}"],["Senbatsu results · {0}","ผลเซ็มบัตสึ · {0}"],["{0} member(s) · {1} Center(s)","{0} คน · เซ็นเตอร์ {1} คน"],["{0} high","สูง {0}"],["{0} moderate","ปานกลาง {0}"],["{0} low","ต่ำ {0}"]);
 // Monthly Sales Chart / Sales & Editions
 Object.assign(I18N_TH,{"Monthly Sales Chart":"ชาร์ตยอดขายรายเดือน","Artists":"ศิลปิน","Open the full chart":"ดูชาร์ตเต็ม","Sales & Editions":"การขายและฉบับ","Editions & sales":"ฉบับและยอดขาย","Limited Quantity":"จำกัดจำนวน","Pre-order":"พรีออเดอร์","+ Add a Limited Edition":"+ เพิ่มฉบับลิมิเต็ด","Remove":"ลบ","Pre-order results":"ผลพรีออเดอร์","Total":"รวม","Your singles · editions":"ซิงเกิ้ลของคุณ · ฉบับต่าง ๆ","Fans from this MV":"แฟนจาก MV นี้","Handshake / Hi-Touch date":"วันงานจับมือ / ไฮทัช","🎲 Random cover":"🎲 สุ่มปก","None yet.":"ยังไม่มี","Not ranked yet.":"ยังไม่ติดอันดับ","No single sold a CD this month.":"เดือนนี้ไม่มีซิงเกิ้ลที่ขายได้"});
+Object.assign(I18N_TH,{"📣 Senbatsu announcement":"📣 ประกาศเซ็มบัตสึ","Release / Launch Day":"วันวางขาย / วันเปิดตัว","Release Day":"วันวางขาย","Ranking Announcement Ceremony":"พิธีประกาศผลอันดับ","Required before Release Day.":"ต้องเลือกก่อนวันวางขาย","Choose members":"เลือกเมมเบอร์","Done":"เสร็จ","Tap a face to edit that member's change.":"แตะรูปเพื่อแก้ไขการเปลี่ยนแปลงของเมมคนนั้น","Promoted":"เลื่อนขั้น","Demoted":"ลดขั้น","Kennin ended":"สิ้นสุดการควบวง","No team yet":"ยังไม่มีทีม"});
+I18N_TH_TPL.push(["{0} selected","เลือก {0} คน"],["From {0}","จาก {0}"],["{0} Kennin","ควบ {0}"],["To {0}","ย้ายไป {0}"]);
 
 </script>
 <script>
