@@ -662,3 +662,7 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
   - conflict checks against schedules and Theater shows;
   - a full record in her profile.
   It never changes any team's Stage performance count. The Former Members page groups Honorary Graduates, Graduated, Agency Retained and Dismissed members.
+- **Trainee Stage & promotions**: promoted Trainees no longer perform in the Trainee Stage. A restructuring that changes the Trainee roster gives the Trainee theater a transition, where the old lineup performs until the final performance. If no Trainees are left, or fewer than the Stage's main lineup, that performance automatically becomes the final performance of the Setlist Stage. It is the first performance 14+ days after the announcement, and you can change it.
+- **Units**: only members of the Stage's main lineup can join or perform Unit songs.
+- **Birthday Stage**: Trainees with a Trainee Stage can have one. A member must have been in the group for at least 3 months. Birthday photos (group and solo) show her holding a cake on the stage, in the costume of the last song of the Birthday special show.
+- **Senbatsu filter**: "Only members not yet in any other song of this single".
