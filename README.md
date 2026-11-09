@@ -671,3 +671,30 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
 - Startup parses the save once: the newer of the localStorage and IndexedDB copies is picked by its timestamp without parsing. The title screen and Continue reuse that result, and the backup copy is written from the raw text.
 - Saves over 512 KB are written to IndexedDB only. The synchronous localStorage write is skipped, and the old localStorage copy is freed.
 - Old Theater performance records are archived (the newest 60 per theater keep every detail). Finished or cancelled schedule slots older than 120 days are removed. This runs on load and monthly, and cuts saves by about a third after 2 years of play.
+
+## Member decisions, obligations & graduation details (`js/ui/grad3.js`)
+- **Motivations**: each member has her own dream (acting, solo, modeling, variety or study), family pull and dream strength. Every month her situation is evaluated from real data:
+  - health and workload (wellness, Theater load, energy);
+  - being overlooked (missed Title Track Senbatsu, never Center);
+  - outside agency offers;
+  - a sense of completion (years in the group, achievements);
+  - family and age, morale, Loyalty and stay agreements.
+
+  The strongest factor becomes her reason. Occasional hints reflect it, and hints never trigger graduation by themselves.
+- **Loyalty** (separate from Passion and health) changes monthly from rest, workload, Senbatsu, group success and kept or broken promises.
+- **Graduation request**: a private talk showing her reason, feelings, plans and preferred timing. You can accept, **Persuade to Stay**, or **Talk Further**.
+  - The persuasion approach depends on her reason, and success uses some Loyalty.
+  - There is a maximum of 3 successful persuasions per member, ever.
+  - The estimated extension depends on Loyalty (1 month up to 10–12 months). It never renews the contract, and she may ask again at any time.
+  - A request left unanswered is announced 30 days after the last talk.
+- **Timeline**: the Graduation Stage comes at least ~90 days after the announcement, and after every obligation confirmed before it:
+  - scheduled events she is in;
+  - singles in production that include her;
+  - a confirmed General Election, until its election single's Handshake Event.
+
+  The stage is arranged within 30 days after that, and her graduation date is the Graduation Stage date. A General Election confirmed after her announcement does not include her.
+- **Graduation Stage**: a team Theater performance with its own editable Setlist (released songs and Theater songs, Encore, Centers, rows, units, members and costumes).
+  - It is generated from her career, starting with her first Center song, first Senbatsu song, Theater units and first Stage, spread across her career periods.
+  - Her complete song history (Singles & Albums / Theater, with status and position) is shown while editing.
+- **Final Message** (unique and immutable) and **Title Badges** are calculated from her real records and shown in the Graduated profile. They are cosmetic only.
+- **Dismissal grounds** (sufficient / insufficient) decide compensation and fan reaction.

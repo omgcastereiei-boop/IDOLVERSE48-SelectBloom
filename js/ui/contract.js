@@ -140,8 +140,7 @@ function ctTick(){const C=ctS(),Y=ctY(S.day);
   if(!m.grad&&!c.next){const left=c.end-S.day;
    if(left<=90&&(!c.talk||c.talk.end!=c.end)){c.talk={day:S.day,end:c.end,int:ctIntent(m),tries:0,res:null};hev(m,{t:'ct_talk'});ctLog(m,'talk',`Contract expiring on ${longDate(c.end)}: ${CT_INT[c.talk.int]}`);CTQ.push(`<div class="ctbd">📄 <b>${esc(m.name)}</b>'s contract ends on ${longDate(c.end)} (3 months). She ${CT_INT[c.talk.int]}. <button class="b s p" onclick="ui.mod=null;ctTalkOpen(${m.id})">Talk with her</button></div>`)}
    else if(left<=60&&c.talk&&!c.talk.res){ctAnnounce(m,{reason:'exp',target:Math.max(S.day+14,c.end),quiet:1})}}
-  // member request: a rare wish to graduate
-  if(!m.grad&&!m.req&&!c.next&&c.end-S.day>120&&S.day-(m.joined||0)>365){const p=.00012*(1+Math.max(0,m.age-22)*.3)*(m.mor<35?2:1)*(m.pas<40?1.5:1);if(Math.random()<p){m.req={day:S.day};hev(m,{t:'ct_req'});ctLog(m,'req','Asked to graduate');CTQ.push(ctReqHtml(m))}}
+  // member requests come from the motivation system (grad3.js)
   if(m.req&&!m.grad&&S.day-m.req.day>=30)ctAnnounce(m,{reason:'req',target:S.day+90,early:S.day+90<c.end-30?'ret':null,quiet:1});
  }catch(e){console.error('ct',m&&m.id,e)}});
  // careers one month after leaving; Agency Retained → Graduated at the contract end
