@@ -70,7 +70,7 @@ function spCancel(x,why){const sp=x.sp;sp.cx=why;sp.mids.forEach(id=>{const m=ge
    rec.sp={kind:sp.kind,mids:sp.mids.slice(),names:sp.mids.map(id=>(get(id)||{}).name||''),songs,setl,cz:Object.fromEntries([...new Set([...sp.mids,...songs.flatMap(z=>z.ids)])].map(id=>[id,czn(id)])),stage:st?st.name:'',stno:st?thNoTxt(st):''};
    const summ={day:x.day,pf:rec.id,team,stage:rec.sp.stage,stno:rec.sp.stno,setl,songs:songs.map(z=>({title:z.title,center:z.center,ids:z.ids,unit:z.unit,rows:z.rows})),cz:rec.sp.cz};
    sp.mids.forEach(id=>{const m=get(id);if(!m)return;if(sp.kind=='bd'){m.bdh=m.bdh||[];m.bdh.push({...summ,age:m.age,gid});hev(m,{t:'bd_stage',age:m.age,stage:summ.stage});ctLog(m,'bdst',`Birthday Stage (age ${m.age}) at ${team}`)}
-    else{hev(m,{t:'grad_stage',stage:summ.stage});m.gstage=summ;ctComplete(m,{rec:summ})}});
+    else{hev(m,{t:'grad_stage',stage:summ.stage});m.gstage=summ;if(m.grad)m.grad.done={rec:summ,day:x.day}}});
    x.spDone=sp;delete x.sp;
    resNote(`<div class="c thres spres"><b>${sp.kind=='grad'?'🎓':'🎂'} ${SP_K[sp.kind]} — ${esc(rec.sp.names.join(', '))}</b><div class="st">Encore + ${songs.map(z=>`“${esc(z.title)}”${z.center?` (Center ${esc((ctMem(z.center)||{}).name||'')})`:''}`).join(', ')}</div></div>`)}}catch(e){console.error(e)}return r}}
 // performance summary: special stage section
@@ -79,7 +79,7 @@ function spCancel(x,why){const sp=x.sp;sp.cx=why;sp.mids.forEach(id=>{const m=ge
 // cancelled performances lose their special stage
 {const f=thPerform;thPerform=function(x){const sp=x&&x.sp;const r=f.apply(this,arguments);try{if(sp&&x.sp&&x.st=='cancel')spCancel(x,x.why||'performance cancelled')}catch(e){console.error(e)}return r}}
 // graduation date passed without a stage → the next performance of her team becomes her Graduation Stage
-{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.th)S.members.forEach(m=>{if(!m.grad)return;const x0=m.grad.stage&&spShow(m.grad.stage);if(x0&&x0.sp&&x0.st=='sched')return;m.grad.stage=null;if(S.day<m.grad.target)return;
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.th)S.members.forEach(m=>{if(!m.grad||m.grad.done)return;{const H=m.grad.hon&&hgOf(m.grad.hon);if(H&&H.st=='sched')return}const x0=m.grad.stage&&spShow(m.grad.stage);if(x0&&x0.sp&&x0.st=='sched')return;m.grad.stage=null;if(S.day<m.grad.target)return;
   const L=spOpts(m,'grad').filter(x=>x.day>S.day);if(L.length){const x=L[0];x.sp=x.sp||{kind:'grad',mids:[],songs:[],cz:{}};if(!x.sp.mids.includes(m.id))x.sp.mids.push(m.id);m.grad.stage=x.id;if(!x.sp.songs.length){const S0=spSongs(x.k),gs=S0.find(o=>o.gf==m.id);x.sp.songs.push({song:(gs||S0[0]||{}).id||null,ids:thPool(x.k).map(z=>z.id),center:m.id,unit:'',rows:{}})}
    CTQ.push(`<div class="ctbd">🎓 ${esc(m.name)}'s graduation date has passed: her Graduation Stage is set to ${wd(x.day)} ${TH_SLOT[x.sl]}. <button class="b s" onclick="ui.mod=null;ui.spx='${x.id}';goView('spst')">Edit</button></div>`)}
   else if((S.day-m.grad.target)%7==0)CTQ.push(`<div class="ctbd">⚠ ${esc(m.name)} needs a Graduation Stage: schedule a performance for ${esc(spLabel(spKey(m)))}.</div>`)})}catch(e){console.error(e)}return r}}

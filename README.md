@@ -651,3 +651,14 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
 - **Dismissal**: reason, Immediate or with a Graduation Stage. Unjustified dismissals pay compensation (Finance History), lose fans and lower single sales for a while (boycott); Company Rules violations, Repeated Misconduct and Contract Violations cost no compensation.
 - **Careers** are announced one month after leaving. Former members can be signed as **Solo Idols** or a **New Idol Group** (Members › Solo & New Groups), with their own singles, MV views, covers, fans and sales — no teams, theater or elections.
 - **Birthdays**: every member has a birthday (editable in the profile). Age goes up by one on the birthday, with a notice 7 days ahead. Birthdays have no stat effects.
+- **Birthday Stage scheduling**: any scheduled performance of her team's active Stage within 30 days before or after her birthday. **Auto-Schedule Birthday Stage** (Birthdays page, or per member in the profile) picks the closest performance; ties go to the earlier day, then the Afternoon show. It adds 1–3 random released songs after the Encore, with the birthday member as Center, rows by popularity, and her existing Stage unit when there is one. Everything stays editable. No performance is ever created; if none fits, you are notified.
+- **Auto-Schedule Graduation Stage** (Contracts & Graduation page, or 🎲 per member) proposes the team performance closest to (and not after) the contract end or her last day. Farewell songs come first, starting with her Graduation Songs. You confirm the date and can edit everything. She graduates the **day after** her Graduation Stage.
+- **Graduation costumes**: a Graduation category in the Costume Studio (flowers, lace trim, pearls, graduation sash, academic gown, layered train, corsage, bouquet). It also adds floor-length gowns, formal and lace sleeves and collars, floral hair accessories, a graduation cap, and 7 graduation dress styles. Random costume generators never use these pieces.
+- **Honorary Graduates**: members who graduate at the end of their contract (contract expiry; not early, not dismissed). They get an academic gown (cap, robe and sash in the group colour) as their profile image, and their Graduation Costume is kept. Instead of a team-show stage they can have a standalone **Honorary Graduation Stage**:
+  - its own Setlist and Encore, Centers, rows and units;
+  - members from any team or sister group;
+  - existing songs and Costume Library costumes only;
+  - a random Setlist or random members if you want them;
+  - conflict checks against schedules and Theater shows;
+  - a full record in her profile.
+  It never changes any team's Stage performance count. The Former Members page groups Honorary Graduates, Graduated, Agency Retained and Dismissed members.
