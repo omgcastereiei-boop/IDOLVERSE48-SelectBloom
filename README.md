@@ -710,3 +710,16 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
 - Milestones, history (kept after transfer, graduation and dismissal), automatic **Social Circles** and a **Relationship News** feed are included. There are no popups.
 - **Members › Relationships**: overview, member list (sort and filter) and a pair detail with Bond in both directions. Profiles show the closest relationships.
 - The Producer can only observe; there are no controls. Effects are moderate and use existing systems only: conflict stress, comfort relief, rivalry → Passion, and friends' reactions to graduations.
+
+## Fanbase, Oshi & fan economy (`js/ui/faneco.js`, extends `js/ui/fanbase.js`)
+- **One fan identity**: the existing cohorts in `S.fb.segs`. Nothing is duplicated; the extra data is stored on the same segments.
+- **Six categories**: Casual, Regular, Dedicated, Hardcore, Dormant, Former. Fans move between them every month (active ↔ dormant → former); former fans are kept as history and not counted in the fanbase.
+- **Attributes** per segment: group interest, loyalty, activity, spending power, willingness to spend, purchase frequency, event tendency, social engagement, preferred activity, and a shared monthly **budget**.
+- **Oshi**: one Kami Oshi per group (`k`, plus `k2` for other groups) and any number of Oshi. **Affinity** is tracked per member per segment. Unique supporters are never double-counted.
+- **Member fan categories** are separate from the group category, calculated from affinity, and split into Kami Oshi and Other Oshi. Each member has her own Dormant and Former pools. Monthly snapshots are kept.
+- **Economy**: CD sales, merchandise, Theater tickets, election tokens and other ticket income are charged to fan budgets (`fxPay`), and logged per kind, fan category, member and group. Revenue is still booked once by the existing systems.
+  - Remaining budget feeds back into CD, merchandise and election demand.
+  - Election tokens are bought per segment and given to Kami Oshi first, then Oshi (existing election rules unchanged).
+  - Handshake tickets come with CDs, so they are not charged again.
+- **Fanbase** page (replaces the old Fan Club title page): Overview, Oshi Ranking (sort by any category, filter by group, team, current or graduated), Fan Spending, Fan Activity (tickets vs unique vs repeat), Regional, Kami Oshi & Teams. Member profiles have a Fanbase section; graduated profiles keep their fan history.
+- No Fan Club, membership or subscription features.
