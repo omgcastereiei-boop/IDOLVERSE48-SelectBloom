@@ -698,3 +698,15 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
   - Her complete song history (Singles & Albums / Theater, with status and position) is shown while editing.
 - **Final Message** (unique and immutable) and **Title Badges** are calculated from her real records and shown in the Graduated profile. They are cosmetic only.
 - **Dismissal grounds** (sufficient / insufficient) decide compensation and fan reaction.
+
+## Member Relationship System (`js/ui/rel.js`)
+- Every member pair has directional **Bond** (0–100, levels from Barely Acquainted to Deeply Connected). It also has **Attitude** (several feelings at once, marked observed, inferred or private) and **Relationship Dynamics** (several labels can apply together).
+- It is fed only by what members actually live through: Theater performances and Units, songs in the same single, Center competition, election ranks, team membership, birthdays, comfort in hard times and senpai lessons.
+  - Counters are collected as these happen, and the evaluation runs weekly.
+  - Personality (`m.pers`, traits and a per-member profile `m.rp`) and a per-pair compatibility shape the probabilities.
+- Events cover friendship, senior–junior, rivalry, conflict (with a mediator or an apology, or no resolution at all) and romance.
+  - Romance is adults only (18+), rare and non-explicit. It stays private until it is shown.
+  - Dialogue varies and is not repeated for the same pair.
+- Milestones, history (kept after transfer, graduation and dismissal), automatic **Social Circles** and a **Relationship News** feed are included. There are no popups.
+- **Members › Relationships**: overview, member list (sort and filter) and a pair detail with Bond in both directions. Profiles show the closest relationships.
+- The Producer can only observe; there are no controls. Effects are moderate and use existing systems only: conflict stress, comfort relief, rivalry → Passion, and friends' reactions to graduations.
