@@ -666,3 +666,8 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
 - **Units**: only members of the Stage's main lineup can join or perform Unit songs.
 - **Birthday Stage**: Trainees with a Trainee Stage can have one. A member must have been in the group for at least 3 months. Birthday photos (group and solo) show her holding a cake on the stage, in the costume of the last song of the Birthday special show.
 - **Senbatsu filter**: "Only members not yet in any other song of this single".
+
+## Long-game performance (`js/ui/saveopt.js`)
+- Startup parses the save once: the newer of the localStorage and IndexedDB copies is picked by its timestamp without parsing. The title screen and Continue reuse that result, and the backup copy is written from the raw text.
+- Saves over 512 KB are written to IndexedDB only. The synchronous localStorage write is skipped, and the old localStorage copy is freed.
+- Old Theater performance records are archived (the newest 60 per theater keep every detail). Finished or cancelled schedule slots older than 120 days are removed. This runs on load and monthly, and cuts saves by about a third after 2 years of play.
