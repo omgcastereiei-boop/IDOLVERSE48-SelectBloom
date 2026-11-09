@@ -639,3 +639,15 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
 - **Handshake:** a pre-order longer than one month moves the existing Handshake / Hi-Touch event to a Saturday–Sunday after the latest closing date, chosen by the player.
 - **General Election singles** keep their own voting-period sales.
 - **YouTube MV views** bring new group fans at a balanced, diminishing rate. About 35% of them also become fans of the members in the MV, weighted by position (Center > front > middle > back) and popularity.
+
+## Contracts, Graduation, Dismissal & Birthdays (`js/ui/contract.js`, `js/ui/spstage.js`)
+- **Contracts**: set at the audition (Fixed-term N years from joining, or Age-based until age N). Existing members get a 5-year contract from their joining date. 3 months before the end the member and the Producer talk (she wants to renew / graduate / is undecided); the Producer proposes a duration and she accepts or refuses. There is no limit on renewals, and every contract and renewal is kept in the contract history. If nothing is decided, graduation is announced automatically 60 days before the end.
+- **Status**: Active, Graduation Announced, Contract Expiring, Contract Renewal, Graduated, Agency Retained, Dismissed.
+- **Graduation**: started by a member request, a Producer proposal (she must agree) or contract expiry. It is announced to fans; she stays active up to ~90 days and graduates at her mandatory **Graduation Stage**. Early graduation: A) contract termination fee (by remaining months, booked in Finances), or B) Agency Retained until the contract end (no entertainment work).
+- **Graduation Song / Graduation Single**: tag songs where she is the Center, and the single itself. The release must come before her graduation date; both are shown in the Discography and her history.
+- **Graduation Stage / Birthday Stage**: a scheduled Theater performance of her team. The Setlist is unchanged, plus 1–3 released songs at the end of the Encore, each with its own Center, rows, unit name and participants. Special stages don't add to the Stage's performance count.
+  - The Graduation Costume is made in the Costume Studio and becomes her final profile image.
+  - Birthday Stage costumes come from the Costume Library only. Its history is kept on the member.
+- **Dismissal**: reason, Immediate or with a Graduation Stage. Unjustified dismissals pay compensation (Finance History), lose fans and lower single sales for a while (boycott); Company Rules violations, Repeated Misconduct and Contract Violations cost no compensation.
+- **Careers** are announced one month after leaving. Former members can be signed as **Solo Idols** or a **New Idol Group** (Members › Solo & New Groups), with their own singles, MV views, covers, fans and sales — no teams, theater or elections.
+- **Birthdays**: every member has a birthday (editable in the profile). Age goes up by one on the birthday, with a notice 7 days ahead. Birthdays have no stat effects.
