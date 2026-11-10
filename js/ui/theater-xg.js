@@ -22,7 +22,7 @@ function thAllK(fn){const p=GS_ALLK;GS_ALLK=1;try{return fn()}finally{GS_ALLK=p}
  const add=L.map(s=>`<div class="thstc ${s.status}"><span class="thno sm">${ordN(s.no)}</span><b>${esc(s.name)}</b><small>${esc(thLabelAny(s.k))} · ${s.status}</small><button class="b s p" onclick="thRevival('${s.id}')">✦ Revival Stage</button></div>`).join('');
  const i=h.indexOf('<div class="thsth">',h.indexOf('<div class="c threv">'));return i<0?h:h.slice(0,i+19)+add+h.slice(i+19)}catch(e){console.error(e);return h}}}
 function thXgSong(srcGid,id,key){const S0=gsCtx(srcGid,'songs')||{},o=S0[id];if(!o)return null;const have=Object.values(S.songs||{}).find(z=>z.xFrom&&z.xFrom.gid==srcGid&&z.xFrom.id==id&&thSongOk(z,key));if(have)return have;
- const n=mkSong('Coupling',{title:o.title,genre:o.genre,concept:o.concept,th:{k:key,day:S.day,deb:null}});n.lyT=o.lyT||n.lyT;n.lyM=o.lyM||n.lyM;n.xFrom={gid:srcGid,id,title:o.title};return n}
+ const n=mkSong('Coupling',{title:o.title,genre:o.genre,concept:o.concept,th:{k:key,day:S.day,deb:null}});n.lyT=o.lyT||n.lyT;n.xFrom={gid:srcGid,id,title:o.title};return n}
 {const f=thRevival;thRevival=function(sid){const src=thStage(sid),K=src&&thKAny(src.k),key=thCur(),tK=key&&thKAny(key);if(!src||!K||!tK||K.gid==tK.gid)return f.apply(this,arguments);
  let s;thAllK(()=>{s=f.apply(this,arguments)});if(!s)return s;let n=0;
  [...s.items,...thEncSeq(s)].forEach(it=>{if(it.k!='song')return;const o=S.songs[it.song];if(o&&thSongOk(o,key)&&!it.na)return;const c=thXgSong(K.gid,it.song,key);if(c){it.song=c.id;delete it.na;n++}});

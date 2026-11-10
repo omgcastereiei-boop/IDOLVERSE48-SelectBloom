@@ -723,3 +723,13 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
   - Handshake tickets come with CDs, so they are not charged again.
 - **Fanbase** page (replaces the old Fan Club title page): Overview, Oshi Ranking (sort by any category, filter by group, team, current or graduated), Fan Spending, Fan Activity (tickets vs unique vs repeat), Regional, Kami Oshi & Teams. Member profiles have a Fanbase section; graduated profiles keep their fan history.
 - No Fan Club, membership or subscription features.
+
+## Music libraries, fan tastes & Song Preference (`js/ui/music-lib.js`, `js/ui/music2.js`)
+- **Libraries**: 120 Genres, 120 Concepts and 114 Lyrics themes, each with a family and a short description. They extend the existing `GENRES`, `CONCEPTS` and `LY_THEMES` tables, so every older song keeps its values. A song has one Genre, one Concept and one Lyrics theme. **Lyrics have no Mood**; the old `lyM` field is removed.
+- **Picker**: every Genre, Concept or Lyrics select opens a searchable library with family filters and a description under each option. The chosen option's description stays visible under the select. Theater song forms have the same three fields.
+- **Fan tastes**: each fan cohort stores a value per Genre, Concept and Lyrics family plus a few favourite options (`segment.mt`). New fans get their own profile. Tastes drift a little every month from the songs the group released or performed, the fan's engagement and her Kami Oshi. There is no market trend system.
+- **Song Preference** (0–100, separate from popularity and sales):
+  - Genre 20%, Concept 15% and Lyrics 15% come from the fans, weighted by interest, with each fan counted once.
+  - Member Popularity 20%, members' existing Concept Fit 15% and Performance Ability 15% (Vocal vs Dance by Genre) come from the performers.
+  - Positions are weighted: Center, then Front, Middle, Back.
+- **Stored once**: singles and albums are scored on release (`song.pref`, `single.prefs`) and shown on the release results and single details. Theater songs are scored at their first performance (`stage.prefs`), with Unit songs using only the Unit, and shown in the performance summary. Later changes never alter stored results.

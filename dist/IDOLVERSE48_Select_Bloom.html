@@ -1125,6 +1125,13 @@ select:not([multiple]):not([size]){cursor:pointer}
 .fxrank{display:flex;flex-direction:column;gap:6px}.fxrow{display:grid;grid-template-columns:28px 42px minmax(90px,1.1fr) minmax(150px,1.4fr) minmax(80px,2fr);gap:8px;align-items:center;text-align:left;cursor:pointer;padding:6px 8px}.fxno{font-weight:800;color:#a2265a;text-align:center}.fxrn small{display:block;opacity:.7;font-size:.75em}.fxrv{display:flex;flex-wrap:wrap;gap:8px;font-size:.86em}
 @media(max-width:700px){.fxrow{grid-template-columns:22px 38px 1fr}.fxrv,.fxrb{grid-column:1/-1}}
 .fxtab td,.fxtab th{text-align:right}.fxtab td:first-child,.fxtab th:first-child{text-align:left}.fbtabs{flex-wrap:wrap}
+/* ---- music library & Song Preference ---- */
+.mupick .gpbox{max-width:680px;width:96vw}.mupick .gpo{display:grid;grid-template-columns:1fr auto;text-align:left;gap:2px 8px;align-items:start;white-space:normal;height:auto;padding:8px 10px}.mupick .gpo>span{font-weight:700}.mupick .gpo .mud{grid-column:1/-1;font-size:.78em;opacity:.8;font-weight:400;line-height:1.35}.mupick .gpo .muf{font-style:normal;font-size:.68em;opacity:.65;border:1px solid #0002;border-radius:999px;padding:1px 7px}.mupick .gpo[hidden]{display:none!important}
+.muchips{display:flex;gap:5px;overflow-x:auto;padding:6px 10px;flex-wrap:wrap}.muchips button{border:1px solid #d9cdea;background:#fff;border-radius:999px;padding:3px 10px;font-size:.76em;cursor:pointer;white-space:nowrap}.muchips button.on{background:linear-gradient(90deg,#f7a8c8,#b28be8);color:#fff;border-color:transparent}
+.mudesc{display:block;font-size:.76em;opacity:.78;margin:2px 0 6px;line-height:1.35;flex-basis:100%}
+.muplg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px}.mupref{margin:0;text-align:left}.muph{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.mups{font-size:1.9em;font-weight:800;line-height:1}.mupb{height:10px;border-radius:6px;background:#efe9f6;overflow:hidden;margin:4px 0}.mupb i{display:block;height:100%;border-radius:6px}.mupr{font-weight:800;font-size:.9em}.mupt{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}.mupf{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:4px 0}.mupf span{background:var(--lv2,#f6f2fb);border-radius:8px;padding:3px 6px;display:flex;flex-direction:column}.mupf small{font-size:.66em;opacity:.7}.mupl{margin-top:10px}
+.mupick .gpo .muf{grid-column:2;grid-row:1;justify-self:end;align-self:center;white-space:nowrap}.mupick .gpo .mud{grid-row:2}.mupick .gpo>span{grid-column:1;grid-row:1}.mupick .gpo>i{display:none}.mupick .gpo.on{outline:2px solid #e05794}
+.mupick .muchips{flex:0 0 auto;max-height:74px;overflow-y:auto}.mupick .gpbox{display:flex;flex-direction:column;max-height:88vh}.mupick .gpl{flex:1 1 auto;overflow-y:auto;min-height:0}
 
 </style>
 </head><body>
@@ -5771,27 +5778,27 @@ const thItemSt=id=>{const s=thEd();if(!s)return null;let i=s.items.findIndex(x=>
 function thSongUsedElsewhere(o,s,it){if(!o)return false;if(o.rel||o.lib||o.relDay!=null)return true;if(S.pj&&typeof usedSongs=='function'&&usedSongs(S.pj).includes(o.id))return true;return Object.values(thS().st).some(z=>[...z.items,...((z.enc&&z.enc.items)||[])].some(x=>x!==it&&x.k=='song'&&x.song==o.id))}
 function thSongDelAsk(id){const X=thItemSt(id);if(!X||!thGuardEdit(X.s))return;const o=S.songs[X.it.song],lbl=thLbl(X.s,X.it);
  ask(`Remove ${lbl} “${o?o.title:'song'}” from this Stage${X.enc?"'s Encore":''}? The song stays in the Song Library and in every other Stage or single that uses it. The other songs keep their order.`,()=>{const s=X.s,L=X.enc?thEncO(s).items:s.items,i=L.indexOf(X.it);if(i<0)return;L.splice(i,1);if(ui.thsi==id)ui.thsi=null;if(s.scz=='thz:'+id)s.scz=null;(ui.thcs||[]).splice(0);toast(`“${o?o.title:'Song'}” removed from the Stage.`);render()},'Remove song')}
-function thSongEditOpen(id){const X=thItemSt(id);if(!X||!thGuardEdit(X.s))return;const o=S.songs[X.it.song]||{};ui.thse={id,title:o.title||'',genre:o.genre||GENRES[0],concept:o.concept||CONCEPTS[0],pt:thPt(X.it)=='unit'?X.it.unit:'team',pos:X.enc?X.i:thSongs(X.s).indexOf(X.it)};ui.mod={t:'html',h:thSongEditHtml()};render()}
+function thSongEditOpen(id){const X=thItemSt(id);if(!X||!thGuardEdit(X.s))return;const o=S.songs[X.it.song]||{};ui.thse={id,title:o.title||'',genre:o.genre||GENRES[0],concept:o.concept||CONCEPTS[0],ly:o.lyT||LY_THEMES[0],pt:thPt(X.it)=='unit'?X.it.unit:'team',pos:X.enc?X.i:thSongs(X.s).indexOf(X.it)};ui.mod={t:'html',h:thSongEditHtml()};render()}
 function thSongEditHtml(){const e=ui.thse,X=e&&thItemSt(e.id);if(!X)return'';const{s,it,enc}=X,o=S.songs[it.song]||{},U=thUnits(s),N=enc?thEncO(s).items.length:thSongs(s).length,shared=thSongUsedElsewhere(o,s,it),op=(L,v)=>L.map(([k,n])=>`<option value="${esc(String(k))}" ${String(k)==String(v)?'selected':''}>${esc(n)}</option>`).join('');
  return`<h2 class="ht">✎ Edit ${thLbl(s,it)}</h2>${shared?`<p class="st thwarn">This song is also used by ${o.rel||o.lib?'a released single':'another Stage'}. Changing its title, Genre or Concept creates a Theater version for this Stage; the original song is not changed.</p>`:''}
- <div class="gsform"><label>Song title<input maxlength="40" value="${esc(e.title)}" onchange="ui.thse.title=this.value"></label><label>Genre<select onchange="ui.thse.genre=this.value">${op(GENRES.map(g=>[g,g]),e.genre)}</select></label><label>Concept<select onchange="ui.thse.concept=this.value">${op(CONCEPTS.map(c=>[c,c]),e.concept)}</select></label>
+ <div class="gsform"><label>Song title<input maxlength="40" value="${esc(e.title)}" onchange="ui.thse.title=this.value"></label><label>Genre<select onchange="ui.thse.genre=this.value">${op(GENRES.map(g=>[g,g]),e.genre)}</select></label><label>Concept<select onchange="ui.thse.concept=this.value">${op(CONCEPTS.map(c=>[c,c]),e.concept)}</select></label><label>Lyrics<select onchange="ui.thse.ly=this.value">${op(LY_THEMES.map(c=>[c,c]),e.ly)}</select></label>
  ${it.k=='song'?`<label>Performed by<select onchange="ui.thse.pt=this.value">${op([['team','Team'],...U.map(u=>[u.id,'Unit · '+u.name])],e.pt)}</select></label>`:''}<label>${enc?'Encore position':'Setlist position'}<select onchange="ui.thse.pos=+this.value">${op(Array.from({length:N},(_,k)=>[k,(enc?'E':'M')+String(k+1).padStart(2,'0')]),e.pos)}</select></label></div>
  <div class="row"><button class="b p" onclick="thSongEditSave()">Save changes</button><button class="b" onclick="ui.mod=null;ui.thse=null;render()">Cancel</button></div>`}
 function thSongEditSave(){const e=ui.thse,X=e&&thItemSt(e.id);if(!X||!thGuardEdit(X.s))return;const{s,it,enc}=X,o=S.songs[it.song];const title=cleanName(e.title||'');if(!title)return toast('Enter a song title.','err');
- const g=GENRES.includes(e.genre)?e.genre:o.genre,c=CONCEPTS.includes(e.concept)?e.concept:o.concept,chg=o&&(title!=o.title||g!=o.genre||c!=o.concept);let note='';
- if(chg){if(thSongUsedElsewhere(o,s,it)){const n=mkSong('Coupling',{title,genre:g,concept:c,th:{k:s.k,day:S.day,deb:null}});n.thFrom=o.id;it.song=n.id;note=' Saved as a Theater version; the original song is unchanged.'}else{o.title=title;o.genre=g;o.concept=c}}
+ const g=GENRES.includes(e.genre)?e.genre:o.genre,c=CONCEPTS.includes(e.concept)?e.concept:o.concept,ly=LY_THEMES.includes(e.ly)?e.ly:o.lyT,chg=o&&(title!=o.title||g!=o.genre||c!=o.concept||ly!=o.lyT);let note='';
+ if(chg){if(thSongUsedElsewhere(o,s,it)){const n=mkSong('Coupling',{title,genre:g,concept:c,th:{k:s.k,day:S.day,deb:null}});n.lyT=ly;n.thFrom=o.id;it.song=n.id;note=' Saved as a Theater version; the original song is unchanged.'}else{o.title=title;o.genre=g;o.concept=c;o.lyT=ly}}
  if(it.k=='song'){const want=e.pt=='team'?'team':e.pt;if(want=='team'&&thPt(it)!='team'){it.pt='team';it.unit=null}else if(want!='team'&&(thPt(it)!='unit'||it.unit!=want)&&thUnitOf(s,want)){it.pt='unit';it.unit=want}if(it.center!=null&&!thMem(s,it).includes(it.center))it.center=null;if(it.center2!=null&&!thMem(s,it).includes(it.center2))it.center2=null}
  if(enc){const L=thEncO(s).items,i=L.indexOf(it),j=Math.max(0,Math.min(L.length-1,e.pos|0));if(i!=j){L.splice(i,1);L.splice(j,0,it)}}
  else{const SG=thSongs(s),j=Math.max(0,Math.min(SG.length-1,e.pos|0)),i=SG.indexOf(it);if(i!=j){const tgt=SG[j];s.items.splice(s.items.indexOf(it),1);const k=s.items.indexOf(tgt);s.items.splice(j>i?k+1:k,0,it)}}
  ui.mod=null;ui.thse=null;toast(`${thLbl(s,it)} “${title}” saved.${note}`);render()}
 // new song (Setlist or Encore), with Unit and position
-thSongNew=function(enc){const key=thCur();if(thTr(key))return toast('Trainee Theater cannot create new songs. Use songs from the Song Library.','err');const s=thEd();if(!s||!thGuardEdit(s))return;ui.thsn2={enc:enc?1:0,title:'',genre:'Dance Pop',concept:'Cute',pt:'team',pos:enc?thEncO(s).items.length:thSongs(s).length};ui.mod={t:'html',h:thSongNewHtml2()};render()};
+thSongNew=function(enc){const key=thCur();if(thTr(key))return toast('Trainee Theater cannot create new songs. Use songs from the Song Library.','err');const s=thEd();if(!s||!thGuardEdit(s))return;ui.thsn2={enc:enc?1:0,title:'',genre:'Dance Pop',concept:'Cute',ly:pick(LY_THEMES),pt:'team',pos:enc?thEncO(s).items.length:thSongs(s).length};ui.mod={t:'html',h:thSongNewHtml2()};render()};
 function thSongNewHtml2(){const e=ui.thsn2,s=thEd();if(!e||!s)return'';const U=thUnits(s),N=e.enc?thEncO(s).items.length:thSongs(s).length,op=(L,v)=>L.map(([k,n])=>`<option value="${esc(String(k))}" ${String(k)==String(v)?'selected':''}>${esc(n)}</option>`).join('');
  return`<h2 class="ht">✦ New ${e.enc?'Encore':'Theater'} song</h2><p class="st">Creates a real song in the Song Library, owned by ${esc(thLabel(thCur()))} until its Stage debuts, and adds it to this Stage.</p>
- <div class="gsform"><label>Song title<input id="thsnt2" maxlength="40" value="${esc(e.title)}" placeholder="Enter a title" onchange="ui.thsn2.title=this.value"></label><label>Genre<select onchange="ui.thsn2.genre=this.value">${op(GENRES.map(g=>[g,g]),e.genre)}</select></label><label>Concept<select onchange="ui.thsn2.concept=this.value">${op(CONCEPTS.map(c=>[c,c]),e.concept)}</select></label><label>Performed by<select onchange="ui.thsn2.pt=this.value">${op([['team','Team'],...U.map(u=>[u.id,'Unit · '+u.name])],e.pt)}</select></label><label>Position<select onchange="ui.thsn2.pos=+this.value">${op(Array.from({length:N+1},(_,k)=>[k,(e.enc?'E':'M')+String(k+1).padStart(2,'0')+(k==N?' (last)':'')]),e.pos)}</select></label></div>
+ <div class="gsform"><label>Song title<input id="thsnt2" maxlength="40" value="${esc(e.title)}" placeholder="Enter a title" onchange="ui.thsn2.title=this.value"></label><label>Genre<select onchange="ui.thsn2.genre=this.value">${op(GENRES.map(g=>[g,g]),e.genre)}</select></label><label>Concept<select onchange="ui.thsn2.concept=this.value">${op(CONCEPTS.map(c=>[c,c]),e.concept)}</select></label><label>Lyrics<select onchange="ui.thsn2.ly=this.value">${op(LY_THEMES.map(c=>[c,c]),e.ly)}</select></label><label>Performed by<select onchange="ui.thsn2.pt=this.value">${op([['team','Team'],...U.map(u=>[u.id,'Unit · '+u.name])],e.pt)}</select></label><label>Position<select onchange="ui.thsn2.pos=+this.value">${op(Array.from({length:N+1},(_,k)=>[k,(e.enc?'E':'M')+String(k+1).padStart(2,'0')+(k==N?' (last)':'')]),e.pos)}</select></label></div>
  <div class="row"><button class="b s" onclick="ui.thsn2.title=genTitle('any','any');ui.mod.h=thSongNewHtml2();render()">🎲 Random song name</button></div><div class="row"><button class="b p" onclick="thSongMake2()">Create song &amp; add</button><button class="b" onclick="ui.mod=null;render()">Cancel</button></div>`}
 function thSongMake2(){const e=ui.thsn2,s=thEd(),key=thCur();if(!e||!s||thTr(key)||!thGuardEdit(s))return;const inp=document.getElementById('thsnt2');if(inp&&inp.value.trim())e.title=inp.value;const title=cleanName(e.title||'');if(!title)return toast('Enter a song title (or use Random song name).','err');
- if(thAll(s).length>=TH_MAXS)return toast(`A Stage can have at most ${TH_MAXS} songs, Encore songs included.`,'err');const o=mkSong('Coupling',{title,genre:GENRES.includes(e.genre)?e.genre:'Dance Pop',concept:CONCEPTS.includes(e.concept)?e.concept:'Cute',th:{k:key,day:S.day,deb:null}});
+ if(thAll(s).length>=TH_MAXS)return toast(`A Stage can have at most ${TH_MAXS} songs, Encore songs included.`,'err');const o=mkSong('Coupling',{title,genre:GENRES.includes(e.genre)?e.genre:'Dance Pop',concept:CONCEPTS.includes(e.concept)?e.concept:'Cute',th:{k:key,day:S.day,deb:null}});if(LY_THEMES.includes(e.ly))o.lyT=e.ly;
  const it={k:'song',id:thUid(),song:o.id,pt:'team',unit:null,center:null,cz:null};if(e.pt!='team'&&thUnitOf(s,e.pt)){it.pt='unit';it.unit=e.pt}
  if(e.enc){const E=thEncO(s);E.on=true;E.items.splice(Math.max(0,Math.min(E.items.length,e.pos|0)),0,it)}else{const SG=thSongs(s),j=e.pos|0;if(j>=SG.length)s.items.push(it);else s.items.splice(s.items.indexOf(SG[j]),0,it)}
  ui.mod=null;ui.thsn2=null;toast(`“${title}” was added to the Song Library and to ${thLbl(s,it)}.`);render();return it}
@@ -6159,7 +6166,7 @@ function thAllK(fn){const p=GS_ALLK;GS_ALLK=1;try{return fn()}finally{GS_ALLK=p}
  const add=L.map(s=>`<div class="thstc ${s.status}"><span class="thno sm">${ordN(s.no)}</span><b>${esc(s.name)}</b><small>${esc(thLabelAny(s.k))} · ${s.status}</small><button class="b s p" onclick="thRevival('${s.id}')">✦ Revival Stage</button></div>`).join('');
  const i=h.indexOf('<div class="thsth">',h.indexOf('<div class="c threv">'));return i<0?h:h.slice(0,i+19)+add+h.slice(i+19)}catch(e){console.error(e);return h}}}
 function thXgSong(srcGid,id,key){const S0=gsCtx(srcGid,'songs')||{},o=S0[id];if(!o)return null;const have=Object.values(S.songs||{}).find(z=>z.xFrom&&z.xFrom.gid==srcGid&&z.xFrom.id==id&&thSongOk(z,key));if(have)return have;
- const n=mkSong('Coupling',{title:o.title,genre:o.genre,concept:o.concept,th:{k:key,day:S.day,deb:null}});n.lyT=o.lyT||n.lyT;n.lyM=o.lyM||n.lyM;n.xFrom={gid:srcGid,id,title:o.title};return n}
+ const n=mkSong('Coupling',{title:o.title,genre:o.genre,concept:o.concept,th:{k:key,day:S.day,deb:null}});n.lyT=o.lyT||n.lyT;n.xFrom={gid:srcGid,id,title:o.title};return n}
 {const f=thRevival;thRevival=function(sid){const src=thStage(sid),K=src&&thKAny(src.k),key=thCur(),tK=key&&thKAny(key);if(!src||!K||!tK||K.gid==tK.gid)return f.apply(this,arguments);
  let s;thAllK(()=>{s=f.apply(this,arguments)});if(!s)return s;let n=0;
  [...s.items,...thEncSeq(s)].forEach(it=>{if(it.k!='song')return;const o=S.songs[it.song];if(o&&thSongOk(o,key)&&!it.na)return;const c=thXgSong(K.gid,it.song,key);if(c){it.song=c.id;delete it.na;n++}});
@@ -9219,6 +9226,468 @@ V.fans=function(){view='fanbase';return V.fanbase()};
 </script>
 <script>
 // =====================================================================================
+//  Music database: Genres, Concepts and Lyrics themes (name | family | data | short description)
+//  · Genres:   name | family | vocal weight 0–1 (rest is dance) | stage intensity 4–9 | description
+//  · Concepts: name | family | description   (family → member Concept Fit weights and suited personalities)
+//  · Lyrics:   name | family | description   (a lyrical theme only — there is no Mood)
+//  The entries extend the existing GENRES / CONCEPTS / LY_THEMES tables (music2.js); nothing is replaced.
+// =====================================================================================
+const MU_GF={pop:'Pop',dance:'Dance',elec:'Electronic',rock:'Rock',ballad:'Ballad & Acoustic',rnb:'R&B, Soul & Funk',hip:'Hip-Hop',jazz:'Jazz',folk:'Folk & Country',world:'World',classic:'Classical & Stage',idol:'Idol & Anime'};
+const MU_G=`Pop|pop|.55|6|Bright, catchy melodies and simple song structures made to be sung along with by everyone.
+Dance Pop|dance|.4|7|Upbeat pop built for choreography, with strong beats and hooks that stick after one listen.
+Synth Pop|pop|.55|6|Melodic pop led by synthesizers and drum machines, cool and slightly nostalgic in tone.
+Electropop|elec|.4|8|Glossy pop with heavy electronic production, punchy bass and processed vocal hooks.
+Bubblegum Pop|pop|.5|6|Sugary, playful pop with bouncy rhythms and childlike, instantly memorable choruses.
+Teen Pop|pop|.5|6|Fresh, youthful pop about everyday feelings, easy to sing and easy to love.
+City Pop|pop|.6|6|A smooth, stylish Japanese pop sound inspired by urban nightlife of the late 1970s and 1980s.
+Power Pop|pop|.55|7|Punchy guitars and big sing-along choruses that mix pop sweetness with rock energy.
+Indie Pop|pop|.6|5|Charming, lightly produced pop with jangly guitars and a handmade, personal feel.
+Dream Pop|pop|.65|4|Hazy, floating textures and soft vocals that feel like drifting through a dream.
+Chamber Pop|classic|.7|4|Pop songs dressed in strings, woodwinds and piano, delicate and carefully arranged.
+Art Pop|pop|.6|5|Pop that plays with unusual structures, theatrical ideas and bold artistic images.
+Experimental Pop|pop|.5|6|Pop that breaks its own rules with surprising sounds, rhythms and song forms.
+Sunshine Pop|pop|.6|5|Warm vocal harmonies and breezy melodies that sound like a sunny afternoon.
+Baroque Pop|classic|.7|4|Classical ornaments such as harpsichord and strings wrapped around a pop tune.
+Bedroom Pop|pop|.65|4|Intimate, soft-spoken pop that sounds as if it were recorded at home late at night.
+Shibuya-kei|pop|.55|5|A chic Tokyo blend of pop, jazz and bossa nova with a retro, fashionable collage feel.
+Hyperpop|elec|.45|8|Extreme, glittering pop with pitched vocals, distorted bass and chaotic energy.
+Kawaii Pop|idol|.5|6|Ultra-cute idol pop with squeaky hooks, call-and-response chants and sparkling sounds.
+Idol Pop|idol|.5|7|The classic idol sound: bright chords, group vocals and fan chants built into the song.
+Disco|dance|.45|7|An upbeat dance style with a steady four-on-the-floor rhythm and groovy basslines.
+Disco Pop|dance|.45|7|Modern pop with disco strings, glittering guitars and a dance-floor pulse.
+Nu-Disco|dance|.45|7|Disco reborn with modern electronic polish, slick bass and a cool late-night mood.
+Eurobeat|dance|.35|9|Very fast, synth-driven dance music with dramatic melodies and non-stop energy.
+Eurodance|dance|.4|8|Nineties club pop with pounding beats, big synth riffs and anthem choruses.
+Para Para|dance|.3|8|High-tempo dance tracks written for synchronized arm-movement routines.
+Hi-NRG|dance|.4|9|Driving, fast electronic disco with relentless bass and powerful vocals.
+Italo Disco|dance|.45|7|Melodic European disco with robotic synths and romantic, slightly melancholic tunes.
+Freestyle|dance|.45|7|Latin-tinged electro dance music with syncopated beats and emotional melodies.
+EDM|elec|.3|9|Electronic dance music featuring synthesized sounds, energetic build-ups and powerful drops.
+House|elec|.4|8|Steady club beats, warm chords and a groove designed to keep people dancing.
+Deep House|elec|.5|6|Mellow, soulful house with soft pads, deep bass and a relaxed after-hours feel.
+Tropical House|elec|.5|6|Laid-back house with steel drums, marimba and a breezy holiday atmosphere.
+Progressive House|elec|.4|8|Long, slowly building house tracks that rise to wide, euphoric melodies.
+Electro House|elec|.3|9|Hard-edged house with buzzing synth leads and heavy, aggressive drops.
+Future Bass|elec|.5|7|Shimmering synth chords, chopped vocals and bouncy drops full of colour.
+Drum and Bass|elec|.35|9|Very fast breakbeats over deep rolling bass, urgent and athletic.
+Dubstep|elec|.3|9|Half-time beats and wobbling, growling bass drops with dramatic tension.
+Trance|elec|.45|8|Hypnotic, soaring synth melodies over a fast steady beat that builds to release.
+Techno|elec|.25|9|Mechanical, repetitive club rhythms with a cold, futuristic drive.
+Synthwave|elec|.5|6|Retro-futuristic synths and neon moods inspired by 1980s films and games.
+Chiptune|elec|.45|7|Cheerful melodies made from the bleeps of old video-game consoles.
+Future Funk|elec|.45|7|Chopped disco and city pop samples turned into sparkling, bouncing dance tracks.
+Ambient Pop|elec|.65|4|Slow, spacious pop that floats on soft electronic atmospheres.
+Trip-Hop|elec|.6|5|Slow, smoky beats with moody samples and a dark, cinematic calm.
+UK Garage|elec|.45|7|Shuffling two-step beats, chopped vocals and warm bass with a stylish swing.
+Hardstyle|elec|.25|9|Pounding distorted kicks and anthem melodies at festival-level intensity.
+Electro Swing|jazz|.5|7|Vintage swing horns and jazz samples fused with modern dance beats.
+Glitch Pop|elec|.5|6|Pop built from stutters, clicks and digital errors turned into rhythm.
+Rock|rock|.5|8|Guitars, bass and drums played loud with attitude and a strong backbeat.
+Pop Rock|rock|.5|8|Catchy pop melodies with energetic rock instrumentation, guitars and strong rhythms.
+Alternative Rock|rock|.55|8|Guitar music outside the mainstream, mixing raw emotion with unusual sounds.
+Punk Pop|rock|.45|9|Fast, bratty guitar pop with shouted hooks and youthful rebellion.
+Punk Rock|rock|.45|9|Short, fast and loud songs with simple chords and a defiant attitude.
+Hard Rock|rock|.5|9|Heavy guitar riffs, pounding drums and powerful, belted vocals.
+Soft Rock|rock|.65|5|Gentle, melodic rock with smooth vocals and an easy-going warmth.
+Indie Rock|rock|.55|7|Independent-minded guitar music, a little rough and full of personality.
+Garage Rock|rock|.45|8|Raw, fuzzy and energetic rock that sounds like a band in a small room.
+Glam Rock|rock|.5|8|Stomping beats, flashy guitars and theatrical glitter-covered swagger.
+Symphonic Rock|rock|.6|7|Rock band power combined with sweeping orchestral arrangements.
+Emo Rock|rock|.6|7|Confessional lyrics and dramatic guitars that swing between quiet and explosive.
+Post-Rock|rock|.4|6|Mostly instrumental guitar landscapes that grow slowly into huge climaxes.
+Surf Rock|rock|.45|7|Twanging reverb guitars and rolling drums that evoke waves and beaches.
+Rockabilly|rock|.5|8|Early rock and roll with slap bass, quick guitar licks and a retro bounce.
+Visual Rock|rock|.55|8|Dramatic Japanese rock with gothic flair, fast guitars and emotional melodies.
+Kawaii Metal|rock|.45|9|Heavy metal riffs colliding with sweet idol melodies and cute chants.
+Shoegaze|rock|.55|5|Walls of blurred, distorted guitar with soft vocals buried inside the sound.
+Ballad|ballad|.85|4|A slower, melody-focused style that emphasizes vocals and emotional expression.
+Pop Ballad|ballad|.8|4|A gentle pop song at a slow tempo with a big, heartfelt chorus.
+Power Ballad|ballad|.85|5|A slow song that builds from quiet verses to a huge, soaring finale.
+Piano Ballad|ballad|.9|4|Voice and piano at the centre, leaving every word and breath exposed.
+Acoustic Pop|ballad|.7|4|Pop songs carried by acoustic guitar, natural and close to the listener.
+Acoustic|ballad|.75|4|Unplugged instruments and unprocessed voices, simple and honest.
+Enka Ballad|ballad|.9|4|Traditional Japanese-style ballad with dramatic vibrato and deep sentiment.
+R&B|rnb|.7|6|Smooth grooves, rich vocal runs and a relaxed, soulful rhythm.
+Contemporary R&B|rnb|.6|6|Sleek modern R&B with electronic beats and layered, silky harmonies.
+Soul|rnb|.8|6|Deeply felt vocals over warm horns and rhythm, rooted in gospel emotion.
+Neo Soul|rnb|.75|5|Jazzy chords and laid-back grooves with intimate, expressive singing.
+Funk|rnb|.45|8|Tight syncopated bass and guitar, punchy horns and an irresistible groove.
+Funk Pop|rnb|.45|7|Pop songs riding a funky bassline with crisp rhythm guitar and brass.
+Motown|rnb|.65|6|Classic 1960s soul-pop with tambourines, handclaps and sweet group harmonies.
+New Jack Swing|rnb|.45|8|Late-80s fusion of R&B singing with hard swinging hip-hop beats.
+Gospel Pop|rnb|.8|5|Uplifting choir harmonies and handclaps that build to a joyful release.
+Hip-Hop|hip|.35|8|Rhythmic spoken verses over sampled beats, with swagger and street style.
+Rap|hip|.35|8|Fast, rhythmic wordplay at the front, driven by flow and attitude.
+Trap|hip|.3|8|Booming 808 bass, rattling hi-hats and dark, heavy atmospheres.
+Boom Bap|hip|.4|7|Old-school hip-hop with dusty drum loops and a head-nodding swing.
+Lo-fi Hip-Hop|hip|.5|4|Mellow, crackling beats with jazzy chords made for quiet evenings.
+Pop Rap|hip|.45|7|Rap verses paired with bright sung hooks for an easy, radio-friendly mix.
+Jazz|jazz|.7|5|Swinging rhythms, rich harmony and room for improvisation and personality.
+Jazz Pop|jazz|.7|5|Pop melodies with jazz chords, walking bass and a sophisticated mood.
+Swing|jazz|.55|7|Big, bouncing dance-band rhythm with bright brass and a playful step.
+Bossa Nova|jazz|.7|4|Soft Brazilian rhythm with whispered vocals and gentle nylon guitar.
+Big Band|jazz|.6|7|A full brass and reed orchestra playing bold, showy arrangements.
+Lounge|jazz|.65|4|Easy, elegant background music with soft vibraphone and cocktail-hour charm.
+Folk|folk|.75|4|Story-telling songs with acoustic instruments and plain, sincere voices.
+Folk Pop|folk|.7|5|Folk warmth and acoustic strumming shaped into catchy pop songs.
+Country Pop|folk|.65|6|Twangy guitars and heartfelt stories with a polished pop chorus.
+Celtic Pop|folk|.65|6|Fiddles, whistles and lilting melodies woven into bright pop.
+Latin Pop|world|.45|7|Pop with Latin percussion, passionate vocals and dance-ready rhythm.
+Reggae Pop|world|.55|6|Off-beat guitar skank and relaxed island groove under a sunny melody.
+Reggaeton|world|.4|8|The driving dembow beat with chanted hooks made for the dance floor.
+Samba Pop|world|.45|8|Carnival percussion and joyful melodies that never stop moving.
+Afrobeat Pop|world|.45|7|Interlocking African rhythms, bright guitars and a light, rolling bounce.
+Okinawan Pop|world|.65|5|Island scales and the sanshin lute give pop a warm southern-sea colour.
+Wa-Pop|world|.6|6|Japanese traditional instruments such as koto and shamisen fused with modern pop.
+Kayokyoku|world|.75|5|Showa-era Japanese pop with dramatic melodies and nostalgic orchestration.
+Tango Pop|world|.55|6|Sharp, passionate tango rhythm and accordion set inside a pop song.
+Flamenco Pop|world|.55|7|Spanish guitar, handclaps and fiery vocals with a pop structure.
+Classical|classic|.75|4|Composed music for orchestra or chamber group, formal and refined.
+Orchestral Pop|classic|.7|5|Pop songs lifted by a full orchestra for a grand, sweeping sound.
+Musical Theatre|classic|.75|6|Songs that tell a story like a stage show, with character and big finishes.
+Waltz Pop|classic|.7|4|Graceful three-beat rhythm that makes a pop song sway like a ballroom dance.
+Opera Pop|classic|.9|5|Operatic vocal power and drama delivered through pop melodies.
+Cinematic|classic|.6|5|Wide, film-score soundscapes that make a song feel like a movie scene.
+Vocaloid / Anime Pop|idol|.5|7|Fast, intricate melodies in the style of synthesized-singer and anime songs.
+Denpa|idol|.45|8|Deliberately chaotic, hyper-cute songs with rapid chants and nonsense hooks.
+Anison Rock|idol|.5|8|Heroic, fast guitar anthems in the style of anime opening themes.
+Marching Band Pop|idol|.45|7|Snare drums, brass fanfares and parade energy turned into pop.
+Cheer Pop|idol|.4|8|Chant-driven, stomping pop written like a cheerleading routine.`.split('\n').map(l=>{const[n,f,v,i,d]=l.split('|');return{n,f,vw:+v,int:+i,d}});
+const MU_CF={cute:['Cute & Sweet',{cute:.8,pretty:.2},['Genki','Airhead']],pure:['Pure & Youthful',{cute:.5,pretty:.5},['Shy','Airhead']],romance:['Romance',{pretty:.5,cute:.3,mature:.2},['Shy','Elegant']],cool:['Cool & Powerful',{cool:.8,mature:.2},['Cool','Serious']],dark:['Dark & Mysterious',{cool:.5,mature:.5},['Cool','Serious']],elegant:['Elegant & Luxury',{pretty:.6,mature:.4},['Elegant','Serious']],sexy:['Sexy & Glamorous',{mature:.8,pretty:.2},['Cool','Elegant']],energy:['Energetic & Festive',{cute:.5,cool:.3,pretty:.2},['Genki','Airhead']],fantasy:['Fantasy',{pretty:.6,cute:.4},['Airhead','Elegant']],emotional:['Emotional',{pretty:.5,mature:.3,cute:.2},['Shy','Serious']],season:['Seasons & Places',{cute:.4,pretty:.4,cool:.2},['Genki','Shy']],retro:['Retro',{pretty:.5,cute:.3,mature:.2},['Genki','Elegant']],future:['Future & Sci-Fi',{cool:.7,pretty:.3},['Cool','Serious']],life:['Life & Spirit',{cute:.35,cool:.3,pretty:.35},['Genki','Serious']]};
+const MU_C=`Cute|cute|An adorable, cheerful and charming concept with playful expressions and sweet visuals.
+Sweet|cute|Soft pastel colours, gentle smiles and a sugary, comforting atmosphere.
+Candy Pop|cute|Lollipops, bright primary colours and a hyperactive sweet-shop world.
+Toy Box|cute|Members as living dolls and toys in a colourful, playful playroom.
+Pajama Party|cute|A cosy sleepover with pillows, secrets and giggles late at night.
+Maid Café|cute|Frilled aprons and devoted service with a wink, straight from Akihabara.
+Idol Classic|cute|The timeless idol image: ribbons, matching uniforms and bright smiles.
+Cheerful|energy|Non-stop positivity and big gestures that make everyone smile.
+Innocent|pure|A pure and youthful concept that expresses sincerity, freshness and simplicity.
+Youth|pure|The sparkle of being young: running, laughing and believing in tomorrow.
+School Life|pure|Classrooms, uniforms and after-school moments shared with friends.
+First Love|romance|The shy excitement of liking someone for the very first time.
+Diary|pure|Private thoughts and small daily feelings, as if reading a girl's notebook.
+Flower Language|pure|Blossoms and bouquets used to say what words cannot.
+Butterfly|pure|Delicate transformation and lightness, like wings opening for the first time.
+Romantic|romance|Soft lights, longing glances and the warmth of being in love.
+Valentine|romance|Chocolate, hand-written notes and the courage to confess.
+Wedding|romance|White dresses, vows and the promise of a shared future.
+Moonlight|romance|A quiet night scene bathed in silver light and gentle longing.
+Starry Night|romance|A sky full of stars and wishes made side by side.
+Secret Garden|romance|A hidden place of flowers where private feelings are allowed to bloom.
+Cool|cool|A confident and stylish concept featuring strong attitudes and sophisticated visuals.
+Girl Crush|cool|Fearless women other women admire: bold, independent and in control.
+Powerful|cool|Hard-hitting choreography and fierce expressions that fill the stage.
+Rebellious|cool|Breaking the rules with a smirk, torn denim and raised fists.
+Confidence|cool|Head high and shoulders back, owning every step.
+Rock Star|cool|Leather, guitars and the swagger of a band at its peak.
+Punk|cool|Safety pins, spiked hair and loud refusal to behave.
+Street Dance|cool|Sneakers, crews and battles under city lights.
+Hip-Hop Swag|cool|Oversized fashion, gold chains and relaxed, unshakable cool.
+Warrior|cool|Fighters preparing for battle with discipline and burning eyes.
+Military Uniform|cool|Sharp tailoring, synchronized marching and commanding presence.
+Spy Action|cool|Secret agents, sleek black outfits and a mission against the clock.
+Racing|cool|Speed, checkered flags and the roar of engines.
+Dark|dark|A mysterious and dramatic concept with darker visuals and intense expressions.
+Gothic|dark|Black lace, candlelight and old-world melancholy.
+Mysterious|dark|Half-hidden faces and unanswered questions that pull the viewer in.
+Horror|dark|Eerie settings and chilling expressions that play with fear.
+Vampire|dark|Immortal beauty, crimson accents and dangerous elegance after dark.
+Witch|dark|Spells, potions and knowing smiles under a pointed hat.
+Masquerade|dark|Ornate masks and a ballroom where nobody is who they seem.
+Detective Noir|dark|Rain-soaked streets, trench coats and a case that won't let go.
+Lonely|emotional|An empty room, a single light and feelings no one else sees.
+Elegant|elegant|Refined poise, graceful movement and quiet, tasteful beauty.
+Luxury|elegant|Diamonds, champagne and the gleam of the high life.
+Royal Court|elegant|Crowns, gowns and the formal splendour of a palace.
+Princess|elegant|Tiaras and ball gowns in a kingdom where dreams come true.
+Ballet|elegant|Tutus, pointe shoes and disciplined, weightless grace.
+Art Museum|elegant|Members posed like paintings among marble halls and gilded frames.
+Jazz Club|elegant|Velvet curtains, a spotlight and smoky late-night sophistication.
+Glamorous|sexy|Sequins, red carpets and the dazzling confidence of a star.
+Sexy / Mature|sexy|Grown-up allure with slow, deliberate movement and smouldering looks.
+Disco Fever|retro|Mirror balls, flared outfits and a dance floor that never empties.
+Night City|sexy|Neon reflections, taxis and the thrill of the city after midnight.
+Festival|energy|Lanterns, drums and a crowd celebrating together in the streets.
+Celebration|energy|Confetti, toasts and the joy of marking a special day.
+Carnival|energy|Feathers, parades and wild colour from morning to night.
+Circus|energy|Ringmasters, acrobats and a big top full of surprises.
+Cheerleader|energy|Pom-poms, jumps and loud support from the sidelines.
+Marching Band|energy|Uniformed ranks, drums and brass moving as one.
+Sports Day|energy|Headbands, relay races and giving everything for the team.
+Sporty|energy|Athletic wear, healthy energy and a love of movement.
+Adventure|energy|Maps, backpacks and the excitement of the unknown.
+Pirate|energy|Treasure maps, tall ships and freedom on the open sea.
+Wild West|energy|Cowboy hats, dusty towns and a showdown at noon.
+Safari|energy|Khaki outfits and wide-eyed wonder among wild animals.
+Road Trip|energy|An open road, loud music and friends in the back seat.
+Dreamy|fantasy|Soft focus, clouds and the feeling of not quite being awake.
+Fantasy|fantasy|Enchanted worlds with castles, quests and impossible landscapes.
+Magical|fantasy|Sparkling wands and transformations in the magical-girl tradition.
+Fairy Tale|fantasy|Storybook scenes of forests, glass slippers and happy endings.
+Angel|fantasy|White wings, halos and a gentle light from above.
+Mermaid|fantasy|Shimmering scales and songs from beneath the waves.
+Fairy Forest|fantasy|Tiny wings and glowing mushrooms deep among ancient trees.
+Snow Fairy|fantasy|A spirit of frost dancing through silent, glittering snow.
+Heroic Fantasy|fantasy|Swords, dragons and a party of heroes setting out together.
+Emotional|emotional|Raw feeling at the centre, with expressions that hold nothing back.
+Heartbreak|emotional|The ache after love ends, shown through tears and empty hands.
+Bittersweet|emotional|A smile and a sigh together, happy and sad in the same moment.
+Nostalgic|emotional|A warm, faded look back at days that will not return.
+Graduation|emotional|Cherry blossoms, diplomas and saying goodbye with gratitude.
+Healing|emotional|Calm, gentle comfort that lets a tired heart rest.
+Lullaby|emotional|A hushed bedtime world of soft blankets and whispered songs.
+Family Warmth|life|Home cooking, shared tables and the people who are always there.
+Hometown|life|Familiar streets and the place you return to in your heart.
+Summer|season|Bright and refreshing, inspired by holidays, sunshine and youthful memories.
+Beach|season|Sand, waves and swimsuits under a blazing sky.
+Tropical Island|season|Palm trees, hibiscus flowers and turquoise water far from home.
+Winter|season|Scarves, white breath and warm hands in the cold.
+Christmas|season|Illuminations, presents and a wish made on a snowy night.
+Spring|season|New buds, soft pink petals and fresh starts.
+Autumn|season|Red leaves, warm sweaters and a thoughtful, golden light.
+Rainy Day|season|Umbrellas, puddles and quiet moments behind a wet window.
+Halloween|season|Costumes, pumpkins and mischievous tricks and treats.
+Star Festival|season|Tanabata wishes on paper strips and lovers meeting across the Milky Way.
+New Year|season|Kimono, first shrine visits and hopes for the year ahead.
+Kimono Festival|season|Yukata, fireworks and goldfish scooping on a summer evening.
+Japanese Traditional|season|Classical Japanese beauty: fans, folding screens and elegant restraint.
+Nature|season|Forests, rivers and open sky, at peace with the living world.
+Sunrise|season|The first light of morning and the promise of a new day.
+Travel|season|Suitcases, train windows and discovering somewhere new.
+Café Chill|season|Coffee, soft music and an unhurried afternoon with a friend.
+Bookish|season|Libraries, glasses and the quiet pleasure of a good story.
+Retro|retro|A loving throwback to the styles and colours of earlier decades.
+80s Idol|retro|Big ribbons, puffed sleeves and the golden age of Showa idols.
+90s Street|retro|Baggy jeans, platform shoes and Shibuya street fashion.
+Y2K|retro|Shiny fabrics, flip phones and turn-of-the-millennium pop optimism.
+Vaporwave|retro|Pastel sunsets, old computer graphics and dreamy digital nostalgia.
+Futuristic|future|Clean lines, metallic fabrics and a vision of tomorrow.
+Cyberpunk|future|Neon, rain and high technology in a gritty mega-city.
+Space|future|Stars, astronauts and a journey beyond the planet.
+Robot / Android|future|Mechanical precision and the question of whether a machine can feel.
+Virtual Idol|future|Digital avatars performing on holographic stages.
+Gamer|future|Controllers, pixel art and the thrill of the next level.
+Freedom|life|Open arms and wide horizons, with nothing holding you back.
+Hope|life|A light ahead in the dark and the will to walk toward it.
+Self-Love|life|Accepting yourself as you are and treating yourself with kindness.
+Friendship|life|Linked arms, shared laughter and standing by each other.
+Inspirational|life|An uplifting push to keep going and believe in yourself.
+Revolution|life|Raising a flag and changing the world together.`.split('\n').map(l=>{const[n,f,d]=l.split('|');return{n,f,d}});
+const MU_LF={love:'Love',heart:'Heartbreak',friend:'Friendship & Bonds',dream:'Dreams & Effort',youth:'Youth & School',self:'Self',life:'Life & Family',season:'Seasons & Places',farewell:'Farewells',fun:'Fun & Everyday',story:'Stories & Worlds'};
+const MU_L=`First Love|love|Lyrics about experiencing love for the first time, with excitement, nervousness and sweet memories.
+Confession|love|Gathering the courage to finally say "I like you" out loud.
+Love Confession|love|A direct, heartfelt declaration of love to one special person.
+Secret Crush|love|Loving someone quietly from a distance and hiding it from everyone.
+Love at First Sight|love|The instant when a single glance changes everything.
+Everyday Love|love|Small, ordinary moments with a partner that turn out to be happiness.
+Eternal Love|love|A promise to love someone for the rest of your life.
+Forbidden Love|love|Feelings for someone you are not supposed to love.
+Love Triangle|love|Three hearts tangled together, where someone will be hurt.
+Flirting|love|Playful teasing and the game of getting someone's attention.
+Summer Romance|love|A love that burns brightly during one unforgettable summer.
+Winter Romance|love|Two people keeping each other warm on cold, snowy nights.
+Long-Distance Love|love|Loving someone far away and counting the days until you meet.
+Wedding Vows|love|Promises exchanged on the day two lives become one.
+Destiny|love|The belief that two people were always meant to find each other.
+Unrequited Love|heart|A story about loving someone who does not return the same feelings.
+Heartbreak|heart|The pain of a love that has ended and a heart left in pieces.
+Breakup|heart|The moment of parting and the words said when a couple separates.
+Missing Someone|heart|Thinking of a person who is no longer by your side.
+Distance|heart|Growing apart, in miles or in feelings, from someone important.
+Jealousy|heart|The sting of seeing the one you love smile at somebody else.
+Betrayal|heart|Trust broken by someone you believed in.
+Regret|heart|Wishing you could go back and choose differently.
+Apology|heart|Finding the words to say sorry and hoping to be forgiven.
+Letting Go|heart|Choosing to release someone because you love them.
+Moving On|heart|Wiping away tears and stepping forward after a loss.
+Tears|heart|Crying openly and letting the sadness finally come out.
+Loneliness|heart|Being surrounded by people and still feeling alone.
+Sleepless Night|heart|Lying awake with thoughts that refuse to quiet down.
+Rainy Days|heart|Grey skies that match a heavy heart, and waiting for them to clear.
+Friendship|friend|Lyrics celebrating friendship, shared memories and supporting one another.
+Best Friends|friend|The one person who knows everything about you and stays anyway.
+Teammates|friend|Working, sweating and winning together as one team.
+Sisterhood|friend|Girls protecting and lifting each other up like family.
+Rivalry|friend|Two people who push each other to improve by competing.
+Promise|friend|A vow made together that neither will ever break.
+Bonds with Fans|friend|A thank-you to the fans who cheer from the audience.
+Reunion|friend|Meeting again after a long time and finding the bond unchanged.
+Gratitude|friend|Saying thank you to everyone who helped along the way.
+Dreams|dream|Holding on to a dream and imagining the day it comes true.
+Chasing Dreams|dream|A message about pursuing dreams, overcoming obstacles and never giving up.
+Stage Dreams|dream|The wish to stand in the spotlight and sing for a full house.
+Idol Life|dream|The joys and hardships hidden behind an idol's smile.
+Hard Work|dream|Daily practice, sweat and the pride of earning every step.
+Never Give Up|dream|Falling down again and again and standing up each time.
+Overcoming Difficulties|dream|Getting through hard times and coming out stronger.
+Courage|dream|Taking the first frightening step into the unknown.
+Victory|dream|The joy of finally winning after a long fight.
+Underdog|dream|Being counted out by everyone and proving them wrong.
+Ambition|dream|A burning desire to reach the very top.
+Fame|dream|What it means to be known by everyone and the price of it.
+Youth|youth|The brightness and impatience of being young.
+Growing Up|youth|Leaving childhood behind and becoming an adult, one day at a time.
+School Days|youth|Memories of classrooms, desks by the window and chalk dust.
+After School|youth|The free hours after the last bell, spent with friends.
+Club Activities|youth|Devoting every afternoon to a club and the people in it.
+Exams|youth|Late-night studying and the nerves before a big test.
+Graduation|farewell|Lyrics about saying goodbye, remembering shared experiences and looking to a new beginning.
+Unforgettable Memories|youth|Moments so precious they stay vivid for a lifetime.
+Nostalgia|youth|A sweet ache for the days and places of the past.
+Summer Memories|season|Looking back on fireworks, sunburn and one perfect summer.
+Self-Belief|self|Trusting your own strength when nobody else does.
+Self-Discovery|self|Searching for who you really are beneath what others expect.
+Self-Acceptance|self|Learning to love your flaws and stop comparing yourself.
+Identity|self|Declaring "this is me" without apology.
+Independence|self|Standing on your own feet and making your own choices.
+Freedom|self|Breaking free from what holds you back and running toward the sky.
+Mirror|self|A conversation with your own reflection about who you have become.
+Imperfection|self|Finding beauty in the things that are not perfect.
+Anxiety|self|The worries that tighten the chest, and learning to breathe through them.
+Rebellion|self|Refusing to follow rules that make no sense.
+Hope|life|A light that remains even on the darkest days.
+New Beginning|life|Turning a page and starting fresh with a clear heart.
+The Future|life|Wondering and dreaming about what tomorrow holds.
+Life's Journey|life|Life as a long road with turns, hills and travelling companions.
+Family|life|Love for parents and siblings and the home that raised you.
+Mother's Love|life|Gratitude for a mother's quiet, endless care.
+Hometown|life|The town you grew up in and the feelings it still holds.
+Leaving Home|life|Packing a bag and setting out alone for the first time.
+Happiness|life|Noticing that right now, in this moment, you are happy.
+Miracle|life|Something impossible that happened anyway.
+Prayer|life|A quiet wish sent out for someone's safety and happiness.
+Peace|life|A hope for a gentle world without conflict.
+Farewell|farewell|A final goodbye said with a smile to hide the tears.
+One More Day|farewell|Wishing for just a little more time before the end.
+Starlight|season|Looking up at the stars and feeling small and hopeful.
+Night Sky|season|The vast dark above, shared by two people far apart.
+Morning Light|season|Waking to a new day and feeling ready to begin again.
+Spring Blossoms|season|Cherry petals falling and the meetings and partings of spring.
+Autumn Leaves|season|Falling leaves and the gentle sadness of time passing.
+Christmas Wish|season|One special wish made under the winter lights.
+Fireworks|season|A summer night sky lighting up, and a moment that fades too fast.
+Festival Night|season|Lanterns, yukata and holding hands in a crowd.
+Beach Day|season|Sun, waves and a carefree day by the sea.
+City Lights|season|The glow of the city at night and the dreams it holds.
+Travel|season|Seeing new places and collecting memories along the way.
+Celebration|fun|Raising a glass together on a day worth remembering.
+Party Time|fun|Turning up the music and forgetting everything until morning.
+Dancing All Night|fun|Losing yourself on the dance floor until sunrise.
+Weekend Fun|fun|The freedom of a day off spent exactly as you like.
+Sweets and Treats|fun|Cake, parfaits and the simple joy of something delicious.
+Fashion|fun|Dressing up and feeling like the best version of yourself.
+Social Media|fun|Likes, selfies and life lived through a screen.
+Daydream|story|A mind wandering off to a nicer place in the middle of the day.
+Fairy Tale Story|story|Once upon a time: a princess, a spell and a happy ending.
+Magic Spell|story|Words of magic that change an ordinary girl into something more.
+Time Travel|story|Going back to fix the past or forward to see what waits.
+Outer Space|story|A voyage among planets and stars in search of something new.
+Robots and AI|story|A machine that begins to wonder what a heart is.
+Mystery|story|Clues, secrets and a truth waiting to be uncovered.
+Secret|story|Something hidden that only the two of you know.
+Justice|story|Standing up for what is right, whatever the cost.
+Nature|story|Wind, trees and rivers, and our place among them.
+Pets|story|The small animal friend who waits for you at home.`.split('\n').map(l=>{const[n,f,d]=l.split('|');return{n,f,d}});
+
+</script>
+<script>
+// =====================================================================================
+//  Music update: expanded Genre / Concept / Lyrics libraries, fan music tastes, Song Preference
+// -------------------------------------------------------------------------------------
+//  · The libraries of music-lib.js extend the existing GENRES / CONCEPTS / LY_THEMES tables (genre
+//    skills and stage intensity, concept → member Concept Fit weights and suited personalities).
+//    One Genre, one Concept and one Lyrics theme per song. Lyrics have NO Mood (o.lyM is removed).
+//  · Every Genre / Concept / Lyrics select opens a searchable library with family filters and a
+//    description under each option; the chosen option's description stays visible under the select.
+//  · Fan tastes live on the existing fan cohorts (segment.mt): a value per Genre / Concept / Lyrics
+//    family plus a few favourite options. New fans get their own profile; tastes drift every month
+//    from the songs the group released or performed, the fan's engagement and her Kami Oshi.
+//  · Song Preference (0–100, separate from popularity and sales): Genre 20% · Concept 15% ·
+//    Lyrics 15% (from the fans, weighted by interest, each fan once) · Member Popularity 20% ·
+//    Member Concept Fit 15% · Performance Ability 15% (Vocal vs Dance by Genre), positions weighted
+//    (Center > Front > Middle > Back), small variation. Stored once: on release (song.pref,
+//    single.prefs) and per Stage song at its first performance (stage.prefs), never recalculated.
+// =====================================================================================
+const MUI={g:{},c:{},l:{}};MU_G.forEach(x=>MUI.g[x.n]=x);MU_C.forEach(x=>MUI.c[x.n]=x);MU_L.forEach(x=>MUI.l[x.n]=x);
+(function(){MU_G.forEach(g=>{if(!GENRES.includes(g.n))GENRES.push(g.n);const sk=g.vw>=.62?['sing','cha']:g.vw<=.42?['dance','sing']:['sing','dance'];if(!GEN_SPEC[g.n])GEN_SPEC[g.n]=[sk,g.int];if(!GEN[g.n])GEN[g.n]=GEN_SPEC[g.n][0].slice();if(CFG.rs&&CFG.rs.INT&&CFG.rs.INT[g.n]==null)CFG.rs.INT[g.n]=GEN_SPEC[g.n][1]});
+ MU_C.forEach(c=>{const F=MU_CF[c.f];if(!CONCEPTS.includes(c.n))CONCEPTS.push(c.n);if(!CONC_PERS[c.n])CONC_PERS[c.n]=F[2].slice();if(!CONC[c.n])CONC[c.n]=CONC_PERS[c.n].slice();if(!CF_W[c.n])CF_W[c.n]={...F[1]}});
+ MU_L.forEach(l=>{if(!LY_THEMES.includes(l.n))LY_THEMES.push(l.n)})})();
+const muFamG=n=>(MUI.g[n]||{f:'pop'}).f,muFamC=n=>(MUI.c[n]||{f:'cute'}).f,muFamL=n=>(MUI.l[n]||{f:'love'}).f;
+const muDesc=(k,n)=>((MUI[k]||{})[n]||{}).d||'';
+// ---- Lyrics: a theme only (no Mood) ---------------------------------------------------------------------------------------
+seFill=function(o){if(!o)return o;if(!LY_THEMES.includes(o.lyT))o.lyT=pick(LY_THEMES);if('lyM'in o)delete o.lyM;return o};
+seRand=function(id,part){const o=S.songs[id];if(!o)return;if(lockedSong(id))return toast('Production is already confirmed.','err');const all=part=='all';
+ if(all||part=='genre')o.genre=pick(GENRES.filter(g=>g!=o.genre));if(all||part=='concept')o.concept=pick(CONCEPTS.filter(c=>c!=o.concept));if(all||part=='lyrics'||part=='theme')o.lyT=pick(LY_THEMES.filter(x=>x!=o.lyT));delete o.ev;if(ui.mod&&ui.mod.t=='html'&&ui.sesh==id)ui.mod.h=seSheetHtml(id);render()};
+{const f=seCreateRow;seCreateRow=function(o,dis){return f.apply(this,arguments).replace(/<label class="st">Lyrics mood <select[\s\S]*?<\/select><\/label>/,'').replace('Lyrics theme <select','Lyrics <select')}}
+{const f=seSheetHtml;seSheetHtml=function(id){let h=f.apply(this,arguments);try{const o=S.songs[id];if(!o)return h;const d=(k,n)=>`<br><small class="st">${esc(muDesc(k,n))}</small>`;
+ h=h.replace(/<tr><th>Lyrics mood<\/th><td>[\s\S]*?<\/td><\/tr>/,'').replace('<th>Lyrics theme</th>','<th>Lyrics</th>').replace(`<tr><th>Genre</th><td>${esc(o.genre)}</td>`,`<tr><th>Genre</th><td>${esc(o.genre)}${d('g',o.genre)}</td>`).replace(`<tr><th>Concept</th><td>${esc(o.concept)}</td>`,`<tr><th>Concept</th><td>${esc(o.concept)}${d('c',o.concept)}</td>`).replace(`<td>${esc(o.lyT)}</td>`,`<td>${esc(o.lyT)}${d('l',o.lyT)}</td>`);
+ if(o.pref)h=h.replace('<p class="st">Concept Compatibility',muPrefCard({title:o.title,genre:o.genre,concept:o.concept,ly:o.lyT,...o.pref},1)+'<p class="st">Concept Compatibility')}catch(e){console.error(e)}return h}}
+// ---- library picker: search, family filter, description under every option -----------------------------------------------
+function muKindOf(sel){const n=sel.options.length;if(n<40)return null;let c={g:0,c:0,l:0};for(const o of sel.options){if(MUI.g[o.value])c.g++;if(MUI.c[o.value])c.c++;if(MUI.l[o.value])c.l++}const k=Object.keys(c).sort((a,b)=>c[b]-c[a])[0];return c[k]>=n*.8?k:null}
+{const f=gpOpen;gpOpen=function(sel){const r=f.apply(this,arguments);try{const k=sel&&muKindOf(sel),el=GP.t;if(!k||!el)return r;el.classList.add('mupick');const FAM=k=='g'?MU_GF:k=='c'?Object.fromEntries(Object.entries(MU_CF).map(([a,b])=>[a,b[0]])):MU_LF;
+ el.querySelectorAll('.gpo').forEach(b=>{const x=MUI[k][b.dataset.v];if(!x)return;b.dataset.f=x.f;b.insertAdjacentHTML('beforeend',`<small class="mud">${esc(x.d)}</small><em class="muf">${esc(FAM[x.f]||'')}</em>`)});
+ const bar=document.createElement('div');bar.className='muchips';bar.innerHTML=`<button type="button" class="on" data-f="">All</button>`+Object.entries(FAM).map(([a,n])=>`<button type="button" data-f="${a}">${esc(n)}</button>`).join('');el.querySelector('.gpl').before(bar);
+ bar.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;e.stopPropagation();bar.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b));el.querySelectorAll('.gpo').forEach(o=>{o.hidden=!!b.dataset.f&&o.dataset.f!=b.dataset.f})});
+ const t=el.querySelector('.gphd b');if(t)t.textContent={g:'Genre library',c:'Concept library',l:'Lyrics library'}[k]+` (${sel.options.length})`}catch(e){console.error(e)}return r}}
+function muDecorate(){try{document.querySelectorAll('select').forEach(sel=>{const k=muKindOf(sel);if(!k)return;const host=sel.closest('label')||sel;let d=host.nextElementSibling;if(!d||!d.classList||!d.classList.contains('mudesc')){d=document.createElement('small');d.className='mudesc';host.after(d)}d.textContent=muDesc(k,sel.value)})}catch(e){}}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{muDecorate()}catch(e){}return r}}
+// ---- fan music tastes (stored on the existing fan cohorts) ------------------------------------------------------------------
+const MU_FAMS={g:Object.keys(MU_GF),c:Object.keys(MU_CF),l:Object.keys(MU_LF)},MU_LIB={g:MU_G,c:MU_C,l:MU_L};
+function muTaste(s){if(s.mt)return s.mt;const T={g:{},c:{},l:{},f:{g:[],c:[],l:[]}};['g','c','l'].forEach(k=>{const F=MU_FAMS[k],like=[...F].sort(()=>Math.random()-.5),hi=like.slice(0,2+(Math.random()<.4?1:0)),lo=like.slice(-2);F.forEach(f=>{T[k][f]=Math.round(hi.includes(f)?68+Math.random()*27:lo.includes(f)?8+Math.random()*24:30+Math.random()*38)});
+  T.f[k]=MU_LIB[k].filter(x=>hi.includes(x.f)).sort(()=>Math.random()-.5).slice(0,2).map(x=>x.n)});return s.mt=T}
+const muVal=(s,k,name)=>{const T=muTaste(s),x=MUI[k][name],f=x?x.f:MU_FAMS[k][0];return Math.min(100,(T[k][f]??50)+(T.f[k].includes(name)?18:0))};
+{const f=fbNew;fbNew=function(o){const src=o&&o.mt;const s=f.apply(this,arguments);try{if(s){if(src){const T=JSON.parse(JSON.stringify(src));['g','c','l'].forEach(k=>{for(const a in T[k])T[k][a]=fbCl(T[k][a]+(Math.random()*6-3),3,97)});s.mt=T}else muTaste(s)}}catch(e){}return s}}
+// what the group released / performed lately (families the fans were exposed to)
+function muExposure(){const E={};(S.groups||[]).forEach(g=>{const L=[];try{gsWith(g.id,()=>{S.singles.filter(x=>S.day-(x.relDay??x.day??-999)<=35).forEach(x=>[x.mainId,...(x.coup||[])].forEach(id=>{const o=S.songs[id];if(o)L.push({o,w:id==x.mainId?1.5:1,ids:new Set((o.slots||[]).filter(Boolean))})}));
+  const seen=new Set();thS().pf.filter(p=>S.day-p.day<=30).forEach(p=>{const K=thKeysAll().find(z=>z.key==p.k);if(!K||K.gid!=g.id)return;(thS().snap[p.snap]||[]).forEach(z=>{if(z.k!='song'||seen.has(z.song))return;seen.add(z.song);const o=S.songs[z.song];if(o)L.push({o,w:.6,ids:new Set(z.mem||[])})})})})}catch(e){}E[g.id]=L});return E}
+function muEvolve(){const E=muExposure();S.fb.segs.forEach(s=>{const T=muTaste(s),home=s.k!=null&&get(s.k)?gsGid(get(s.k)):(s.gs??(S.groups[0]||{}).id),L=E[home]||[],hit={g:{},c:{},l:{}};
+  L.forEach(x=>{const ks=s.k!=null&&x.ids.has(s.k)?1.5:1;[['g',muFamG(x.o.genre),x.o.genre],['c',muFamC(x.o.concept),x.o.concept],['l',muFamL(x.o.lyT),x.o.lyT]].forEach(([k,f,nm])=>{hit[k][f]=1;const cur=T[k][f]??50,enjoy=cur/100*.6+(s.eng||50)/250;const r=Math.random();
+   if(r<enjoy)T[k][f]=fbCl(cur+(1+Math.random()*2)*x.w*ks,3,97);else if(r>.9)T[k][f]=fbCl(cur-1-Math.random(),3,97);if(cur>=60&&Math.random()<.04&&!T.f[k].includes(nm)){T.f[k].push(nm);if(T.f[k].length>3)T.f[k].shift()}})});
+  ['g','c','l'].forEach(k=>{for(const f in T[k]){let v=T[k][f]+(Math.random()*2.4-1.2);if(!hit[k][f]&&v>72)v-=.4;T[k][f]=+fbCl(v,3,97).toFixed(1)}})})}
+{const f=fbMonthly;fbMonthly=function(){const r=f.apply(this,arguments);try{muEvolve()}catch(e){console.error(e)}return r}}
+// ---- Song Preference ----------------------------------------------------------------------------------------------------------
+const MU_RATE=[[90,'Loved by Fans'],[80,'Very Well Received'],[70,'Well Received'],[60,'Generally Liked'],[50,'Mixed Reception'],[40,'Below Expectations'],[0,'Poor Reception']];
+const muRate=v=>(MU_RATE.find(([t])=>v>=t)||MU_RATE.at(-1))[1];
+const MU_FN={g:'Genre',c:'Concept',l:'Lyrics',p:'Member popularity',mc:'Concept fit of the members',a:'Performance ability'};
+// lineup: [{id, w}] — position weights; cen: Set of Center ids
+function muLineSingle(o){const sl=(o.fm&&o.fm.sl||[]).filter(z=>z.m&&get(z.m)),R=sl.length?Math.max(...sl.map(z=>z.r))+1:1;if(sl.length)return{L:sl.map(z=>({id:z.m,w:z.c?2:z.r==0?1.4:z.r>=R-1&&R>1?.8:1})),cen:new Set(sl.filter(z=>z.c).map(z=>z.m))};const ids=(o.slots||[]).filter(id=>id&&get(id)),cen=new Set(o.centers||[]);return{L:ids.map(id=>({id,w:cen.has(id)?2:1})),cen}}
+function muLineTheater(z){const mem=(z.mem||[]).filter(id=>get(id)),rows=z.rows||[],cen=new Set([z.center,z.center2].filter(x=>x!=null));let acc=0,ri=0;const rowOf=i=>{let a=0;for(let r=0;r<rows.length;r++){a+=rows[r];if(i<a)return r}return rows.length-1};
+ return{L:mem.map((id,i)=>{const r=rows.length?rowOf(i):0;return{id,w:cen.has(id)?2:r==0?1.4:r>=rows.length-1&&rows.length>1?.8:1}}),cen}}
+function muPref(o,line,gid){const L=line.L,cen=line.cen,ids=new Set(L.map(z=>z.id));if(!o||!L.length)return null;let W=0,G=0,C=0,Ly=0,nf=0;
+ try{((S.fb&&S.fb.segs)||[]).forEach(s=>{if(!(s.n>0))return;const g=typeof fxGrpOk=='function'?fxGrpOk(s,gid):1;if(!g)return;let os=0;for(const j in s.o)if(ids.has(+j))os+=s.o[j];const kin=s.k!=null&&ids.has(s.k);
+   const w=s.n*g*(s.ft=='dormant'?.2:1)*(.5+(s.eng||50)/100)*(1+(kin?.8:0)+.4*Math.min(1,os/s.n)+(kin&&cen.has(s.k)?.6:0));W+=w;nf+=s.n*g;G+=w*muVal(s,'g',o.genre);C+=w*muVal(s,'c',o.concept);Ly+=w*muVal(s,'l',o.lyT)})}catch(e){console.error(e)}
+ const gf=muFamG(o.genre),base={g:{pop:60,dance:58,idol:60,elec:52,rock:52,ballad:55,rnb:50,hip:47,jazz:44,folk:45,world:44,classic:43}[gf]||50,c:54,l:54},b=Math.min(1,nf/800);
+ const g=W?b*G/W+(1-b)*base.g:base.g,c=W?b*C/W+(1-b)*base.c:base.c,l=W?b*Ly/W+(1-b)*base.l:base.l,sw=L.reduce((a,z)=>a+z.w,0),av=fn=>L.reduce((a,z)=>a+z.w*fn(get(z.id)),0)/sw;
+ const vw=(MUI.g[o.genre]||{vw:.5}).vw,p=fbCl(15+av(m=>m.pop||0)*.9),mc=fbCl(35+av(m=>seComp(m,o.concept))*.65),a=fbCl(av(m=>vw*(m.sing||0)+(1-vw)*(m.dance||0))*.9+av(m=>((m.cha||0)+(m.variety||0))/2)*.1);
+ const raw=.2*g+.15*c+.15*l+.2*p+.15*mc+.15*a,s=Math.round(fbCl(raw+(Math.random()*5-2.5))),F={g,c,l,p,mc,a},ord=Object.entries(F).sort((x,y)=>y[1]-x[1]);
+ const why=`Strongest: ${MU_FN[ord[0][0]]} (${Math.round(ord[0][1])}) and ${MU_FN[ord[1][0]]} (${Math.round(ord[1][1])}). Weakest: ${MU_FN[ord.at(-1)[0]]} (${Math.round(ord.at(-1)[1])}).${nf<800?' The fanbase is still small, so general listeners count for part of the taste scores.':''}`;
+ return{s,g:Math.round(g),c:Math.round(c),l:Math.round(l),p:Math.round(p),mc:Math.round(mc),a:Math.round(a),vw,n:L.length,day:S.day,why}}
+function muPrefCard(x,compact){const col=x.s>=80?'#2f8f62':x.s>=60?'#b28be8':x.s>=50?'#d9a23a':'#c4513a';return`<div class="c mupref"><div class="muph"><b>${esc(x.title||'')}</b><span class="mups" style="color:${col}">${x.s}</span></div><div class="mupb"><i style="width:${x.s}%;background:${col}"></i></div><div class="mupr" style="color:${col}">${muRate(x.s)}</div>
+ <div class="mupt"><span class="tag" title="${esc(muDesc('g',x.genre))}">♪ ${esc(x.genre||'')}</span><span class="tag" title="${esc(muDesc('c',x.concept))}">✦ ${esc(x.concept||'')}</span><span class="tag" title="${esc(muDesc('l',x.ly))}">✎ ${esc(x.ly||'')}</span></div>
+ <div class="mupf">${[['g','Genre 20%'],['c','Concept 15%'],['l','Lyrics 15%'],['p','Popularity 20%'],['mc','Concept fit 15%'],['a','Ability 15%']].map(([k,n])=>`<span><small>${n}</small><b>${x[k]??'—'}</b></span>`).join('')}</div><p class="st">${esc(x.why||'')}</p>${compact?'':`<details><summary class="st">About this Genre, Concept and Lyrics</summary><p class="st"><b>${esc(x.genre)}</b> — ${esc(muDesc('g',x.genre))}<br><b>${esc(x.concept)}</b> — ${esc(muDesc('c',x.concept))}<br><b>${esc(x.ly)}</b> — ${esc(muDesc('l',x.ly))}</p></details>`}</div>`}
+function muPrefList(P,title){if(!P||!P.length)return'';const L=P.slice().sort((a,b)=>b.s-a.s);return`<div class="mupl"><h3>💗 Song Preference <small class="st">ความชื่นชอบของแฟน ๆ ต่อเพลง · how much the fans like each song (not sales or popularity)</small></h3>${title?`<p class="st">${esc(title)}</p>`:''}<div class="muplg">${L.map(x=>muPrefCard(x)).join('')}</div></div>`}
+// single / album release: one stored score per new song
+function muRelease(x,ids){const P=[];ids.forEach(id=>{const o=S.songs[id];if(!o)return;seFill(o);if(!o.pref){const r=muPref(o,muLineSingle(o),gsAg());if(r)o.pref=r}if(o.pref)P.push({id,title:o.title,genre:o.genre,concept:o.concept,ly:o.lyT,role:id==x.mainId?'Main Song':'Coupling Song',...o.pref})});x.prefs=P;
+ try{if(P.length){const av=avg(P.map(p=>p.s));fbBoost(()=>true,fbCl((av-60)/12,-2,3),0)}}catch(e){}return P}
+{const f=doRelease;doRelease=function(){const n=S.singles.length;const r=f.apply(this,arguments);try{const x=S.singles[n];if(x&&S.singles.length>n){const ids=uniq([x.mainId,...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))]).filter(id=>S.songs[id]&&(S.songs[id].relDay==S.day||!S.songs[id].pref));const P=muRelease(x,ids);if(ui.mod&&ui.mod.t=='html'&&P.length)ui.mod.h+=muPrefList(P)}}catch(e){console.error(e)}return r}}
+{const f=alRelease;alRelease=function(){const n=(S.albums||[]).length;const r=f.apply(this,arguments);try{const a=(S.albums||[])[n];if(a){const ids=((a.trk||[]).map(t=>t.id)).filter(id=>S.songs[id]&&!S.songs[id].pref);const P=muRelease(a,ids);if(ui.mod&&ui.mod.t=='html'&&P.length)ui.mod.h+=muPrefList(P)}}catch(e){console.error(e)}return r}}
+{const f=showEds;showEds=function(i){f.apply(this,arguments);try{const x=S.singles[i];if(!x||!ui.mod||ui.mod.t!='html')return;const P=x.prefs&&x.prefs.length?x.prefs:null;if(P)ui.mod.h+=muPrefList(P,`Recorded on release day (${jd(x.relDay??x.day)}).`);else{const ids=[x.mainId,...(x.coup||[])].map(id=>S.songs[id]).filter(Boolean);ui.mod.h+=`<div class="c"><h3>Songs</h3>${ids.map(o=>`<div class="fbrow"><b>${esc(o.title)}</b><span>${esc(o.genre)} · ${esc(o.concept)} · ${esc(o.lyT||'—')}</span></div>`).join('')}</div>`}}catch(e){console.error(e)}}}
+// Theater: each Stage song gets its score at its first performance (again only if its performers change)
+{const f=thPerform;thPerform=function(x){const H=thS(),n0=H.pf.length;const r=f.apply(this,arguments);try{if(H.pf.length>n0){const rec=H.pf.at(-1),st=thStage(rec.st),gid=(thKeysAll().find(z=>z.key==rec.k)||{}).gid;if(st){st.prefs=st.prefs||{};const out={};let nw=0;
+  (H.snap[rec.snap]||[]).forEach(z=>{if(z.k!='song')return;const o=S.songs[z.song];if(!o)return;seFill(o);const sig=[...(z.mem||[])].sort((a,b)=>a-b).join(',')+'|'+(z.center||'')+'|'+o.genre+'|'+o.concept+'|'+o.lyT,cur=st.prefs[z.song];
+   if(!cur||cur.sig!=sig){const p=gsWith(gid,()=>muPref(o,muLineTheater(z),gid));if(!p)return;if(cur){st.prefH=st.prefH||[];st.prefH.push({song:z.song,...cur});if(st.prefH.length>60)st.prefH.shift()}st.prefs[z.song]={...p,sig,unit:z.pt=='unit'?(z.unit&&z.unit.name)||'Unit':null,title:o.title,genre:o.genre,concept:o.concept,ly:o.lyT};nw++}out[z.song]=st.prefs[z.song].s});
+  rec.prefs=out;const v=Object.values(out);if(v.length)resNote(`<div class="c thres"><b>💗 Song Preference</b> <span class="st">average ${Math.round(avg(v))} · best ${Math.max(...v)}${nw?` · ${nw} song(s) scored for the first time`:''} — see the performance summary</span></div>`)}}}catch(e){console.error(e)}return r}}
+{const f=thOpenPerf;thOpenPerf=function(id){f.apply(this,arguments);try{const p=thS().pf.find(z=>z.id==id);if(!p||!p.prefs||!ui.mod||ui.mod.t!='html'||ui.mod.h.includes('class="mupl"'))return;const st=thStage(p.st),P=[];
+ (thS().snap[p.snap]||[]).forEach(z=>{if(z.k!='song'||p.prefs[z.song]==null)return;const o=S.songs[z.song]||{},cur=st&&st.prefs&&st.prefs[z.song],old=st&&(st.prefH||[]).find(h=>h.song==z.song&&h.s==p.prefs[z.song]),d=cur&&cur.s==p.prefs[z.song]?cur:old;P.push(d?{...d,title:(d.title||o.title)+(d.unit?` · ${d.unit}`:'')}:{title:z.title||o.title,genre:o.genre,concept:o.concept,ly:o.lyT,s:p.prefs[z.song],why:''})});
+ if(P.length){ui.mod.h+=muPrefList(P,'Each song is scored with the members who actually perform it (Unit songs: the Unit only). A score is kept from the song\'s first performance.');render()}}catch(e){console.error(e)}}}
+// ---- old saves: every song keeps its data; missing Lyrics get a safe default; Mood is dropped ---------------------------------
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{(S.groups||[{id:null}]).forEach(g=>{try{gsWith(g.id,()=>Object.values(S.songs||{}).forEach(seFill))}catch(e){Object.values(S.songs||{}).forEach(seFill)}});if(S.fb&&S.fb.segs)S.fb.segs.forEach(muTaste)}catch(e){console.error(e)}return r}}
+{const f=fbInit;fbInit=function(){const r=f.apply(this,arguments);try{S.fb.segs.forEach(muTaste)}catch(e){}return r}}
+
+</script>
+<script>
+// =====================================================================================
 //  Long-game performance: smaller saves and faster loading
 // -------------------------------------------------------------------------------------
 //  · Startup reads the save ONCE: only the newer copy (localStorage or IndexedDB, compared by the
@@ -9858,6 +10327,7 @@ Object.assign(I18N_TH,{"Accept graduation request":"ยอมรับคำข�
 Object.assign(I18N_TH,{"In the group for":"อยู่ในวงมาแล้ว","Time in the group":"อยู่ในวง"});
 Object.assign(I18N_TH,{"Relationships":"ความสัมพันธ์","Members’ Lounge · Relationships":"ห้องพักสมาชิก · ความสัมพันธ์","Close relationships":"ความสัมพันธ์ใกล้ชิด","Active rivalries":"คู่แข่งที่มีอยู่","Current conflicts":"ความขัดแย้งตอนนี้","Social Circles":"กลุ่มเพื่อน","Relationship News":"ข่าวความสัมพันธ์","Shared history":"ความทรงจำร่วมกัน","Observed feelings":"ความรู้สึกที่สังเกตเห็น","Inferred (may feel)":"อาจรู้สึก (คาดการณ์)","Some feelings remain undisclosed.":"ยังมีความรู้สึกบางอย่างที่ไม่เปิดเผย","All relationships":"ความสัมพันธ์ทั้งหมด","Barely Acquainted":"แทบไม่รู้จัก","Acquaintances":"คนรู้จัก","Familiar":"คุ้นเคย","Friends":"เพื่อน","Close Friends":"เพื่อนสนิท","Deeply Connected":"ผูกพันลึกซึ้ง","Best Friends":"เพื่อนรัก","Good Friends":"เพื่อนที่ดี","Senpai & Kouhai":"รุ่นพี่และรุ่นน้อง","Mentor & Mentee":"ผู้สอนและลูกศิษย์","Rivals":"คู่แข่ง","Friendly Rivals":"คู่แข่งที่เป็นมิตร","Professional Competitors":"คู่แข่งในหน้าที่","Strained Relationship":"ความสัมพันธ์ตึงเครียด","Conflict":"ขัดแย้ง","Complicated Relationship":"ความสัมพันธ์ซับซ้อน","Distant Relationship":"ห่างเหิน","Romantic Interest":"มีใจ","Mutual Romantic Feelings":"มีใจให้กัน","Unrequited Feelings":"รักข้างเดียว","Admiration":"ชื่นชม","Trust":"ไว้ใจ","Care":"ห่วงใย","Respect":"นับถือ","Appreciation":"ซาบซึ้ง","Protectiveness":"อยากปกป้อง","Jealousy":"อิจฉา","Resentment":"ขุ่นเคือง","Disappointment":"ผิดหวัง","Frustration":"หงุดหงิด","Pressure":"กดดัน","Dislike":"ไม่ชอบ"});
 Object.assign(I18N_TH,{"Fanbase":"แฟนเบส","Oshi Ranking":"อันดับโอชิ","Fan Spending":"การใช้จ่ายของแฟน","Fan Activity":"กิจกรรมของแฟน","Regional":"ภูมิภาค","Kami Oshi & Teams":"คามิโอชิและทีม","Casual":"ขาจร","Regular":"ขาประจำ","Dedicated":"ทุ่มเท","Hardcore":"ฮาร์ดคอร์","Dormant":"พักการติดตาม","Former":"อดีตแฟน","Casual fans":"แฟนขาจร","Regular fans":"แฟนขาประจำ","Dedicated fans":"แฟนทุ่มเท","Hardcore fans":"แฟนฮาร์ดคอร์","Dormant fans":"แฟนพักการติดตาม","Former fans":"อดีตแฟน","Total fanbase":"แฟนเบสทั้งหมด","Active fans":"แฟนที่ยังติดตาม","New fans":"แฟนใหม่","Lost fans":"แฟนที่เสียไป","Fan growth rate":"อัตราการเติบโตของแฟน","Group loyalty":"ความภักดีต่อวง","Fan engagement":"การมีส่วนร่วมของแฟน","Unique supporters":"ผู้สนับสนุน (ไม่นับซ้ำ)","Other Oshi":"โอชิอื่น","Active supporters":"ผู้สนับสนุนที่ยังติดตาม","Fan loyalty":"ความภักดีของแฟน","Fan affinity":"ความผูกพันของแฟน","Fan growth":"การเติบโตของแฟน","Spending this month":"ยอดใช้จ่ายเดือนนี้","Fan category":"ประเภทแฟน","Total spending":"ยอดใช้จ่ายรวม","Unique buyers":"ผู้ซื้อ (ไม่นับซ้ำ)","Transactions":"จำนวนรายการ","CD Sales":"ยอดขายซีดี","Merchandise":"สินค้า","Handshake":"งานจับมือ","Theater":"เธียเตอร์","General Election":"เลือกตั้งทั่วไป","Current members":"สมาชิกปัจจุบัน","Graduated members":"สมาชิกที่จบการศึกษา","Entire company":"ทั้งบริษัท","Fanbase history":"ประวัติแฟนเบส","Supporter trend":"แนวโน้มผู้สนับสนุน"});
+Object.assign(I18N_TH,{"Genre library":"คลังแนวเพลง","Concept library":"คลังคอนเซ็ปต์","Lyrics library":"คลังเนื้อเพลง","Lyrics":"เนื้อเพลง","Loved by Fans":"แฟน ๆ รักมาก","Very Well Received":"ตอบรับดีมาก","Well Received":"ตอบรับดี","Generally Liked":"ชอบโดยรวม","Mixed Reception":"เสียงตอบรับปนกัน","Below Expectations":"ต่ำกว่าที่คาด","Poor Reception":"ตอบรับไม่ดี","About this Genre, Concept and Lyrics":"เกี่ยวกับแนวเพลง คอนเซ็ปต์ และเนื้อเพลงนี้"});
 
 </script>
 <script>
