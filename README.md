@@ -733,3 +733,10 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
   - Member Popularity 20%, members' existing Concept Fit 15% and Performance Ability 15% (Vocal vs Dance by Genre) come from the performers.
   - Positions are weighted: Center, then Front, Middle, Back.
 - **Stored once**: singles and albums are scored on release (`song.pref`, `single.prefs`) and shown on the release results and single details. Theater songs are scored at their first performance (`stage.prefs`), with Unit songs using only the Unit, and shown in the performance summary. Later changes never alter stored results.
+
+## Day-advance speed (`js/ui/perf3.js` and changes in `fanbase.js` / `faneco.js`)
+- During one Theater performance the Stage lineup (`thBase`) and team pool (`thPool`) are computed once instead of hundreds of times.
+- Fan purchases are queued and settled together once a week, at month end (before budgets reset), before saving and before fan statistics are read. Fan affinity changes from exposure are applied once a day in one pass.
+- Daily merch & streaming revenue reuses fan statistics for up to 7 days. Team and unit supporter totals are only computed when a screen or the monthly snapshot needs them.
+- Member lookups in the monthly fan simulation use a map instead of searching the roster each time. The full fan cohort clean-up runs only when the active roster changes.
+- Measured with 4 teams and 4 Stages after about 300 days: a normal 7-day advance went from about 1.3–1.6 s to about 0.3 s, and a week that crosses a month from about 2.4 s to about 1.0 s (desktop Chrome).

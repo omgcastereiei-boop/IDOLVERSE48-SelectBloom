@@ -79,9 +79,12 @@ function fbStats(){const fb=fbState();if(!fb)return null;if(FBC.s===S&&FBC.v===f
   const sn=(fb.snap&&fb.snap.mem[X.id])||null;X.net=sn?X.sup-sn.s:X.sup;X.kNet=sn?X.k-sn.k:X.k;X.oNet=sn?X.o-sn.o:X.o;const c=fb.acc.kc[X.id]||{kg:0,kl:0,og:0,ol:0};X.gain=c.kg+c.og;X.loss=c.kl+c.ol;X.kg=c.kg;X.kl2=c.kl});
  G.goods=Math.round(G.goods);G.pop=act.length?avg(act.map(m=>m.pop)):0;
  // teams & units: unique followers per segment (Kami Oshi in the team → 90%, each Oshi in it → 70%, independent)
+ const val={G,M,act};let TU=null;const tu=()=>{if(TU)return TU;
  const teams=[],units=[];(S.groups||[]).forEach(g=>{const gm=act.filter(m=>m.group==g.id);units.push({key:'g'+g.id,name:g.name,color:g.color,ids:new Set(gm.map(m=>m.id)),n:gm.length});(g.teams||[]).forEach(t=>{const tm=gm.filter(m=>m.tid==t.id);teams.push({key:g.id+':'+t.id,name:t.name,gname:g.name,color:t.color||g.color,ids:new Set(tm.map(m=>m.id)),n:tm.length})})});
  [...teams,...units].forEach(U=>{U.sup=0;U.loy=0;U.eng=0;fb.segs.forEach(s=>{let miss=s.k!=null&&U.ids.has(s.k)?.1:1;for(const j in s.o)if(U.ids.has(+j))miss*=1-.7*s.o[j]/s.n;const f=s.n*(1-miss);U.sup+=f;U.loy+=f*s.loy;U.eng+=f*s.eng});U.loy=U.sup?U.loy/U.sup:0;U.eng=U.sup?U.eng/U.sup:0;U.sup=Math.round(U.sup);const ms=[...U.ids].map(get).filter(Boolean);U.pop=ms.length?avg(ms.map(m=>m.pop)):0;const sn=fb.snap&&(fb.snap.team[U.key]??null);U.net=sn==null?U.sup:U.sup-sn});
- const val={G,M,teams,units,act};FBC={s:S,v:fb.ver,d:S.day,val};return val}
+ return TU={teams,units}};
+ // teams & units are only computed when a screen or the monthly snapshot reads them
+ Object.defineProperty(val,'teams',{get:()=>tu().teams,enumerable:true});Object.defineProperty(val,'units',{get:()=>tu().units,enumerable:true});FBC={s:S,v:fb.ver,d:S.day,val};return val}
 function fbSnapshot(){const st=fbStatsRaw();return{total:st.G.total,day:S.day,mem:Object.fromEntries(Object.values(st.M).map(X=>[X.id,{k:X.k,o:X.o,s:X.sup}])),team:Object.fromEntries([...st.teams,...st.units].map(U=>[U.key,U.sup]))}}
 function fbStatsRaw(){FBC.v=-1;return fbStats()}
 
@@ -153,7 +156,7 @@ function fbCtx(){const x=S.singles[S.singles.length-1],act=fbActive(),mn=x&&S.so
 function fbAppeal(m,c){const e=S.fb.exp[m.id]||0;let a=m.pop*.25+e*3+(c.cen.has(m.id)?18:0)+(c.sen.has(m.id)?6:0)+(c.front.has(m.id)?4:0)+(m.sing>=80?5:0)+(m.dance>=80?5:0)+((m.traits||[]).length>1?2:0)+(m.variety>=75?3:0);
  return a*(.6+m.pop/100)*(isAct(m)?1:.5)*(c.stale?.7:1)*Math.sqrt(1+S.fans/20000)}
 function fbWhy(m,c){return c.cen.has(m.id)?'Center exposure':c.sen.has(m.id)?'Senbatsu exposure':m.sing>=80?'Vocal talent':m.dance>=80?'Dance talent':(S.fb.exp[m.id]||0)>1?'Performance':'Member appeal'}
-function fbMonthly(){const fb=S.fb,c=fbCtx(),act=c.act,A=fb.acc,start=fb.snap?fb.snap.total:fbTotal();if(!act.length){fbRecord(start);return}
+function fbMonthly(){const _gm=new Map(S.members.map(m=>[m.id,m]));const fb=S.fb,c=fbCtx(),act=c.act,A=fb.acc,start=fb.snap?fb.snap.total:fbTotal();if(!act.length){fbRecord(start);return}
  // 1. acquisition: word of mouth (group) and members' own appeal
  const gp=avg(act.map(m=>m.pop));fbAcquire(fbRound((10+gp*2.5)*fbJit(.75,1.25)*(c.recent?1.4:c.stale?.6:1)),{via:'group',org:'Word of mouth'});
  act.forEach(m=>{const n=fbRound(fbAppeal(m,c)*fbJit(.6,1.4));if(n>0)fbAcquire(n,{via:'member',mid:m.id,org:fbWhy(m,c)})});
@@ -161,16 +164,16 @@ function fbMonthly(){const fb=S.fb,c=fbCtx(),act=c.act,A=fb.acc,start=fb.snap?fb
  fb.segs.filter(s=>s.k==null&&s.n>0).forEach(s=>{const mv=fbRound(s.n*.07*(s.eng/60));if(mv<=0)return;const W=act.map(m=>[m,(m.pop+5)*(1+4*(s.o[m.id]||0)/s.n)*(1+(fb.exp[m.id]||0)*.2)]).sort((a,b)=>b[1]-a[1]).slice(0,3),Wt=W.reduce((a,b)=>a+b[1],0);let left=mv;
   W.forEach(([m,w],i)=>{const n=i==W.length-1?left:Math.min(left,fbRound(mv*w/Wt));left-=n;if(n<=0)return;const t=fbSplit(s,n),had=t.o[m.id]||0;t.k=m.id;delete t.o[m.id];t.pat=fbPick();if(t.ft=='casual')t.ft='oshi';fbLife(m.id,'kg',n);if(had)fbLife(m.id,'ol',had)})});
  // 2. fan loss (type, loyalty, activity, exposure over several singles)
- fb.segs.forEach(s=>{const km=s.k!=null?get(s.k):null;let r=FB_CHURN[s.ft]*(1.5-s.loy/100)*(c.stale?1.5:1)*(1+.15*fb.flops);if(km&&!c.seen(km.id))r*=1.25;if(km&&!isAct(km))r*=1.1;r=Math.min(.1,r*fbJit(.85,1.15));
+ fb.segs.forEach(s=>{const km=s.k!=null?_gm.get(s.k):null;let r=FB_CHURN[s.ft]*(1.5-s.loy/100)*(c.stale?1.5:1)*(1+.15*fb.flops);if(km&&!c.seen(km.id))r*=1.25;if(km&&!isAct(km))r*=1.1;r=Math.min(.1,r*fbJit(.85,1.15));
   const L=fbRound(s.n*r);if(L<=0)return;const f=L/s.n;if(s.k!=null)fbLife(s.k,'kl',L);for(const j in s.o){const d=Math.round(s.o[j]*f);s.o[j]-=d;fbLife(+j,'ol',d)}s.n-=L;A.lost+=L;A.lossBy[FB_TN[s.ft]]=(A.lossBy[FB_TN[s.ft]]||0)+L});
  // 3. fan type evolution (gradual: a few % of a segment per month)
  const EVO=[['casual',s=>s.k!=null&&s.loy>30&&s.eng>42,'oshi',.07],['casual',s=>s.eng>46&&s.loy>32,'dedicated',.06],['dedicated',s=>s.loy>62,'hardcore',.04],['oshi',s=>s.sp>52,'collector',.04],['oshi',s=>s.loy>66,'hardcore',.03],['hardcore',s=>s.eng<42,'dedicated',.05],['collector',s=>s.sp<40,'oshi',.04]];
  fb.segs.slice().forEach(s=>{const e=EVO.find(([f,p])=>f==s.ft&&p(s));if(!e)return;const n=fbRound(s.n*e[3]*fbJit(.7,1.3));if(n<=0)return;const t=fbSplit(s,n);t.ft=e[2];const b=FB_BASE[e[2]];t.loy=fbCl(t.loy+(b[0]-t.loy)*.2);t.sp=fbCl(t.sp+(b[2]-t.sp)*.2);A.evo+=n});
  // 4. loyalty & engagement drift (popularity is separate: underrated members can have very loyal fans)
- fb.segs.forEach(s=>{const b=FB_BASE[s.ft],km=s.k!=null?get(s.k):null;let tl=b[0],te=b[1]+(c.recent?10:c.stale?-12:0);if(km){tl+=(55-km.pop)*.12+(km.mor-50)*.06+(c.sen.has(km.id)?2:c.seen(km.id)?0:-3);te+=(fb.exp[km.id]||0)*1.5}
+ fb.segs.forEach(s=>{const b=FB_BASE[s.ft],km=s.k!=null?_gm.get(s.k):null;let tl=b[0],te=b[1]+(c.recent?10:c.stale?-12:0);if(km){tl+=(55-km.pop)*.12+(km.mor-50)*.06+(c.sen.has(km.id)?2:c.seen(km.id)?0:-3);te+=(fb.exp[km.id]||0)*1.5}
   tl+=Math.min(15,(S.day-s.born)/15)+(c.recent?3:0);s.loy=fbCl(s.loy+(tl-s.loy)*.12+fbJit(-1.2,1.2));s.eng=fbCl(s.eng+(te-s.eng)*.25+fbJit(-1.5,1.5));s.sp=fbCl(s.sp+(b[2]-s.sp)*.05+fbJit(-1,1))});
  // 5. Kami Oshi changes (uncommon; exposure raises the chance, high loyalty lowers it)
- fb.segs.slice().forEach(s=>{const km=s.k!=null?get(s.k):null;if(!km||s.n<2)return;const C=act.filter(m=>m.id!=s.k).map(m=>[m,(fb.exp[m.id]||0)+(c.cen.has(m.id)?2:0)+Math.max(0,m.pop-km.pop)/20+2*(s.o[m.id]||0)/s.n]).filter(x=>x[1]>.4).sort((a,b)=>b[1]-a[1]);if(!C.length)return;
+ fb.segs.slice().forEach(s=>{const km=s.k!=null?_gm.get(s.k):null;if(!km||s.n<2)return;const C=act.filter(m=>m.id!=s.k).map(m=>[m,(fb.exp[m.id]||0)+(c.cen.has(m.id)?2:0)+Math.max(0,m.pop-km.pop)/20+2*(s.o[m.id]||0)/s.n]).filter(x=>x[1]>.4).sort((a,b)=>b[1]-a[1]);if(!C.length)return;
   const r=Math.min(.03,(.003+.006*Math.min(1,C[0][1]/5)+(c.seen(km.id)?0:.008)+(isAct(km)?0:.006))*(1.4-s.loy/100)),n=fbRound(s.n*r*fbJit(.7,1.3));if(n<=0)return;
   const to=C[Math.random()<.7?0:Math.min(C.length-1,1)][0],t=fbSplit(s,n),had=t.o[to.id]||0;t.k=to.id;delete t.o[to.id];if(had)fbLife(to.id,'ol',had);const keep=fbRound(n*.6);if(keep>0){t.o[km.id]=keep;fbLife(km.id,'og',keep)}t.loy=fbCl(t.loy*.97);t.org='Kami Oshi change';
   fbLife(km.id,'kl',n);fbLife(to.id,'kg',n);A.kch+=n;const key=km.id+'>'+to.id;A.kmove[key]=(A.kmove[key]||0)+n});
@@ -185,7 +188,8 @@ function fbRecord(start){const fb=S.fb,A=fb.acc,st=fbStatsRaw(),G=st.G,mon=fb.mo
 
 // ---- hooks into the existing game -----------------------------------------------------------
 const _fbTick=tick;tick=function(){const r=_fbTick.apply(this,arguments);try{if(S&&S.fb){fbSync(FBORG?null:{org:'Member buzz'});const mk=fbMon();if(mk!==S.fb.mon){fbMonthly();S.fb.mon=mk}}else fbState()}catch(e){console.error(e)}return r};
-const _fbEarn=earn;earn=function(a,l){if(l=='Merch & streaming'&&S&&S.fb&&!FBW){try{const st=fbStats(),G=st.G,str=G.total*(.7+.8*G.eng/100),mer=(G.merch+G.goods)/30*fbJit(.92,1.08);a=Math.round(str+mer);const R=S.fb.acc.rev;R.stream+=str;R.merch+=mer;Object.values(st.M).forEach(X=>{R.mem[X.id]=(R.mem[X.id]||0)+X.mp/30})}catch(e){console.error(e)}}return _fbEarn.call(this,a,l)};
+let FB_MW=null; // daily merch & streaming: fan statistics are refreshed weekly (they change slowly)
+const _fbEarn=earn;earn=function(a,l){if(l=='Merch & streaming'&&S&&S.fb&&!FBW){try{const st=(FB_MW&&FB_MW.s===S&&S.day-FB_MW.d<7&&S.day>=FB_MW.d)?FB_MW.st:(FB_MW={s:S,d:S.day,st:fbStats()}).st,G=st.G,str=G.total*(.7+.8*G.eng/100),mer=(G.merch+G.goods)/30*fbJit(.92,1.08);a=Math.round(str+mer);const R=S.fb.acc.rev;R.stream+=str;R.merch+=mer;Object.values(st.M).forEach(X=>{R.mem[X.id]=(R.mem[X.id]||0)+X.mp/30})}catch(e){console.error(e)}}return _fbEarn.call(this,a,l)};
 const _fbRel=doRelease;doRelease=function(){const p=S.pj,n=S.singles.length;const r=fbWith('cd',()=>_fbRel.apply(this,arguments),{org:p?'Single release: '+p.title:'Single release'});const x=S.singles[n];if(x&&S.singles.length>n)try{fbOnRelease(x)}catch(e){console.error(e)}return r};
 const _fbAlb=alRelease;alRelease=function(){const n=(S.albums||[]).length,t=S.al&&S.al.title;const r=fbWith('album',()=>_fbAlb.apply(this,arguments),{org:'Album release: '+(t||'')});const a=(S.albums||[])[n];if(a)try{fbOnAlbum(a)}catch(e){console.error(e)}return r};
 const _fbConc=holdConcert;holdConcert=function(p,x){const ev=fbWith('concert',()=>_fbConc.apply(this,arguments),{org:'Release Day Mini Concert'});if(ev)try{fbOnShow('conc:'+ev.id,ev.members||[],'A')}catch(e){}return ev};

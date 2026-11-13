@@ -38,23 +38,29 @@ const fxAf=(s,mid,kami)=>{fxSeg(s);return s.af[mid]!=null?s.af[mid]:fxAfInit(s,m
 // supporters who leave a member: Dormant pool → Former pool (historical, per member)
 {const f=fbLife;fbLife=function(mid,k,v){try{if(v>0){const M=fxMs(mid);if(k=='kl')M.dk+=v;else if(k=='ol')M.do+=v;else if(k=='kg'){const b=Math.min(M.dk,Math.round(v*.15));M.dk-=b}else if(k=='og'){const b=Math.min(M.do,Math.round(v*.15));M.do-=b}}}catch(e){}return f.apply(this,arguments)}}
 // exposure raises the affinity of that member's supporters (each segment differently)
-{const f=fbExp;fbExp=function(mid,v){const r=f.apply(this,arguments);try{S.fb.segs.forEach(s=>{if(s.k==mid)s.af[mid]=fbCl(fxAf(s,mid,1)+v*(1+Math.random()));else if(s.o&&s.o[mid])s.af[mid]=fbCl(fxAf(s,mid,0)+v*(.6+Math.random()*.9))})}catch(e){}return r}}
+let FX_EXQ={};
+{const f=fbExp;fbExp=function(mid,v){const r=f.apply(this,arguments);try{if(get(mid))FX_EXQ[mid]=(FX_EXQ[mid]||0)+v}catch(e){}return r}}
+function fxExFlush(){const Q=FX_EXQ;if(!Object.keys(Q).length||!S||!S.fb)return;FX_EXQ={};S.fb.segs.forEach(s=>{if(s.k!=null&&Q[s.k]!=null)s.af[s.k]=fbCl(fxAf(s,s.k,1)+Q[s.k]*(1+Math.random()));for(const j in s.o)if(Q[j]!=null&&+j!=s.k)s.af[j]=fbCl(fxAf(s,+j,0)+Q[j]*(.6+Math.random()*.9))})}
 // ---- shared budget & purchases --------------------------------------------------------------------------------------------
 function fxTx(){const X=fxS(),k=fbMon();return X.tx[k]=X.tx[k]||{k:{},cat:{},mem:{},grp:{},pub:0,tot:0}}
 const fxGrpOk=(s,gid)=>{if(!S||S.groups.length<2||gid==null)return 1;try{const w=gsSupW(s,gid,gsAffMap(gid));return w||(s.k==null&&s.gs==null&&gid==(gsMain()||{}).id?1:0)}catch(e){return 1}};
 // budget fullness of the fans who would pay for this (1 = fresh month, → 0 = spent)
 function fxFull(kind,gid){let a=0,b=0;try{S.fb.segs.forEach(s=>{fxSeg(s);const w=s.n*(FX_PREF[kind]||FX_PREF.other)[s.ft]*fxGrpOk(s,gid);if(!w)return;a+=w*Math.max(0,s.bl);b+=w*fxBud(s)})}catch(e){}return b?a/b:1}
-const fxDem=(kind,gid)=>fbCl(.6+.42*fxFull(kind,gid),.6,1.05);
+let FX_DC={d:-1,m:{}};const fxDem=(kind,gid)=>{if(FX_DC.d!==S.day||FX_DC.s!==S)FX_DC={d:S.day,s:S,m:{}};const k=kind+'|'+gid;if(FX_DC.m[k]==null)FX_DC.m[k]=fbCl(.6+.42*fxFull(kind,gid),.6,1.05);return FX_DC.m[k]};
 // charge a purchase to the fans: weights by remaining budget, category, preferred activity and the members involved
-function fxPay(kind,yen,units,ctx){yen=Math.round(yen);if(!S||!S.fb||!(yen>0))return 0;ctx=ctx||{};const gid=ctx.gid!=null?ctx.gid:(typeof gsAg=='function'?gsAg():null),mids=ctx.mids?new Set(ctx.mids):null,PR=FX_PREF[kind]||FX_PREF.other,T=fxTx();
+let FX_Q=null;
+function fxPay(kind,yen,units,ctx){if(FX_Q&&yen>0){FX_Q.push([kind,yen,units,ctx||{}]);return 0}return fxPayNow(kind,yen,units,ctx)}
+function fxQFlush(){const Q=FX_Q;FX_Q=null;if(!Q||!Q.length)return;const G={};Q.forEach(([k,y,u,c])=>{const gid=c.gid!=null?c.gid:(typeof gsAg=='function'?gsAg():null),key=k+'|'+gid;const g=G[key]=G[key]||{k,y:0,u:0,pw:0,gid,mids:new Set(),all:false};g.y+=y;g.u+=u||0;g.pw+=(c.price||300)*y;if(!c.mids)g.all=true;else c.mids.forEach(i=>g.mids.add(i))});Object.values(G).forEach(g=>fxPayNow(g.k,g.y,g.u,{gid:g.gid,mids:g.all?null:[...g.mids],price:Math.round(g.pw/Math.max(1,g.y))}))}
+function fxPayNow(kind,yen,units,ctx){yen=Math.round(yen);if(!S||!S.fb||!(yen>0))return 0;ctx=ctx||{};const gid=ctx.gid!=null?ctx.gid:(typeof gsAg=='function'?gsAg():null),mids=ctx.mids?new Set(ctx.mids):null,PR=FX_PREF[kind]||FX_PREF.other,T=fxTx();
  const L=[];let W=0;S.fb.segs.forEach(s=>{fxSeg(s);const g=fxGrpOk(s,gid);if(!g||s.n<=0)return;let mt=1;if(mids){if(s.k!=null&&mids.has(s.k))mt+=2.5*fxAf(s,s.k,1)/60;let os=0;for(const j in s.o)if(mids.has(+j))os+=s.o[j];mt+=1.2*Math.min(1,os/s.n)}
   const w=s.n*Math.max(20,s.bl)*PR[s.ft]*(s.pa==kind?1.6:1)*mt*g*(.5+(s.pq??50)/100);if(w>0){L.push([s,w]);W+=w}});
- let paid=0,left=yen;const K=T.k[kind]=T.k[kind]||{y:0,u:0,t:0,b:0};if(W>0){for(let pass=0;pass<2&&left>0;pass++){const W2=L.reduce((a,[s,w])=>a+(s.n*s.bl>0?w:0),0);if(!W2)break;const amt=left;L.forEach(([s,w])=>{const cap=s.n*Math.max(0,s.bl);if(cap<=0)return;const pay=Math.min(cap,amt*w/W2);if(pay<=0)return;s.bl-=pay/s.n;paid+=pay;left-=pay;
+ let paid=0,left=yen;const MM={};const K=T.k[kind]=T.k[kind]||{y:0,u:0,t:0,b:0};if(W>0){for(let pass=0;pass<2&&left>yen*.01;pass++){const W2=L.reduce((a,[s,w])=>a+(s.n*s.bl>0?w:0),0);if(!W2)break;const amt=left;L.forEach(([s,w])=>{const cap=s.n*Math.max(0,s.bl);if(cap<=0)return;const pay=Math.min(cap,amt*w/W2);if(pay<=0)return;s.bl-=pay/s.n;paid+=pay;left-=pay;
     T.cat[s.ft]=(T.cat[s.ft]||0)+pay;const u=units?units*pay/yen:0,buyers=Math.min(s.n,Math.max(pay>0?1:0,u?u/(1+(s.pq||50)/60):pay/Math.max(1,ctx.price||300)));s.bx=s.bx||{};s.bx[kind]=Math.min(s.n,(s.bx[kind]||0)+buyers*(1-(s.bx[kind]||0)/s.n));
     // member attribution: Kami Oshi first, then Oshi (only members involved when the purchase names members)
-    const tgt=[];if(s.k!=null&&(!mids||mids.has(s.k)))tgt.push([s.k,(FB_PAT[s.pat]||[.75])[0]*s.n]);for(const j in s.o)if(!mids||mids.has(+j))tgt.push([+j,s.o[j]*.35]);if(s.k2)for(const g2 in s.k2)if(!mids||mids.has(s.k2[g2].m))tgt.push([s.k2[g2].m,s.k2[g2].n*.5]);
-    const tw=tgt.reduce((a,z)=>a+z[1],0);if(tw>0)tgt.forEach(([id,w2])=>{const M=T.mem[id]=T.mem[id]||{};M[kind]=(M[kind]||0)+pay*w2/tw})})}}
- paid=Math.round(paid);const pub=yen-paid;T.pub+=pub;K.y+=yen;K.u+=units||0;K.t+=Math.max(1,Math.round((units||yen/Math.max(1,ctx.price||300))/1.3));T.tot+=yen;if(gid!=null)T.grp[gid]=(T.grp[gid]||0)+yen;S.fb.ver++;return paid}
+    let tw=0;const kw=s.k!=null&&(!mids||mids.has(s.k))?(FB_PAT[s.pat]||[.75])[0]*s.n:0;tw+=kw;for(const j in s.o)if(!mids||mids.has(+j))tw+=s.o[j]*.35;if(s.k2)for(const g2 in s.k2)if(!mids||mids.has(s.k2[g2].m))tw+=s.k2[g2].n*.5;if(tw<=0)return;const f=pay/tw;
+    if(kw)MM[s.k]=(MM[s.k]||0)+kw*f;for(const j in s.o)if(!mids||mids.has(+j))MM[j]=(MM[j]||0)+s.o[j]*.35*f;if(s.k2)for(const g2 in s.k2)if(!mids||mids.has(s.k2[g2].m))MM[s.k2[g2].m]=(MM[s.k2[g2].m]||0)+s.k2[g2].n*.5*f})}}
+ for(const id in MM){const M=T.mem[id]=T.mem[id]||{};M[kind]=(M[kind]||0)+MM[id]}
+ paid=Math.round(paid);const pub=yen-paid;T.pub+=pub;K.y+=yen;K.u+=units||0;K.t+=Math.max(1,Math.round((units||yen/Math.max(1,ctx.price||300))/1.3));T.tot+=yen;if(gid!=null)T.grp[gid]=(T.grp[gid]||0)+yen;fxS().tv=(fxS().tv||0)+1;return paid}
 function fxBuyers(kind){let n=0;S.fb.segs.forEach(s=>{n+=(s.bx&&s.bx[kind])||0});return Math.round(n)}
 function fxBuyersAny(){let n=0;S.fb.segs.forEach(s=>{if(!s.bx)return;let p=1;for(const k in s.bx)p*=1-Math.min(1,s.bx[k]/Math.max(1,s.n));n+=s.n*(1-p)});return Math.round(n)}
 // ---- hooks into the existing paid activities (revenue itself stays where it is booked) --------------------------------------
@@ -86,7 +92,7 @@ function fxAct(kind,n,uq){const A=fxActM(),a=A[kind]=A[kind]||{n:0,uq:0};a.n+=n;
   s.bx=s.bx||{};s.bx.vote=Math.min(s.n,(s.bx.vote||0)+Math.min(s.n,u/Math.max(1,P.q))*(1-(s.bx.vote||0)/s.n));for(const k in e.buy){const d=(e.buy[k]||0)-(b0[k]||0);if(d>0){const M=T.mem[k]=T.mem[k]||{};M.vote=(M.vote||0)+d*SE_PRICE}}fxAct('vote',u,null)}}catch(x){console.error(x)}return r}}
 // ---- monthly: category flow, affinity, Kami Oshi per group, budgets, snapshots ------------------------------------------------
 function fxFormer(s,n,why){n=Math.min(s.n,Math.round(n));if(n<=0)return 0;const X=fxS(),F=X.fmr,r=n/s.n;F.n+=n;F.by[why]=(F.by[why]||0)+n;if(s.k!=null){F.k[s.k]=(F.k[s.k]||0)+n;const M=fxMs(s.k);M.fk+=n}for(const j in s.o){const c=Math.round(s.o[j]*r);if(c>0){F.o[j]=(F.o[j]||0)+c;fxMs(+j).fo+=c;s.o[j]-=c}}s.n-=n;fbFix(s);const A=S.fb.acc;A.lost+=n;A.lossBy[why]=(A.lossBy[why]||0)+n;return n}
-function fxMonthly(){const fb=S.fb,X=fxS(),act=fbActive(),ids=new Set(act.map(m=>m.id)),stale=fb.lastRel==null?true:S.day-fb.lastRel>90,recent=fb.lastRel!=null&&S.day-fb.lastRel<=45;
+function fxMonthly(){const MID=new Map(S.members.map(m=>[m.id,m])),GID=new Map(S.members.map(m=>[m.id,gsGid(m)])),fb=S.fb,X=fxS(),act=fbActive(),ids=new Set(act.map(m=>m.id)),stale=fb.lastRel==null?true:S.day-fb.lastRel>90,recent=fb.lastRel!=null&&S.day-fb.lastRel<=45;
  fb.segs.slice().forEach(s=>{fxSeg(s);if(s.n<=0)return;
   if(s.ft!='dormant'){ // active → dormant: low engagement / interest, long silence, favourite gone
    const risk=fbCl((38-s.eng)/100+(stale?.05:0)+(s.k==null&&s.pf2?.03:0)+(40-(s.gi||50))/400,0,.2)*(s.ft=='hardcore'?.3:s.ft=='dedicated'?.6:1);const n=fbRound(s.n*risk*fbJit(.6,1.2));if(n>0){const t=fbSplit(s,n);t.pf=t.ft;t.ft='dormant';t.dsince=S.day;t.eng=fbCl(t.eng*.5);t.gi=fbCl((t.gi||40)-10)}
@@ -97,9 +103,9 @@ function fxMonthly(){const fb=S.fb,X=fxS(),act=fbActive(),ids=new Set(act.map(m=
   // affinity drifts toward the segment's engagement; weak Oshi are dropped, a stronger Oshi can become the Kami Oshi
   for(const j in s.af){if(!ids.has(+j)||(+j!=s.k&&!(s.o[j]>0)&&!(s.k2&&Object.values(s.k2).some(z=>z.m==+j)))){delete s.af[j];continue}s.af[j]=fbCl(s.af[j]+(s.eng-55)*.03-.8+fbJit(-1.5,1.5))}
   if(s.ft!='dormant'){for(const j in s.o){const a=fxAf(s,+j,0);if(a<14&&Math.random()<.5){const c=fbRound(s.o[j]*.4);if(c>0){s.o[j]-=c;fbLife(+j,'ol',c)}}}fbFix(s);
-   if(s.k!=null&&s.n>=4){const ka=fxAf(s,s.k,1);const best=Object.keys(s.o).map(j=>[+j,fxAf(s,+j,0)]).filter(([j])=>get(j)&&gsGid(get(j))==gsGid(get(s.k))).sort((a,b)=>b[1]-a[1])[0];if(best&&best[1]>ka+12&&Math.random()<.35){const n=Math.min(s.o[best[0]],fbRound(s.n*.25));if(n>0){const t=fbSplit(s,n),old=t.k;t.k=best[0];delete t.o[best[0]];t.o[old]=Math.round(n*.6);t.af[best[0]]=best[1];t.af[old]=ka-10;fbLife(old,'kl',n);fbLife(best[0],'kg',n);fbLife(old,'og',t.o[old]);fb.acc.kch+=n}}}}
+   if(s.k!=null&&s.n>=4){const ka=fxAf(s,s.k,1);const best=Object.keys(s.o).map(j=>[+j,fxAf(s,+j,0)]).filter(([j])=>MID.has(j)&&GID.get(j)==GID.get(s.k)).sort((a,b)=>b[1]-a[1])[0];if(best&&best[1]>ka+12&&Math.random()<.35){const n=Math.min(s.o[best[0]],fbRound(s.n*.25));if(n>0){const t=fbSplit(s,n),old=t.k;t.k=best[0];delete t.o[best[0]];t.o[old]=Math.round(n*.6);t.af[best[0]]=best[1];t.af[old]=ka-10;fbLife(old,'kl',n);fbLife(best[0],'kg',n);fbLife(old,'og',t.o[old]);fb.acc.kch+=n}}}}
   // one Kami Oshi per group: the favourite in another group
-  const home=s.k!=null&&get(s.k)?gsGid(get(s.k)):s.gs,by={};for(const j in s.o){const m=get(+j);if(!m)continue;const g=gsGid(m);if(g==home)continue;if(!by[g]||s.o[j]>s.o[by[g]])by[g]=+j}
+  const home=s.k!=null&&MID.has(s.k)?GID.get(s.k):s.gs,by={};for(const j in s.o){if(!MID.has(+j))continue;const g=GID.get(+j);if(g==home)continue;if(!by[g]||s.o[j]>s.o[by[g]])by[g]=+j}
   const k2={};for(const g in by){const j=by[g];if(s.o[j]>=s.n*.3)k2[g]={m:j,n:Math.round(s.o[j]*.6)}}if(Object.keys(k2).length)s.k2=k2;else delete s.k2;
   // budget: the month's allowance; part of what was not spent is saved (savers keep more)
   const b=fxBud(s);s.bl=Math.round(Math.min(3*b,Math.max(0,s.bl)*(s.pa=='vote'?.85:.45)+b));s.bx={}});
@@ -118,7 +124,7 @@ function fxSnap(){const X=fxS(),st=fxStats(1),T=X.tx[X.mon]||{k:{},tot:0},row={m
 let FXC={v:-1,d:-1,val:null};
 function fxCatSplit(n,af,out,key){ // spread a cohort over the member categories around its affinity
  const c=af>=78?3:af>=60?2:af>=42?1:0,L=[[c,.62],[Math.max(0,c-1),.2],[Math.min(3,c+1),.18]];let used=0;L.forEach(([i,p],x)=>{const v=x==2?n-used:Math.round(n*p);used+=v;out[FX_ACT[i]][key]+=v})}
-function fxStats(force){const fb=fbState();if(!fb)return null;if(!force&&FXC.v===fb.ver&&FXC.d===S.day&&FXC.s===S)return FXC.val;const X=fxS(),G={total:0,active:0,cat:{casual:0,oshi:0,dedicated:0,hardcore:0,dormant:0,former:X.fmr.n},loy:0,eng:0,sp:0,gi:0,bud:0,bl:0},M={};
+function fxStats(force){const fb=fbState();if(!fb)return null;fxSettle();const tv=(fb.fx&&fb.fx.tv)||0;if(!force&&FXC.v===fb.ver&&FXC.tv===tv&&FXC.d===S.day&&FXC.s===S)return FXC.val;const X=fxS(),G={total:0,active:0,cat:{casual:0,oshi:0,dedicated:0,hardcore:0,dormant:0,former:X.fmr.n},loy:0,eng:0,sp:0,gi:0,bud:0,bl:0},M={};
  const mk=id=>M[id]=M[id]||{id,k:0,o:0,act:0,loy:0,eng:0,af:0,afn:0,ck:{casual:0,oshi:0,dedicated:0,hardcore:0,dormant:0,former:0},co:{casual:0,oshi:0,dedicated:0,hardcore:0,dormant:0,former:0}};
  S.members.forEach(m=>mk(m.id));Object.keys(X.ms).forEach(id=>mk(+id));const cs={};FX_ACT.forEach(k=>cs[k]={k:0,o:0});
  fb.segs.forEach(s=>{fxSeg(s);const n=s.n;if(n<=0)return;G.total+=n;G.cat[s.ft]=(G.cat[s.ft]||0)+n;if(s.ft!='dormant')G.active+=n;G.loy+=s.loy*n;G.eng+=s.eng*n;G.sp+=s.sp*n;G.gi+=(s.gi||50)*n;G.bud+=fxBud(s)*n;G.bl+=Math.max(0,s.bl)*n;const dor=s.ft=='dormant';
@@ -128,7 +134,7 @@ function fxStats(force){const fb=fbState();if(!fb)return null;if(!force&&FXC.v==
  Object.values(M).forEach(A=>{const P=X.ms[A.id]||{dk:0,do:0,fk:0,fo:0},m=get(A.id);A.uniq=A.k+A.o;A.loy=A.uniq?A.loy/A.uniq:0;A.eng=A.uniq?A.eng/A.uniq:0;A.af=A.afn?A.af/A.afn:0;A.ck.dormant+=P.dk;A.co.dormant+=P.do;A.ck.former+=P.fk;A.co.former+=P.fo;
   A.cat={};FX_CATS.forEach(([k])=>A.cat[k]=A.ck[k]+A.co[k]);A.inact=A.cat.dormant+A.cat.former;A.hist=A.act+A.inact;A.spend=Math.round(Object.values(tx.mem[A.id]||{}).reduce((a,b)=>a+b,0));A.sk=tx.mem[A.id]||{};
   const pv=last&&last.mem[A.id];A.grow=pv?A.uniq-(pv[0]+pv[1]):0;A.dcat=pv?{casual:A.cat.casual-pv[2],oshi:A.cat.oshi-pv[3],dedicated:A.cat.dedicated-pv[4],hardcore:A.cat.hardcore-pv[5],dormant:A.cat.dormant-pv[6],former:A.cat.former-pv[7]}:null;A.cur=!!m;A.pop=m?m.pop:0;A.gradH=P.grad||null});
- const val={G,M,fmr:X.fmr};FXC={v:fb.ver,d:S.day,s:S,val};return val}
+ const val={G,M,fmr:X.fmr};FXC={v:fb.ver,tv,d:S.day,s:S,val};return val}
 // unique supporters of a set of members (no double counting) — e.g. a team, a group
 function fxUnique(ids){const set=new Set(ids);let u=0;S.fb.segs.forEach(s=>{if(s.n<=0)return;if(s.k!=null&&set.has(s.k)){u+=s.n;return}let miss=1;for(const j in s.o)if(set.has(+j))miss*=1-Math.min(1,s.o[j]/s.n);u+=s.n*(1-miss)});return Math.round(u)}
 // ---- UI -----------------------------------------------------------------------------------------------------------------------
@@ -175,6 +181,12 @@ V.fans=function(){view='fanbase';return V.fanbase()};
 {const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{if(cand||!m||!S.members.includes(m)||(ui.ptab||'stats')!='stats'||!S.fb)return h;const A=fxStats().M[m.id];if(!A)return h;const H=fxS().hist.slice(-12).map(r=>({l:r.label,v:r.mem[m.id]?r.mem[m.id][0]+r.mem[m.id][1]:0}));
  h+=`<div class="c fxprof"><h3>Fanbase</h3>${fxMemHtml(A)}<h4>Supporter trend</h4>${fbLineChart(H,{color:FB_K,label:'Unique supporters',min:0,empty:'The trend appears after the first month.'})}</div>`}catch(e){console.error(e)}return h}}
 {const f=ctFormerOpen;ctFormerOpen=function(id){f.apply(this,arguments);try{const A=fxStats().M[id],g=A&&A.gradH;if(ui.mod&&ui.mod.h&&A){ui.mod.h+=`<div class="c fxprof"><h3>Fanbase history</h3>${g?`<p class="st">At graduation (${jd(g.day)}): Kami Oshi ${fbN(g.k)} · Other Oshi ${fbN(g.o)} · unique supporters ${fbN(g.uniq)} — ${fbN(g.cont)} stayed with the group, ${fbN(g.trans)} chose another member, ${fbN(g.att)} stayed attached to her, ${fbN(g.left)} left.</p>${fxBarStack(g.cat)}${fxLegend()}`:''}<div class="ctscroll"><table class="cttab"><tr><th>Now</th><th>Kami Oshi</th><th>Other Oshi</th></tr><tr><td>Dormant</td><td>${fbN(A.ck.dormant)}</td><td>${fbN(A.co.dormant)}</td></tr><tr><td>Former</td><td>${fbN(A.ck.former)}</td><td>${fbN(A.co.former)}</td></tr></table></div></div>`;render()}}catch(e){console.error(e)}}}
+// purchases are queued and settled together once a week (and at month end, before saving and before statistics are read)
+let FX_QD=null;
+{const f=tick;tick=function(){if(!FX_Q)FX_Q=[];if(FX_QD==null)FX_QD=S.day;let r;try{r=f.apply(this,arguments)}finally{try{if(S.day-FX_QD>=7||FX_Q.length>400){fxQFlush();FX_Q=[];FX_QD=S.day}}catch(e){console.error(e)}try{fxExFlush()}catch(e){console.error(e)}}return r}}
+function fxSettle(){try{if(FX_Q&&FX_Q.length){fxQFlush();FX_Q=[];FX_QD=S?S.day:null}fxExFlush()}catch(e){console.error(e)}}
+{const f=save;save=function(){fxSettle();return f.apply(this,arguments)}}
+{const f=fxMonthly;fxMonthly=function(){try{fxExFlush();if(FX_Q){fxQFlush();FX_Q=[]}}catch(e){console.error(e)}return f.apply(this,arguments)}} // settle the old month before budgets reset
 // ---- month change, migration -------------------------------------------------------------------------------------------------
-{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S.fb){fxS();S.fb.segs.forEach(fxSeg)}}catch(e){console.error(e)}return r}}
+{const f=migrate;migrate=function(){FX_Q=null;FX_QD=null;FX_EXQ={};const r=f.apply(this,arguments);try{if(S.fb){fxS();S.fb.segs.forEach(fxSeg)}}catch(e){console.error(e)}return r}}
 {const f=fbInit;fbInit=function(){const r=f.apply(this,arguments);try{fxS();S.fb.segs.forEach(fxSeg)}catch(e){}return r}}
