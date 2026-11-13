@@ -18,7 +18,7 @@ function thAllK(fn){const p=GS_ALLK;GS_ALLK=1;try{return fn()}finally{GS_ALLK=p}
 // ---- 1. Revival between groups ------------------------------------------------------------------
 // the Revival list shows the debuted Stages of every group
 {const f=V.thstage;if(f)V.thstage=function(){let h=f.apply(this,arguments);try{const key=thCur();if(!key||S.groups.length<2)return h;const mine=new Set(thKeys().map(K=>K.key));
- const L=Object.values(thS().st).filter(s=>s.no&&!mine.has(s.k)&&thKAny(s.k)).sort((a,b)=>String(a.k).localeCompare(String(b.k))||a.no-b.no);if(!L.length)return h;
+ const L=Object.values(thS().st).filter(s=>s.no&&!s.revOf&&!s.adopted&&!mine.has(s.k)&&thKAny(s.k)).sort((a,b)=>String(a.k).localeCompare(String(b.k))||a.no-b.no);if(!L.length)return h;
  const add=L.map(s=>`<div class="thstc ${s.status}"><span class="thno sm">${ordN(s.no)}</span><b>${esc(s.name)}</b><small>${esc(thLabelAny(s.k))} · ${s.status}</small><button class="b s p" onclick="thRevival('${s.id}')">✦ Revival Stage</button></div>`).join('');
  const i=h.indexOf('<div class="thsth">',h.indexOf('<div class="c threv">'));return i<0?h:h.slice(0,i+19)+add+h.slice(i+19)}catch(e){console.error(e);return h}}}
 function thXgSong(srcGid,id,key){const S0=gsCtx(srcGid,'songs')||{},o=S0[id];if(!o)return null;const have=Object.values(S.songs||{}).find(z=>z.xFrom&&z.xFrom.gid==srcGid&&z.xFrom.id==id&&thSongOk(z,key));if(have)return have;

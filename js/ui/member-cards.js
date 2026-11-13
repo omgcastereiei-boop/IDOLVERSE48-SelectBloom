@@ -7,7 +7,7 @@
 //    TOP 3 bronze (crown + corner flourishes + shimmer), TOP 4–7 Kami 7 (star), Title Track Senbatsu (bow).
 //    A "TOP n" ribbon sits on the portrait. Unranked / not running: nothing. Same frame in the profile.
 // =====================================================================================
-const mcLine=m=>{const g=grp(m.group),t=teamOf(m),tn=t&&isAct(m)?t.name:TL();let s=`${esc(g?g.name:'')} ${ord(m.gen||1)} Gen ${esc(tn)}`;
+const mcLine=m=>{const g=grp(m.group),t=teamOf(m),tn=t&&isAct(m)?t.name:(m.reg&&isAct(m)&&!m.tid?'Regular Member':TL());let s=`${esc(g?g.name:'')} ${ord(m.gen||1)} Gen ${esc(tn)}`;
  if(m.kn){const kg=grp(m.kn.gid),kt=kg&&(kg.teams||[]).find(x=>x.id==m.kn.tid);if(kg)s+=` · ${esc(kg.name)} ${esc(kt?kt.name:'')}`}return s};
 const GEDC_C='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 22V9Q2 2 9 2H22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M6.5 18V10.5Q6.5 6.5 10.5 6.5H18" fill="none" stroke="currentColor" stroke-width="1.3" opacity=".75" stroke-linecap="round"/><circle cx="4.2" cy="4.2" r="2.8" fill="currentColor"/><circle cx="4.2" cy="4.2" r="1.1" fill="#fff" opacity=".85"/></svg>';
 const GEDC_TOP={crown:'<svg viewBox="0 0 40 26" aria-hidden="true"><path d="M3 22L6 7L14 15L20 2L26 15L34 7L37 22Z" fill="currentColor" stroke="rgba(0,0,0,.25)" stroke-width="1"/><rect x="3" y="21" width="34" height="4" rx="1.5" fill="currentColor" stroke="rgba(0,0,0,.25)" stroke-width="1"/><circle cx="20" cy="3" r="2.3" fill="#fff"/><circle cx="6" cy="7.5" r="1.8" fill="#fff"/><circle cx="34" cy="7.5" r="1.8" fill="#fff"/><circle cx="20" cy="18" r="2" fill="#e8213b"/></svg>',

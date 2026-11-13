@@ -1050,3 +1050,10 @@ select:not([multiple]):not([size]){cursor:pointer}
 .muplg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:8px}.mupref{margin:0;text-align:left}.muph{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.mups{font-size:1.9em;font-weight:800;line-height:1}.mupb{height:10px;border-radius:6px;background:#efe9f6;overflow:hidden;margin:4px 0}.mupb i{display:block;height:100%;border-radius:6px}.mupr{font-weight:800;font-size:.9em}.mupt{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}.mupf{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:4px 0}.mupf span{background:var(--lv2,#f6f2fb);border-radius:8px;padding:3px 6px;display:flex;flex-direction:column}.mupf small{font-size:.66em;opacity:.7}.mupl{margin-top:10px}
 .mupick .gpo .muf{grid-column:2;grid-row:1;justify-self:end;align-self:center;white-space:nowrap}.mupick .gpo .mud{grid-row:2}.mupick .gpo>span{grid-column:1;grid-row:1}.mupick .gpo>i{display:none}.mupick .gpo.on{outline:2px solid #e05794}
 .mupick .muchips{flex:0 0 auto;max-height:74px;overflow-y:auto}.mupick .gpbox{display:flex;flex-direction:column;max-height:88vh}.mupick .gpl{flex:1 1 auto;overflow-y:auto;min-height:0}
+/* theater operations & disbanding */
+.thpause{border-left:6px solid #f0b3c8;margin:10px 0}.thpause h3{margin:0 0 4px}.thpause .row{flex-wrap:wrap;gap:6px}.thpause select{max-width:100%}
+.threvf{display:block;margin-top:2px}
+.treg{background:#d9ecff;color:#24507a;font-weight:800}.treg-sec{border-top:6px solid #9cc6ef}
+.b.warn{border-color:#e39aa9;color:#a3324d}
+.gsdis{opacity:.75;filter:grayscale(.5)}
+.gdisl{max-height:52vh;overflow-y:auto;margin:6px 0}.gdisr{gap:8px;padding:4px 0;border-bottom:1px dashed #eee;flex-wrap:nowrap}.gdisr select{max-width:52%;min-width:0}

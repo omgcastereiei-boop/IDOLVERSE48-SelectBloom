@@ -159,7 +159,7 @@ V.rel=function(){const R=relS(),st=relStats(),f=ui.relf=ui.relf||{mid:null,lv:'a
 function relOpenK(k){const[a,b]=k.split('-').map(Number);relOpen(a,b)}
 function relOpen(a,b){const P=relGet(a,b),A=relM(a),B=relM(b);if(!A||!B)return;if(!P){ui.mod={t:'html',h:`<h2 class="ht">${esc(relNm(A))} & ${esc(relNm(B))}</h2>${emptyBox('They barely know each other yet.')}`};return render()}
  const dA=relDir(P,a),side=(m,d)=>{const F=P.f[d]||{},obs=Object.entries(F).filter(([,o])=>o.s=='o'&&(o.v>=10)),inf=Object.entries(F).filter(([,o])=>o.s=='i'&&o.v>=10),pr=Object.values(F).some(o=>o.s=='p');
-  return`<div class="c relside">${ptc(m,64)}<b>${esc(relNm(m))}</b><small class="st">${esc(gn(m.group))} · ${relAct(m)?(teamOf(m)&&isAct(m)?esc(teamOf(m).name):esc(TL())):'former member ('+esc(CT_ST[ctStatus(m)]||'Graduated')+')'}</small>
+  return`<div class="c relside">${ptc(m,64)}<b>${esc(relNm(m))}</b><small class="st">${esc(gn(m.group))} · ${relAct(m)?(teamOf(m)&&isAct(m)?esc(teamOf(m).name):esc(TLm(m))):'former member ('+esc(CT_ST[ctStatus(m)]||'Graduated')+')'}</small>
   <div class="relbig">${Math.round(P.x[d])}<small>/100 · ${relLv(P.x[d])}</small></div><small class="st">Bond toward ${esc(relNm(d==dA?B:A))}</small>
   ${obs.length?`<div><small>Observed feelings</small><div>${obs.map(([k])=>`<span class="tag ${REL_NEG.has(k)?'relneg':'relpos'}">${REL_F[k]}</span>`).join('')}</div></div>`:''}${inf.length?`<div><small>Inferred (may feel)</small><div>${inf.map(([k])=>`<span class="tag relinf">${REL_F[k]}?</span>`).join('')}</div></div>`:''}${pr?'<div><small class="st">Some feelings remain undisclosed.</small></div>':''}</div>`};
  const H=P.h.filter(e=>!e.p).slice().sort((x,y)=>x.d-y.d);

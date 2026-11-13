@@ -740,3 +740,36 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
 - Daily merch & streaming revenue reuses fan statistics for up to 7 days. Team and unit supporter totals are only computed when a screen or the monthly snapshot needs them.
 - Member lookups in the monthly fan simulation use a map instead of searching the roster each time. The full fan cohort clean-up runs only when the active roster changes.
 - Measured with 4 teams and 4 Stages after about 300 days: a normal 7-day advance went from about 1.3–1.6 s to about 0.3 s, and a week that crosses a month from about 2.4 s to about 1.0 s (desktop Chrome).
+
+## Theater operations & disbanding (`js/ui/theater-ops.js`)
+- **Revival Stage**:
+  - Only an Original Stage can be revived. Revival Stages are left out of the Revival list, and reviving one is refused with a pointer to its original.
+  - A Revival Stage shows where it came from ("Revival of Team A 2nd Stage “…”") in Stage Management, the Stage page and the archive.
+  - Stages of a disbanded team stay revivable.
+- **Trainee Theater without Trainees**: when the group has no Trainees left (all promoted or graduated), the Trainee Stage ends at once.
+  - Scheduled performances are cancelled and the Stage retires.
+  - No new performance is scheduled and a debut cannot be confirmed until there are Trainees again.
+  - A restructuring transition with a frozen lineup still runs its own final performance.
+- **Final performance & pause**: Stage Management › *Final performance & pause* picks one scheduled performance as the active Stage's last.
+  - Later performances are cancelled.
+  - After the final performance the Stage retires and the theater is **paused**: no performances and no automatic scheduling.
+  - A new, revived or reused Stage ends the pause, and the history is kept in `T.pauseH`.
+  - The plan can be cancelled before the date, which restores the cancelled performances.
+- **Online membership** (company-wide):
+  - No subscribers until a theater has given a performance. Existing saves are corrected on load.
+  - A theater that stopped performing in the last 180 days (paused or disbanded) adds extra monthly cancellations in proportion to its share of theaters.
+  - With no theater performing, subscribers drop by about 25–38% a month and nobody new subscribes.
+- **Disband Team** (Groups › team › *Disband team*): members become **Regular Members** (`m.reg`): full members with no team.
+  - They are shown in their own section and filter (`@reg`) and are labelled "Regular Member" everywhere.
+  - They can join a team later or be demoted.
+  - Team leadership and Concurrent Positions in that team end.
+  - The team's theater stops, and its Stages stay in the archive.
+- **Disband Group** (sister groups only; the Main Group cannot be disbanded): a dialog lets the player choose, for every member, one of:
+  - graduate;
+  - move to another group as a Trainee;
+  - move to another group as a Regular Member;
+  - move straight into one of another group's teams.
+
+  After disbanding:
+  - The group is marked `g.dis` and its teams, theaters and leadership end.
+  - It disappears from the group switcher and the Groups page, and stays listed as *Disbanded* in the company history.

@@ -19,7 +19,7 @@ function geHistOf(e,r){const m=get(r.id)||(S.alumni||[]).find(a=>a.id==r.id)||{}
 const geArrow=(from,to)=>{if(from==null||to==null)return'';const d=from-to;return`<span class="gechg2 ${d>0?'up':d<0?'dn':''}">${d>0?'▲'+d:d<0?'▼'+(-d):'＝'}</span>`};
 function geBadge(e,r){if(!r.rank)return'';const H=geHistOf(e,r);if(!H.everRanked)return'<span class="getag new">NEW</span>';if(H.prevRank==null)return'<span class="getag cb">Comeback</span>';return geArrow(H.prevRank,r.rank)}
 // member line: Group Team (Group 1st Gen) / Group B Team B
-geMeta=function(r){const m=r&&(get(r.id)||(S.alumni||[]).find(a=>a.id==r.id));if(!m)return r?`${esc(r.trainee?TL():r.team||'')}`:'';const g=grp(m.group),t=teamOf(m),tn=t&&isAct(m)?t.name:TL();
+geMeta=function(r){const m=r&&(get(r.id)||(S.alumni||[]).find(a=>a.id==r.id));if(!m)return r?`${esc(r.trainee?TL():r.team||'')}`:'';const g=grp(m.group),t=teamOf(m),tn=t&&isAct(m)?t.name:TLm(m);
  let s=`${esc(g?g.name:'')} ${esc(tn)}`;if(m.kn){const kg=grp(m.kn.gid),kt=kg&&(kg.teams||[]).find(x=>x.id==m.kn.tid);if(kg)s+=` / ${esc(kg.name)} ${esc(kt?kt.name:'')}`}return`${s} (${esc(g?g.name:'')} ${ordN(m.gen||1)} Gen)`};
 // results line under the votes
 geChg=function(r){const e=GE_CTX;if(!e||!r)return'';const H=geHistOf(e,r),it=[],v=x=>x?`<b>TOP ${x}</b>`:'<b class="nr">Not Ranked</b>';
