@@ -1089,3 +1089,16 @@ select:not([multiple]):not([size]){cursor:pointer}
 .ccpics{margin:8px 0}.ccpicv .ccart{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 4px 14px rgba(40,20,60,.25)}
 .ccpicn{gap:8px;align-items:center;margin-top:6px;flex-wrap:nowrap}.ccpicn b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ccpicc{display:flex;gap:4px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}.ccpicc .b{flex:0 0 auto}
+/* Theater setlist: fit the screen width (phones) */
+.thg>*{min-width:0}.thtl{grid-template-columns:minmax(0,1fr)}.thtl li{min-width:0;max-width:100%;box-sizing:border-box}
+.thtl .thmcm{flex-wrap:wrap;max-width:100%;row-gap:2px}.thsgm small{overflow-wrap:anywhere}
+.thtl li.thmc input{flex:1 1 140px;min-width:0;max-width:100%;box-sizing:border-box}.thtl li.thmc .thmcd{flex:2 1 180px}
+.thaddrow{margin:10px 0 8px}
+@media(max-width:700px){
+ .thtl li{gap:4px 6px;padding:6px}
+ .thtl li .thsgm{flex:1 1 calc(100% - 52px)}
+ .thtl li.thmc input,.thtl li.thmc .thmcd{flex:1 1 100%;width:100%}
+ .thtl li .thmcm{flex:1 1 100%;padding-left:0}
+ .thtl li select{max-width:46%;min-width:0}
+ .thtl li .b.s{padding:5px 9px;font-size:12px}
+}

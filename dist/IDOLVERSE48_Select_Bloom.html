@@ -1171,6 +1171,19 @@ select:not([multiple]):not([size]){cursor:pointer}
 .ccpics{margin:8px 0}.ccpicv .ccart{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 4px 14px rgba(40,20,60,.25)}
 .ccpicn{gap:8px;align-items:center;margin-top:6px;flex-wrap:nowrap}.ccpicn b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ccpicc{display:flex;gap:4px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}.ccpicc .b{flex:0 0 auto}
+/* Theater setlist: fit the screen width (phones) */
+.thg>*{min-width:0}.thtl{grid-template-columns:minmax(0,1fr)}.thtl li{min-width:0;max-width:100%;box-sizing:border-box}
+.thtl .thmcm{flex-wrap:wrap;max-width:100%;row-gap:2px}.thsgm small{overflow-wrap:anywhere}
+.thtl li.thmc input{flex:1 1 140px;min-width:0;max-width:100%;box-sizing:border-box}.thtl li.thmc .thmcd{flex:2 1 180px}
+.thaddrow{margin:10px 0 8px}
+@media(max-width:700px){
+ .thtl li{gap:4px 6px;padding:6px}
+ .thtl li .thsgm{flex:1 1 calc(100% - 52px)}
+ .thtl li.thmc input,.thtl li.thmc .thmcd{flex:1 1 100%;width:100%}
+ .thtl li .thmcm{flex:1 1 100%;padding-left:0}
+ .thtl li select{max-width:46%;min-width:0}
+ .thtl li .b.s{padding:5px 9px;font-size:12px}
+}
 
 </style>
 </head><body>
@@ -5816,7 +5829,7 @@ const TH_EDT=s=>!!s&&s.status!='retired'&&s.status!='archived';
 thGuardEdit=function(s){if(!s)return false;if(s.status=='retired'||s.status=='archived'){toast('This Stage is retired. Reuse it from the Stage Archive to perform it again.','err');return false}return true};
 {const f=thSongsTab;thSongsTab=function(s,tr,lk){return f.call(this,s,tr,!TH_EDT(s))}}
 {const f=thEncHtml;thEncHtml=function(s,lk){const r=f.call(this,s,!TH_EDT(s));return TH_EDT(s)?thEdBtns(s,r,1):r}}
-{const f=thTimeline;thTimeline=function(s,lk,mode){const ed=TH_EDT(s),r=f.call(this,s,!ed,mode);if(!ed)return r;const tr=thTr(s.k);return`<div class="row thaddrow">${tr?'':`<button class="b p" onclick="thSongNew()">✦ Add New Song</button>`}<span class="st">${tr?'Add songs from the Song Library below.':'Create a new song for this Stage, or add one from the Song Library below.'} Every song can be edited or removed at any time.</span></div>`+thEdBtns(s,r,0)}}
+{const f=thTimeline;thTimeline=function(s,lk,mode){const ed=TH_EDT(s),r=f.call(this,s,!ed,mode);if(!ed)return r;const tr=thTr(s.k);return thEdBtns(s,r,0)+`<div class="row thaddrow">${tr?'':`<button class="b p" onclick="thSongNew()">✦ Add New Song</button>`}<span class="st">${tr?'Add songs from the Song Library below.':'Create a new song for this Stage, or add one from the Song Library below.'} Every song can be edited or removed at any time.</span></div>`}}
 {const f=V.thset;V.thset=function(){return f.apply(this,arguments).replace(' · 🔒 song list fixed (Stage debuted or scheduled)','')}}
 // ✎ Edit / ✕ Remove on every song (the index buttons of the original lists become id-based)
 function thEdBtns(s,h,enc){return h.replace(enc?/onclick="thEncDel\((\d+)\)">✕<\/button>/g:/onclick="thDel\((\d+)\)">✕<\/button>/g,(a,i)=>{const it=enc?thEncO(s).items[+i]:s.items[+i];if(!it||it.k!='song')return a;return`onclick="thSongEditOpen('${it.id}')">✎ Edit</button><button class="b s" onclick="thSongDelAsk('${it.id}')">✕ Remove</button>`}).replace(enc?/(<\/ol>)(?![\s\S]*<\/ol>)/:/$^/,enc&&thEncO(s).on&&!thTr(s.k)?`$1<div class="row"><button class="b s p" onclick="thSongNew(1)">✦ New Encore song</button></div>`:'$1')}
