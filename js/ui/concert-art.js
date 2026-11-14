@@ -49,11 +49,12 @@ function ccStageSvg(C,p,set,idx,W=900,H=420){const it=set.items[idx],V=ccV(C.vid
  // light beams in the costume colours
  let beams='';const nb=cat=='lh'?0:cat=='hall'?4:7;for(let i=0;i<nb;i++){const bx=W*(i+.5)/nb+(r()-.5)*40;beams+=`<path d="M${bx.toFixed(0)} 0L${(bx-60+r()*120).toFixed(0)} ${G.floor}H${(bx-20+r()*120).toFixed(0)}Z" fill="${i%2?P.a:P.b}" opacity=".1"/>`}
  // stage floor & runway
- let floor=`<rect x="0" y="${G.floor}" width="${W}" height="${H-G.floor}" fill="#140f1f"/><path d="M${cat=='lh'?40:20} ${G.floor}H${W-(cat=='lh'?40:20)}" stroke="${P.a}" stroke-width="3" opacity=".8"/>`;
- if(cat=='arena'||cat=='dome'||cat=='stad')floor+=`<path d="M${W/2-34} ${G.floor}H${W/2+34}L${W/2+52} ${H}H${W/2-52}Z" fill="#1e1730" stroke="${P.c}" stroke-opacity=".5"/>`;
- // members (back rows first)
- let fg='';const RN=rows.length;rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,sc=1-back*.12,fw=Math.min(cat=='lh'?100:92,(W-120)/Math.max(1,row.length)/.86)*sc,yb=G.floor-fw*2.15+back*0+(-back*30);const x0=W/2-fw*.86*(row.length-1)/2;
-  row.forEach((z,i)=>{const m=ccMem(z.m);if(!m)return;const a=ap(m),c=z.c,ww=c?fw*1.1:fw,ps=TH_MICP[Math.floor(r()*TH_MICP.length)];fg+=`<svg x="${(x0+fw*.86*i-ww/2).toFixed(1)}" y="${(c?yb-8:yb).toFixed(1)}" width="${ww.toFixed(1)}" height="${(ww*2.5).toFixed(1)}" viewBox="10 -2 80 200">${fig(m,{pose:c?3:ps,of:a.of,oh:a.oh,ac:a.ac,ex:2,prop:1,...(cdm[m.id]?{cd:cdm[m.id]}:{})})}</svg>`})});
+ const RN=rows.length,FRONT=G.floor+30,DEPTH=RN>1?Math.min(34*(RN-1),110):0,FB=FRONT-DEPTH-20;
+ let floor=`<path d="M${cat=='lh'?60:40} ${FB}H${W-(cat=='lh'?60:40)}L${W} ${H}H0Z" fill="#140f1f"/><path d="M${cat=='lh'?60:40} ${FB}H${W-(cat=='lh'?60:40)}" stroke="${P.a}" stroke-width="3" opacity=".8"/>`+[...Array(9)].map((_,i)=>{const t=i/8,xb=60+(W-120)*t,xf=-40+(W+80)*t;return`<path d="M${xb.toFixed(0)} ${FB}L${xf.toFixed(0)} ${H}" stroke="${P.c}" stroke-opacity=".08"/>`}).join('');
+ if(cat=='arena'||cat=='dome'||cat=='stad')floor+=`<path d="M${W/2-34} ${FRONT+4}H${W/2+34}L${W/2+52} ${H}H${W/2-52}Z" fill="#1e1730" stroke="${P.c}" stroke-opacity=".5"/>`;
+ // members (back rows first) — every row stands on the stage floor
+ let fg='';rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,cat=='lh'?100:92);const x0=W/2-Y.step*(row.length-1)/2;
+  row.forEach((z,i)=>{const m=ccMem(z.m);if(!m)return;const a=ap(m),c=z.c,ww=c?Y.fw*1.08:Y.fw,ps=TH_MICP[Math.floor(r()*TH_MICP.length)],x=x0+Y.step*i;fg+=`<ellipse cx="${x.toFixed(1)}" cy="${(Y.feet+1).toFixed(1)}" rx="${(ww*.3).toFixed(1)}" ry="${(ww*.06).toFixed(1)}" fill="#000" opacity=".35"/>`+stFig(m,x,Y.feet+(c?4:0),ww,fig(m,{pose:c?3:ps,of:a.of,oh:a.oh,ac:a.ac,ex:2,prop:1,...(cdm[m.id]?{cd:cdm[m.id]}:{})}))})});
  // audience
  let aud='';const ay=H-30;if(G.crowd=='stand'){for(let i=0;i<34;i++){const x=10+i*(W-20)/33+(r()-.5)*8;aud+=`<circle cx="${x.toFixed(0)}" cy="${(ay+6+r()*8).toFixed(0)}" r="13" fill="#0a0810"/>`;if(r()<.35)aud+=`<line x1="${x.toFixed(0)}" y1="${ay-4}" x2="${(x+(r()-.5)*14).toFixed(0)}" y2="${ay-22}" stroke="#0a0810" stroke-width="6" stroke-linecap="round"/>`}}
  else if(G.crowd=='seat'){for(let row=0;row<2;row++)for(let i=0;i<26;i++){const x=20+i*(W-40)/25;aud+=`<circle cx="${x.toFixed(0)}" cy="${ay+row*12}" r="10" fill="${row?'#07060c':'#0d0a15'}"/>`}}

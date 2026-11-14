@@ -959,3 +959,4 @@ Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap
 - **Stage Archive**: only the first and the last (latest) performance, with every member (tap a face for the profile).
 - **Costume dropdowns** (every page): Single costumes and Theater costumes in separate sections, sorted by group, team and release order; other designs last.
 - Team names are shown correctly when a performance of another group's team is opened (no more raw keys such as "tt4").
+- **Performance pictures** (Theater debut/performance photos, Birthday Stage photos, Concert photos): every row stands on a perspective stage floor (back rows further back and smaller, with shadows) instead of floating; members stand further apart. In the Birthday Stage group photo the birthday member holds the cake again.
