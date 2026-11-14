@@ -1085,3 +1085,7 @@ select:not([multiple]):not([size]){cursor:pointer}
 .czrep{margin:6px 0;padding:6px;border:1px dashed #e6dcf3;border-radius:10px}.czrepl{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
 .czsw{display:inline-block;width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #d8cfe6;cursor:pointer;padding:0}.czsw.on{box-shadow:0 0 0 3px var(--pk)}
 .czrep .row{gap:8px;flex-wrap:wrap;align-items:center}
+/* concert pictures */
+.ccpics{margin:8px 0}.ccpicv .ccart{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 4px 14px rgba(40,20,60,.25)}
+.ccpicn{gap:8px;align-items:center;margin-top:6px;flex-wrap:nowrap}.ccpicn b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ccpicc{display:flex;gap:4px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}.ccpicc .b{flex:0 0 auto}

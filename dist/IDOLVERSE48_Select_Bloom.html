@@ -1167,6 +1167,10 @@ select:not([multiple]):not([size]){cursor:pointer}
 .czrep{margin:6px 0;padding:6px;border:1px dashed #e6dcf3;border-radius:10px}.czrepl{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
 .czsw{display:inline-block;width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #d8cfe6;cursor:pointer;padding:0}.czsw.on{box-shadow:0 0 0 3px var(--pk)}
 .czrep .row{gap:8px;flex-wrap:wrap;align-items:center}
+/* concert pictures */
+.ccpics{margin:8px 0}.ccpicv .ccart{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 4px 14px rgba(40,20,60,.25)}
+.ccpicn{gap:8px;align-items:center;margin-top:6px;flex-wrap:nowrap}.ccpicn b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ccpicc{display:flex;gap:4px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}.ccpicc .b{flex:0 0 auto}
 
 </style>
 </head><body>
@@ -10267,7 +10271,9 @@ let CC_REP_Q=[];
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{ccDaily()}catch(e){console.error(e)}return r}}
 function ccDaily(){const X=ccS();X.list.forEach(C=>{if(C.status=='conf'&&S.day>=C.sale.open)ccSalesOpen(C);if(C.status=='sales'){if(S.day<C.start)ccSalesDay(C);else{ccSalesClose(C);C.status='live';ccLog(C,'Concert started.')}}
   if(C.status=='live'){ccPfOrder(C).forEach(p=>{if(!p.res&&ccPfDay(C,p)<=S.day){try{ccPerform(C,p)}catch(e){console.error(e);p.res={err:1,day:S.day}}}});if(C.pf.every(p=>p.res))ccFinish(C)}});
- if(CC_REP_Q.length&&!ui.mod){ui.mod={t:'html',h:CC_REP_Q.join('<hr>')+'<div class="row"><button class="b p" onclick="ui.mod=null;render()">Close</button></div>',cc:1};CC_REP_Q=[]}}
+ if(CC_REP_Q.length&&!ui.mod){const q=CC_REP_Q.slice();ui.mod={t:'html',h:ccQHtml(q),cc:1,ccq:q};CC_REP_Q=[]}}
+// pop-up after performances: rebuilt from references (so the picture viewer can change song)
+function ccQHtml(q){return q.map(x=>{const C=ccGet(x.c);if(!C)return'';if(x.fin)return ccFinHtml(C,true);const p=C.pf.find(z=>z.id==x.p);return p?ccRepHtml(C,p,true):''}).join('<hr>')+'<div class="row"><button class="b p" onclick="ui.mod=null;render()">Close</button></div>'}
 // ---- performance -----------------------------------------------------------------------------------------------------------
 const ccSongIt=set=>set.items.filter(i=>i.k=='song');
 function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(!set)return p.res={err:1};const items=set.items,songs=ccSongIt(set);
@@ -10292,7 +10298,7 @@ function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(
  if(revP)earn(revP,`Concert tickets: ${C.name} · Performance ${p.no}`);if(revO)earn(revO,`Concert online tickets: ${C.name} · Performance ${p.no}`);
  const res={day,phys,onl,sold,revP,revO,cap:ccCap(C),vocal,dance,pas,eff,mistakes,out,mem:MR,songs:songRes,sid:p.set,setName:set.name};
  p.res=res;try{ccResponse(C,p,res)}catch(e){console.error(e)}try{ccGrowth(C,p,res)}catch(e){console.error(e)}
- C.hist=C.hist||{};CC_REP_Q.push(ccRepHtml(C,p,true));ccLog(C,`Performance ${p.no}: ${phys.toLocaleString()} in the venue, ${onl.toLocaleString()} online · efficiency ${eff}.`);return res}
+ C.hist=C.hist||{};CC_REP_Q.push({c:C.id,p:p.id});ccLog(C,`Performance ${p.no}: ${phys.toLocaleString()} in the venue, ${onl.toLocaleString()} online · efficiency ${eff}.`);return res}
 // ---- song popularity -----------------------------------------------------------------------------------------------------
 function ccSongPop(gid,id){const o=ccSong(gid,id);if(!o)return 40;let p=40+(o.role=='Main'?14:0)+(o.pref&&o.pref.s?(o.pref.s-50)*.4:0)+Math.min(10,(o.thBuzz||0)*2);const SG=gsCtx(gid,'singles')||[];const x=SG.find(z=>z.mainId==id);if(x&&x.sales){const mx=Math.max(...SG.map(z=>z.sales||0),1);p+=12*x.sales/mx}return fbCl(p)}
 // ---- fan response ----------------------------------------------------------------------------------------------------------
@@ -10358,7 +10364,7 @@ function ccFinish(C){const E=C.est,rows={},line=(g,n,a)=>{rows[g]=rows[g]||{n,a:
  C.parts.forEach(id=>{const m=get(id);if(!m)return;const R=C.pf.map(p=>((p.res||{}).mem||{})[id]).filter(Boolean),songs=R.reduce((a,r)=>a+r.songs,0),front=R.reduce((a,r)=>a+r.center+r.front,0),back=R.reduce((a,r)=>a+r.back,0);
   const exp=Math.min(.95,.35+m.pop/140),def=Math.max(0,exp-songs/tot)+(songs?Math.max(0,Math.min(.9,m.pop/110)-front/songs)*.5+back/songs*.2:.4);const T=X.mt[id]=X.mt[id]||{d:0,n:0,cc:0};T.cc++;T.d=T.d*.6+(m.pop>=55?def:def*.3);T.n=def>.3&&m.pop>=55?T.n+1:0;
   if(T.n>=2&&T.d>.35){const k=Math.min(4,T.d*5);fbBoost(s=>s.k==id,-k,-k*.6);fbExp(id,-Math.min(2,k/2));X.trust[C.host]=Math.round(fbCl(X.trust[C.host]-T.d*3)*10)/10;notes.push(`Fans of ${m.name} are frustrated: she received little stage time / poor positions in ${T.n} concerts in a row.`)}});
- C.notes=notes;C.status='done';C.done=S.day;ccLog(C,`Completed. Net ${yen(C.fin.net)}.`);CC_REP_Q.push(ccFinHtml(C,true))}
+ C.notes=notes;C.status='done';C.done=S.day;ccLog(C,`Completed. Net ${yen(C.fin.net)}.`);CC_REP_Q.push({c:C.id,fin:1})}
 
 </script>
 <script>
@@ -10516,6 +10522,77 @@ function ccFinHtml(C,popup){const F=C.fin;if(!F||!F.rev)return'';return`<div cla
 function ccViewHtml(C){const V=ccV(C.vid),Sd=ccSched(C);return`<div class="c"><h3>Concert details</h3><table class="cctab"><tr><th>Type</th><td>${CC_TYPE[C.type]}${C.type=='anni'?' · '+esc(ccAnniTxt(C)||((C.anni||{}).cat||'')):''}${C.type=='grad'?' · '+(C.grad.length>1?'Joint':'Individual')+': '+C.grad.map(id=>esc(ccNm(C,id))).join(', '):''}</td></tr><tr><th>Host group</th><td>${esc((grp(C.host)||{}).name||'')}</td></tr><tr><th>Venue</th><td>${V?esc(V.n)+' · '+esc(V.city)+', '+esc(V.pref):''}</td></tr><tr><th>Preparation</th><td>${jd(Sd.prepFrom)} – ${jd(Sd.prepTo)}</td></tr><tr><th>Performances</th><td>${ccPfOrder(C).map(p=>`P${p.no}: ${jd(ccPfDay(C,p))} ${CC_SLS[p.sl]} · ${esc((C.sets[p.set]||{}).name||'')}`).join('<br>')}</td></tr><tr><th>Participants</th><td>${C.parts.map(id=>esc(ccNm(C,id))+(C.snap[id]&&C.snap[id].gname?` <small class="st">(${esc(C.snap[id].gname)}${C.snap[id].team?' · '+esc(C.snap[id].team):''})</small>`:'')).join(', ')}</td></tr></table>
  <h3>Setlists</h3>${Object.values(C.sets).map(s=>`<div><b>${esc(s.name)}</b><div class="ccol">${(()=>{let k=0;return s.items.map(it=>it.k=='mc'?`<div class="st">MC — ${esc(it.name)} (${it.all?'all':ccMcMem(C,it).map(id=>esc(ccNm(C,id))).join(', ')})</div>`:`<div><b>M${++k}</b> ${esc(it.title)} — ${ccPerf(it).map(id=>esc(ccNm(C,id))+(it.pos.find(z=>z.m==id&&z.c)?'★':'')).join(', ')}</div>`).join('')})()}</div></div>`).join('')}
  <h3>Log</h3><ul class="ms">${(C.log||[]).map(l=>`<li>${jd(l.day)} — ${esc(l.t)}</li>`).join('')}</ul></div>`}
+
+</script>
+<script>
+// =====================================================================================
+//  Concert performance pictures — one picture per song of a performance
+// -------------------------------------------------------------------------------------
+//  · The performers stand in the song's concert formation (rows, center) wearing the exact
+//    costume of that song (ccCzFor), with microphone poses.
+//  · LED wall: the pattern follows the song's genre family and never repeats on the next song
+//    of the setlist; its colours come from the costumes of that song.
+//  · Stage: every venue category has its own stage (live house, hall, large hall, arena,
+//    stadium, dome) and every venue its own details (structure colour, screens, roof, runway,
+//    audience) — seeded from the venue, so a venue always looks the same.
+// =====================================================================================
+const CC_LEDS=['rays','grid','stars','waves','hearts','bars','circles','petals','diamonds','title'];
+const CC_LEDF={idol:['hearts','petals','title','rays'],pop:['rays','circles','title','hearts'],dance:['grid','bars','diamonds','rays'],elec:['grid','diamonds','bars','circles'],rock:['bars','rays','diamonds','grid'],ballad:['stars','waves','petals','circles'],rnb:['circles','waves','grid','stars'],hip:['bars','grid','diamonds','circles'],jazz:['waves','stars','circles','title'],classic:['stars','waves','petals','title'],folk:['petals','waves','stars','circles'],world:['petals','circles','waves','rays']};
+// LED pattern per song of a setlist: genre family first, never the same as the previous song
+function ccLedPlan(set){const out={};let prev=null,k=0;(set.items||[]).forEach(it=>{if(it.k!='song')return;const o=ccSong(it.gid,it.song),f=o&&MUI.g[o.genre]?MUI.g[o.genre].f:'pop',L=[...(CC_LEDF[f]||CC_LEDS),...CC_LEDS],r=thSeed(it.song+'|'+k)();let pick=L[Math.floor(r*4)%L.length];if(pick==prev)pick=L.find(x=>x!=prev);out[it.id]=pick;prev=pick;k++});return out}
+// colours of a song's costumes → LED palette
+function ccPal(cds,seed){const cnt=new Map();cds.forEach(p=>{if(!p)return;czUsedCols(p).forEach(([c,n])=>cnt.set(c,(cnt.get(c)||0)+n))});const L=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+ const vivid=L.filter(c=>{const[,s,l]=czToHsl(c);return s>25&&l>18&&l<88});const r=thSeed(seed);const base=vivid[0]||L[0]||czHsl(r()*360,70,60),acc=vivid.find(c=>Math.abs(czToHsl(c)[0]-czToHsl(base)[0])>25)||vivid[1]||czHsl(czToHsl(base)[0]+150,70,62);
+ const[h,s]=czToHsl(base),[h2,s2]=czToHsl(acc);return{a:czHsl(h,Math.max(55,s),62),b:czHsl(h2,Math.max(55,s2),60),c:czHsl(h,Math.max(40,s*.7),85),bg:czHsl(h,Math.max(55,s*.8),16),bg2:czHsl(h2,Math.max(55,s2*.8),34)}}
+// ---- LED wall content --------------------------------------------------------------------------------------------------------
+function ccLed(style,P,x,y,w,h,r,id,title){const cx=x+w/2,cy=y+h/2,R=n=>(r()*n);let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#lg${id})"/>`;
+ if(style=='rays'){for(let i=0;i<18;i++){const a0=i/18*Math.PI*2,a1=(i+.5)/18*Math.PI*2,L=Math.max(w,h);s+=`<path d="M${cx} ${cy}L${cx+Math.cos(a0)*L} ${cy+Math.sin(a0)*L}L${cx+Math.cos(a1)*L} ${cy+Math.sin(a1)*L}Z" fill="${i%2?P.a:P.b}" opacity=".8"/>`}s+=`<circle cx="${cx}" cy="${cy}" r="${h*.18}" fill="${P.c}" opacity=".9"/>`}
+ else if(style=='grid'){s+=`<circle cx="${cx}" cy="${y+h*.55}" r="${h*.28}" fill="${P.a}" opacity=".9"/>`;for(let i=0;i<5;i++)s+=`<rect x="${cx-h*.3}" y="${y+h*.5+i*h*.06}" width="${h*.6}" height="${h*.022}" fill="url(#lg${id})"/>`;for(let i=-8;i<=8;i++)s+=`<line x1="${cx+i*w*.02}" y1="${y+h*.62}" x2="${cx+i*w*.12}" y2="${y+h}" stroke="${P.b}" stroke-width="1.5" opacity=".8"/>`;for(let i=0;i<6;i++){const yy=y+h*.62+Math.pow(i/5,1.8)*h*.38;s+=`<line x1="${x}" y1="${yy}" x2="${x+w}" y2="${yy}" stroke="${P.b}" stroke-width="1.2" opacity=".7"/>`}}
+ else if(style=='stars'){for(let i=0;i<70;i++)s+=`<circle cx="${x+R(w)}" cy="${y+R(h)}" r="${(.6+R(2.2)).toFixed(1)}" fill="${i%5?'#fff':P.c}" opacity="${(.4+R(.6)).toFixed(2)}"/>`;s+=`<path d="M${cx} ${cy-h*.22}L${cx+h*.06} ${cy-h*.06}L${cx+h*.22} ${cy}L${cx+h*.06} ${cy+h*.06}L${cx} ${cy+h*.22}L${cx-h*.06} ${cy+h*.06}L${cx-h*.22} ${cy}L${cx-h*.06} ${cy-h*.06}Z" fill="${P.c}" opacity=".85"/><circle cx="${cx}" cy="${cy}" r="${h*.3}" fill="${P.a}" opacity=".18"/>`}
+ else if(style=='waves'){for(let i=0;i<6;i++){const yy=y+h*(.3+i*.12),amp=h*.06;let d=`M${x} ${yy}`;for(let k=0;k<=8;k++)d+=` Q${x+w*(k+.5)/8} ${yy+(k%2?amp:-amp)} ${x+w*(k+1)/8} ${yy}`;s+=`<path d="${d}V${y+h}H${x}Z" fill="${i%2?P.a:P.b}" opacity="${.4+i*.1}"/>`}}
+ else if(style=='hearts'){for(let i=0;i<16;i++){const hx=x+R(w),hy=y+R(h),z=6+R(h*.14);s+=`<path transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)}) scale(${(z/20).toFixed(2)})" d="M0 6C-6-4-20 2-10 12L0 20L10 12C20 2 6-4 0 6Z" fill="${i%3?P.a:P.c}" opacity="${(.8+R(.2)).toFixed(2)}"/>`}}
+ else if(style=='bars'){const n=24;for(let i=0;i<n;i++){const bh=h*(.15+R(.75));s+=`<rect x="${x+i*w/n+2}" y="${y+h-bh}" width="${w/n-4}" height="${bh}" fill="${i%2?P.a:P.b}" opacity=".85"/><rect x="${x+i*w/n+2}" y="${y+h-bh-6}" width="${w/n-4}" height="3" fill="${P.c}"/>`}}
+ else if(style=='circles'){for(let i=7;i>0;i--)s+=`<circle cx="${cx}" cy="${cy}" r="${i*h*.09}" fill="none" stroke="${i%2?P.a:P.b}" stroke-width="${h*.035}" opacity="${.55+i*.06}"/>`}
+ else if(style=='petals'){for(let i=0;i<26;i++){const px=x+R(w),py=y+R(h),z=4+R(9),ro=R(360);s+=`<ellipse cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" rx="${z.toFixed(1)}" ry="${(z*.55).toFixed(1)}" transform="rotate(${ro.toFixed(0)} ${px.toFixed(1)} ${py.toFixed(1)})" fill="${i%3?P.c:P.a}" opacity=".85"/>`}s+=`<circle cx="${x+w*.8}" cy="${y+h*.3}" r="${h*.2}" fill="${P.b}" opacity=".35"/>`}
+ else if(style=='diamonds'){const n=12,dw=w/n;for(let i=0;i<n;i++)for(let j=0;j<4;j++){const dx=x+i*dw+dw/2,dy=y+j*h/4+h/8;if((i+j)%2)s+=`<path d="M${dx} ${dy-h/8}L${dx+dw/2} ${dy}L${dx} ${dy+h/8}L${dx-dw/2} ${dy}Z" fill="${(i+j)%4==1?P.a:P.b}" opacity=".92"/>`}}
+ else{s+=`<text x="${cx}" y="${cy+h*.07}" text-anchor="middle" font-size="${Math.min(h*.26,w/Math.max(6,(title||'').length)*1.5).toFixed(0)}" font-weight="800" fill="${P.c}" font-family="Quicksand,sans-serif" opacity=".95">${esc(title||'')}</text>`;for(let i=0;i<24;i++)s+=`<circle cx="${x+R(w)}" cy="${y+R(h)}" r="${(1+R(2.5)).toFixed(1)}" fill="${i%2?P.a:'#fff'}" opacity=".8"/>`}
+ return s}
+// ---- stage per venue -----------------------------------------------------------------------------------------------------
+function ccStageSvg(C,p,set,idx,W=900,H=420){const it=set.items[idx],V=ccV(C.vid)||{cat:'hall',id:'x',n:''},res=p.res||{},out=res.out||{};const r=thSeed(C.vid+'|'+p.id+'|'+it.id),rv=thSeed('venue:'+V.id);
+ const pos=(it.pos||[]).filter(z=>z.m!=null&&ccMem(z.m)&&!out[z.m]);const R=[...new Set(pos.map(z=>z.r))].sort((a,b)=>a-b),rows=R.map(rr=>pos.filter(z=>z.r==rr));
+ const cds=pos.map(z=>ccCzFor(C,set,idx,z.m)),cdm={};pos.forEach((z,i)=>cdm[z.m]=cds[i]);const P=ccPal(cds,it.song+it.id),plan=ccLedPlan(set),style=plan[it.id]||'rays';
+ const sh=rv()*360,struct=czHsl(sh,22,26),gold=czHsl(40+rv()*20,70,62),id='cc'+(++PTC[0]);const cat=V.cat;
+ // geometry per category
+ const G={lh:{led:[250,46,400,150],floor:H-92,crowd:'stand'},hall:{led:[200,50,500,170],floor:H-86,crowd:'seat'},lhall:{led:[150,40,600,190],floor:H-84,crowd:'seat'},arena:{led:[210,30,480,200],floor:H-90,crowd:'pen',side:1},stad:{led:[190,40,520,190],floor:H-88,crowd:'pen',side:2,sky:1},dome:{led:[180,48,540,200],floor:H-90,crowd:'pen',side:1,roof:1}}[cat]||{led:[200,50,500,170],floor:H-86,crowd:'seat'};
+ const[lx,ly,lw,lh]=G.led;let bg=`<defs><linearGradient id="lg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.bg}"/><stop offset="1" stop-color="${P.bg2}"/></linearGradient><linearGradient id="sk${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0820"/><stop offset="1" stop-color="${czHsl(sh,40,18)}"/></linearGradient><radialGradient id="sp${id}" cx=".5" cy=".1" r=".8"><stop offset="0" stop-color="${P.c}" stop-opacity=".14"/><stop offset="1" stop-color="${P.c}" stop-opacity="0"/></radialGradient><filter id="gl${id}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter><clipPath id="cl${id}"><rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="4"/></clipPath></defs>`;
+ bg+=`<rect width="${W}" height="${H}" fill="url(#sk${id})"/>`;
+ if(G.sky){for(let i=0;i<50;i++)bg+=`<circle cx="${(rv()*W).toFixed(0)}" cy="${(rv()*120).toFixed(0)}" r="${(.5+rv()*1.4).toFixed(1)}" fill="#fff" opacity=".7"/>`;[0,1].forEach(k=>{const fx=k?W*.82:W*.18,fy=50+r()*30;for(let i=0;i<14;i++){const a=i/14*Math.PI*2;bg+=`<line x1="${fx}" y1="${fy}" x2="${(fx+Math.cos(a)*34).toFixed(1)}" y2="${(fy+Math.sin(a)*34).toFixed(1)}" stroke="${i%2?P.a:P.c}" stroke-width="2" opacity=".85"/>`}});bg+=[60,W-60].map(x=>`<rect x="${x-10}" y="40" width="20" height="${G.floor-40}" fill="${struct}"/><rect x="${x-26}" y="34" width="52" height="16" fill="${struct}"/>${[0,1,2].map(i=>`<circle cx="${x-14+i*14}" cy="42" r="5" fill="#fff6c8"/>`).join('')}`).join('')}
+ if(G.roof){bg+=`<path d="M0 ${H*.42}Q${W/2} ${-H*.25} ${W} ${H*.42}" fill="none" stroke="${V.id=='tdome'?'#e9eef7':struct}" stroke-width="10" opacity=".9"/>`;for(let i=1;i<8;i++){const x=i*W/8;bg+=`<line x1="${x}" y1="${(H*.42-Math.sin(i/8*Math.PI)*H*.34).toFixed(0)}" x2="${x}" y2="${G.floor}" stroke="${V.id=='tdome'?'#c7d0de':struct}" stroke-width="2" opacity=".35"/>`}}
+ if(cat=='hall'||cat=='lhall'){const cur=czHsl(330+(sh%70),60,32);bg+=`<path d="M0 0H110Q86 ${H*.45} 56 ${G.floor}H0Z" fill="${cur}"/><path d="M${W} 0H${W-110}Q${W-86} ${H*.45} ${W-56} ${G.floor}H${W}Z" fill="${cur}"/><path d="M0 0H${W}V22Q${W/2} 46 0 22Z" fill="${czHsl(330+(sh%70),55,40)}"/>`;if(V.id=='budo'){bg+=`<path d="M${W/2-60} 22Q${W/2} -30 ${W/2+60} 22Z" fill="${gold}" opacity=".9"/><circle cx="${W/2}" cy="-2" r="7" fill="${gold}"/>`}}
+ if(cat=='lh'){bg+=`<rect x="0" y="0" width="${W}" height="${G.floor}" fill="#0d0b12" opacity=".55"/>`;bg+=`<rect x="60" y="20" width="${W-120}" height="12" fill="${struct}"/>`+Array.from({length:9},(_,i)=>`<circle cx="${100+i*(W-200)/8}" cy="38" r="7" fill="${i%2?P.a:P.c}"/><path d="M${100+i*(W-200)/8-6} 44L${80+i*(W-200)/8+(r()*80)} ${G.floor}H${120+i*(W-200)/8+(r()*80)}L${100+i*(W-200)/8+6} 44Z" fill="${i%2?P.a:P.c}" opacity=".12"/>`).join('')}
+ // LED wall (+ side screens)
+ let led=`<rect x="${lx-18}" y="${ly-18}" width="${lw+36}" height="${lh+36}" rx="18" fill="${P.a}" opacity=".22" filter="url(#gl${id})"/><rect x="${lx-6}" y="${ly-6}" width="${lw+12}" height="${lh+12}" rx="6" fill="${struct}"/><g clip-path="url(#cl${id})">${ccLed(style,P,lx,ly,lw,lh,r,id,it.title)}</g>`;
+ if(G.side){const sw=G.side==2?120:90,shh=lh*.75;[[lx-sw-26,ly+16],[lx+lw+26,ly+16]].forEach(([sx,sy],k)=>{led+=`<rect x="${sx-4}" y="${sy-4}" width="${sw+8}" height="${shh+8}" rx="4" fill="${struct}"/><rect x="${sx}" y="${sy}" width="${sw}" height="${shh}" fill="url(#lg${id})"/>`;const lead=pos.find(z=>z.c)||pos[0];const m=lead&&ccMem(lead.m);if(m){const a=ap(m);led+=`<svg x="${sx}" y="${sy}" width="${sw}" height="${shh}" viewBox="18 4 64 72" preserveAspectRatio="xMidYMid slice">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:k?3:2,...(cdm[m.id]?{cd:cdm[m.id]}:{})})}</svg>`}})}
+ // light beams in the costume colours
+ let beams='';const nb=cat=='lh'?0:cat=='hall'?4:7;for(let i=0;i<nb;i++){const bx=W*(i+.5)/nb+(r()-.5)*40;beams+=`<path d="M${bx.toFixed(0)} 0L${(bx-60+r()*120).toFixed(0)} ${G.floor}H${(bx-20+r()*120).toFixed(0)}Z" fill="${i%2?P.a:P.b}" opacity=".1"/>`}
+ // stage floor & runway
+ let floor=`<rect x="0" y="${G.floor}" width="${W}" height="${H-G.floor}" fill="#140f1f"/><path d="M${cat=='lh'?40:20} ${G.floor}H${W-(cat=='lh'?40:20)}" stroke="${P.a}" stroke-width="3" opacity=".8"/>`;
+ if(cat=='arena'||cat=='dome'||cat=='stad')floor+=`<path d="M${W/2-34} ${G.floor}H${W/2+34}L${W/2+52} ${H}H${W/2-52}Z" fill="#1e1730" stroke="${P.c}" stroke-opacity=".5"/>`;
+ // members (back rows first)
+ let fg='';const RN=rows.length;rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,sc=1-back*.12,fw=Math.min(cat=='lh'?100:92,(W-120)/Math.max(1,row.length)/.86)*sc,yb=G.floor-fw*2.15+back*0+(-back*30);const x0=W/2-fw*.86*(row.length-1)/2;
+  row.forEach((z,i)=>{const m=ccMem(z.m);if(!m)return;const a=ap(m),c=z.c,ww=c?fw*1.1:fw,ps=TH_MICP[Math.floor(r()*TH_MICP.length)];fg+=`<svg x="${(x0+fw*.86*i-ww/2).toFixed(1)}" y="${(c?yb-8:yb).toFixed(1)}" width="${ww.toFixed(1)}" height="${(ww*2.5).toFixed(1)}" viewBox="10 -2 80 200">${fig(m,{pose:c?3:ps,of:a.of,oh:a.oh,ac:a.ac,ex:2,prop:1,...(cdm[m.id]?{cd:cdm[m.id]}:{})})}</svg>`})});
+ // audience
+ let aud='';const ay=H-30;if(G.crowd=='stand'){for(let i=0;i<34;i++){const x=10+i*(W-20)/33+(r()-.5)*8;aud+=`<circle cx="${x.toFixed(0)}" cy="${(ay+6+r()*8).toFixed(0)}" r="13" fill="#0a0810"/>`;if(r()<.35)aud+=`<line x1="${x.toFixed(0)}" y1="${ay-4}" x2="${(x+(r()-.5)*14).toFixed(0)}" y2="${ay-22}" stroke="#0a0810" stroke-width="6" stroke-linecap="round"/>`}}
+ else if(G.crowd=='seat'){for(let row=0;row<2;row++)for(let i=0;i<26;i++){const x=20+i*(W-40)/25;aud+=`<circle cx="${x.toFixed(0)}" cy="${ay+row*12}" r="10" fill="${row?'#07060c':'#0d0a15'}"/>`}}
+ else{const pc=[P.a,P.b,P.c];for(let row=0;row<3;row++)for(let i=0;i<46;i++){const x=6+i*(W-12)/45+(row%2)*8,yy=ay-6+row*13;aud+=`<circle cx="${x.toFixed(0)}" cy="${yy+6}" r="7" fill="#08060e"/><line x1="${x.toFixed(0)}" y1="${yy}" x2="${(x+(r()-.5)*10).toFixed(0)}" y2="${yy-16}" stroke="${pc[(i+row)%3]}" stroke-width="3.5" stroke-linecap="round" opacity=".95"/>`}}
+ const label=`<rect x="10" y="${H-22}" width="${Math.min(W-20,24+(V.n||'').length*7)}" height="18" rx="9" fill="#000" opacity=".45"/><text x="20" y="${H-9}" font-size="11" fill="#fff" font-family="Quicksand,sans-serif">${esc(V.n||'')}</text>`;
+ return`<svg class="ccart" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(it.title)} — ${esc(V.n||'')}">${bg}${beams}${led}<rect width="${W}" height="${H}" fill="url(#sp${id})"/>${floor}${fg}${pos.length?'':`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="#fff" font-size="20">No performer</text>`}${aud}${label}</svg>`}
+// ---- viewer in the performance report ------------------------------------------------------------------------------------------
+function ccPicNav(cid,pid,d,abs){const C=ccGet(cid),p=C&&C.pf.find(x=>x.id==pid);if(!p)return;const set=C.sets[(p.res||{}).sid||p.set];const n=set?ccSongIt(set).length:0;ui.ccpic=ui.ccpic||{};const k=cid+pid;ui.ccpic[k]=abs?d:((ui.ccpic[k]||0)+d+n)%Math.max(1,n);if(ui.mod&&ui.mod.ccq)ui.mod.h=ccQHtml(ui.mod.ccq);render()}
+function ccPicHtml(C,p){const set=C.sets[(p.res||{}).sid||p.set];if(!set||!p.res||p.res.err)return'';const S2=set.items.map((it,i)=>[it,i]).filter(([it])=>it.k=='song');if(!S2.length)return'';const k=C.id+p.id,cur=Math.min(S2.length-1,(ui.ccpic||{})[k]||0),[it,idx]=S2[cur];
+ let pic='';try{pic=ccStageSvg(C,p,set,idx)}catch(e){console.error(e)}
+ return`<div class="ccpics"><h3>📸 Performance pictures</h3><div class="ccpicv">${pic}</div><div class="row ccpicn"><button class="b s" aria-label="Previous song" onclick="ccPicNav('${C.id}','${p.id}',-1)">◀</button><b>M${cur+1} · ${esc(it.title)}</b><span class="st">${cur+1}/${S2.length}</span><button class="b s" aria-label="Next song" onclick="ccPicNav('${C.id}','${p.id}',1)">▶</button></div><div class="ccpicc">${S2.map(([x],i)=>`<button class="b s ${i==cur?'p':''}" onclick="ccPicNav('${C.id}','${p.id}',${i},1)">M${i+1}</button>`).join('')}</div></div>`}
+{const f=ccRepHtml;ccRepHtml=function(C,p,popup){const h=f.apply(this,arguments);if(!p||!p.res||p.res.err)return h;const pics=ccPicHtml(C,p);const i=h.indexOf('<h3>Ticket results</h3>');return i<0?h+pics:h.slice(0,i)+pics+h.slice(i)}}
 
 </script>
 <script>
@@ -11199,6 +11276,7 @@ I18N_TH_TPL.unshift(["Performance {0}","รอบที่ {0}"],["+ Add perform
 // costume colour tools & song random
 Object.assign(I18N_TH,{"Secondary colour":"สีรอง","🎯 Main + secondary":"🎯 สุ่มจากสีหลัก + สีรอง","🔁 Replace a colour in every piece — tap a colour:":"🔁 เปลี่ยนสีที่เลือกในทุกชิ้นของชุด — แตะสีที่ต้องการเปลี่ยน:","Change everywhere":"เปลี่ยนทุกชิ้น","🎲 Random":"🎲 สุ่ม","Genre":"แนวเพลง","Concept":"คอนเซ็ปต์","Lyrics":"เนื้อเพลง","🎲 Randomize all":"🎲 สุ่มทั้งหมด"});
 I18N_TH_TPL.unshift(["{0} colour slot(s) changed in every piece. Save to keep them.","เปลี่ยนสีแล้ว {0} จุดในทุกชิ้น กดบันทึกเพื่อเก็บไว้"],["Copy to {0} member(s)","คัดลอกให้ {0} คน"]);
+Object.assign(I18N_TH,{"📸 Performance pictures":"📸 ภาพการแสดง","No performer":"ไม่มีผู้แสดง"});
 
 </script>
 <script>

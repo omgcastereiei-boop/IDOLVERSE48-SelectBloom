@@ -101,7 +101,9 @@ let CC_REP_Q=[];
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{ccDaily()}catch(e){console.error(e)}return r}}
 function ccDaily(){const X=ccS();X.list.forEach(C=>{if(C.status=='conf'&&S.day>=C.sale.open)ccSalesOpen(C);if(C.status=='sales'){if(S.day<C.start)ccSalesDay(C);else{ccSalesClose(C);C.status='live';ccLog(C,'Concert started.')}}
   if(C.status=='live'){ccPfOrder(C).forEach(p=>{if(!p.res&&ccPfDay(C,p)<=S.day){try{ccPerform(C,p)}catch(e){console.error(e);p.res={err:1,day:S.day}}}});if(C.pf.every(p=>p.res))ccFinish(C)}});
- if(CC_REP_Q.length&&!ui.mod){ui.mod={t:'html',h:CC_REP_Q.join('<hr>')+'<div class="row"><button class="b p" onclick="ui.mod=null;render()">Close</button></div>',cc:1};CC_REP_Q=[]}}
+ if(CC_REP_Q.length&&!ui.mod){const q=CC_REP_Q.slice();ui.mod={t:'html',h:ccQHtml(q),cc:1,ccq:q};CC_REP_Q=[]}}
+// pop-up after performances: rebuilt from references (so the picture viewer can change song)
+function ccQHtml(q){return q.map(x=>{const C=ccGet(x.c);if(!C)return'';if(x.fin)return ccFinHtml(C,true);const p=C.pf.find(z=>z.id==x.p);return p?ccRepHtml(C,p,true):''}).join('<hr>')+'<div class="row"><button class="b p" onclick="ui.mod=null;render()">Close</button></div>'}
 // ---- performance -----------------------------------------------------------------------------------------------------------
 const ccSongIt=set=>set.items.filter(i=>i.k=='song');
 function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(!set)return p.res={err:1};const items=set.items,songs=ccSongIt(set);
@@ -126,7 +128,7 @@ function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(
  if(revP)earn(revP,`Concert tickets: ${C.name} · Performance ${p.no}`);if(revO)earn(revO,`Concert online tickets: ${C.name} · Performance ${p.no}`);
  const res={day,phys,onl,sold,revP,revO,cap:ccCap(C),vocal,dance,pas,eff,mistakes,out,mem:MR,songs:songRes,sid:p.set,setName:set.name};
  p.res=res;try{ccResponse(C,p,res)}catch(e){console.error(e)}try{ccGrowth(C,p,res)}catch(e){console.error(e)}
- C.hist=C.hist||{};CC_REP_Q.push(ccRepHtml(C,p,true));ccLog(C,`Performance ${p.no}: ${phys.toLocaleString()} in the venue, ${onl.toLocaleString()} online · efficiency ${eff}.`);return res}
+ C.hist=C.hist||{};CC_REP_Q.push({c:C.id,p:p.id});ccLog(C,`Performance ${p.no}: ${phys.toLocaleString()} in the venue, ${onl.toLocaleString()} online · efficiency ${eff}.`);return res}
 // ---- song popularity -----------------------------------------------------------------------------------------------------
 function ccSongPop(gid,id){const o=ccSong(gid,id);if(!o)return 40;let p=40+(o.role=='Main'?14:0)+(o.pref&&o.pref.s?(o.pref.s-50)*.4:0)+Math.min(10,(o.thBuzz||0)*2);const SG=gsCtx(gid,'singles')||[];const x=SG.find(z=>z.mainId==id);if(x&&x.sales){const mx=Math.max(...SG.map(z=>z.sales||0),1);p+=12*x.sales/mx}return fbCl(p)}
 // ---- fan response ----------------------------------------------------------------------------------------------------------
@@ -192,4 +194,4 @@ function ccFinish(C){const E=C.est,rows={},line=(g,n,a)=>{rows[g]=rows[g]||{n,a:
  C.parts.forEach(id=>{const m=get(id);if(!m)return;const R=C.pf.map(p=>((p.res||{}).mem||{})[id]).filter(Boolean),songs=R.reduce((a,r)=>a+r.songs,0),front=R.reduce((a,r)=>a+r.center+r.front,0),back=R.reduce((a,r)=>a+r.back,0);
   const exp=Math.min(.95,.35+m.pop/140),def=Math.max(0,exp-songs/tot)+(songs?Math.max(0,Math.min(.9,m.pop/110)-front/songs)*.5+back/songs*.2:.4);const T=X.mt[id]=X.mt[id]||{d:0,n:0,cc:0};T.cc++;T.d=T.d*.6+(m.pop>=55?def:def*.3);T.n=def>.3&&m.pop>=55?T.n+1:0;
   if(T.n>=2&&T.d>.35){const k=Math.min(4,T.d*5);fbBoost(s=>s.k==id,-k,-k*.6);fbExp(id,-Math.min(2,k/2));X.trust[C.host]=Math.round(fbCl(X.trust[C.host]-T.d*3)*10)/10;notes.push(`Fans of ${m.name} are frustrated: she received little stage time / poor positions in ${T.n} concerts in a row.`)}});
- C.notes=notes;C.status='done';C.done=S.day;ccLog(C,`Completed. Net ${yen(C.fin.net)}.`);CC_REP_Q.push(ccFinHtml(C,true))}
+ C.notes=notes;C.status='done';C.done=S.day;ccLog(C,`Completed. Net ${yen(C.fin.net)}.`);CC_REP_Q.push({c:C.id,fin:1})}

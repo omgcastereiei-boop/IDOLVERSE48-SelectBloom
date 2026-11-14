@@ -855,3 +855,19 @@ Events & Concerts › **Concerts**. One record per concert in `S.cc.list` (statu
   - *🔁 Replace a colour in every piece*: tap a colour used by the costume, choose the new one, and every piece that uses it changes.
 - **Theater song forms** (new song / edit): 🎲 random Genre, Concept, Lyrics or all. Single Production already had this.
 - **Saves**: large saves (IndexedDB only) also get a synchronous emergency copy in localStorage when the page is closed or refreshed. The newer copy wins at load, so a refresh right after a save no longer loads an older game.
+
+## Concert performance pictures (`js/ui/concert-art.js`)
+Every performance report, and the pop-up after a performance, has **📸 Performance pictures**, with one picture per song. ◀ ▶ and the M1…Mn buttons switch songs, and only one picture is drawn at a time to keep phones fast.
+- **Performers:** they stand in the song's concert formation (rows, center in front) wearing that song's exact costume, with microphone poses. Members who sat out are not shown.
+- **LED wall:**
+  - The pattern follows the song's genre family: rays, synth grid, stars, waves, hearts, EQ bars, rings, petals, diamonds, or the song title.
+  - It is never the same as the previous song's.
+  - Its colours come from that song's costumes, with a glow in the main costume colour.
+- **Stages by venue category:**
+  - Live house: truss, par cans, standing crowd.
+  - Hall: curtains and a seated audience.
+  - Large hall: Nippon Budokan has its golden roof ornament.
+  - Arena: side screens with a close-up of the center, a runway and a penlight sea.
+  - Stadium: open night sky, fireworks and light towers.
+  - Dome: the roof arch, white for Tokyo Dome.
+- **Per-venue details:** the structure colours, curtains and lights are seeded by the venue, so each venue always looks the same and different from the others.

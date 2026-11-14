@@ -71,3 +71,4 @@ I18N_TH_TPL.unshift(["Performance {0}","รอบที่ {0}"],["+ Add perform
 // costume colour tools & song random
 Object.assign(I18N_TH,{"Secondary colour":"สีรอง","🎯 Main + secondary":"🎯 สุ่มจากสีหลัก + สีรอง","🔁 Replace a colour in every piece — tap a colour:":"🔁 เปลี่ยนสีที่เลือกในทุกชิ้นของชุด — แตะสีที่ต้องการเปลี่ยน:","Change everywhere":"เปลี่ยนทุกชิ้น","🎲 Random":"🎲 สุ่ม","Genre":"แนวเพลง","Concept":"คอนเซ็ปต์","Lyrics":"เนื้อเพลง","🎲 Randomize all":"🎲 สุ่มทั้งหมด"});
 I18N_TH_TPL.unshift(["{0} colour slot(s) changed in every piece. Save to keep them.","เปลี่ยนสีแล้ว {0} จุดในทุกชิ้น กดบันทึกเพื่อเก็บไว้"],["Copy to {0} member(s)","คัดลอกให้ {0} คน"]);
+Object.assign(I18N_TH,{"📸 Performance pictures":"📸 ภาพการแสดง","No performer":"ไม่มีผู้แสดง"});
