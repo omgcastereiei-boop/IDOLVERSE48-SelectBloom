@@ -1649,7 +1649,18 @@ function ptBuild(m,s,nb,vb,ex,id){const H=headParts(m,ex,id),a=H.a,h=m.hue|0,D=H
  const bg=nb?'':`<rect width="100" height="120" fill="url(#${id}bg)"/><circle cx="78" cy="26" r="30" fill="url(#${id}bk)" opacity=".6"/><circle cx="14" cy="98" r="20" fill="url(#${id}bk)" opacity=".45"/><g fill="#fff" opacity=".85"><path d="M12 16l1.5 3.7 3.7 1.5-3.7 1.5-1.5 3.7-1.5-3.7-3.7-1.5 3.7-1.5z"/><path d="M90 78l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z"/><circle cx="86" cy="12" r="1.2"/><circle cx="20" cy="40" r=".9"/></g>`;
  const T=`<g transform="scale(${N2(inv)}) translate(${N2(-HTX)} ${-HTY})">`;
  return`<svg viewBox="${vb||'0 0 100 120'}" ${s?`width="${s}"`:''} overflow="hidden" xmlns="http://www.w3.org/2000/svg"><defs>${H.defs}${bgd}<clipPath id="${id}fr"><rect width="100" height="120"/></clipPath></defs><g clip-path="url(#${id}fr)">${bg}${H.back}${T}${B.back}${B.neck}${B.torso}${B.collar}${B.arms}</g>${H.face}${H.feat}${H.brow}${H.bangs}${H.acc}${H.ties}${H.sl}${H.over}</g></svg>`}
-function pt(m,s,nb,vb,ex){const a=apEff(m),k=JSON.stringify(['p4',m.id|0,m.hue|0,a,m.bgc||0,s||0,nb?1:0,vb||0,ex==null?'':ex]);let t=ART.cache.get(k);if(!t){t=ptBuild(m,s,nb,vb,ex,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}return t.split('§').join('p'+(++PTC[0]))}
+function pt(m,s,nb,vb,ex){const a=apEff(m),k=JSON.stringify(['p4',m.id|0,m.hue|0,a,m.bgc||0,s||0,nb?1:0,vb||0,ex==null?'':ex]);let t=ART.cache.get(k);if(!t){t=ptBuild(m,s,nb,vb,ex,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}
+ if(PT_INLINE||typeof document=='undefined'||!document.body)return t.split('§').join('p'+(++PTC[0]));return ptUse(k,t)}
+// portraits are drawn ONCE into a hidden sprite (<symbol>) and every copy on screen is a tiny <use> reference:
+// a page with hundreds of faces stays small, so screens render and update much faster.
+let PT_INLINE=0,PT_SN=0;const PT_SPR=new Map();
+function ptSprite(){let el=document.getElementById('ptspr');if(!el){el=document.createElementNS('http://www.w3.org/2000/svg','svg');el.id='ptspr';el.setAttribute('aria-hidden','true');el.setAttribute('style','position:absolute;width:0;height:0;overflow:hidden;pointer-events:none');document.body.appendChild(el)}return el}
+function ptUse(k,t){let y=PT_SPR.get(k);if(!y){if(PT_SPR.size>4000){PT_SPR.clear();const el=document.getElementById('ptspr');if(el)el.innerHTML=''}
+  const id='ps'+(++PT_SN),body=t.split('§').join(id+'_'),mm=body.match(/^<svg([^>]*)>([\s\S]*)<\/svg>$/);if(!mm)return t.split('§').join('p'+(++PTC[0]));
+  const at=mm[1],vbm=at.match(/viewBox="([^"]+)"/),vb=(vbm?vbm[1]:'0 0 100 120').split(/\s+/).map(Number);
+  try{const doc=new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg"><symbol id="${id}" viewBox="${vb.join(' ')}" overflow="hidden">${mm[2]}</symbol></svg>`,'image/svg+xml');const sym=doc.querySelector('symbol');if(!sym||doc.querySelector('parsererror'))throw 0;ptSprite().appendChild(document.importNode(sym,true))}catch(e){return t.split('§').join('p'+(++PTC[0]))}
+  y={at,u:`<use href="#${id}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}"/>`};PT_SPR.set(k,y)}
+ return`<svg${y.at}>${y.u}</svg>`}
 
 // ---- asset registry: one entry per member ID, every screen draws from it ---------------
 const CHAR_ASSETS={
@@ -2123,7 +2134,7 @@ function profHtml(m,cand){const r=rar(m),g=grp(m.group),t=teamOf(m),tab=cand?'st
  if(tab=='gal')return head+tabs+galHtml(m);
  return head+tabs+`<div class="st" style="margin:4px 0">Date joined: ${cand?'—':jd(m.joined)} · ${cand?'Joined team: —':!m.tid?'Not in a team':`Joined team: ${m.tjoined==null?'Unrecorded':jd(m.tjoined)}`}${cand||m.stSince==null?'':' · Status since '+jd(m.stSince)}</div><div>${m.traits.map(x=>`<span class="tag">${x}</span>`).join('')}${m.gift?`<span class="tag">Gifted: ${SKL[m.gift]}</span>`:''}</div>${cand?'':`<div class="row"><input id="stg" value="${esc(m.stage||m.name)}" maxlength="40" style="width:160px"><button class="b s" onclick="setStage(${m.id},$('#stg').value)">Save stage name</button></div>`}<p class="st">${BIO[m.pers]}</p>
 ${cand?'':posBlock(m)}<h3>Popularity</h3><div class="fan"><b>${m.fans.toLocaleString()}</b> fans</div>${sr('Buzz',m.buzz)}<div class="st">Individual fanbase; fans can overlap with other members. Popularity index ${m.pop} is computed from fanbase and buzz.</div>
-<h3>Abilities</h3>${ABK.map(k=>`<div class="sr"><b>${SKL[k]}</b><span>${m[k]}</span>${bar(m[k])}${cand?'':`<button class="b s" onclick="train(${m.id},'${k}')">Train ¥10k</button>`}</div>`).join('')}
+<h3>Abilities</h3>${ABK.map(k=>`<div class="sr"><b>${SKL[k]}</b><span>${m[k]}</span>${bar(m[k])}${k=='cha'?'<small class="st">Average of Vocal &amp; Dance</small>':cand?'':`<button class="b s" onclick="train(${m.id},'${k}')">Train ¥10k</button>`}</div>`).join('')}
 <h3>Concept affinity</h3>${AFL.map(([k,l])=>sr(l,m.aff[k])).join('')}
 <h3>Growth &amp; management</h3>${sr('Potential',m.pot)}${sr('Stamina',m.en)}${sr('Loyalty',m.loy)}${sr('Passion',m.pas)}${sr('Morale',m.mor)}
 ${cand?'':`<h3>Management</h3><div class="row">${isAct(m)&&m.tid?`<button class="b s" onclick="setStatus(${m.id},'trainee')">Demote to ${esc(TL())} (leaves team)</button>`:`<label class="st">Join team (becomes active) <select onchange="profJoin(${m.id},this.value)"><option value="">Choose…</option>${(grp(m.group)||{teams:[]}).teams.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></label>`}<label class="st">Costume <select onchange="setMemCos(${m.id},this.value)"><option value="team" ${m.cosOv==null?'selected':''}>Team default${teamCos(m)!=null?' ('+COS[teamCos(m)][0]+')':''}</option><option value="own" ${m.cosOv==-1?'selected':''}>My own appearance</option>${COS.map((c,i)=>`<option value="${i}" ${m.cosOv===i?'selected':''}>${c[0]}</option>`).join('')}</select></label></div><p class="st">Training costs ¥10,000 and 25 Stamina; Stamina recovers 15 per day. Higher Potential and Passion improve training results.</p><button class="b p" onclick="ui.mod=null;ui.cm=${m.id};ui.draft=null;view='creator';render()">✎ Edit appearance</button>`}`}
@@ -4350,7 +4361,7 @@ V.training=function(){const f=ui.trf=ui.trf||{grp:'all',st:'all',sk:'name'};if(!
   return`<div class="c trc ${low?'tired':''} ${away?'wlaway':''}"><div class="av" onclick="${prof(m.id)}">${CH.half(m,0,m.en<25?9:7)}<span class="avt">${isAct(m)?esc(teamLbl(m)):esc(TLm(m))}</span>${away?'<span class="wlbadge">On Leave</span>':''}</div><div><div class="trh"><b>${esc(m.name)}</b> <span class="tag rr${rar(m)}">${rar(m)}</span> <span class="wlmood sm ${mo[1]}" title="Mood: ${w.mood}">${mo[0]} ${w.mood}</span></div>
   <div class="en ${m.en<25?'low':''}">Energy ${m.en}/100${bar(m.en)}</div><div class="wlmini"><span>Physical ${Math.round(w.ph)}</span>${wlBar(w.ph,wlLvCls(w.ph))}<span>Mental ${Math.round(w.mh)}</span>${wlBar(w.mh,wlLvCls(w.mh))}</div>
   ${away?`<div class="wlleave sm">🏥 ${WLT[w.leave.type]} · returns ${longDate(w.leave.ret)}</div>`:off?'<div class="st">Resting today — back tomorrow.</div>':''}
-  ${ABK.map(k=>{const c=WL.cost[k],dis=away||off||m[k]>=100||m.en<c||(k=='dance'&&w.ph<20);return`<div class="trr"><b>${SKL[k]}</b><span>${m[k]}</span>${bar(m[k])}<button class="b s" ${dis?'disabled':''} title="Uses ${c} Energy" onclick="train(${m.id},'${k}')">Train −${c}</button></div>`}).join('')}
+  ${ABK.map(k=>{const c=WL.cost[k],dis=away||off||m[k]>=100||m.en<c||(k=='dance'&&w.ph<20);return`<div class="trr"><b>${SKL[k]}</b><span>${m[k]}</span>${bar(m[k])}${k=='cha'?'<small class="st">Average of Vocal &amp; Dance</small>':`<button class="b s" ${dis?'disabled':''} title="Uses ${c} Energy" onclick="train(${m.id},'${k}')">Train −${c}</button>`}</div>`}).join('')}
   <div class="row"><button class="b s" ${away||w.rest==S.day?'disabled':''} onclick="wlDo(${m.id},'rest')">Rest +40</button><span class="st">EXP ×${wlTrainMul(m,'sing').toFixed(2)}</span></div></div></div>`};
  return`<h2 class="ht">Lesson Room</h2><div class="c tools"><div class="row"><span class="tag rrR">Each lesson: ${yen(10000)}</span><span class="tag">Energy: Vocal −15 · Dance −25 · Performance −20 · Variety −10 · Rest +40</span><span class="tag">+1–3 points (bonus for high Potential / Passion)</span><span class="tag">Mental Health changes lesson EXP</span><span class="tag">Energy recovers +15 per day</span></div>
  <div class="row"><select onchange="ui.trf.grp=this.value;render()">${op([['all','All groups'],...S.groups.map(g=>[g.id,g.name])],f.grp)}</select><select onchange="ui.trf.st=this.value;render()">${op([['all','All statuses'],['act','Active members'],['tr',TL()+'s'],['leave','On leave']],f.st)}</select><select onchange="ui.trf.sk=this.value;render()">${op([['name','Sort: Name'],['en','Sort: Energy'],['ph','Sort: Physical Health (low first)'],['mh','Sort: Mental Health (low first)'],...ABK.map(k=>[k,'Sort: '+SKL[k]])],f.sk)}</select><span class="st">${L.length} idols</span><button class="b s" onclick="adv(1)">Next day</button></div></div>
@@ -10722,6 +10733,20 @@ thCpTog=function(id){const c=ui.thcp;if(!c)return;const i=c.sel.indexOf(id);if(i
 {const f=fmSync;fmSync=function(o){try{if(o&&o.fm)fmRenum(o.fm.sl)}catch(e){}return f.apply(this,arguments)}}
 function fmRenumAll(){try{(S.groups||[]).forEach(g=>{Object.values(gsCtx(g.id,'songs')||{}).forEach(o=>{if(o&&o.fm&&Array.isArray(o.fm.sl))fmRenum(o.fm.sl)})})}catch(e){console.error(e)}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);if(S&&!S.fmN1){fmRenumAll();S.fmN1=1}return r}}
+// covers are exported as standalone images (PNG): their portraits stay inline (no sprite references)
+{const f=coverSvg;coverSvg=function(){PT_INLINE++;try{return f.apply(this,arguments)}finally{PT_INLINE--}}}
+// ---- Performance = average of Vocal and Dance (replaces the old separate "Performance" value) ------------------------------
+// m.cha becomes a computed value on every member, so every existing formula, sort and display that used "Performance"
+// now uses the Vocal/Dance average; the old stored number is discarded. It cannot be trained directly.
+const perfOf=m=>Math.round(((+m.sing||0)+(+m.dance||0))/2);
+const PERF_D={get(){return perfOf(this)},set(){},enumerable:true,configurable:true};
+function perfDef(m){if(!m||typeof m!='object')return;const d=Object.getOwnPropertyDescriptor(m,'cha');if(d&&d.get===PERF_D.get)return;try{delete m.cha;Object.defineProperty(m,'cha',PERF_D)}catch(e){}}
+function perfSync(){if(!S)return;(S.members||[]).forEach(perfDef);(S.alumni||[]).forEach(perfDef);try{((ui.au&&ui.au.cands)||[]).forEach(perfDef)}catch(e){}}
+{const f=render;render=function(){try{perfSync()}catch(e){}return f.apply(this,arguments)}}
+{const f=tick;tick=function(){try{perfSync()}catch(e){}return f.apply(this,arguments)}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{perfSync()}catch(e){}return r}}
+{const f=train;train=function(id,k){if(k=='cha')return toast('Performance is the average of Vocal and Dance — train those instead.','err');return f.apply(this,arguments)}}
+SKL.cha='Performance';
 
 </script>
 <script>
@@ -11367,6 +11392,7 @@ I18N_TH_TPL.unshift(["Performance {0}","รอบที่ {0}"],["+ Add perform
 Object.assign(I18N_TH,{"Secondary colour":"สีรอง","🎯 Main + secondary":"🎯 สุ่มจากสีหลัก + สีรอง","🔁 Replace a colour in every piece — tap a colour:":"🔁 เปลี่ยนสีที่เลือกในทุกชิ้นของชุด — แตะสีที่ต้องการเปลี่ยน:","Change everywhere":"เปลี่ยนทุกชิ้น","🎲 Random":"🎲 สุ่ม","Genre":"แนวเพลง","Concept":"คอนเซ็ปต์","Lyrics":"เนื้อเพลง","🎲 Randomize all":"🎲 สุ่มทั้งหมด"});
 I18N_TH_TPL.unshift(["{0} colour slot(s) changed in every piece. Save to keep them.","เปลี่ยนสีแล้ว {0} จุดในทุกชิ้น กดบันทึกเพื่อเก็บไว้"],["Copy to {0} member(s)","คัดลอกให้ {0} คน"]);
 Object.assign(I18N_TH,{"📸 Performance pictures":"📸 ภาพการแสดง","No performer":"ไม่มีผู้แสดง"});
+Object.assign(I18N_TH,{"Average of Vocal & Dance":"ค่าเฉลี่ยร้องและเต้น","Performance is the average of Vocal and Dance — train those instead.":"Performance คือค่าเฉลี่ยของร้องและเต้น — ให้ฝึกร้องหรือเต้นแทน"});
 
 </script>
 <script>

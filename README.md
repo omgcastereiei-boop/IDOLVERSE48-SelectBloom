@@ -871,3 +871,24 @@ Every performance report, and the pop-up after a performance, has **📸 Perform
   - Stadium: open night sky, fireworks and light towers.
   - Dome: the roof arch, white for Tokyo Dome.
 - **Per-venue details:** the structure colours, curtains and lights are seeded by the venue, so each venue always looks the same and different from the others.
+
+## General Election voting statistics (`js/ui/ge-stats.js`)
+- **Hidden during voting.** While voting is open nothing new is shown. The data is recorded silently from the existing fan-behaviour voting (`geGive`): tokens per member by fan class (fan type × Kami Oshi / Oshi / floating), the buyer pool, and tokens per buyer.
+- **Snapshot at the close.** When voting closes, `e.final.vs` is stored:
+  - Unique Voters: distinct buying fans, capped by the pool, and only fans with at least one cast token.
+  - Total Votes: the real cast votes. They still decide the rank.
+  - Average = votes ÷ voters.
+  - The heavy-voter share and the behaviour mix.
+  - Names are kept, so history never changes.
+- **Shown after the ceremony** in the Election Archive:
+  - a sortable table (Member, Final Rank, Total Votes, Unique Voters, Avg / Voter, with change versus the previous election);
+  - six statistical highlights;
+  - a link from the General Election page.
+- **Older elections** show a note instead of invented numbers.
+
+## Performance stat & speed (`js/ui/ux6.js`, `js/art/characters.js`)
+- **Performance = average of Vocal and Dance.** `m.cha` is now a computed property on every member. All formulas, sorts and displays that used "Performance" use the average, and the old separate value is gone. It can't be trained directly; train Vocal or Dance.
+- **Portraits are drawn once** into a hidden SVG sprite (`#ptspr`), and every copy on screen is a small `<use>` reference.
+  - The Theater member / unit pickers went from ~5 MB of HTML per tap to ~90 KB.
+  - Re-render times dropped about 5–8× on the heaviest screens.
+  - Covers (exported as PNG) keep inline portraits.

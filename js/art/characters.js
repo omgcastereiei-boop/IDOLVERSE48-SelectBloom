@@ -363,7 +363,18 @@ function ptBuild(m,s,nb,vb,ex,id){const H=headParts(m,ex,id),a=H.a,h=m.hue|0,D=H
  const bg=nb?'':`<rect width="100" height="120" fill="url(#${id}bg)"/><circle cx="78" cy="26" r="30" fill="url(#${id}bk)" opacity=".6"/><circle cx="14" cy="98" r="20" fill="url(#${id}bk)" opacity=".45"/><g fill="#fff" opacity=".85"><path d="M12 16l1.5 3.7 3.7 1.5-3.7 1.5-1.5 3.7-1.5-3.7-3.7-1.5 3.7-1.5z"/><path d="M90 78l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z"/><circle cx="86" cy="12" r="1.2"/><circle cx="20" cy="40" r=".9"/></g>`;
  const T=`<g transform="scale(${N2(inv)}) translate(${N2(-HTX)} ${-HTY})">`;
  return`<svg viewBox="${vb||'0 0 100 120'}" ${s?`width="${s}"`:''} overflow="hidden" xmlns="http://www.w3.org/2000/svg"><defs>${H.defs}${bgd}<clipPath id="${id}fr"><rect width="100" height="120"/></clipPath></defs><g clip-path="url(#${id}fr)">${bg}${H.back}${T}${B.back}${B.neck}${B.torso}${B.collar}${B.arms}</g>${H.face}${H.feat}${H.brow}${H.bangs}${H.acc}${H.ties}${H.sl}${H.over}</g></svg>`}
-function pt(m,s,nb,vb,ex){const a=apEff(m),k=JSON.stringify(['p4',m.id|0,m.hue|0,a,m.bgc||0,s||0,nb?1:0,vb||0,ex==null?'':ex]);let t=ART.cache.get(k);if(!t){t=ptBuild(m,s,nb,vb,ex,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}return t.split('§').join('p'+(++PTC[0]))}
+function pt(m,s,nb,vb,ex){const a=apEff(m),k=JSON.stringify(['p4',m.id|0,m.hue|0,a,m.bgc||0,s||0,nb?1:0,vb||0,ex==null?'':ex]);let t=ART.cache.get(k);if(!t){t=ptBuild(m,s,nb,vb,ex,'§');if(ART.cache.size>3000)ART.cache.clear();ART.cache.set(k,t)}
+ if(PT_INLINE||typeof document=='undefined'||!document.body)return t.split('§').join('p'+(++PTC[0]));return ptUse(k,t)}
+// portraits are drawn ONCE into a hidden sprite (<symbol>) and every copy on screen is a tiny <use> reference:
+// a page with hundreds of faces stays small, so screens render and update much faster.
+let PT_INLINE=0,PT_SN=0;const PT_SPR=new Map();
+function ptSprite(){let el=document.getElementById('ptspr');if(!el){el=document.createElementNS('http://www.w3.org/2000/svg','svg');el.id='ptspr';el.setAttribute('aria-hidden','true');el.setAttribute('style','position:absolute;width:0;height:0;overflow:hidden;pointer-events:none');document.body.appendChild(el)}return el}
+function ptUse(k,t){let y=PT_SPR.get(k);if(!y){if(PT_SPR.size>4000){PT_SPR.clear();const el=document.getElementById('ptspr');if(el)el.innerHTML=''}
+  const id='ps'+(++PT_SN),body=t.split('§').join(id+'_'),mm=body.match(/^<svg([^>]*)>([\s\S]*)<\/svg>$/);if(!mm)return t.split('§').join('p'+(++PTC[0]));
+  const at=mm[1],vbm=at.match(/viewBox="([^"]+)"/),vb=(vbm?vbm[1]:'0 0 100 120').split(/\s+/).map(Number);
+  try{const doc=new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg"><symbol id="${id}" viewBox="${vb.join(' ')}" overflow="hidden">${mm[2]}</symbol></svg>`,'image/svg+xml');const sym=doc.querySelector('symbol');if(!sym||doc.querySelector('parsererror'))throw 0;ptSprite().appendChild(document.importNode(sym,true))}catch(e){return t.split('§').join('p'+(++PTC[0]))}
+  y={at,u:`<use href="#${id}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}"/>`};PT_SPR.set(k,y)}
+ return`<svg${y.at}>${y.u}</svg>`}
 
 // ---- asset registry: one entry per member ID, every screen draws from it ---------------
 const CHAR_ASSETS={

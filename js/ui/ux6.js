@@ -34,3 +34,17 @@ thCpTog=function(id){const c=ui.thcp;if(!c)return;const i=c.sel.indexOf(id);if(i
 {const f=fmSync;fmSync=function(o){try{if(o&&o.fm)fmRenum(o.fm.sl)}catch(e){}return f.apply(this,arguments)}}
 function fmRenumAll(){try{(S.groups||[]).forEach(g=>{Object.values(gsCtx(g.id,'songs')||{}).forEach(o=>{if(o&&o.fm&&Array.isArray(o.fm.sl))fmRenum(o.fm.sl)})})}catch(e){console.error(e)}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);if(S&&!S.fmN1){fmRenumAll();S.fmN1=1}return r}}
+// covers are exported as standalone images (PNG): their portraits stay inline (no sprite references)
+{const f=coverSvg;coverSvg=function(){PT_INLINE++;try{return f.apply(this,arguments)}finally{PT_INLINE--}}}
+// ---- Performance = average of Vocal and Dance (replaces the old separate "Performance" value) ------------------------------
+// m.cha becomes a computed value on every member, so every existing formula, sort and display that used "Performance"
+// now uses the Vocal/Dance average; the old stored number is discarded. It cannot be trained directly.
+const perfOf=m=>Math.round(((+m.sing||0)+(+m.dance||0))/2);
+const PERF_D={get(){return perfOf(this)},set(){},enumerable:true,configurable:true};
+function perfDef(m){if(!m||typeof m!='object')return;const d=Object.getOwnPropertyDescriptor(m,'cha');if(d&&d.get===PERF_D.get)return;try{delete m.cha;Object.defineProperty(m,'cha',PERF_D)}catch(e){}}
+function perfSync(){if(!S)return;(S.members||[]).forEach(perfDef);(S.alumni||[]).forEach(perfDef);try{((ui.au&&ui.au.cands)||[]).forEach(perfDef)}catch(e){}}
+{const f=render;render=function(){try{perfSync()}catch(e){}return f.apply(this,arguments)}}
+{const f=tick;tick=function(){try{perfSync()}catch(e){}return f.apply(this,arguments)}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{perfSync()}catch(e){}return r}}
+{const f=train;train=function(id,k){if(k=='cha')return toast('Performance is the average of Vocal and Dance — train those instead.','err');return f.apply(this,arguments)}}
+SKL.cha='Performance';
