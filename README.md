@@ -892,3 +892,53 @@ Every performance report, and the pop-up after a performance, has **📸 Perform
   - The Theater member / unit pickers went from ~5 MB of HTML per tap to ~90 KB.
   - Re-render times dropped about 5–8× on the heaviest screens.
   - Covers (exported as PNG) keep inline portraits.
+
+## Captain System (`js/ui/captain.js`)
+Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap` (Group Vice Captain), and `g.tl[tid].cap` / `.vice` (Team Captain / Team Vice Captain). Every group, Sister Groups included, and every team has its own independent positions.
+
+### Positions & recommendations
+- **Positions:** all optional, no term, appointed and removed immediately, never filled automatically, no Acting Captain.
+- **Eligibility:** active full members of that group (and of that team for team positions). Trainees, graduated or dismissed members and members who left the group are not eligible.
+- **Combinations:** one position per level. Group Captain + Team Captain together is allowed; a same-level conflict is explained and nothing is changed.
+- **Validation:** positions are re-checked every day.
+- **Recommendations (advice only):** computed when the appointment screen opens, from existing data:
+  - personality and the relationship profile `m.rp`;
+  - Passion, Loyalty, Mental Health;
+  - group and team tenure;
+  - relationships in `S.rel` (cross-team for group positions, team bonds for team positions, the bond with the Captain for Vice positions);
+  - past appointments and leadership events.
+
+  Weights differ per position. The level is Excellent / Good / Average / Poor, with reasons taken from the real data. If nobody is suitable, the screen suggests leaving the position vacant.
+
+### History
+- `S.capH` stores one record per appointment period (member, group, team, position, start, end, reason). It is never deleted, and a later re-appointment creates a new record.
+- A reconciler keeps the history in step whatever changed the position: the Groups page, restructuring, graduation, dismissal, transfer, demotion, disbanding.
+- Saves from before this system record the current holders as "before records", with no invented history.
+
+### Leadership events
+- **When:** checked weekly per team and group, only when a real trigger exists:
+  - a new member;
+  - a member with low Mental Health;
+  - a strained or conflicting pair;
+  - a new single Center;
+  - recent General Election results;
+  - a recent Theater show of the team;
+  - a generation gap;
+  - cross-team distance;
+  - Captain pressure, or appreciation after repeated support.
+- **How often:** per-team and per-group cooldowns plus per-member/pair cooldowns. The Captain leads more often than the Vice Captain, and one member leads at most one event per check.
+- **Outcomes:** probabilistic. They depend on bond, personality and the member's need for space, and can be positive, neutral or negative.
+- **Effects** go only through existing systems:
+  - relationship bond, feelings, pair history and Relationship news;
+  - Mental Health through `wlAdj`;
+  - small Passion changes;
+  - +1 Loyalty only when a new member is welcomed.
+- **What it never does:** no fan, revenue, Senbatsu, Center or election influence, and no direct relationship controls.
+- **When a Captain graduates,** only members who were genuinely close to her react.
+
+### UI
+- **Groups page:** a Group Leadership panel with History, plus Captain / Vice Captain rows on each team.
+- **Candidate screen:** level, reasons and current positions, with Appoint, Cancel or Leave vacant.
+- **Position detail:** appointment date, time in office, duties, leadership moments and previous positions, with Replace or Remove.
+- **Profile:** a Leadership section.
+- **Vacancy notice:** a single "Leadership" pop-up.

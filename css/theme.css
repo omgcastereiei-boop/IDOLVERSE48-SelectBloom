@@ -1112,3 +1112,13 @@ select:not([multiple]):not([size]){cursor:pointer}
 .gevm{display:flex;gap:6px;align-items:center;min-width:150px}.gevm>div{display:flex;flex-direction:column;min-width:0;gap:3px}
 .gevmix{display:flex;height:5px;width:96px;border-radius:3px;overflow:hidden;background:#eee}.gevmix i{display:block;height:100%}
 .gevlink{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.gevlink .st{flex:1 1 200px}
+/* Captain system */
+.capbox{margin:8px 0}.capbox.sm{margin:6px 0;padding:6px;border:1px dashed #eadff2;border-radius:12px}
+.caprow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 0;border-bottom:1px dashed #f0e8f5}.caprow:last-child{border-bottom:0}
+.capt{min-width:120px}.capm{display:flex;align-items:center;gap:6px;border:0;background:none;padding:0;cursor:pointer;text-align:left;font:inherit;color:inherit;min-width:0}.capm span{display:flex;flex-direction:column;min-width:0}.capm small{font-size:11px;color:var(--mut)}
+.capb{display:inline-block;font:800 10px Quicksand;padding:2px 6px;border-radius:8px;color:#fff;background:#b28be8}.capb.gcap{background:linear-gradient(90deg,#e9b949,#d6457f)}.capb.gvice{background:#d98bb0}.capb.tcap{background:#7a6ad8}.capb.tvice{background:#9fb6e6}
+.capvac{background:#f1eef6;color:#8f80a6}
+.capcl{display:grid;gap:8px;max-height:60vh;overflow-y:auto;margin:8px 0}.capcand{border:1px solid #eee;border-radius:12px;padding:8px}.capcand.on{border-color:#e9b949;background:#fffaf0}.capcand .row{gap:8px;align-items:center;flex-wrap:nowrap}
+.capr{margin:6px 0 0 4px;padding:0;list-style:none;font-size:12.5px}.capr li{margin:2px 0}.capr li.pos{color:#2f7d58}.capr li.neg{color:#b04a3a}
+.caplv.excellent{background:#d9f2e3;color:#1f6b45}.caplv.good{background:#e3efff;color:#2a5a9a}.caplv.average{background:#fff3d6;color:#8a6a1a}.caplv.poor{background:#fde4e4;color:#9a3030}
+.capprof .capb{margin:2px 0}
