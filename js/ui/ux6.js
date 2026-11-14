@@ -53,3 +53,18 @@ GCOL_DEF.unit=4;
 {const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{if(h.includes('<div class="thpg">')){let first=true;h=h.split('<div class="thpg">').join('\u0001');h=h.replace(/\u0001/g,()=>{const b=first?gcolBar('unit'):'';first=false;return b+`<div class="thpg gcolu gcolu-${gcolGet('unit')}">`})}}catch(e){console.error(e)}return h}}
 // ---- member profile: ✕ close button at the top right ---------------------------------------------------------------------
 {const f=render;render=function(){const r=f.apply(this,arguments);try{if(ui.mod&&ui.mod.t=='prof'){const d=document.querySelector('.mod [role=dialog]');if(d&&!d.querySelector('.mxclose')){const b=document.createElement('button');b.type='button';b.className='mxclose';b.setAttribute('aria-label','Close');b.textContent='✕';b.onclick=()=>{ui.mod=null;render()};d.insertBefore(b,d.firstChild)}}}catch(e){}return r}}
+// ---- Costume editor: Undo / Redo and the random-costume buttons under the character -----------------------------------------
+// History follows the design being edited (ui.czE.p): every change made by any tool becomes one step.
+let CZ_UR=0;
+function czHist(){const E=ui.czE;if(!E||!E.p)return;let cur;try{cur=JSON.stringify(E.p)}catch(e){return}if(E._u==null){E._u=[];E._r=[];E._last=cur;return}if(CZ_UR||cur==E._last)return;E._u.push(E._last);if(E._u.length>60)E._u.shift();E._r=[];E._last=cur}
+function czUndo(){const E=ui.czE;if(!E||!E._u||!E._u.length)return;czHist();E._r.push(JSON.stringify(E.p));const s=E._u.pop();E.p=JSON.parse(s);E._last=s;E.dirty=1;CZ_UR=1;try{render()}finally{CZ_UR=0}}
+function czRedo(){const E=ui.czE;if(!E||!E._r||!E._r.length)return;E._u.push(JSON.stringify(E.p));const s=E._r.pop();E.p=JSON.parse(s);E._last=s;E.dirty=1;CZ_UR=1;try{render()}finally{CZ_UR=0}}
+// library designer (no member context): random design for the design being edited
+function czRandEd(){const E=ui.czE;if(!E||!E.p||!czEditing())return toast('Choose a design to edit first.','err');E.p=czRandom();E.dirty=1;toast('Random costume generated. Edit any piece, then press Save.');render()}
+const CZ_RANDB=['plCzRandom()','thCzRandom()','thCzRandAll(0)','thCzRandAll(1)','thCzLibRand(0)','thCzLibRand(1)','geCzRandEd()'];
+{const f=render;render=function(){try{czHist()}catch(e){}const r=f.apply(this,arguments);try{const st=document.getElementById('czstage'),pose=st&&st.parentNode&&st.parentNode.querySelector('.czpose');if(pose&&!document.querySelector('.czubar')){const E=ui.czE||{};
+  const bar=document.createElement('div');bar.className='row czubar';bar.innerHTML=`<button class="b s" type="button" ${E._u&&E._u.length?'':'disabled'} onclick="czUndo()" aria-label="Undo">↶ Undo</button><button class="b s" type="button" ${E._r&&E._r.length?'':'disabled'} onclick="czRedo()" aria-label="Redo">↷ Redo</button>`;
+  const moved=[];document.querySelectorAll('#app button[onclick]').forEach(b=>{if(CZ_RANDB.includes(b.getAttribute('onclick'))&&!st.parentNode.contains(b))moved.push(b)});
+  if(!moved.length&&czEditing&&czEditing()&&!E.scz){const b=document.createElement('button');b.className='b s p';b.type='button';b.setAttribute('onclick','czRandEd()');b.textContent='🎲 Randomize Costume';moved.push(b)}
+  moved.forEach(b=>bar.appendChild(b));pose.insertAdjacentElement('afterend',bar);try{if(typeof i18nApply=='function')i18nApply(bar)}catch(e){}}}catch(e){console.error(e)}return r}}
+document.addEventListener('keydown',e=>{try{if(!document.getElementById('czstage')||/INPUT|TEXTAREA|SELECT/.test((e.target||{}).tagName||''))return;const k=(e.key||'').toLowerCase();if((e.ctrlKey||e.metaKey)&&k=='z'&&!e.shiftKey){e.preventDefault();czUndo()}else if((e.ctrlKey||e.metaKey)&&(k=='y'||(k=='z'&&e.shiftKey))){e.preventDefault();czRedo()}}catch(x){}});
