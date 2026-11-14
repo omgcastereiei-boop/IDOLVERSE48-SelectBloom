@@ -22,11 +22,11 @@ const GEV_FT={casual:'Casual',oshi:'Regular',dedicated:'Dedicated',hardcore:'Har
 const GEV_REL={k:'Kami Oshi supporters',o:'Oshi / multi-member voters',f:'Floating fans'};
 // ---- silent recording -------------------------------------------------------------------------------------------------------
 {const f=geGive;geGive=function(e,P,u,FW){if(!e||!P||!(u>0))return f.apply(this,arguments);const b0={},B=e.buy||{};for(const k in B)b0[k]=B[k];const r=f.apply(this,arguments);try{geVxRec(e,P,b0,FW)}catch(x){console.error(x)}return r}}
-function geVxRec(e,P,b0,FW){if(e.final||e.st=='done')return;const X=e.vx=e.vx||{from:S.day,c:{}},s=P.s,ft=s.ft||'casual',n=s.n||0,p=P.p||0,q=Math.max(1,P.q||1),sc=(e.k2||1)*(P.mk||1)*(P.mot||1);
+function geVxRec(e,P,b0,FW){if(e.final||e.st=='done')return;const X=e.vx=e.vx||{from:S.day,c:{}},s=P.s,ft=s.ft||'casual',n=s.n||0,p=P.p||0,q=Math.max(1,P.q||1),k2=e.k2||1,sc=(P.mk||1)*(P.mot||1)*Math.max(1,k2),pk=p*Math.min(1,k2);
  let fw=null,fwT=0;const FWx=()=>{if(!fw){fw=FW||geFloatW(e);for(const k in fw)fwT+=fw[k]}return fw};
  for(const k in e.buy){const d=(e.buy[k]||0)-(b0[k]||0);if(d<=0)continue;const mid=+k,shm=(P.sh&&P.sh[k])||0,rel=P.kc==mid?'k':shm>0?'o':'f';
   // distinct buying fans of this segment who support this member, and the tokens one of them gives her
-  let E,a;if(rel=='k'){E=n*p;a=q*shm*sc}else if(rel=='o'){const oj=Math.max(1,Math.min(n,(s.o||{})[mid]||0));E=oj*p;a=q*shm*n/oj*sc}else{const F=FWx(),sh=fwT?(F[mid]||0)/fwT:0,fl=(P.sh&&P.sh._f)||0;E=n*p*fl*sh;a=q*fl*sc}
+  let E,a;if(rel=='k'){E=n*pk;a=q*shm*sc}else if(rel=='o'){const oj=Math.max(1,Math.min(n,(s.o||{})[mid]||0));E=oj*pk;a=q*shm*n/oj*sc}else{const F=FWx(),sh=fwT?(F[mid]||0)/fwT:0,fl=(P.sh&&P.sh._f)||0;E=n*pk*fl*sh;a=q*fl*sc}
   a=Math.max(1,a);E=Math.max(E,1);const M=X.c[mid]=X.c[mid]||{},key=ft+'|'+rel,c=M[key]=M[key]||{T:0,Aw:0,E:0,Ed:0,d:S.day};
   if(c.d!=S.day){c.E=Math.max(c.E,c.Ed);c.Ed=0;c.d=S.day}c.Ed+=E;c.T+=d;c.Aw+=d*a}}
 // ---- snapshot at the close ------------------------------------------------------------------------------------------------

@@ -942,3 +942,10 @@ Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap
 - **Position detail:** appointment date, time in office, duties, leadership moments and previous positions, with Replace or Remove.
 - **Profile:** a Leadership section.
 - **Vacancy notice:** a single "Leadership" pop-up.
+
+## Economy & fanbase safety (`js/ui/econfix.js`)
+- **CD cap.** `CD_MAX` = 5,000,000 CDs per single, album or election single. It applies to release-day sales, daily edition sales (editions stop selling when the cap is reached), album sales and election CD buying.
+- **Diminishing fan growth.** Fan gains shrink as the fanbase grows: × 1 / (1 + (fans / 2.5M)^1.3). That is about 77% at 1M fans, 50% at 2.5M and 29% at 5M, which stops the sales ↔ fans feedback loop from exploding.
+- **Kami Oshi adoption.** Each month some fans who only have Oshi choose one of them as Kami Oshi (existing rules; no fans are created or removed). Saves where Oshi-only fans outnumber Kami Oshi fans more than 2:1 are rebalanced once on load.
+- **Invalid values repaired.** Loyalty, engagement, spending and segment sizes are fixed on load and monthly, so averages no longer show NaN.
+- **Election voter statistics.** The CD scale of an election now changes how many fans buy, not how many CDs each buyer gets. Average votes per voter now reflects real behaviour (casual about 1–2, hardcore 20+). Statistics already sealed in finished elections are not changed.

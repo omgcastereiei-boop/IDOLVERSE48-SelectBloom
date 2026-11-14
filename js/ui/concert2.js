@@ -158,7 +158,7 @@ function ccResponse(C,p,res){const fb=fbState(),V=ccV(C.vid),SB=ccSegBuyers(C,p,
 function ccExpo(res,mid){const R=res.mem[mid];if(!R||!R.songs)return 0;const m=get(mid);return(R.center*2+R.front+R.songs*.5+R.mc*.3)*((R.e||50)/70)*(.5+(m?m.pop:0)/60)}
 function ccGrowth(C,p,res){const fb=fbState();if(!fb)return;const per=res._per||[],G={newCas:0,newReg:0,newOshi:0,newKami:0,kch:0,lost:0,loyUp:0,mem:{}},gm=id=>G.mem[id]=G.mem[id]||{kg:0,og:0,cas:0,lost:0};
  const X=ccS();X.seen=X.seen||{};const seen=X.seen[C.id]=X.seen[C.id]||{};const ex={};let exT=0;C.parts.forEach(id=>{const e=ccExpo(res,id);if(e>0){ex[id]=e;exT+=e}});const pickM=()=>{let r=Math.random()*exT;for(const id in ex){r-=ex[id];if(r<=0)return+id}return+Object.keys(ex)[0]};
- per.forEach(({s,z,v})=>{if(!fb.segs.includes(s)||!(s.n>0))return;const b=Math.min(s.n,z.ph+z.on),prev=seen[s.id]||0,fresh=Math.max(0,b-prev*(.6+(CC_REP[s.ft]||0)));seen[s.id]=Math.max(prev,b);const sh=Math.min(1,b/s.n),sat=v.all;
+ per.forEach(({s,z,v})=>{if(!fb.segs.includes(s)||!(s.n>0)||!Number.isFinite(v.all)||!Number.isFinite(z.ph+z.on))return;const b=Math.min(s.n,z.ph+z.on),prev=seen[s.id]||0,fresh=Math.max(0,b-prev*(.6+(CC_REP[s.ft]||0)));seen[s.id]=Math.max(prev,b);const sh=Math.min(1,b/s.n),sat=v.all;
   // loyalty & engagement of everyone who came
   s.loy=fbCl(s.loy+(sat-55)*.08*sh);s.eng=fbCl(s.eng+(sat-50)*.12*sh);if(sat>55)G.loyUp+=Math.round(b);
   if(sat<40){const l=Math.min(s.n,fbRound(b*(40-sat)/100*.3));if(l>0){s.n-=l;fbFix(s);G.lost+=l;fb.acc.lost=(fb.acc.lost||0)+l;fb.acc.lossBy['Concert']=(fb.acc.lossBy['Concert']||0)+l;if(s.k!=null)gm(s.k).lost+=l}return}

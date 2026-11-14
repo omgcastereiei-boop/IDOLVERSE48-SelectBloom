@@ -1974,9 +1974,10 @@ function rmType(i){if(guard())return;const p=S.pj;if(p.types.length<2)return toa
 function tAdd(i,id){if(!id||guard())return;const t=S.pj.types[i];if(t.songs.length>=CFG.maxPerType)return toast('A Type holds at most 3 songs.','err');t.songs.push(id);render()}
 function tRm(i,j){if(guard())return;S.pj.types[i].songs.splice(j,1);render()}
 function tMv(i,j,d){if(guard())return;const a=S.pj.types[i].songs,k=j+d;if(k<1||k>=a.length)return;[a[j],a[k]]=[a[k],a[j]];render()}
+const CD_MAX=5000000; // no single, album or election single sells more than 5 million CDs
 function doRelease(){const p=S.pj;if(!p||p.status!='producing')return;p.status='released';const mn=S.songs[p.mainId],L=mn.slots.filter(x=>x).map(get).filter(x=>x),c=get(mn.center)||L[0];
  const RC=seRecep(mn),comp=RC.comp,sk=RC.sk;let cm=comp; // Concept Compatibility factor and Senbatsu Ability (song-eval.js)if(CMATCH[mn.concept]==mn.costume||(mn.genre=='Rock'&&mn.costume=='Sporty'))cm*=1.08;
- const rhm=p.rh&&p.rh.total?.9+.2*p.rh.present/p.rh.total:1,u=cost(p).u,wpop=(()=>{const P=posShares(mn.fm.sl);let w=0,t=0;mn.fm.sl.forEach((x,k)=>{const m=x.m&&get(x.m);if(m&&P.sh.has(k)){w+=P.sh.get(k)*m.pop;t+=P.sh.get(k)}});return t?w/t:avg(L.map(m=>m.pop))})(),score=avg(L.map(m=>m.pop))*.3+wpop*.3+sk*.4,sales=Math.round((score*90+S.fans*.12)*cm*rnd(90,115)/100*(L.length/16+.5)*(1+.15*(p.types.length-1)+.03*u.size)*rhm*(hsOn(p)?HSF[p.hs.fmt].cd:1)),rev=sales*300,fans=Math.round(sales*.2);
+ const rhm=p.rh&&p.rh.total?.9+.2*p.rh.present/p.rh.total:1,u=cost(p).u,wpop=(()=>{const P=posShares(mn.fm.sl);let w=0,t=0;mn.fm.sl.forEach((x,k)=>{const m=x.m&&get(x.m);if(m&&P.sh.has(k)){w+=P.sh.get(k)*m.pop;t+=P.sh.get(k)}});return t?w/t:avg(L.map(m=>m.pop))})(),score=avg(L.map(m=>m.pop))*.3+wpop*.3+sk*.4,sales=Math.min(CD_MAX,Math.round((score*90+S.fans*.12)*cm*rnd(90,115)/100*(L.length/16+.5)*(1+.15*(p.types.length-1)+.03*u.size)*rhm*(hsOn(p)?HSF[p.hs.fmt].cd:1))),rev=sales*300,fans=Math.round(sales*.2);
  earn(rev,`Sales: ${p.title}`);S.fans+=fans;const repLog=[mn,...[...u].map(i=>S.songs[i])].flatMap(o=>grantRep(o,2+sales/3000));
  const covers={};p.types.forEach(t=>{covers[t.name]=JSON.parse(JSON.stringify(S.cov[t.name]));delete S.cov[t.name]});[p.mainId,...u].forEach(i=>{S.songs[i].rel=p.title;S.songs[i].relDay=S.day;const o=S.songs[i];if(o.video&&o.video!='none')o.videoPub={kind:o.video,day:S.day}});
  const x={rid:'r'+(++S.sid),ann:p.ann||null,repLog,title:p.title,num:p.num,genre:mn.genre,concept:mn.concept,color:Object.values(covers)[0].bg.c1,mainId:p.mainId,types:JSON.parse(JSON.stringify(p.types)),cost:p.paid,covers,sales,rev,fans,day:S.day,comp};
@@ -1990,7 +1991,7 @@ function alRm(i){const a=S.al.tracks,id=a.splice(i,1)[0],o=S.songs[id];if(o&&o.a
 const alCost=a=>{const n=a.tracks.filter(i=>S.songs[i].alb&&!S.songs[i].rel).length,r=a.tracks.length-n;return{L:[['Album production',CFG.albBase],[`New songs ×${n}`,n*CFG.albNew],[`Reused songs ×${r} (license/remaster)`,r*CFG.albReuse],['Cover artwork',CFG.albCover]],t:CFG.albBase+n*CFG.albNew+r*CFG.albReuse+CFG.albCover}};
 function openAlbCov(){ui.cvCtx='album';EDS.length=0;EDS.push('Album Cover');ui.cd=null;view='cover';render()}
 function alRelease(){const a=S.al;if(!a.title.trim())return toast('Enter an album title.','err');if(a.tracks.length<3)return toast('Add at least 3 tracks.','err');if(S.cov['Album Cover']?.status!='confirmed')return toast('Confirm the album cover first.','err');const c=alCost(a);if(!spend(c.t,'Album: '+a.title))return;
- const ps=a.tracks.map(i=>avg(S.songs[i].slots.filter(x=>x).map(j=>get(j)?.pop||0)));const sales=Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*a.tracks.length)*rnd(90,115)/100),rev=sales*250,fans=Math.round(sales*.15);earn(rev,'Album sales: '+a.title);S.fans+=fans;const rl=[],nw=[];a.tracks.forEach(i=>{const o=S.songs[i];if(!o.rel){nw.push(i);rl.push(...grantRep(o,2+sales/3000));o.rel='Album: '+a.title}});
+ const ps=a.tracks.map(i=>avg(S.songs[i].slots.filter(x=>x).map(j=>get(j)?.pop||0)));const sales=Math.min(CD_MAX,Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*a.tracks.length)*rnd(90,115)/100)),rev=sales*250,fans=Math.round(sales*.15);earn(rev,'Album sales: '+a.title);S.fans+=fans;const rl=[],nw=[];a.tracks.forEach(i=>{const o=S.songs[i];if(!o.rel){nw.push(i);rl.push(...grantRep(o,2+sales/3000));o.rel='Album: '+a.title}});
  const r={...a,id:'a'+(++S.sid),covers:{'Album Cover':S.cov['Album Cover']},cost:c.t,sales,rev,fans,day:S.day};delete S.cov['Album Cover'];S.albums.push(r);recordHistAlbum(r,nw);S.al=null;ui.cd=null;ui.mod={t:'html',h:`<h2 class="ht">✦ "${r.title}" released! ✦</h2>${coverSvg(r.covers['Album Cover'],{size:240})}<p>${r.tracks.length} tracks · Sales <b>${sales.toLocaleString()}</b> · Revenue <b>${yen(rev)}</b> · Fans +${fans.toLocaleString()}</p>${repTable(rl)}`};render()}
 function setCos(id,v){const d=ui.cd;if(d.cmode=='shared')return toast('Switch to Individual Costumes to change one member.','err');snap();const l=d.layers.find(x=>x.id==id),c=COS[+v];l.cid=+v;l.of=c[1];l.oh=c[2];render()}
 CFG.maxSen=32;CFG.maxCenters=6;CFG.rep={base:3,main:1,coup:.6,row:[.30,.15,.05],center:.25};
@@ -3679,7 +3680,7 @@ const _rpSched=scheduleSingle;scheduleSingle=function(p){const r=_rpSched.apply(
 // ---- album release --------------------------------------------------------------------------
 function plAlbumRelease(){const p=S.pj;if(!p||p.status!='producing'||!plAlb(p))return;const ids=plTracks(p),reu=new Set(ids.filter(i=>S.songs[i].rel)),nw=ids.filter(i=>!reu.has(i));p.status='released';
  const ps=ids.map(i=>avg((S.songs[i].slots||[]).filter(x=>x).map(j=>get(j)?.pop||0))||0);let sales=0;
- const calc=()=>{sales=Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*ids.length)*rnd(90,115)/100*seAlbumF(ids))};if(typeof fbWith=='function')fbWith('album',calc);else calc();
+ const calc=()=>{sales=Math.min(CD_MAX,Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*ids.length)*rnd(90,115)/100*seAlbumF(ids)))};if(typeof fbWith=='function')fbWith('album',calc);else calc();
  const rev=sales*250,fans=Math.round(sales*.15);earn(rev,'Album sales: '+p.title);S.fans+=fans;const rl=[];
  nw.forEach(i=>{const o=S.songs[i];rl.push(...grantRep(o,2+sales/3000));o.rel='Album: '+p.title;o.relDay=S.day});
  const covers={};p.types.forEach(t=>{covers[t.name]=JSON.parse(JSON.stringify(S.cov[t.name]));delete S.cov[t.name]});covers['Album Cover']=covers['Album Cover']||covers[p.types[0].name];
@@ -7990,6 +7991,7 @@ function seDay(x,d){const SL=x&&x.sale;if(!SL||SL.last!=null&&SL.last>=d)return 
  SL.eds.forEach(e=>{let n=0;if(e.m=='qty'){if(e.st!='selling')return;const t=d-x.relDay;const dm=e.F*seCurve(t)*(t>0?.85+Math.random()*.3:1)+e.fr;n=Math.floor(dm);e.fr=dm-n;n=Math.min(n,e.cap-e.sold);e.sold+=n;if(e.sold>=e.cap){e.st='soldout';e.soldDay=d;SE_Q.push({k:'sold',rid:x.rid,id:e.id,gid:gsAg()})}else if(t>210){e.st='ended';e.endDay=d}}
   else{if(e.st=='closed')return;if(d<e.open){e.st='upcoming';return}e.st='open';const T=e.close-e.open+1,i=d-e.open,w=T==1?1:i==0?.25:i==T-1?.12:(T>2?.63/(T-2):.75);const dm=e.P*w*(T>1?.85+Math.random()*.3:1)+e.fr;n=Math.floor(dm);e.fr=dm-n;e.sold+=n;if(d>=e.close){e.st='closed';e.closedDay=d;SE_Q.push({k:'pre',rid:x.rid,id:e.id,gid:gsAg()})}}
   e.dl=e.dl||{};if(n)e.dl[d]=(e.dl[d]||0)+n;tot+=n});
+ {const room=Math.max(0,CD_MAX-(x.sales||0));if(tot>room){let cut=tot-room;SL.eds.slice().reverse().forEach(e=>{const t=(e.dl&&e.dl[d])||0;if(!t||cut<=0)return;const c=Math.min(t,cut);e.dl[d]-=c;e.sold-=c;cut-=c});tot=room}if((x.sales||0)+tot>=CD_MAX)SL.eds.forEach(e=>{if(e.st=='selling'||e.st=='open'){e.st='ended';e.endDay=d}})}
  if(tot){x.dsl[d]=(x.dsl[d]||0)+tot;x.sales+=tot;x.cd.units+=tot;x.cd.orders+=Math.max(1,Math.round(tot/1.05));if(x.seHs)x.cd.tickets+=tot;const rev=tot*SE_PRICE;x.rev+=rev;SL.pr=(SL.pr||0)+rev;const fr=tot*.2+SL.fc,nf=Math.floor(fr);SL.fc=fr-nf;x.fans+=nf;S.fans+=nf}
  // revenue is booked once a week (and when the last edition stops selling) to keep the ledger short
  const live=SL.eds.some(e=>e.st=='selling'||e.st=='open'||e.st=='upcoming');if(SL.pr&&((d-x.relDay)%7==0||!live)){earn(SL.pr,`CD sales: ${x.title}`);SL.pr=0}return tot}
@@ -10377,7 +10379,7 @@ function ccResponse(C,p,res){const fb=fbState(),V=ccV(C.vid),SB=ccSegBuyers(C,p,
 function ccExpo(res,mid){const R=res.mem[mid];if(!R||!R.songs)return 0;const m=get(mid);return(R.center*2+R.front+R.songs*.5+R.mc*.3)*((R.e||50)/70)*(.5+(m?m.pop:0)/60)}
 function ccGrowth(C,p,res){const fb=fbState();if(!fb)return;const per=res._per||[],G={newCas:0,newReg:0,newOshi:0,newKami:0,kch:0,lost:0,loyUp:0,mem:{}},gm=id=>G.mem[id]=G.mem[id]||{kg:0,og:0,cas:0,lost:0};
  const X=ccS();X.seen=X.seen||{};const seen=X.seen[C.id]=X.seen[C.id]||{};const ex={};let exT=0;C.parts.forEach(id=>{const e=ccExpo(res,id);if(e>0){ex[id]=e;exT+=e}});const pickM=()=>{let r=Math.random()*exT;for(const id in ex){r-=ex[id];if(r<=0)return+id}return+Object.keys(ex)[0]};
- per.forEach(({s,z,v})=>{if(!fb.segs.includes(s)||!(s.n>0))return;const b=Math.min(s.n,z.ph+z.on),prev=seen[s.id]||0,fresh=Math.max(0,b-prev*(.6+(CC_REP[s.ft]||0)));seen[s.id]=Math.max(prev,b);const sh=Math.min(1,b/s.n),sat=v.all;
+ per.forEach(({s,z,v})=>{if(!fb.segs.includes(s)||!(s.n>0)||!Number.isFinite(v.all)||!Number.isFinite(z.ph+z.on))return;const b=Math.min(s.n,z.ph+z.on),prev=seen[s.id]||0,fresh=Math.max(0,b-prev*(.6+(CC_REP[s.ft]||0)));seen[s.id]=Math.max(prev,b);const sh=Math.min(1,b/s.n),sat=v.all;
   // loyalty & engagement of everyone who came
   s.loy=fbCl(s.loy+(sat-55)*.08*sh);s.eng=fbCl(s.eng+(sat-50)*.12*sh);if(sat>55)G.loyUp+=Math.round(b);
   if(sat<40){const l=Math.min(s.n,fbRound(b*(40-sat)/100*.3));if(l>0){s.n-=l;fbFix(s);G.lost+=l;fb.acc.lost=(fb.acc.lost||0)+l;fb.acc.lossBy['Concert']=(fb.acc.lossBy['Concert']||0)+l;if(s.k!=null)gm(s.k).lost+=l}return}
@@ -10669,11 +10671,11 @@ const GEV_FT={casual:'Casual',oshi:'Regular',dedicated:'Dedicated',hardcore:'Har
 const GEV_REL={k:'Kami Oshi supporters',o:'Oshi / multi-member voters',f:'Floating fans'};
 // ---- silent recording -------------------------------------------------------------------------------------------------------
 {const f=geGive;geGive=function(e,P,u,FW){if(!e||!P||!(u>0))return f.apply(this,arguments);const b0={},B=e.buy||{};for(const k in B)b0[k]=B[k];const r=f.apply(this,arguments);try{geVxRec(e,P,b0,FW)}catch(x){console.error(x)}return r}}
-function geVxRec(e,P,b0,FW){if(e.final||e.st=='done')return;const X=e.vx=e.vx||{from:S.day,c:{}},s=P.s,ft=s.ft||'casual',n=s.n||0,p=P.p||0,q=Math.max(1,P.q||1),sc=(e.k2||1)*(P.mk||1)*(P.mot||1);
+function geVxRec(e,P,b0,FW){if(e.final||e.st=='done')return;const X=e.vx=e.vx||{from:S.day,c:{}},s=P.s,ft=s.ft||'casual',n=s.n||0,p=P.p||0,q=Math.max(1,P.q||1),k2=e.k2||1,sc=(P.mk||1)*(P.mot||1)*Math.max(1,k2),pk=p*Math.min(1,k2);
  let fw=null,fwT=0;const FWx=()=>{if(!fw){fw=FW||geFloatW(e);for(const k in fw)fwT+=fw[k]}return fw};
  for(const k in e.buy){const d=(e.buy[k]||0)-(b0[k]||0);if(d<=0)continue;const mid=+k,shm=(P.sh&&P.sh[k])||0,rel=P.kc==mid?'k':shm>0?'o':'f';
   // distinct buying fans of this segment who support this member, and the tokens one of them gives her
-  let E,a;if(rel=='k'){E=n*p;a=q*shm*sc}else if(rel=='o'){const oj=Math.max(1,Math.min(n,(s.o||{})[mid]||0));E=oj*p;a=q*shm*n/oj*sc}else{const F=FWx(),sh=fwT?(F[mid]||0)/fwT:0,fl=(P.sh&&P.sh._f)||0;E=n*p*fl*sh;a=q*fl*sc}
+  let E,a;if(rel=='k'){E=n*pk;a=q*shm*sc}else if(rel=='o'){const oj=Math.max(1,Math.min(n,(s.o||{})[mid]||0));E=oj*pk;a=q*shm*n/oj*sc}else{const F=FWx(),sh=fwT?(F[mid]||0)/fwT:0,fl=(P.sh&&P.sh._f)||0;E=n*pk*fl*sh;a=q*fl*sc}
   a=Math.max(1,a);E=Math.max(E,1);const M=X.c[mid]=X.c[mid]||{},key=ft+'|'+rel,c=M[key]=M[key]||{T:0,Aw:0,E:0,Ed:0,d:S.day};
   if(c.d!=S.day){c.E=Math.max(c.E,c.Ed);c.Ed=0;c.d=S.day}c.Ed+=E;c.T+=d;c.Aw+=d*a}}
 // ---- snapshot at the close ------------------------------------------------------------------------------------------------
@@ -10907,6 +10909,43 @@ function capHist(gid){const g=grp(gid);const L=(S.capH||[]).filter(r=>r.gid==gid
 // member profile: current positions + previous positions
 {const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{if(cand||!m||(ui.ptab||'stats')!='stats')return h;const cur=capOf(m.id),prev=(S.capH||[]).filter(r=>r.mid==m.id&&!r.act);if(!cur.length&&!prev.length)return h;
  h+=`<div class="c capprof"><h3>👑 Leadership</h3>${cur.map(z=>`<span class="capb ${z.pos}">${CAP_SH[z.pos]}</span> <b>${CAP_POS[z.pos]}</b> <span class="st">${esc(z.t?z.g.name+' · '+z.t.name:z.g.name)}</span><br>`).join('')}${prev.length?`<details><summary class="st">Previous positions (${prev.length})</summary><ul class="ms">${prev.map(r=>`<li>${CAP_POS[r.pos]} · ${esc(r.tn?r.gn+' · '+r.tn:r.gn)} · ${r.from!=null?jd(r.from):'before records'} – ${jd(r.to)} (${esc(r.why)})</li>`).join('')}</ul></details>`:''}</div>`}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  Economy & fanbase safety — CD cap, diminishing fan growth, Kami Oshi / Oshi balance, NaN repair
+// -------------------------------------------------------------------------------------
+//  · CD_MAX (5,000,000) per single / album / election single: release day, daily edition sales,
+//    album sales and election CD buying never go above it (game-systems.js, sales.js, here).
+//  · Fan growth slows down as the fanbase gets very large (every fan gain goes through fbSync):
+//    gain × 1 / (1 + (fans / 2.5M)^1.3) — about 77% at 1M fans, 50% at 2.5M, 29% at 5M.
+//  · Kami Oshi adoption: each month some fans who only have Oshi choose their favourite Oshi as
+//    Kami Oshi (no fans created or removed). Saves where Oshi-only fans heavily outnumber Kami Oshi
+//    fans get a one-time rebalance on load.
+//  · Fan segment values (loyalty, engagement, spending, size) are repaired if they ever become
+//    invalid numbers, so averages never show NaN.
+// =====================================================================================
+const FAN_SOFT=2500000;
+// ---- 1. election CDs: the election single obeys the same 5M cap -----------------------------------------------------------
+let GE_REL=0;
+{const f=geRelAttr;geRelAttr=function(){GE_REL++;try{return f.apply(this,arguments)}finally{GE_REL--}}}
+{const f=geGive;geGive=function(e,P,u,FW){if(GE_REL||!e||!(u>0))return f.apply(this,arguments);try{const x=geSingleOf(e),base=x&&x.cd?x.cd.units|0:0,key=S.day+':'+base;if(e._cd!=key){e._cd=key;e._cu=0}const room=Math.max(0,CD_MAX-base-(e._cu|0));if(u>room)u=room;e._cu=(e._cu|0)+u;if(u<=0)return 0}catch(x){}return f.call(this,e,P,u,FW)}}
+{const f=geDemand;geDemand=function(e,x){const u=f.apply(this,arguments);try{return Math.max(0,Math.min(u,CD_MAX-((x&&x.cd&&x.cd.units)|0)))}catch(z){return u}}}
+// ---- 2. diminishing fan growth for very large fanbases ------------------------------------------------------------------
+{const f=fbSync;fbSync=function(){try{const fb=S&&S.fb;if(fb&&!FBW&&Number.isFinite(S.fans)&&Number.isFinite(fb.lastS)){const d=S.fans-fb.lastS;if(d>0){const damp=1/(1+Math.pow(Math.max(0,fb.lastS)/FAN_SOFT,1.3));S.fans=fb.lastS+Math.round(d*damp)}}}catch(e){}return f.apply(this,arguments)}}
+// ---- 3. repair invalid numbers in fan segments --------------------------------------------------------------------------
+function fbRepair(){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return 0;let n=0;fb.segs.forEach(s=>{const b=FB_BASE[s.ft]||[40,50,40];[['loy',0],['eng',1],['sp',2]].forEach(([k,i])=>{if(!Number.isFinite(s[k])){s[k]=b[i];n++}});if(!Number.isFinite(s.n)){s.n=0;n++}for(const j in s.o)if(!Number.isFinite(s.o[j])){delete s.o[j];n++}});if(!Number.isFinite(S.fans)||!Number.isFinite(fb.lastS)){fbApply();n++}return n}
+// ---- 4. Kami Oshi adoption (Oshi-only fans choose a Kami Oshi among their Oshi) ----------------------------------------------
+function fbKamiAdopt(rate){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return 0;const act=new Map(fbActive().map(m=>[m.id,m]));let moved=0;
+ fb.segs.slice().forEach(s=>{if(s.k!=null||!(s.n>1))return;const O=Object.entries(s.o||{}).filter(([j,c])=>c>0&&act.has(+j));if(!O.length)return;
+  const r=typeof rate=='number'?rate:(s.ft=='casual'?.03:s.ft=='dormant'?0:.08)*((s.eng??50)>=40?1:.5);const c=Math.min(s.n-1,fbRound(s.n*r));if(c<=0)return;
+  // the Oshi held by most fans of this segment is the most likely choice
+  let tot=O.reduce((a,[,c])=>a+c,0),x=Math.random()*tot,pick=+O[0][0];for(const[j,cc]of O){x-=cc;if(x<=0){pick=+j;break}}
+  const t=fbSplit(s,c),had=t.o[pick]||0;t.k=pick;delete t.o[pick];t.pat=fbPick();t.org=t.org||'Kami Oshi chosen';if(had)fbLife(pick,'ol',had);fbLife(pick,'kg',c);moved+=c});
+ if(moved){try{fbMerge()}catch(e){}fbApply()}return moved}
+const fbKamiStat=()=>{let k=0,o=0;((S.fb&&S.fb.segs)||[]).forEach(s=>{if(s.k!=null)k+=s.n;else if(Object.keys(s.o||{}).length)o+=s.n});return{k,o}};
+{const f=fbMonthly;fbMonthly=function(){const r=f.apply(this,arguments);try{fbRepair();fbKamiAdopt()}catch(e){console.error(e)}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(!S||!S.fb)return r;fbRepair();if(!S.fbKB1){const K=fbKamiStat();if(K.o>K.k*2&&K.o>1000)fbKamiAdopt(Math.min(.5,Math.max(.1,(K.o-K.k)/(2*K.o))));S.fbKB1=1}}catch(e){console.error(e)}return r}}
 
 </script>
 <script>
