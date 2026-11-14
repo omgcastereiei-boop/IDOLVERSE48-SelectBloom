@@ -3365,6 +3365,9 @@ const FB_PAT={strong:[.95,'Strong Kami'],focus:[.9,'Kami-focused'],balanced:[.75
 const FB_CHURN={casual:.04,dedicated:.016,oshi:.014,hardcore:.005,collector:.008};
 const FB_BASE={casual:[30,42,32],dedicated:[56,56,45],oshi:[60,62,50],hardcore:[80,74,62],collector:[66,60,78]}; // loyalty, engagement, spending targets
 const FB_ON={strong:.4,focus:.8,balanced:1.4,multi:2.4}; // average number of Oshi per fan by pattern
+// support style of a fan: [label, Kami Oshi change ×, Oshi added ×, Oshi dropped ×] — steady fans rarely change, fickle fans keep changing
+const FB_FK={s:['Steady',.2,.5,.35],n:['Normal',1,1,1],f:['Fickle',3,1.6,2.6]};
+const FB_OMAX=5; // a fan has at most 1 Kami Oshi and at most 5 Oshi
 const FB_K='#d6457f',FB_O='#7a6ad8',FB_UP='#2f8f62',FB_DN='#c4513a'; // Kami Oshi / Oshi (validated pair), gain / loss
 let FBW=null,FBORG=null,FBC={s:null,v:-1,val:null};
 
@@ -3378,10 +3381,13 @@ const fbN=n=>Math.round(n||0).toLocaleString(),fbPct=x=>(x>=0?'+':'')+(Math.roun
 const fbAcc=()=>({newG:0,newM:0,lost:0,kch:0,src:{},lossBy:{},kc:{},kmove:{},rev:{stream:0,merch:0,mem:{}},grad:[],evo:0});
 const fbKC=(mid)=>{const A=S.fb.acc;return A.kc[mid]=A.kc[mid]||{kg:0,kl:0,og:0,ol:0}};
 function fbLife(mid,k,v){const L=S.fb.life[mid]=S.fb.life[mid]||{kg:0,kl:0,og:0,ol:0};L[k]+=v;fbKC(mid)[k]+=v}
-function fbNew(o){const fb=S.fb,s={id:'f'+(++fb.seq),n:Math.max(0,Math.round(o.n)),ft:o.ft||'casual',org:o.org||'Group',k:o.k||null,o:{},pat:o.pat||'balanced',loy:fbCl(o.loy??40),eng:fbCl(o.eng??50),sp:fbCl(o.sp??40),reg:o.reg||'Japan',ng:o.ng?1:0,born:S.day};fb.segs.push(s);fb.ver++;return s}
+function fbNew(o){const fb=S.fb,s={id:'f'+(++fb.seq),n:Math.max(0,Math.round(o.n)),ft:o.ft||'casual',org:o.org||'Group',k:o.k||null,o:{},pat:o.pat||'balanced',loy:fbCl(o.loy??40),eng:fbCl(o.eng??50),sp:fbCl(o.sp??40),reg:o.reg||'Japan',ng:o.ng?1:0,born:S.day,fk:o.fk||fbFkPick(o.loy)};fb.segs.push(s);fb.ver++;return s}
 // move n fans of a segment into a new segment (same attributes, Oshi counts scaled) — counts are preserved
 function fbSplit(s,n){n=Math.min(s.n,Math.max(0,Math.round(n)));const t=fbNew({...s,n});const r=s.n?n/s.n:0;for(const j in s.o){const c=Math.min(n,s.o[j],Math.round(s.o[j]*r));if(c>0)t.o[j]=c;s.o[j]-=c}s.n-=n;fbFix(s);fbFix(t);return t}
-function fbFix(s){for(const j in s.o){if(+j==s.k||!(s.o[j]>0))delete s.o[j];else s.o[j]=Math.min(s.n,Math.round(s.o[j]))}}
+function fbFkPick(loy){const r=Math.random(),l=loy??50;return r<.18+Math.max(0,l-50)*.006?'s':r>.82+Math.max(0,l-50)*.002?'f':'n'}
+// Oshi per fan: Σ Oshi ≤ 5 × fans (the smallest Oshi shares are trimmed first)
+function fbFix(s){for(const j in s.o){if(+j==s.k||!(s.o[j]>0))delete s.o[j];else s.o[j]=Math.min(s.n,Math.round(s.o[j]))}
+ let tot=0;for(const j in s.o)tot+=s.o[j];const cap=FB_OMAX*s.n;if(tot>cap){const L=Object.entries(s.o).sort((a,b)=>a[1]-b[1]);let over=tot-cap;for(const[j,c]of L){if(over<=0)break;const d=Math.min(c,over);s.o[j]=c-d;over-=d;if(!s.o[j])delete s.o[j]}}}
 function fbOshiFill(s,act,avgN){const C=act.filter(m=>m.id!=s.k);if(!C.length||!s.n)return;const w=C.map(m=>(m.pop+5)*(1+((S.fb.exp||{})[m.id]||0)*.3)),W=w.reduce((a,b)=>a+b,0);C.forEach((m,i)=>{const c=Math.min(s.n,Math.round(s.n*Math.min(.85,avgN*w[i]/W)));if(c>0)s.o[m.id]=(s.o[m.id]||0)+c});fbFix(s)}
 const fbPick=pat=>pat||(()=>{const r=Math.random();return r<.12?'strong':r<.42?'focus':r<.8?'balanced':'multi'})();
 function fbAbroad(){try{const L=Object.values(RSL).filter(l=>l.kind=='as').map(l=>[l.n,rsG(l.id)]).sort((a,b)=>b[1]-a[1]);if(L[0]&&L[0][1]>0)return L[0][0]}catch(e){}return pick(['Taiwan','Thailand','South Korea','Hong Kong'])}
@@ -3404,7 +3410,7 @@ const fbTotal=()=>S.fb.segs.reduce((a,s)=>a+s.n,0);
 function fbApply(){const fb=S.fb;fbClean();fb.ver++;if(FBW)return; // inside a running formula: the outer call settles S.fans afterwards
  S.fans=fbTotal();fb.lastS=S.fans}
 function fbClean(){const fb=S.fb,ids=new Set(fbActive().map(m=>m.id));fb.segs.forEach(s=>{s.n=Math.max(0,Math.round(s.n));if(s.k!=null&&!ids.has(s.k))s.k=null;for(const j in s.o)if(!ids.has(+j))delete s.o[j];fbFix(s)});fb.segs=fb.segs.filter(s=>s.n>0)}
-function fbMerge(){const fb=S.fb,M=new Map();fb.segs.forEach(s=>{const key=s.n<6?`${s.k}|${s.ft}`:`${s.k}|${s.ft}|${s.pat}|${s.reg}|${s.ng}|${Math.floor(s.loy/20)}`;const t=M.get(key);if(!t){M.set(key,s);return}
+function fbMerge(){const fb=S.fb,M=new Map();fb.segs.forEach(s=>{const key=s.n<6?`${s.k}|${s.ft}|${s.fk||'n'}`:`${s.k}|${s.ft}|${s.pat}|${s.reg}|${s.ng}|${Math.floor(s.loy/20)}|${s.fk||'n'}`;const t=M.get(key);if(!t){M.set(key,s);return}
   const N=t.n+s.n;['loy','eng','sp'].forEach(f=>t[f]=(t[f]*t.n+s[f]*s.n)/N);for(const j in s.o)t.o[j]=(t.o[j]||0)+s.o[j];if(s.n>t.n)t.org=s.org;t.born=Math.min(t.born,s.born);t.n=N;fbFix(t)});fb.segs=[...M.values()];fb.ver++}
 function fbDone(key){const fb=S.fb;if(fb.done[key])return true;fb.done[key]=S.day;fb.doneQ.push(key);if(fb.doneQ.length>600){delete fb.done[fb.doneQ.shift()]}return false}
 
@@ -3517,11 +3523,11 @@ function fbMonthly(){const _gm=new Map(S.members.map(m=>[m.id,m]));const fb=S.fb
   tl+=Math.min(15,(S.day-s.born)/15)+(c.recent?3:0);s.loy=fbCl(s.loy+(tl-s.loy)*.12+fbJit(-1.2,1.2));s.eng=fbCl(s.eng+(te-s.eng)*.25+fbJit(-1.5,1.5));s.sp=fbCl(s.sp+(b[2]-s.sp)*.05+fbJit(-1,1))});
  // 5. Kami Oshi changes (uncommon; exposure raises the chance, high loyalty lowers it)
  fb.segs.slice().forEach(s=>{const km=s.k!=null?_gm.get(s.k):null;if(!km||s.n<2)return;const C=act.filter(m=>m.id!=s.k).map(m=>[m,(fb.exp[m.id]||0)+(c.cen.has(m.id)?2:0)+Math.max(0,m.pop-km.pop)/20+2*(s.o[m.id]||0)/s.n]).filter(x=>x[1]>.4).sort((a,b)=>b[1]-a[1]);if(!C.length)return;
-  const r=Math.min(.03,(.003+.006*Math.min(1,C[0][1]/5)+(c.seen(km.id)?0:.008)+(isAct(km)?0:.006))*(1.4-s.loy/100)),n=fbRound(s.n*r*fbJit(.7,1.3));if(n<=0)return;
+  const fm=FB_FK[s.fk||'n'][1],r=Math.min(.03*fm,(.003+.006*Math.min(1,C[0][1]/5)+(c.seen(km.id)?0:.008)+(isAct(km)?0:.006))*(1.4-s.loy/100)*fm),n=fbRound(s.n*r*fbJit(.7,1.3));if(n<=0)return;
   const to=C[Math.random()<.7?0:Math.min(C.length-1,1)][0],t=fbSplit(s,n),had=t.o[to.id]||0;t.k=to.id;delete t.o[to.id];if(had)fbLife(to.id,'ol',had);const keep=fbRound(n*.6);if(keep>0){t.o[km.id]=keep;fbLife(km.id,'og',keep)}t.loy=fbCl(t.loy*.97);t.org='Kami Oshi change';
   fbLife(km.id,'kl',n);fbLife(to.id,'kg',n);A.kch+=n;const key=km.id+'>'+to.id;A.kmove[key]=(A.kmove[key]||0)+n});
  // 6. Oshi preferences: add exposed / popular members, drop members out of sight
- fb.segs.forEach(s=>{if(s.n<3)return;const mult=s.k==null?.8:{strong:.3,focus:.6,balanced:1,multi:1.5}[s.pat];act.forEach(m=>{if(m.id==s.k)return;const cur=s.o[m.id]||0,e=fb.exp[m.id]||0,add=fbRound((s.n-cur)*Math.min(.06,.008*mult*(m.pop/50)*(1+e*.4))),drop=fbRound(cur*(c.seen(m.id)?.015:.04));const d=add-drop;if(d){s.o[m.id]=Math.min(s.n,Math.max(0,cur+d));fbLife(m.id,d>0?'og':'ol',Math.abs(d))}});fbFix(s)});
+ fb.segs.forEach(s=>{if(s.n<3)return;const mult=s.k==null?.8:{strong:.3,focus:.6,balanced:1,multi:1.5}[s.pat];act.forEach(m=>{if(m.id==s.k)return;const cur=s.o[m.id]||0,e=fb.exp[m.id]||0,F=FB_FK[s.fk||'n'],add=fbRound((s.n-cur)*Math.min(.06,.008*mult*(m.pop/50)*(1+e*.4))*F[2]),drop=fbRound(cur*(c.seen(m.id)?.015:.04)*F[3]);const d=add-drop;if(d){s.o[m.id]=Math.min(s.n,Math.max(0,cur+d));fbLife(m.id,d>0?'og':'ol',Math.abs(d))}});fbFix(s)});
  fbMerge();fbApply();fbRecord(start)}
 function fbRecord(start){const fb=S.fb,A=fb.acc,st=fbStatsRaw(),G=st.G,mon=fb.mon;
  const mem={};Object.values(st.M).forEach(X=>{mem[X.id]=[X.k,X.o,X.sup,Math.round(X.loy),X.pop,X.net,X.kNet,X.mp];const p=fb.peak[X.id]=fb.peak[X.id]||{k:0,s:0,loy:0,pop:0};p.k=Math.max(p.k,X.k);p.s=Math.max(p.s,X.sup);p.loy=Math.max(p.loy,Math.round(X.loy));p.pop=Math.max(p.pop,X.pop)});
@@ -10944,7 +10950,7 @@ let GE_REL=0;
 // ---- 2. diminishing fan growth for very large fanbases ------------------------------------------------------------------
 {const f=fbSync;fbSync=function(){try{const fb=S&&S.fb;if(fb&&!FBW&&Number.isFinite(S.fans)&&Number.isFinite(fb.lastS)){const d=S.fans-fb.lastS;if(d>0){const damp=1/(1+Math.pow(Math.max(0,fb.lastS)/FAN_SOFT,1.3));S.fans=fb.lastS+Math.round(d*damp)}}}catch(e){}return f.apply(this,arguments)}}
 // ---- 3. repair invalid numbers in fan segments --------------------------------------------------------------------------
-function fbRepair(){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return 0;let n=0;fb.segs.forEach(s=>{const b=FB_BASE[s.ft]||[40,50,40];[['loy',0],['eng',1],['sp',2]].forEach(([k,i])=>{if(!Number.isFinite(s[k])){s[k]=b[i];n++}});if(!Number.isFinite(s.n)){s.n=0;n++}for(const j in s.o)if(!Number.isFinite(s.o[j])){delete s.o[j];n++}});if(!Number.isFinite(S.fans)||!Number.isFinite(fb.lastS)){fbApply();n++}return n}
+function fbRepair(){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return 0;let n=0;fb.segs.forEach(s=>{if(!s.fk)s.fk=fbFkPick(s.loy);fbFix(s);const b=FB_BASE[s.ft]||[40,50,40];[['loy',0],['eng',1],['sp',2]].forEach(([k,i])=>{if(!Number.isFinite(s[k])){s[k]=b[i];n++}});if(!Number.isFinite(s.n)){s.n=0;n++}for(const j in s.o)if(!Number.isFinite(s.o[j])){delete s.o[j];n++}});if(!Number.isFinite(S.fans)||!Number.isFinite(fb.lastS)){fbApply();n++}return n}
 // ---- 4. Kami Oshi adoption (Oshi-only fans choose a Kami Oshi among their Oshi) ----------------------------------------------
 function fbKamiAdopt(rate){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return 0;const act=new Map(fbActive().map(m=>[m.id,m]));let moved=0;
  fb.segs.slice().forEach(s=>{if(s.k!=null||!(s.n>1))return;const O=Object.entries(s.o||{}).filter(([j,c])=>c>0&&act.has(+j));if(!O.length)return;
@@ -10956,6 +10962,10 @@ function fbKamiAdopt(rate){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))retu
 const fbKamiStat=()=>{let k=0,o=0;((S.fb&&S.fb.segs)||[]).forEach(s=>{if(s.k!=null)k+=s.n;else if(Object.keys(s.o||{}).length)o+=s.n});return{k,o}};
 {const f=fbMonthly;fbMonthly=function(){const r=f.apply(this,arguments);try{fbRepair();fbKamiAdopt()}catch(e){console.error(e)}return r}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(!S||!S.fb)return r;fbRepair();if(!S.fbKB1){const K=fbKamiStat();if(K.o>K.k*2&&K.o>1000)fbKamiAdopt(Math.min(.5,Math.max(.1,(K.o-K.k)/(2*K.o))));S.fbKB1=1}}catch(e){console.error(e)}return r}}
+// ---- 5. fan page: Kami Oshi 1 · Oshi up to 5 · support style ----------------------------------------------------------------
+function fbFkHtml(){const c={s:0,n:0,f:0};let k=0,o=0,n=0;((S.fb&&S.fb.segs)||[]).forEach(z=>{c[z.fk||'n']+=z.n;n+=z.n;if(z.k!=null)k+=z.n;for(const j in z.o)o+=z.o[j]});
+ return`<div class="c fbfk"><h3>Kami Oshi &amp; Oshi</h3><p class="st">Each fan has at most 1 Kami Oshi (main support: most of her money and votes) and up to ${FB_OMAX} Oshi (secondary support). Both can change over time: Steady fans rarely change, Fickle fans keep changing.</p><div class="fbkv"><div><small>Fans with a Kami Oshi</small><b>${fbN(k)}</b></div><div><small>Oshi per fan (average)</small><b>${n?(o/n).toFixed(2):'0'}</b></div>${Object.entries(FB_FK).map(([key,[nm]])=>`<div><small>${nm} fans</small><b>${fbN(c[key])}</b></div>`).join('')}</div></div>`}
+{const f=V.fanbase;V.fanbase=function(){const h=f.apply(this,arguments);try{if(S&&S.fb&&(!ui.fx||ui.fx.tab=='over'))return h+fbFkHtml()}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -11029,6 +11039,8 @@ const CZ_RANDB=['plCzRandom()','thCzRandom()','thCzRandAll(0)','thCzRandAll(1)',
   if(!moved.length&&czEditing&&czEditing()&&!E.scz){const b=document.createElement('button');b.className='b s p';b.type='button';b.setAttribute('onclick','czRandEd()');b.textContent='🎲 Randomize Costume';moved.push(b)}
   moved.forEach(b=>bar.appendChild(b));pose.insertAdjacentElement('afterend',bar);try{if(typeof i18nApply=='function')i18nApply(bar)}catch(e){}}}catch(e){console.error(e)}return r}}
 document.addEventListener('keydown',e=>{try{if(!document.getElementById('czstage')||/INPUT|TEXTAREA|SELECT/.test((e.target||{}).tagName||''))return;const k=(e.key||'').toLowerCase();if((e.ctrlKey||e.metaKey)&&k=='z'&&!e.shiftKey){e.preventDefault();czUndo()}else if((e.ctrlKey||e.metaKey)&&(k=='y'||(k=='z'&&e.shiftKey))){e.preventDefault();czRedo()}}catch(x){}});
+// the member profile overlay (tap a face) also gets the ✕ at the top right
+{const f=mpHtml;mpHtml=function(){const h=f.apply(this,arguments);return h?h.replace('<div role="dialog" aria-modal="true" aria-label="Member profile">','<div role="dialog" aria-modal="true" aria-label="Member profile"><button type="button" class="mxclose" aria-label="Close" onclick="mpClose()">✕</button>'):h}}
 
 </script>
 <script>
@@ -11848,6 +11860,8 @@ Object.assign(I18N_TH,{"🎓 Graduation Stage":"🎓 กราดูเอชั
 I18N_TH_TPL.unshift(["First & {0} performance","การแสดงรอบแรกและรอบ{0}"],["No Birthday Stage on {0}.","ไม่สามารถจัดเบิร์ธเดย์สเตจใน{0}"]);
 Object.assign(I18N_TH,{"Costumes as worn on that day. Costume changes made later appear in the photos of later performances (Performance History).":"ชุดที่ใส่ในวันนั้น ถ้าเปลี่ยนชุดภายหลัง จะเห็นในรูปของการแสดงรอบหลัง ๆ (Performance History)"});
 I18N_TH_TPL.unshift(["📸 First performance photos · {0}","📸 รูปการแสดงรอบแรก · {0}"]);
+Object.assign(I18N_TH,{"Kami Oshi & Oshi":"คามิโอชิ & โอชิ","Fans with a Kami Oshi":"แฟนที่มีคามิโอชิ","Oshi per fan (average)":"โอชิต่อแฟน (เฉลี่ย)","Steady fans":"แฟนรักมั่นคง","Normal fans":"แฟนทั่วไป","Fickle fans":"แฟนเปลี่ยนใจง่าย"});
+I18N_TH_TPL.unshift(["Each fan has at most 1 Kami Oshi (main support: most of her money and votes) and up to {0} Oshi (secondary support). Both can change over time: Steady fans rarely change, Fickle fans keep changing.","แฟน 1 คนมีคามิโอชิได้ 1 คน (สนับสนุนหลัก: เงินและคะแนนโหวตส่วนใหญ่) และโอชิได้สูงสุด {0} คน (สนับสนุนรอง) เปลี่ยนได้ตลอด แฟนรักมั่นคงแทบไม่เปลี่ยน แฟนเปลี่ยนใจง่ายจะเปลี่ยนไปเรื่อย ๆ"]);
 
 </script>
 <script>

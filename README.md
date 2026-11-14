@@ -962,3 +962,9 @@ Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap
 - **Performance pictures** (Theater debut/performance photos, Birthday Stage photos, Concert photos): every row stands on a perspective stage floor (back rows further back and smaller, with shadows) instead of floating; members stand further apart. In the Birthday Stage group photo the birthday member holds the cake (others in random poses); extra-song photos use the normal stage formation with the birthday member as Center.
 - **Performance report from Performance History / Stage Archive**: no per-member section (it stays in the summary shown right after the performance).
 - **Stage Archive Setlist**: song, Team / Unit and Center only (no costume preview, costume count or rows); Unit songs show the Unit members (faces and names); no Units section. Debut photos are labelled "First performance photos" with the note that they show the costumes worn that day.
+
+## Fans: Kami Oshi & Oshi
+- Each fan has **at most 1 Kami Oshi** (main support: most of the fan's money and votes) and **up to 5 Oshi** (secondary support). A member is never both Kami Oshi and Oshi of the same fan. Old saves are trimmed to the limit on load.
+- **Support style** per fan: Steady (rarely changes Kami Oshi / Oshi), Normal, Fickle (keeps changing). High-loyalty fans are more often Steady. Both Kami Oshi and Oshi keep changing month by month at the fan's own pace.
+- Fanbase overview shows fans with a Kami Oshi, average Oshi per fan and the number of Steady / Normal / Fickle fans.
+- The member profile overlay (tap a face) has a ✕ close button at the top right.
