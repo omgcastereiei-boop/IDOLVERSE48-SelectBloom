@@ -11318,6 +11318,16 @@ function thWhyShort(L){const G=new Map();(L||[]).forEach(z=>{const k=thWhyKey(z.
 function mvPrefOf(o){try{if(!o.pref){seFill(o);const r=muPref(o,muLineSingle(o),gsAg());if(r)o.pref=r}return o.pref&&Number.isFinite(o.pref.s)?o.pref.s:50}catch(e){return 50}}
 {const f=mvAddDay;mvAddDay=function(o,first){try{const v=o&&o.mv;if(v&&first&&v.pf8==null){const s=mvPrefOf(o),k=+(.6+.8*s/100).toFixed(3);v.pf8=k;v.i0=Math.round(v.i0*k);v.lt=+(v.lt*(.7+.6*s/100)).toFixed(4)}}catch(e){}return f.apply(this,arguments)}}
 {const f=seMvFans;seMvFans=function(o,dv){try{const v=o.mv,t=Math.max(0,S.day-(v.pub??S.day)),k=(.7+2.5*Math.exp(-t/4))*(v.track=='coupling'?.6:1);return f.call(this,o,dv*k)}catch(e){return f.apply(this,arguments)}}}
+// ---- Release Day Mini Concert: Title Track members gain more popularity than Coupling members ------------------------------
+// Title Track Senbatsu (they already get +1): Center +2 more, front row +1 more. Coupling-only performers join the show with
+// smaller exposure; the Center of a Coupling song gets +1.
+{const f=holdConcert;holdConcert=function(p,x){const ev=f.apply(this,arguments);try{if(ev&&ev.result&&!ev.result.g8){const mn=S.songs[p.mainId],sl=(mn&&mn.fm&&mn.fm.sl)||[],G=[];
+ sl.filter(z=>z.m&&get(z.m)).forEach(z=>{const m=get(z.m),add=z.c?2:z.r==0?1:0;if(add)gainPop(m,add);G.push({id:m.id,role:'Main',g:1+add})});
+ const inMain=new Set(G.map(z=>z.id));(p.coup||[]).forEach(id=>{const o=S.songs[id];if(!o)return;(o.slots||[]).filter(Boolean).forEach(mid=>{const m=get(mid);if(!m||inMain.has(mid)||G.some(z=>z.id==mid))return;const c=(o.centers||[]).includes(mid);if(c)gainPop(m,1);try{fbExp(mid,.4)}catch(e){}G.push({id:mid,role:'Coupling',g:c?1:0})})});
+ const add=G.filter(z=>z.role=='Coupling').map(z=>z.id);if(add.length){ev.members=[...new Set([...(ev.members||[]),...add])];ev.result.members=[...new Set([...(ev.result.members||[]),...add])]}ev.result.g8=G}}catch(e){console.error(e)}return ev}}
+// release result: popularity from the Mini Concert per member
+{const f=doRelease;doRelease=function(){const n=S.singles.length;const r=f.apply(this,arguments);try{const x=S.singles[n];const ev=x&&(S.cal||[]).find(e=>e.type=='concert'&&e.result&&e.result.rid==x.rid);const G=ev&&ev.result.g8;if(G&&G.length&&ui.mod&&ui.mod.t=='html'){const row=z=>{const m=get(z.id);return m?`<tr><td>${esc(m.name)}</td><td>${z.role=='Main'?'Title Track':'Coupling'}</td><td>+${z.g}</td></tr>`:''};
+ ui.mod.h+=`<h3>Mini Concert popularity</h3><p class="st">Title Track members gain more (Center most); Coupling members gain less.</p><div class="wrap" style="max-height:200px"><table><tr><th>Idol</th><th>Song</th><th>+Pop</th></tr>${G.slice().sort((a,b)=>b.g-a.g).map(row).join('')}</table></div>`}}catch(e){console.error(e)}return r}}
 
 </script>
 <script>
@@ -11976,6 +11986,7 @@ Object.assign(I18N_TH,{"Kami Oshi & Oshi":"คามิโอชิ & โอช�
 I18N_TH_TPL.unshift(["Each fan has at most 1 Kami Oshi (main support: most of her money and votes) and up to {0} Oshi (secondary support). Both can change over time: Steady fans rarely change, Fickle fans keep changing.","แฟน 1 คนมีคามิโอชิได้ 1 คน (สนับสนุนหลัก: เงินและคะแนนโหวตส่วนใหญ่) และโอชิได้สูงสุด {0} คน (สนับสนุนรอง) เปลี่ยนได้ตลอด แฟนรักมั่นคงแทบไม่เปลี่ยน แฟนเปลี่ยนใจง่ายจะเปลี่ยนไปเรื่อย ๆ"]);
 Object.assign(I18N_TH,{"Music Video":"มิวสิกวิดีโอ","Sales & Editions":"การขายและเอดิชัน","Back to Single Production ▶":"กลับไปหน้าการผลิตซิงเกิ้ล ▶","📚 Library design…":"📚 ชุดจากคลัง…","Category":"หมวด","All":"ทั้งหมด","Single":"ซิงเกิ้ล","Theater":"เธียเตอร์","Other":"อื่น ๆ","Group":"วง","All groups":"ทุกวง","Team":"ทีม","All teams":"ทุกทีม","Order":"เรียง","Newest first":"ใหม่ไปเก่า","Oldest first":"เก่าไปใหม่","No costume in this category.":"ไม่มีชุดในหมวดนี้","🎲 Random members":"🎲 สุ่มเมมเบอร์","🎲 Random positions":"🎲 สุ่มตำแหน่ง","🎲 Random poses":"🎲 สุ่มท่าทาง","🎲 Move texts":"🎲 ย้ายตัวหนังสือ","Pre-order":"พรีออเดอร์","Limited Quantity":"จำกัดจำนวน","A Limited Edition is sold in a limited quantity.":"Limited Edition ขายแบบจำกัดจำนวน","A Regular Edition is sold by pre-order.":"Regular Edition ขายแบบพรีออเดอร์","🎨 Its own CD cover is designed in step 6 · CD cover design.":"🎨 ออกแบบปก CD ของเอดิชันนี้ในขั้นที่ 6 · ออกแบบปก CD","Final performance of this Stage: how much the fans liked each song.":"การแสดงรอบสุดท้ายของสเตจนี้: แฟน ๆ ชอบแต่ละเพลงแค่ไหน","Albums are sold as one edition per track type — nothing to set here.":"อัลบั้มขาย 1 เอดิชันต่อแบบ ไม่ต้องตั้งค่า"});
 I18N_TH_TPL.unshift(["Substitutes: {0}","ขึ้นแทน: {0}"],["{0} costume(s)","{0} ชุด"]);
+Object.assign(I18N_TH,{"Mini Concert popularity":"ความนิยมจากมินิคอนเสิร์ต","Title Track members gain more (Center most); Coupling members gain less.":"เมมเพลงหลักได้ความนิยมมากกว่า (เซ็นเตอร์ได้มากที่สุด) เมมเพลงรองได้น้อยกว่า","Title Track":"เพลงหลัก","Coupling":"เพลงรอง"});
 
 </script>
 <script>

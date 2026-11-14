@@ -981,3 +981,4 @@ Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap
 - Release Day Mini Concert picture: members stand in the Title Track dance formation (rows and left-to-right order, Center in the middle of the front row).
 - Song Preference in theater reports only on a Stage's first and final performance.
 - MV: Song Preference changes views (and the long tail); new fans per view are highest on the first day and fade over the following days; Coupling MVs reach fewer people than the Title Track MV (fewer views, lower fan conversion).
+- **Release Day Mini Concert popularity**: Title Track Senbatsu members gain more than Coupling members — Title Track Center +3, front row +2, others +1; Coupling-only members also perform (smaller exposure), the Coupling Center +1. The release pop-up lists each member's gain.
