@@ -949,3 +949,13 @@ Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap
 - **Kami Oshi adoption.** Each month some fans who only have Oshi choose one of them as Kami Oshi (existing rules; no fans are created or removed). Saves where Oshi-only fans outnumber Kami Oshi fans more than 2:1 are rebalanced once on load.
 - **Invalid values repaired.** Loyalty, engagement, spending and segment sizes are fixed on load and monthly, so averages no longer show NaN.
 - **Election voter statistics.** The CD scale of an election now changes how many fans buy, not how many CDs each buyer gets. Average votes per voter now reflects real behaviour (casual about 1–2, hardcore 20+). Statistics already sealed in finished elections are not changed.
+
+## Theater fixes (round 7)
+- **Trainee Stage** ends as soon as a Trainee of its lineup is promoted, transferred or leaves (scheduled shows cancelled), whether Trainees remain or not. A restructuring transition of the Trainee theater ends with it.
+- **Restructuring transition**: a pending "Theater transition needed" is completed automatically once the team already performs another Stage after the announcement (or the team no longer exists).
+- **Performance report**: "Setlist as performed" only on the Stage's first performance (or when the setlist changed); Song Preference only where songs were scored (first performance / new performers). The daily Song Preference note follows the same rule.
+- **Birthday / Graduation Stage** tag in results, Performance History, Stage pages and the report title. The special-stage box is a one-line summary (no member/row list).
+- **Birthday Stage**: one member per performance; never on a Stage's first (debut) or final performance. Plans that break the rules are moved (auto-schedule) or released with a notice. Photos use the Theater stage: one photo of everyone who performed that show and one photo per extra song.
+- **Stage Archive**: only the first and the last (latest) performance, with every member (tap a face for the profile).
+- **Costume dropdowns** (every page): Single costumes and Theater costumes in separate sections, sorted by group, team and release order; other designs last.
+- Team names are shown correctly when a performance of another group's team is opened (no more raw keys such as "tt4").

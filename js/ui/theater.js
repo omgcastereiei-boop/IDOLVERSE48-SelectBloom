@@ -25,7 +25,7 @@ function thKeys(){const L=[];(S.groups||[]).forEach(g=>{(g.teams||[]).forEach(t=
 const thK=key=>thKeys().find(x=>x.key==key)||null,thTr=key=>String(key).startsWith('tr');
 function thOf(key){const H=thS();let T=H.T[key];const K=thK(key);if(!T){const g=K?grp(K.gid):null;T=H.T[key]={key,name:`${g?g.name:'Idol'} Theater`,price:3000,no:0,active:null,trans:null,rmode:'auto',sched:{mode:'fixed',fixed:[],n:3,rw:{}},pk:[{id:'pkb',name:'Basic Online Membership',price:980,on:1,ben:'Live stream of every performance'},{id:'pkp',name:'Premium Online Membership',price:1980,on:1,ben:'Live streams, 7-day archive and backstage talk'}],subs:{},subH:[],bill:null,warn:[],created:S.day}}
  T.pk=Array.isArray(T.pk)?T.pk:[];T.subs=T.subs||{};T.subH=Array.isArray(T.subH)?T.subH:[];T.sched=T.sched||{mode:'fixed',fixed:[],n:3,rw:{}};T.sched.rw=T.sched.rw||{};return T}
-const thLabel=key=>{const K=thK(key);return K?K.label:(S.th&&S.th.T[key]?S.th.T[key].lbl||key:key)};
+const thLabel=key=>{const K=thK(key)||(typeof thKeysAll=='function'?thKeysAll().find(x=>x.key==key):null);if(K)return K.label;const T=S.th&&S.th.T[key];if(T&&T.lbl)return T.lbl;const t=(S.groups||[]).flatMap(g=>g.teams||[]).find(t=>'t'+t.id==key)||(S.disT||[]).find(t=>'t'+t.id==key);return t?t.name:key};
 const thStage=id=>(S.th&&S.th.st[id])||null;
 const thStages=key=>Object.values(thS().st).filter(s=>s.k==key);
 const thNoTxt=s=>s&&s.no?`${thLabel(s.k)} ${ordN(s.no)} Stage`:`${thLabel(s?s.k:'')} · new Stage (no number yet)`;
