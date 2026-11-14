@@ -968,3 +968,16 @@ Extends the existing leadership fields: `g.cap` (Group Captain), the new `g.vcap
 - **Support style** per fan: Steady (rarely changes Kami Oshi / Oshi), Normal, Fickle (keeps changing). High-loyalty fans are more often Steady. Both Kami Oshi and Oshi keep changing month by month at the fan's own pace.
 - Fanbase overview shows fans with a Kami Oshi, average Oshi per fan and the number of Steady / Normal / Fickle fans.
 - The member profile overlay (tap a face) has a ✕ close button at the top right.
+
+## Single Production (7 steps) & release updates
+- Steps: 1 Release information · 2 Songs & Senbatsu · 3 Costumes · **4 Music Video** · **5 Sales & Editions** (Release Day, editions) · **6 CD covers** (each Type and each Limited Edition) · 7 Budget & start.
+- A new coupling / album song goes straight to Senbatsu Selection; its Song Sheet ("Song created") opens after the Senbatsu is saved.
+- **Regular Edition = Pre-order, Limited Edition = Limited Quantity** (fixed). Note: an open pre-order still blocks starting the next single until it closes (existing rule).
+- Popularity Index is no longer shown (sort lists, member cards, profile); it still works inside the simulation.
+- Costume Library picker (📚 Library design…): previews, category (Single / Theater / Other), group, team, newest / oldest first.
+- Saved costume names: "Song — Center" for the Center, "Song #1 / #2" for other members' designs; Single Costumes (non-Senbatsu) are "<Group> <Title Track>" (#1, #2 when there are several). Old saves are renamed once.
+- CD cover studio: 🎲 Random members (same number, others from the Senbatsu), 🎲 Random positions, 🎲 Random poses, 🎲 Move texts; a random cover also moves its texts.
+- Theater notices: short reasons ("Busy: Filming MV: names") and "Substitutes: names"; who replaced whom is in the performance summary.
+- Release Day Mini Concert picture: members stand in the Title Track dance formation (rows and left-to-right order, Center in the middle of the front row).
+- Song Preference in theater reports only on a Stage's first and final performance.
+- MV: Song Preference changes views (and the long tail); new fans per view are highest on the first day and fade over the following days; Coupling MVs reach fewer people than the Title Track MV (fewer views, lower fan conversion).

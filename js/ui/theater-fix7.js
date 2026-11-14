@@ -55,17 +55,19 @@ function tf7RxAuto(){if(!S||!S.th||typeof orgS!='function')return;try{orgS().pla
  const r=f.apply(this,arguments);
  try{if(H.pf.length>n0){const rec=H.pf.at(-1),st=thStage(rec.st);if(rec.prefs&&st&&st.prefs)rec.prefN=Object.keys(rec.prefs).filter(k=>st.prefs[k]&&st.prefs[k].sig!=sig0[k]);
   const R=ui.newRes,t=tf7Tag(rec);if(R)for(let i=r0;i<R.length;i++){const h=R[i];if(typeof h!='string')continue;
-   if(h.includes('💗 Song Preference')&&!(rec.prefN&&rec.prefN.length)){R.splice(i--,1);continue}
+   if(h.includes('💗 Song Preference')&&!tf7PrefShow(rec)){R.splice(i--,1);continue}
    if(t&&h.includes('class="c thres"><b>🎭')&&!h.includes('thsptag'))R[i]=h.replace('class="c thres"><b>🎭',`class="c thres"><b>${t} 🎭`)}}}catch(e){console.error(e)}return r}}
 
 // ---- 2 / 5. report sections shown once ----------------------------------------------------------------------------
 const tf7SetSig=p=>(S.th.snap[p.snap]||[]).map(z=>z.k=='song'?'s'+z.song+(z.enc?'e':''):z.k+':'+(z.name||'')).join('|');
 function tf7Prev(p){const P=thS().pf,i=P.indexOf(p);for(let j=i-1;j>=0;j--)if(P[j].st==p.st)return P[j];return null}
 const tf7SetFirst=p=>{const q=tf7Prev(p);return!q||tf7SetSig(q)!=tf7SetSig(p)};
-function tf7PrefHtml(p){if(!p.prefs)return'';const N=p.prefN?new Set(p.prefN.map(String)):null;if(!N&&tf7Prev(p))return'';const st=thStage(p.st),P=[];
- (thS().snap[p.snap]||[]).forEach(z=>{if(z.k!='song'||p.prefs[z.song]==null||(N&&!N.has(String(z.song))))return;if(P.some(q=>q.song==z.song))return;const o=S.songs[z.song]||{},cur=st&&st.prefs&&st.prefs[z.song],old=st&&(st.prefH||[]).find(h=>h.song==z.song&&h.s==p.prefs[z.song]),d=cur&&cur.s==p.prefs[z.song]?cur:old;
+const tf7IsFinal=p=>{const st=thStage(p.st);return!!(st&&st.final!=null&&st.status!='active'&&st.status!='upcoming'&&thS().pf.filter(z=>z.st==p.st).at(-1)===p)};
+const tf7PrefShow=p=>!!p&&(!tf7Prev(p)||tf7IsFinal(p));
+function tf7PrefHtml(p){if(!p.prefs||!tf7PrefShow(p))return'';const first=!tf7Prev(p),st=thStage(p.st),P=[];
+ (thS().snap[p.snap]||[]).forEach(z=>{if(z.k!='song'||p.prefs[z.song]==null)return;if(P.some(q=>q.song==z.song))return;const o=S.songs[z.song]||{},cur=st&&st.prefs&&st.prefs[z.song],old=st&&(st.prefH||[]).find(h=>h.song==z.song&&h.s==p.prefs[z.song]),d=cur&&cur.s==p.prefs[z.song]?cur:old;
   P.push(d?{...d,song:z.song,title:(d.title||o.title)+(d.unit?` · ${d.unit}`:'')}:{song:z.song,title:z.title||o.title,genre:o.genre,concept:o.concept,ly:o.lyT,s:p.prefs[z.song],why:''})});
- return P.length?muPrefList(P,tf7Prev(p)?'Scored at this performance because the performers changed. Other songs keep the score from their first performance.':'Scored at the first performance of this Stage, with the members who perform each song (Unit songs: the Unit only). Later performances keep these scores.'):''}
+ return P.length?muPrefList(P,first?'Scored at the first performance of this Stage, with the members who perform each song (Unit songs: the Unit only).':'Final performance of this Stage: how much the fans liked each song.'):''}
 
 // ---- 7. Birthday Stage photos: Theater stage, everyone + one photo per extra song ------------------------------------
 function tf7BdPics(rec){const sp=rec.sp;if(!sp||sp.kind!='bd')return[];const img=sp.img||null,P=(S.th&&S.th.czp)||{},items=(S.th.snap[rec.snap]||[]).filter(z=>z.k=='song');

@@ -31,7 +31,7 @@ function seRelCard(p){if(!p||p.status!='draft')return'';const d=seRel(p),C=seRel
   if(p&&was=='draft'&&p.status=='producing')seRelShows(p.releaseDay).forEach(({x})=>{x.st='cancel';x.why=`Release Day of “${p.title}”`})}catch(e){console.error(e)}return r}}
 // shows added later on the Release Day are cancelled too
 {const f=thPerform;thPerform=function(x){try{if(x&&x.st=='sched'&&S.pj&&S.pj.status=='producing'&&S.pj.releaseDay==x.day){const K=thKeys().find(k=>k.key==x.k);if(K&&K.gid==gsAg()){x.st='cancel';x.why=`Release Day of “${S.pj.title}”`;return}}}catch(e){}return f.apply(this,arguments)}}
-{const f=V.music;V.music=function(){let h=f.apply(this,arguments);try{const p=S.pj;if(p&&p.status=='draft'&&!(plAlb&&plAlb(p))){const c=seRelCard(p),i=h.indexOf('<div class="c sesale">');h=i>=0?h.slice(0,i)+c+h.slice(i):h+c}}catch(e){console.error(e)}return h}}
+{const f=V.music;V.music=function(){let h=f.apply(this,arguments);try{const p=S.pj;if(PL_STEP7)return h;if(p&&p.status=='draft'&&!(plAlb&&plAlb(p))){const c=seRelCard(p),i=h.indexOf('<div class="c sesale">');h=i>=0?h.slice(0,i)+c+h.slice(i):h+c}}catch(e){console.error(e)}return h}}
 // ---- 3. Limited Quantity: keeps selling until sold out --------------------------------------------------------------
 seCurve=function(t){if(t<0)return 0;if(t==0)return .55;if(t<7)return .45*IND_D[t-1];return Math.max(.0004,.12*Math.pow(.6,Math.floor(t/7)-1)/7)};
 {const f=seDay;seDay=function(x,d){if(x&&x.sale)x.sale.eds.forEach(e=>{if(e.m=='qty'&&e.st=='ended')e.st='selling'});return f.apply(this,arguments)}}
