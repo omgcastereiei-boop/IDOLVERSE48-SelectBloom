@@ -53,6 +53,8 @@ const XE_ORGN={music:['Tokyo Sound Wave Festival Committee','Japan Idol Summit O
  charity:['Smile Children Foundation','Green Tokyo Campaign','Hope Bridge Relief Fund','City Hall Community Office'],
  special:['Akiba Culture Press','Weekly Idol Monthly','Pop Culture Expo Office','Tokyo Anime & Idol Fair']};
 const XE_DIST=[[3000,0],[6000,0],[15000,1],[26000,1],[38000,1]]; // transport per member by distance band, nights
+// first k items that pass the check (stops early: schedule checks are not cheap in big saves)
+const xeTake=(L,ok,k)=>{const o=[];for(const x of L){if(o.length>=k)break;if(ok(x))o.push(x)}return o};
 const xeRnd=()=>Math.random(),xePick=a=>a[Math.floor(Math.random()*a.length)],xeR=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 // ---- reputation (derived from fans and popularity + event history) ------------------------------------------------
 function xeCoRep(){const X=xeS(),act=(S.members||[]).filter(isAct),top=act.slice().sort((a,b)=>b.pop-a.pop).slice(0,5);return Math.round(cl(18+11*Math.log10(1+(S.fans||0)/1000)+(top.length?avg(top.map(m=>m.pop)):0)*.25+(X.rep.co||0)))}
@@ -96,12 +98,12 @@ function xeMake(ch,o={}){const X=xeS(),act=S.members.filter(xeOk);if(act.length<
  r.brand=xePick(['cute','mature','cool','pretty','energetic']);
  // date: free of locked schedules for the people involved
  for(let k=0;k<8;k++){const day=o.day!=null?o.day:S.day+xeR(ch=='direct'?12:10,ch=='direct'?40:45);r.day=day;r.prep=xePrep({...r,n:6,req:[]});if(day-S.day<=r.prep+1)continue;
-  if(r.mode=='org'){const pool=(o.mids||[]).length?o.mids.map(get).filter(Boolean):act.filter(m=>xeFree(m.id,day)).sort((a,b)=>(b.pop+Math.random()*40)-(a.pop+Math.random()*40));const n=o.mids?o.mids.length:Math.random()<.5?1:xeR(2,Math.min(5,pool.length));
+  if(r.mode=='org'){const want=Math.random()<.5?1:xeR(2,5),pool=(o.mids||[]).length?o.mids.map(get).filter(Boolean):xeTake(act.map(m=>[m,m.pop+Math.random()*40]).sort((a,b)=>b[1]-a[1]).map(x=>x[0]),m=>xeFree(m.id,day),want);const n=o.mids?o.mids.length:Math.min(want,pool.length);
    const pick=o.mids?pool:pool.slice(0,Math.max(1,n));if(!pick.length||!pick.every(m=>xeFree(m.id,day)))continue;r.req=pick.map(m=>({mid:m.id,gid:gsGid(m),nm:m.name,gn:(grp(gsGid(m))||{}).name||''}));r.n=r.req.length;r.gr=[...new Set(r.req.map(q=>q.gid))].map(gid=>({gid,gn:(grp(gid)||{}).name||''}))}
   else{const G=S.groups.filter(g=>!g.dis&&gsMem(g.id).some(isAct)),gr=[];const g0=o.gid!=null?grp(o.gid):xePick(G);if(!g0)return null;gr.push({gid:g0.id,gn:g0.name});
    if(Math.random()<.3){const T=(g0.teams||[]).filter(t=>S.members.some(m=>isAct(m)&&m.tid==t.id));xePick([1,2]);T.sort(()=>Math.random()-.5).slice(0,xeR(1,2)).forEach(t=>gr.push({gid:g0.id,tid:t.id,tn:t.name}))}
    if(Math.random()<.2&&G.length>1){const g2=xePick(G.filter(g=>g.id!=g0.id));if(g2)gr.push({gid:g2.id,gn:g2.name})}r.gr=gr;r.n=Math.max(2,Math.min(24,Math.round(3+lv*2.2+Math.random()*3)));
-   const free=xeScope(r).filter(id=>xeFree(id,day));if(free.length<Math.min(r.n,3))continue;r.n=Math.min(r.n,free.length)}
+   const free=xeTake(xeScope(r).sort(()=>Math.random()-.5),id=>xeFree(id,day),r.n);if(free.length<Math.min(r.n,3))continue;r.n=Math.min(r.n,free.length)}
   r.prep=xePrep(r);if(day-S.day<=r.prep)continue;r.ok=1;break}
  if(!r.ok)return null;delete r.ok;r.dl=Math.min(r.day-r.prep-1,S.day+(ch=='direct'?xeR(4,7):xeR(3,10)));if(r.dl<S.day+1)return null;
  r.pay=xePay(r);r.expE=xeExp(r).t;r.cond=xeCond(r);r.art=xeArtMake(r,r.mode=='org'?r.req.map(q=>q.mid):[]);X.list.push(r);return r}
