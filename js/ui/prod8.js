@@ -115,3 +115,16 @@ function mvPrefOf(o){try{if(!o.pref){seFill(o);const r=muPref(o,muLineSingle(o),
 // release result: popularity from the Mini Concert per member
 {const f=doRelease;doRelease=function(){const n=S.singles.length;const r=f.apply(this,arguments);try{const x=S.singles[n];const ev=x&&(S.cal||[]).find(e=>e.type=='concert'&&e.result&&e.result.rid==x.rid);const G=ev&&ev.result.g8;if(G&&G.length&&ui.mod&&ui.mod.t=='html'){const row=z=>{const m=get(z.id);return m?`<tr><td>${esc(m.name)}</td><td>${z.role=='Main'?'Title Track':'Coupling'}</td><td>+${z.g}</td></tr>`:''};
  ui.mod.h+=`<h3>Mini Concert popularity</h3><p class="st">Title Track members gain more (Center most); Coupling members gain less.</p><div class="wrap" style="max-height:200px"><table><tr><th>Idol</th><th>Song</th><th>+Pop</th></tr>${G.slice().sort((a,b)=>b.g-a.g).map(row).join('')}</table></div>`}}catch(e){console.error(e)}return r}}
+// ---- Release Day Mini Concert: one performance picture per Coupling song (its own Senbatsu, formation and costumes) ---------
+function relCoupIds(x){const ids=[...new Set((x.types||[]).flatMap(t=>t.songs||[]))].filter(id=>id!=x.mainId&&S.songs[id]);return ids.filter(id=>{const o=S.songs[id];return o.relDay==null||o.relDay==(x.relDay??x.day)})}
+function relCoupImgs(x){if(!x)return[];const ev=(S.cal||[]).find(e=>e.type=='concert'&&e.result&&e.result.rid==x.rid),r=(x.promo||[]).find(z=>z.type=='concert');const own=(ev&&ev.imgC)||(r&&r.imgC);if(own)return own;
+ const L=relCoupIds(x).map(id=>{const o=S.songs[id],m=(o.slots||[]).filter(i=>i&&get(i));if(!m.length)return null;try{return evSpec('release',x.rid,id,m,{t:o.title,day:x.relDay??x.day,retro:ev?undefined:1})}catch(e){return null}}).filter(Boolean);
+ if(r)r.imgC=L;else if(ev)ev.imgC=L;return L}
+const relCoupHtml=x=>relCoupImgs(x).map(sp=>evImgBlock(sp,'Coupling · '+(sp.t||''))).join('');
+{const f=holdConcert;holdConcert=function(p,x){const ev=f.apply(this,arguments);try{if(ev&&!ev.imgC){const ids=[...new Set((p.types||[]).flatMap(t=>t.songs||[]))].filter(id=>id!=p.mainId&&S.songs[id]&&!plReused(p,S.songs[id]));
+ ev.imgC=ids.map(id=>{const o=S.songs[id],m=(o.slots||[]).filter(i=>i&&get(i));return m.length?evSpec('release',x&&x.rid,id,m,{t:o.title,day:S.day,eid:ev.id}):null}).filter(Boolean)}}catch(e){console.error(e)}return ev}}
+{const f=evSync;evSync=function(){const r=f.apply(this,arguments);try{const cal=S.cal||[];(S.singles||[]).forEach(x=>(x.promo||[]).forEach(z=>{if(z.type=='concert'&&!z.imgC){const e=cal.find(q=>q.id==z.id&&q.imgC);if(e)z.imgC=e.imgC}}))}catch(e){}return r}}
+// release pop-up: after the Title Track picture
+{const f=doRelease;doRelease=function(){const n=S.singles.length;const r=f.apply(this,arguments);try{const x=S.singles[n];if(x&&ui.mod&&ui.mod.t=='html'){const add=relCoupHtml(x);if(add){const h=ui.mod.h,k=h.indexOf('</figure>');ui.mod.h=k>=0?h.slice(0,k+9)+add+h.slice(k+9):h.replace('</h2>','</h2>'+add)}}}catch(e){console.error(e)}return r}}
+// event window: every song of the Mini Concert
+{const f=evOpen;evOpen=function(id){f.apply(this,arguments);try{const sp=evImgOf(id);if(sp&&sp.k=='release'&&ui.mod&&ui.mod.t=='html'){const x=(S.singles||[]).find(z=>z.rid==sp.rid)||(S.singles||[]).find(z=>(z.promo||[]).some(q=>q.id==id));const add=x?relCoupHtml(x):'';if(add){ui.mod.h+=add;render()}}}catch(e){console.error(e)}}}
