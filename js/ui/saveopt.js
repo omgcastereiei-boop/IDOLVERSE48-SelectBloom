@@ -15,7 +15,7 @@
 // =====================================================================================
 const SO={raw:null,val:null,lsBig:512*1024,keep:60,shKeep:120};
 const soTs=raw=>{if(!raw)return-1;const m=/"_ts":(\d+)/.exec(raw);return m?+m[1]:0};
-load=function(){let ls=null;try{if(!(typeof SVP!='undefined'&&SVP.lsOff&&SV.idbMain))ls=localStorage.getItem(KEY)}catch(e){}const idb=SV.idbMain;
+load=function(){let ls=null;try{ls=localStorage.getItem(KEY)}catch(e){}const idb=SV.idbMain; // both copies: the newer one (by _ts) wins
  const pick=soTs(idb)>soTs(ls)?[idb,ls]:[ls,idb];for(const raw of pick){if(!raw)continue;if(raw===SO.raw&&SO.val)return SO.val;const s=svParse(raw);if(s){SO.raw=raw;SO.val=s;SV.bad=null;return s}if(raw===ls)SV.bad=ls}return null};
 cont=function(){const s=load();if(!s){if(SV.bad)return svRecover();return toast('No saved game was found in this browser. Start a New Game or import a save file.','err')}
  const raw=SO.raw;if(raw)svPut('bak_load',raw);SO.raw=null;SO.val=null;S=s;try{migrate()}catch(e){console.error('migrate',e);SV.lastErr='Part of the save could not be updated ('+e.message+'). Your data was kept and a backup was stored.'}
@@ -33,3 +33,8 @@ function soCompact(){if(!S||!S.th)return{pf:0,sh:0};let a=0,d=0;const H=S.th,by=
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{soCompact()}catch(e){console.error(e)}return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.day%30==0)soCompact()}catch(e){console.error(e)}return r}}
 {const f=thOpenPerf;thOpenPerf=function(id){f.apply(this,arguments);try{const p=thS().pf.find(z=>z.id==id);if(p&&p.arc&&ui.mod&&ui.mod.t=='html'&&!ui.mod.h.includes('soarc'))ui.mod.h=ui.mod.h.replace('</h2>','</h2><p class="st soarc">Archived performance: results are kept; the per-member fan breakdown of older performances is no longer stored.</p>')}catch(e){}}}
+
+// large saves live in IndexedDB, whose write can be cut short when the page is closed or refreshed right after a save:
+// keep a synchronous emergency copy in localStorage on page hide (the newer copy wins at load; it is removed again
+// after the next successful IndexedDB save of the following session)
+window.addEventListener('pagehide',()=>{try{if(S&&!ui.t&&SVP.lsOff&&SV.idbMain)localStorage.setItem(KEY,SV.idbMain)}catch(e){}});

@@ -37,7 +37,7 @@ function czSetSlot(p,path,v){const ks=path.split('.'),last=ks.pop();let t=p;ks.f
 function czFor(o,mid){if(!o||!o.cdz)return null;czLib();const z=o.cdz,mm=(z.mem||{})[mid]||{};if(mm.own&&mm.own.p)return mm.own.p;const d=czD(z.mode=='individual'&&mm.d?mm.d:z.main)||czD(z.main);if(!d)return null;let p=d.p;
  if(z.mode=='uniform'&&mm.ov&&Object.keys(mm.ov).length){p=czClone(p);for(const k in mm.ov){const s=czGetSlot(p,k);if(s)Object.assign(s,mm.ov[k])}}return p}
 const czMain=o=>o&&o.cdz?czD(o.cdz.main):null;
-const czMembers=o=>(o.slots||[]).filter(Boolean).map(get).filter(Boolean);
+const czMembers=o=>{const sl=(o.fm&&o.fm.sl||[]).filter(x=>x.m);const ids=sl.length?sl.slice().sort((a,b)=>(a.n||0)-(b.n||0)).map(x=>x.m):(o.slots||[]).filter(Boolean);(o.slots||[]).forEach(id=>{if(id&&!ids.includes(id))ids.push(id)});return ids.map(get).filter(Boolean)};
 const czUsers=did=>Object.values(S.songs||{}).filter(o=>o.cdz&&(o.cdz.main==did||Object.values(o.cdz.mem||{}).some(m=>m.d==did)));
 // keep the original production fields in step with the assigned design (only while the song is still a draft)
 function czSync(o){if(!o||lockedSong(o.id))return;const d=czMain(o)||czHasOwn(o);if(d){o.cid=CZ_COS;o.coh=null;o.cosFinal=true;o.costume='Custom'}else if(o.cid==CZ_COS){o.cid=null;o.cosFinal=false}}
@@ -52,7 +52,7 @@ const _czConfirm=confirmProd;confirmProd=function(){czSyncPlan();return _czConfi
 
 // ---- designer state ---------------------------------------------------------------------
 function czInit(did,songId){czLib();const songs=czSongs(),o=songId?S.songs[songId]:(songs[0]||[])[0],d=czD(did)||(o&&czMain(o))||czLib().ds[0]||null;
- ui.czE={did:d?d.id:null,p:d?czClone(d.p):null,style:d?d.style||'':'',dirty:0,cat:'top',sel:'top',mid:((o&&czMembers(o)[0])||S.members[0]||{}).id,pose:2,ex:2,song:o?o.id:null}}
+ ui.czE={did:d?d.id:null,p:d?czClone(d.p):null,style:d?d.style||'':'',dirty:0,cat:'top',sel:'top',mid:((o&&czMembers(o)[0])||S.members[0]||{}).id,pose:0,ex:2,song:o?o.id:null}}
 function czOpen(songId){czInit(null,songId);view='costume';render();try{window.scrollTo(0,0)}catch(e){}}
 const czEditing=()=>ui.czE&&ui.czE.did&&czD(ui.czE.did);
 // pieces can be edited in the library designer AND in a member's song / Single costume (even before its first save)

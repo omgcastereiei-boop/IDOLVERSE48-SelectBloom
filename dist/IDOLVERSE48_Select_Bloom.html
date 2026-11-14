@@ -1163,6 +1163,10 @@ select:not([multiple]):not([size]){cursor:pointer}
 .ccol{margin:4px 0 8px;padding:0}.ccol>div{margin:2px 0}
 .ccrep h3,.ccfin h3{margin:10px 0 4px}.ccneg-l{margin:6px 0}.ccli{gap:6px;flex-wrap:wrap}
 .cchead .ht{font-size:1.15em}.ccith{flex-wrap:nowrap!important;align-items:flex-start}.ccbtns{gap:4px;flex-wrap:wrap;margin-top:4px}
+/* replace colour */
+.czrep{margin:6px 0;padding:6px;border:1px dashed #e6dcf3;border-radius:10px}.czrepl{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
+.czsw{display:inline-block;width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #d8cfe6;cursor:pointer;padding:0}.czsw.on{box-shadow:0 0 0 3px var(--pk)}
+.czrep .row{gap:8px;flex-wrap:wrap;align-items:center}
 
 </style>
 </head><body>
@@ -2130,7 +2134,7 @@ function defForm(size,nc){let F,M,B;
  else{const q=Math.floor(size/3),r=size%3;F=q;M=q+(r?1:0);B=q+(r==2?1:0);
   if(F<nc){F=nc;const rm=size-F;M=Math.ceil(rm/2);B=rm-M}
   else if(r!=0&&(F-nc)%2){const F2=F+1,rm=size-F2,M2=Math.ceil(rm/2);if(rm>=0&&(size<=9||F2<=M2)){F=F2;M=M2;B=rm-M2}}}
- const st=(F-nc)>>1,sl=[];let n=0;[[0,F],[1,M],[2,B]].forEach(([r,c])=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return sl}
+ const st=(F-nc)>>1,sl=[];let n=0;[[0,F],[1,M],[2,B]].forEach(([r,c])=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return fmRenum(sl)}
 const cpSrc=id=>Object.values(S.songs).filter(x=>x.id!=id&&x.fm&&x.fm.sl.some(y=>y.m)).sort((a,b)=>(b.rel?1:0)-(a.rel?1:0)),stype=o=>o.role=='Main'?'Main song':o.role=='Coupling'?'Coupling':'Album song';
 function cpPlan(a,b){const E=elig(b),ok=new Set(E.map(m=>m.id)),ids=orderedIds(a.fm),bad=ids.filter(i=>!ok.has(i)),is=[];if(bad.length)is.push(`${bad.length} member(s) are not eligible for this song${b.tm?' (team '+b.tm+')':''}: ${bad.map(i=>get(i).name).join(', ')}.`);if(a.fm.size!=b.fm.size)is.push(`The source lineup has ${a.fm.size} members, but this song's lineup size is ${b.fm.size}.`);if(a.fm.nc!=b.fm.nc)is.push(`The source has ${a.fm.nc} center(s); this song uses ${b.fm.nc}.`);const sc=a.fm.sl.filter(x=>x.c&&x.m).map(x=>x.m).filter(i=>ok.has(i)),so=a.fm.sl.filter(x=>!x.c&&x.m).sort((x,y)=>x.n-y.n).map(x=>x.m).filter(i=>ok.has(i));return{is,bad,ms:maxSize(b),E,sc,so,exact:!is.length}}
 function fitInto(b,sc,so){const f=b.fm;f.sl.forEach(x=>x.m=null);const ord=slotOrder(f),cs=ord.filter(k=>f.sl[k].c),os=ord.filter(k=>!f.sl[k].c),cc=sc.slice(0,cs.length),rest=[...sc.slice(cs.length),...so],place=rest.slice(0,os.length);cc.forEach((id,j)=>f.sl[cs[j]].m=id);place.forEach((id,j)=>f.sl[os[j]].m=id);fmSync(b);return{placed:cc.length+place.length,dropped:rest.length-place.length,emptyC:cs.length-cc.length}}
@@ -2276,7 +2280,10 @@ CFG.posW={center:5,beside:4,front:3,mid:2,back:1,fall:.3};CFG.rep.pool=1.2;CFG.m
 const SNAMES=['Senbatsu','Under Girls','Next Girls','Future Girls','Upcoming Girls','Theater Girls'];
 const nRows=sl=>sl.length?Math.max(...sl.map(x=>x.r))+1:1,rowsOf=sl=>{const n=nRows(sl),c=Array(n).fill(0);sl.forEach(x=>c[x.r]++);return c},rowCounts=a=>rowsOf(a).join('-');
 const defRows=(size,nc)=>rowsOf(defForm(size,nc)).filter(x=>x>0);
-function buildForm(rows,nc){const F=rows[0],st=Math.max(0,(F-nc)>>1),sl=[];let n=0;rows.forEach((c,r)=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return sl}
+function buildForm(rows,nc){const F=rows[0],st=Math.max(0,(F-nc)>>1),sl=[];let n=0;rows.forEach((c,r)=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return fmRenum(sl)}
+// position numbers: #1 = center (Row 1), then the positions next to it alternating left / right outward; the next rows continue the same way
+function fmRenum(sl){if(!Array.isArray(sl))return sl;let n=0;[...new Set(sl.map(x=>x.r))].sort((a,b)=>a-b).forEach(r=>{const L=sl.filter(x=>x.r==r),C=L.filter(x=>x.c),mid=C.length?(Math.min(...C.map(x=>x.i))+Math.max(...C.map(x=>x.i)))/2:(Math.max(...L.map(x=>x.i))+Math.min(...L.map(x=>x.i)))/2;
+ L.sort((a,b)=>(b.c-a.c)||(Math.abs(a.i-mid)-Math.abs(b.i-mid))||(a.i-b.i)).forEach(x=>x.n=++n)});return sl}
 const genForm=(size,nc)=>buildForm(defRows(size,nc),nc);
 const rowSh=(r,n)=>n<=1||r==0?'Front':r==n-1?'Back':'Middle',rowNm=(r,n)=>`Row ${r+1} · ${rowSh(r,n)}`;
 function posWeights(sl){const W=CFG.posW,R=rowsOf(sl),nR=R.length,f0=sl.filter(x=>x.r==0),cs=f0.filter(x=>x.c).map(x=>x.i),st=cs.length?Math.min(...cs):0,ce=cs.length?Math.max(...cs):-1,kOf=x=>x.i<st?st-1-x.i:x.i-ce-1,km=Math.max(1,...f0.filter(x=>!x.c&&x.i!=st-1&&x.i!=ce+1).map(kOf));
@@ -2863,7 +2870,7 @@ function czSetSlot(p,path,v){const ks=path.split('.'),last=ks.pop();let t=p;ks.f
 function czFor(o,mid){if(!o||!o.cdz)return null;czLib();const z=o.cdz,mm=(z.mem||{})[mid]||{};if(mm.own&&mm.own.p)return mm.own.p;const d=czD(z.mode=='individual'&&mm.d?mm.d:z.main)||czD(z.main);if(!d)return null;let p=d.p;
  if(z.mode=='uniform'&&mm.ov&&Object.keys(mm.ov).length){p=czClone(p);for(const k in mm.ov){const s=czGetSlot(p,k);if(s)Object.assign(s,mm.ov[k])}}return p}
 const czMain=o=>o&&o.cdz?czD(o.cdz.main):null;
-const czMembers=o=>(o.slots||[]).filter(Boolean).map(get).filter(Boolean);
+const czMembers=o=>{const sl=(o.fm&&o.fm.sl||[]).filter(x=>x.m);const ids=sl.length?sl.slice().sort((a,b)=>(a.n||0)-(b.n||0)).map(x=>x.m):(o.slots||[]).filter(Boolean);(o.slots||[]).forEach(id=>{if(id&&!ids.includes(id))ids.push(id)});return ids.map(get).filter(Boolean)};
 const czUsers=did=>Object.values(S.songs||{}).filter(o=>o.cdz&&(o.cdz.main==did||Object.values(o.cdz.mem||{}).some(m=>m.d==did)));
 // keep the original production fields in step with the assigned design (only while the song is still a draft)
 function czSync(o){if(!o||lockedSong(o.id))return;const d=czMain(o)||czHasOwn(o);if(d){o.cid=CZ_COS;o.coh=null;o.cosFinal=true;o.costume='Custom'}else if(o.cid==CZ_COS){o.cid=null;o.cosFinal=false}}
@@ -2878,7 +2885,7 @@ const _czConfirm=confirmProd;confirmProd=function(){czSyncPlan();return _czConfi
 
 // ---- designer state ---------------------------------------------------------------------
 function czInit(did,songId){czLib();const songs=czSongs(),o=songId?S.songs[songId]:(songs[0]||[])[0],d=czD(did)||(o&&czMain(o))||czLib().ds[0]||null;
- ui.czE={did:d?d.id:null,p:d?czClone(d.p):null,style:d?d.style||'':'',dirty:0,cat:'top',sel:'top',mid:((o&&czMembers(o)[0])||S.members[0]||{}).id,pose:2,ex:2,song:o?o.id:null}}
+ ui.czE={did:d?d.id:null,p:d?czClone(d.p):null,style:d?d.style||'':'',dirty:0,cat:'top',sel:'top',mid:((o&&czMembers(o)[0])||S.members[0]||{}).id,pose:0,ex:2,song:o?o.id:null}}
 function czOpen(songId){czInit(null,songId);view='costume';render();try{window.scrollTo(0,0)}catch(e){}}
 const czEditing=()=>ui.czE&&ui.czE.did&&czD(ui.czE.did);
 // pieces can be edited in the library designer AND in a member's song / Single costume (even before its first save)
@@ -3663,7 +3670,7 @@ function plCzMigrate(o){if(!o||o.czMig)return;const z=o.cdz;if(z&&(z.main||Objec
 function plCzOpen(id,mid){const o=S.songs[id];if(!o)return;const mem=czMembers(o);if(!mem.length)return toast('Select this song\'s Senbatsu first.','err');if(plReused(S.pj,o))return toast('This released song keeps its original costumes.','err');czLib();
  const same=ui.scz&&ui.scz.song==id&&ui.scz.mid==mid;if(same&&view=='songcz')return;const go=()=>{ui.scz={song:id,mid:mid&&mem.some(m=>m.id==mid)?mid:mem[0].id};plCzLoad();view='songcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='songcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function plCzLoad(){const{song,mid}=ui.scz,o=S.songs[song],mm=czSongZ(o).mem[mid]||{},id=`mz~${song}~${mid}`,src=mm.own?mm.own.p:(czFor(o,mid)||CZ_PRESETS[0][1]),prev=ui.czE||{};
- ui.czE={did:mm.own?id:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??2,ex:prev.ex??2,song:null,scz:1}}
+ ui.czE={did:mm.own?id:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1}}
 function plCzMem(mid){if(!ui.scz)return;plCzOpen(ui.scz.song,mid)}
 function plCzSave(){const{song,mid}=ui.scz||{},o=S.songs[song],m=get(mid);if(!o||!m)return;if(lockedSong(song))return toast('The release is in production: costumes are locked.','err');const z=czSongZ(o),mm=z.mem[mid]=z.mem[mid]||{};
  if(!mm.own)mm.own={name:`${o.title} — ${m.name}`,p:czClone(ui.czE.p)};mm.own.p=czClone(ui.czE.p);mm.own.updated=S.day;mm.ok=true;ui.czE.did=`mz~${song}~${mid}`;ui.czE.dirty=0;czSync(o);toast(`Costume for ${m.name} in "${o.title}" saved.`);render()}
@@ -3784,7 +3791,7 @@ function plCzHost(key){const p=S.pj;if(!p)return null;if(key=='__single'){if(plA
 plCzOpen=function(id,mid){const H=plCzHost(id);if(!H)return;const mem=H.mem;if(!mem.length)return toast(H.single?'Every eligible member is in the Title Track Senbatsu, so nobody needs a Single Costume.':'Select this song\'s Senbatsu first.','err');if(!H.single&&plReused(S.pj,H.o))return toast('This released song keeps its original costumes.','err');czLib();
  const same=ui.scz&&ui.scz.song==id&&ui.scz.mid==mid;if(same&&view=='songcz')return;const go=()=>{ui.scz={song:id,mid:mid&&mem.some(m=>m.id==mid)?mid:mem[0].id};plCzLoad();view='songcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='songcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()};
 plCzLoad=function(){const{song,mid}=ui.scz,H=plCzHost(song),o=H.o,m=get(mid),mm=czSongZ(o).mem[mid]||{},src=mm.own?mm.own.p:(czFor(o,mid)||(H.single&&m&&m.profCz&&m.profCz.p)||CZ_PRESETS[0][1]),prev=ui.czE||{};
- ui.czE={did:mm.own?`mz~${song}~${mid}`:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??2,ex:prev.ex??2,song:null,scz:1}};
+ ui.czE={did:mm.own?`mz~${song}~${mid}`:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1}};
 plCzSave=function(){const{song,mid}=ui.scz||{},H=plCzHost(song),m=get(mid);if(!H||!m)return;if(H.locked)return toast('The release is in production: costumes are locked.','err');const o=H.o,z=czSongZ(o),mm=z.mem[mid]=z.mem[mid]||{};
  if(!mm.own)mm.own={name:`${H.single?'Single Costume':o.title} — ${m.name}`,p:czClone(ui.czE.p)};mm.own.p=czClone(ui.czE.p);mm.own.updated=S.day;mm.ok=true;ui.czE.did=`mz~${song}~${mid}`;ui.czE.dirty=0;if(!H.single)czSync(o);toast(`${H.single?'Single Costume':'Costume'} for ${m.name}${H.single?'':` in "${o.title}"`} saved.`);render()};
 plCzCopyAll=function(){const{song,mid}=ui.scz||{},H=plCzHost(song);if(!H||H.locked)return;const o=H.o,D=plCzDone(o,H.mem).filter(x=>!x[1]&&x[0].id!=mid);if(!D.length)return toast('Every member already has a costume.','err');
@@ -5562,7 +5569,7 @@ function thCzCtx(){const c=ui.thcz;if(!c)return null;const s=thStage(c.sid);if(!
 function thCzOpen(id,mid){const s=thEd(),it=thItem(id);if(!s||!it)return;const M=thMem(s,it);if(!M.length)return toast('This song has no performers yet.','err');
  const go=()=>{ui.thcz={sid:s.id,item:id,mid:M.includes(+mid)?+mid:M[0]};thCzLoad();view='thcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='thcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function thCzMem(mid){if(ui.thcz)thCzOpen(ui.thcz.item,mid)}
-function thCzLoad(){const X=thCzCtx();if(!X)return;const p=thCzOf(X.it,X.c.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.c.mid,pose:prev.pose??2,ex:prev.ex??2,song:null,scz:1,thz:1}}
+function thCzLoad(){const X=thCzCtx();if(!X)return;const p=thCzOf(X.it,X.c.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.c.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,thz:1}}
 const thCzG=X=>X&&thGuardEdit(X.s);
 const thCzNoTr=X=>{if(X.tr){toast('Trainee Theater cannot produce new costumes. Choose an existing costume.','err');return false}return true};
 function thCzSave(){const X=thCzCtx();if(!thCzG(X)||!thCzNoTr(X))return;const m=get(X.c.mid);thSetOwn(X.it,m.id,ui.czE.p);ui.czE.dirty=0;toast(`Costume for ${m.name} in “${(S.songs[X.it.song]||{}).title||''}” saved.`);render()}
@@ -9751,7 +9758,7 @@ function muRelease(x,ids){const P=[];ids.forEach(id=>{const o=S.songs[id];if(!o)
 // =====================================================================================
 const SO={raw:null,val:null,lsBig:512*1024,keep:60,shKeep:120};
 const soTs=raw=>{if(!raw)return-1;const m=/"_ts":(\d+)/.exec(raw);return m?+m[1]:0};
-load=function(){let ls=null;try{if(!(typeof SVP!='undefined'&&SVP.lsOff&&SV.idbMain))ls=localStorage.getItem(KEY)}catch(e){}const idb=SV.idbMain;
+load=function(){let ls=null;try{ls=localStorage.getItem(KEY)}catch(e){}const idb=SV.idbMain; // both copies: the newer one (by _ts) wins
  const pick=soTs(idb)>soTs(ls)?[idb,ls]:[ls,idb];for(const raw of pick){if(!raw)continue;if(raw===SO.raw&&SO.val)return SO.val;const s=svParse(raw);if(s){SO.raw=raw;SO.val=s;SV.bad=null;return s}if(raw===ls)SV.bad=ls}return null};
 cont=function(){const s=load();if(!s){if(SV.bad)return svRecover();return toast('No saved game was found in this browser. Start a New Game or import a save file.','err')}
  const raw=SO.raw;if(raw)svPut('bak_load',raw);SO.raw=null;SO.val=null;S=s;try{migrate()}catch(e){console.error('migrate',e);SV.lastErr='Part of the save could not be updated ('+e.message+'). Your data was kept and a backup was stored.'}
@@ -9769,6 +9776,11 @@ function soCompact(){if(!S||!S.th)return{pf:0,sh:0};let a=0,d=0;const H=S.th,by=
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{soCompact()}catch(e){console.error(e)}return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.day%30==0)soCompact()}catch(e){console.error(e)}return r}}
 {const f=thOpenPerf;thOpenPerf=function(id){f.apply(this,arguments);try{const p=thS().pf.find(z=>z.id==id);if(p&&p.arc&&ui.mod&&ui.mod.t=='html'&&!ui.mod.h.includes('soarc'))ui.mod.h=ui.mod.h.replace('</h2>','</h2><p class="st soarc">Archived performance: results are kept; the per-member fan breakdown of older performances is no longer stored.</p>')}catch(e){}}}
+
+// large saves live in IndexedDB, whose write can be cut short when the page is closed or refreshed right after a save:
+// keep a synchronous emergency copy in localStorage on page hide (the newer copy wins at load; it is removed again
+// after the next successful IndexedDB save of the following session)
+window.addEventListener('pagehide',()=>{try{if(S&&!ui.t&&SVP.lsOff&&SV.idbMain)localStorage.setItem(KEY,SV.idbMain)}catch(e){}});
 
 </script>
 <script>
@@ -10508,6 +10520,45 @@ function ccViewHtml(C){const V=ccV(C.vid),Sd=ccSched(C);return`<div class="c"><h
 </script>
 <script>
 // =====================================================================================
+//  Small updates — random song attributes in Theater song forms · secondary colour ·
+//  replace one colour everywhere · smooth multi-select copy dialogs · dress-up order by
+//  position · centre-out position numbers on existing saves
+// =====================================================================================
+// ---- 1. Theater song forms: random Genre / Concept / Lyrics ---------------------------------------------------------------
+function thSnRand(k,part){const e=ui[k];if(!e)return;const P=(L,v)=>pick(L.filter(x=>x!=v));if(part=='genre'||part=='all')e.genre=P(GENRES,e.genre);if(part=='concept'||part=='all')e.concept=P(CONCEPTS,e.concept);if(part=='ly'||part=='all')e.ly=P(LY_THEMES,e.ly);ui.mod.h=k=='thsn2'?thSongNewHtml2():thSongEditHtml();render()}
+const thSnRandRow=k=>`<div class="row serand"><span class="st">🎲 Random</span><button class="b s" onclick="thSnRand('${k}','genre')">Genre</button><button class="b s" onclick="thSnRand('${k}','concept')">Concept</button><button class="b s" onclick="thSnRand('${k}','ly')">Lyrics</button><button class="b s p" onclick="thSnRand('${k}','all')">🎲 Randomize all</button></div>`;
+{const f=thSongNewHtml2;thSongNewHtml2=function(){const h=f.apply(this,arguments);if(!h)return h;const i=h.indexOf('<div class="row"><button class="b p" onclick="thSongMake2()">');return i<0?h:h.slice(0,i)+thSnRandRow('thsn2')+h.slice(i)}}
+{const f=thSongEditHtml;thSongEditHtml=function(){const h=f.apply(this,arguments);if(!h||!ui.thse)return h;const i=h.lastIndexOf('<div class="row"><button class="b p"');return i<0?h:h.slice(0,i)+thSnRandRow('thse')+h.slice(i)}}
+// ---- 2. secondary colour for "colours from main colour" ------------------------------------------------------------------
+function czFromMain2(hex,sub){const E=czEdP();if(!E)return;const ok=v=>/^#?[0-9a-f]{6}$/i.test(v||'');if(!ok(hex)||!ok(sub))return toast('Choose the main and the secondary colour.','err');if(hex[0]!='#')hex='#'+hex;if(sub[0]!='#')sub='#'+sub;
+ const[h,s,l]=czToHsl(hex),[h2,s2,l2]=czToHsl(sub),R=a=>a[Math.floor(Math.random()*a.length)];
+ czPaint(E.p,{base:hex,light:czHsl(h,Math.max(20,s*.5),Math.min(95,l+28)),dark:czHsl(h,s*.8,Math.max(12,l-35)),acc:sub,acc2:czHsl(h2+R([-15,0,15]),Math.max(30,s2*.85),Math.min(88,l2+R([8,15,22]))),gold:R(['#f3c35c','#ffffff','#e9b949'])});
+ UIP.czMain=hex;UIP.czSub=sub;try{localStorage.setItem('iv48ui',JSON.stringify(UIP))}catch(e){}E.dirty=1;toast('Colours built from your main and secondary colours (each press gives a new combination). Save to keep them.');render()}
+// ---- 3. replace one colour in every piece --------------------------------------------------------------------------------
+const CZ_CF=['c1','c2','c3','pc','dc'];
+function czUsedCols(p){const M=new Map();czPieces(p||{}).forEach(([,P])=>CZ_CF.forEach(f=>{const v=P[f];if(typeof v=='string'&&/^#[0-9a-f]{6}$/i.test(v)){const k=v.toLowerCase();M.set(k,(M.get(k)||0)+1)}}));return[...M.entries()].sort((a,b)=>b[1]-a[1])}
+function czRepPick(c){ui.czrep=ui.czrep||{};ui.czrep.from=c;render()}
+function czRepGo(to){const E=czEdP();if(!E)return;const from=(ui.czrep||{}).from;if(!from)return toast('Tap a colour of the costume first.','err');if(!/^#?[0-9a-f]{6}$/i.test(to||''))return toast('Choose the new colour.','err');if(to[0]!='#')to='#'+to;to=to.toLowerCase();
+ let n=0;czPieces(E.p).forEach(([,P])=>CZ_CF.forEach(f=>{if(typeof P[f]=='string'&&P[f].toLowerCase()==from){P[f]=to;n++}}));if(!n)return toast('That colour is no longer used in this costume.','err');ui.czrep.from=to;ui.czrep.to=to;E.dirty=1;try{czRecent(to)}catch(e){}toast(`${n} colour slot(s) changed in every piece. Save to keep them.`);render()}
+{const f=czGridHtml;czGridHtml=function(){let h=f.apply(this,arguments);try{const E=ui.czE;if(!E||!E.p)return h;const sc=UIP.czSub||'#c9b6ff',R=ui.czrep||{},U=czUsedCols(E.p);
+ h=h.replace('<button class="b s" onclick="czFromMain($(\'#czmainc\').value)">🎯 Colours from main colour</button>',`<button class="b s" onclick="czFromMain($('#czmainc').value)">🎯 Colours from main colour</button><label class="st czmc">Secondary colour <input type="color" id="czsubc" value="${sc}"></label><button class="b s" onclick="czFromMain2($('#czmainc').value,$('#czsubc').value)">🎯 Main + secondary</button>`);
+ const rep=`<div class="czrep"><span class="st">🔁 Replace a colour in every piece — tap a colour:</span><div class="czrepl">${U.map(([c,n])=>`<button class="czsw ${R.from==c?'on':''}" style="background:${c}" title="${c} · ${n}" aria-label="Colour ${c}" onclick="czRepPick('${c}')"></button>`).join('')}</div>${R.from?`<div class="row"><span class="czsw on" style="background:${R.from}"></span><span>→</span><input type="color" id="czrepto" value="${R.to||R.from}"><button class="b s p" onclick="czRepGo($('#czrepto').value)">Change everywhere</button></div>`:''}</div>`;
+ const i=h.indexOf('<div class="czact">');h=i<0?h+rep:h.slice(0,i)+rep+h.slice(i)}catch(e){console.error(e)}return h}}
+// ---- 4. copy dialogs: select several members without re-rendering the page ---------------------------------------------------
+function czCpDom(fn,id,sel,goFn){const on=sel.includes(id),b=document.querySelector(`.msel [onclick="${fn}(${id})"]`);if(b){b.classList.toggle('msel-on',on);const ck=b.querySelector('.mselck');if(on&&!ck)b.insertAdjacentHTML('afterbegin','<i class="mselck">✔</i>');if(!on&&ck)ck.remove()}
+ const g=document.querySelector(`[onclick="${goFn}()"]`);if(g){g.disabled=!sel.length;g.textContent=`Copy to ${sel.length} member(s)`;try{if(typeof tr=='function')g.textContent=tr(g.textContent)}catch(e){}}return!!b}
+plCzCpTog=function(id){const c=ui.czcp;if(!c)return;const i=c.sel.indexOf(id);if(i>=0)c.sel.splice(i,1);else c.sel.push(id);ui.mod.h=plCzCopyHtml();if(!czCpDom('plCzCpTog',id,c.sel,'plCzCpGo'))render()};
+thCpTog=function(id){const c=ui.thcp;if(!c)return;const i=c.sel.indexOf(id);if(i>=0)c.sel.splice(i,1);else c.sel.push(id);ui.mod.h=thCzCopyHtml();if(!czCpDom('thCpTog',id,c.sel,'thCpGo'))render()};
+// ---- 5. Theater dressing room: members in formation order ---------------------------------------------------------------
+{const f=thCzCtx;thCzCtx=function(){const X=f.apply(this,arguments);try{if(X&&X.M&&X.M.length>1){const o=thForm(X.s,X.it).o;X.M=X.M.slice().sort((a,b)=>{const i=o.indexOf(a),j=o.indexOf(b);return(i<0?99:i)-(j<0?99:j)})}}catch(e){}return X}}
+// ---- 6. centre-out position numbers: keep them after every formation change and on existing saves --------------------------
+{const f=fmSync;fmSync=function(o){try{if(o&&o.fm)fmRenum(o.fm.sl)}catch(e){}return f.apply(this,arguments)}}
+function fmRenumAll(){try{(S.groups||[]).forEach(g=>{Object.values(gsCtx(g.id,'songs')||{}).forEach(o=>{if(o&&o.fm&&Array.isArray(o.fm.sl))fmRenum(o.fm.sl)})})}catch(e){console.error(e)}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);if(S&&!S.fmN1){fmRenumAll();S.fmN1=1}return r}}
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom!  —  Thai translation (ภาษาไทย)
 //  English text -> Thai. Used by js/i18n/i18n.js. Proper nouns (idol names, cities,
 //  countries, generated song titles) are intentionally kept as they are.
@@ -11145,6 +11196,9 @@ Object.assign(I18N_TH,{"Concerts":"คอนเสิร์ต","✦ Create Conc
 "Setlist":"เซ็ตลิสต์","Ticket results":"ผลการขายบัตร","Total revenue":"รายได้รวม","Performance evaluation":"การประเมินการแสดง","Vocal Performance":"การร้อง","Dance Performance":"การเต้น","Passion & Stage Presence":"ความทุ่มเท & ออร่าบนเวที","Performance Efficiency":"ประสิทธิภาพการแสดง","Mistakes":"ข้อผิดพลาด","Fan response":"การตอบรับของแฟน","Song Satisfaction":"ความพอใจต่อเพลง","Member Satisfaction":"ความพอใจต่อเมมเบอร์","Position Satisfaction":"ความพอใจต่อตำแหน่ง","Overall Satisfaction":"ความพอใจโดยรวม","Physical audience":"ผู้ชมในสถานที่","Online audience":"ผู้ชมออนไลน์","Member results":"ผลรายเมมเบอร์","Fan growth":"การเติบโตของแฟน","New Casual Fans":"แฟนทั่วไปใหม่","New Regular Fans":"แฟนประจำใหม่","New Oshi":"โอชิใหม่","New Kami Oshi":"คามิโอชิใหม่","Kami Oshi changes":"เปลี่ยนคามิโอชิ","More loyal fans":"แฟนที่ภักดีขึ้น","Fans lost":"แฟนที่เสียไป",
 "Revenue":"รายได้","Expenses":"ค่าใช้จ่าย","Total expenses":"ค่าใช้จ่ายรวม","Venue Rental":"ค่าเช่าสถานที่","Stage Production":"โปรดักชันเวที","Operational Expenses":"ค่าดำเนินงาน","Transportation":"การเดินทาง/ขนส่ง","Accommodation":"ที่พัก","Marketing":"การตลาด","Miscellaneous":"เบ็ดเตล็ด","Streaming":"สตรีมมิง","Ticketing fees":"ค่าธรรมเนียมขายบัตร","Graduating member(s)":"เมมเบอร์ที่จบการศึกษา","Host group":"วงเจ้าภาพ","Concert type":"ประเภทคอนเสิร์ต","Name":"ชื่อ"});
 I18N_TH_TPL.unshift(["Performance {0}","รอบที่ {0}"],["+ Add performance ({0}/5)","+ เพิ่มรอบการแสดง ({0}/5)"],["Selected participants ({0})","ผู้ร่วมแสดงที่เลือก ({0})"],["Select all shown ({0})","เลือกทั้งหมดที่แสดง ({0})"]);
+// costume colour tools & song random
+Object.assign(I18N_TH,{"Secondary colour":"สีรอง","🎯 Main + secondary":"🎯 สุ่มจากสีหลัก + สีรอง","🔁 Replace a colour in every piece — tap a colour:":"🔁 เปลี่ยนสีที่เลือกในทุกชิ้นของชุด — แตะสีที่ต้องการเปลี่ยน:","Change everywhere":"เปลี่ยนทุกชิ้น","🎲 Random":"🎲 สุ่ม","Genre":"แนวเพลง","Concept":"คอนเซ็ปต์","Lyrics":"เนื้อเพลง","🎲 Randomize all":"🎲 สุ่มทั้งหมด"});
+I18N_TH_TPL.unshift(["{0} colour slot(s) changed in every piece. Save to keep them.","เปลี่ยนสีแล้ว {0} จุดในทุกชิ้น กดบันทึกเพื่อเก็บไว้"],["Copy to {0} member(s)","คัดลอกให้ {0} คน"]);
 
 </script>
 <script>

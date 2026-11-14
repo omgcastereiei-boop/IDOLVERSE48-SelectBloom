@@ -105,7 +105,7 @@ function plCzMigrate(o){if(!o||o.czMig)return;const z=o.cdz;if(z&&(z.main||Objec
 function plCzOpen(id,mid){const o=S.songs[id];if(!o)return;const mem=czMembers(o);if(!mem.length)return toast('Select this song\'s Senbatsu first.','err');if(plReused(S.pj,o))return toast('This released song keeps its original costumes.','err');czLib();
  const same=ui.scz&&ui.scz.song==id&&ui.scz.mid==mid;if(same&&view=='songcz')return;const go=()=>{ui.scz={song:id,mid:mid&&mem.some(m=>m.id==mid)?mid:mem[0].id};plCzLoad();view='songcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='songcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function plCzLoad(){const{song,mid}=ui.scz,o=S.songs[song],mm=czSongZ(o).mem[mid]||{},id=`mz~${song}~${mid}`,src=mm.own?mm.own.p:(czFor(o,mid)||CZ_PRESETS[0][1]),prev=ui.czE||{};
- ui.czE={did:mm.own?id:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??2,ex:prev.ex??2,song:null,scz:1}}
+ ui.czE={did:mm.own?id:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1}}
 function plCzMem(mid){if(!ui.scz)return;plCzOpen(ui.scz.song,mid)}
 function plCzSave(){const{song,mid}=ui.scz||{},o=S.songs[song],m=get(mid);if(!o||!m)return;if(lockedSong(song))return toast('The release is in production: costumes are locked.','err');const z=czSongZ(o),mm=z.mem[mid]=z.mem[mid]||{};
  if(!mm.own)mm.own={name:`${o.title} — ${m.name}`,p:czClone(ui.czE.p)};mm.own.p=czClone(ui.czE.p);mm.own.updated=S.day;mm.ok=true;ui.czE.did=`mz~${song}~${mid}`;ui.czE.dirty=0;czSync(o);toast(`Costume for ${m.name} in "${o.title}" saved.`);render()}

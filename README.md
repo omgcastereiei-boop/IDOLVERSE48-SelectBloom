@@ -843,3 +843,15 @@ Events & Concerts › **Concerts**. One record per concert in `S.cc.list` (statu
   - the other expenses are booked once when the concert ends, which also creates the combined financial report.
   - Cancellation refunds 50% of the rental if preparation starts in 30 days or more.
 - **History**: completed and cancelled concerts stay in the history with member name snapshots, setlists, formations, ticket results, reports and finances. This survives graduation, transfers and team changes.
+
+## Small updates (`js/ui/ux6.js`)
+- **Position numbers** run centre-out: #1 is the center, then the positions beside it alternate left and right moving outward (front row of 5: `#4 #2 #1 #3 #5`). Twin centers are #1 and #2. Later rows continue the same way. Existing saves are renumbered once on load (`fmRenum`).
+- **Dress-up**:
+  - Members are listed in position order (center first) for Single Production and the Theater.
+  - The default model pose is *Standing confidently* (straight).
+- **Copy costume to members**: several members can be ticked in a row. The page no longer redraws or jumps after each tap.
+- **Costume colours**:
+  - *Secondary colour* + *🎯 Main + secondary* builds a palette from two chosen colours.
+  - *🔁 Replace a colour in every piece*: tap a colour used by the costume, choose the new one, and every piece that uses it changes.
+- **Theater song forms** (new song / edit): 🎲 random Genre, Concept, Lyrics or all. Single Production already had this.
+- **Saves**: large saves (IndexedDB only) also get a synchronous emergency copy in localStorage when the page is closed or refreshed. The newer copy wins at load, so a refresh right after a save no longer loads an older game.

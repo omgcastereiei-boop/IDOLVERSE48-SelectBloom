@@ -84,7 +84,7 @@ function thCzCtx(){const c=ui.thcz;if(!c)return null;const s=thStage(c.sid);if(!
 function thCzOpen(id,mid){const s=thEd(),it=thItem(id);if(!s||!it)return;const M=thMem(s,it);if(!M.length)return toast('This song has no performers yet.','err');
  const go=()=>{ui.thcz={sid:s.id,item:id,mid:M.includes(+mid)?+mid:M[0]};thCzLoad();view='thcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='thcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function thCzMem(mid){if(ui.thcz)thCzOpen(ui.thcz.item,mid)}
-function thCzLoad(){const X=thCzCtx();if(!X)return;const p=thCzOf(X.it,X.c.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.c.mid,pose:prev.pose??2,ex:prev.ex??2,song:null,scz:1,thz:1}}
+function thCzLoad(){const X=thCzCtx();if(!X)return;const p=thCzOf(X.it,X.c.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.c.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,thz:1}}
 const thCzG=X=>X&&thGuardEdit(X.s);
 const thCzNoTr=X=>{if(X.tr){toast('Trainee Theater cannot produce new costumes. Choose an existing costume.','err');return false}return true};
 function thCzSave(){const X=thCzCtx();if(!thCzG(X)||!thCzNoTr(X))return;const m=get(X.c.mid);thSetOwn(X.it,m.id,ui.czE.p);ui.czE.dirty=0;toast(`Costume for ${m.name} in “${(S.songs[X.it.song]||{}).title||''}” saved.`);render()}

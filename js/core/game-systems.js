@@ -323,7 +323,7 @@ function defForm(size,nc){let F,M,B;
  else{const q=Math.floor(size/3),r=size%3;F=q;M=q+(r?1:0);B=q+(r==2?1:0);
   if(F<nc){F=nc;const rm=size-F;M=Math.ceil(rm/2);B=rm-M}
   else if(r!=0&&(F-nc)%2){const F2=F+1,rm=size-F2,M2=Math.ceil(rm/2);if(rm>=0&&(size<=9||F2<=M2)){F=F2;M=M2;B=rm-M2}}}
- const st=(F-nc)>>1,sl=[];let n=0;[[0,F],[1,M],[2,B]].forEach(([r,c])=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return sl}
+ const st=(F-nc)>>1,sl=[];let n=0;[[0,F],[1,M],[2,B]].forEach(([r,c])=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return fmRenum(sl)}
 const cpSrc=id=>Object.values(S.songs).filter(x=>x.id!=id&&x.fm&&x.fm.sl.some(y=>y.m)).sort((a,b)=>(b.rel?1:0)-(a.rel?1:0)),stype=o=>o.role=='Main'?'Main song':o.role=='Coupling'?'Coupling':'Album song';
 function cpPlan(a,b){const E=elig(b),ok=new Set(E.map(m=>m.id)),ids=orderedIds(a.fm),bad=ids.filter(i=>!ok.has(i)),is=[];if(bad.length)is.push(`${bad.length} member(s) are not eligible for this song${b.tm?' (team '+b.tm+')':''}: ${bad.map(i=>get(i).name).join(', ')}.`);if(a.fm.size!=b.fm.size)is.push(`The source lineup has ${a.fm.size} members, but this song's lineup size is ${b.fm.size}.`);if(a.fm.nc!=b.fm.nc)is.push(`The source has ${a.fm.nc} center(s); this song uses ${b.fm.nc}.`);const sc=a.fm.sl.filter(x=>x.c&&x.m).map(x=>x.m).filter(i=>ok.has(i)),so=a.fm.sl.filter(x=>!x.c&&x.m).sort((x,y)=>x.n-y.n).map(x=>x.m).filter(i=>ok.has(i));return{is,bad,ms:maxSize(b),E,sc,so,exact:!is.length}}
 function fitInto(b,sc,so){const f=b.fm;f.sl.forEach(x=>x.m=null);const ord=slotOrder(f),cs=ord.filter(k=>f.sl[k].c),os=ord.filter(k=>!f.sl[k].c),cc=sc.slice(0,cs.length),rest=[...sc.slice(cs.length),...so],place=rest.slice(0,os.length);cc.forEach((id,j)=>f.sl[cs[j]].m=id);place.forEach((id,j)=>f.sl[os[j]].m=id);fmSync(b);return{placed:cc.length+place.length,dropped:rest.length-place.length,emptyC:cs.length-cc.length}}
@@ -469,7 +469,10 @@ CFG.posW={center:5,beside:4,front:3,mid:2,back:1,fall:.3};CFG.rep.pool=1.2;CFG.m
 const SNAMES=['Senbatsu','Under Girls','Next Girls','Future Girls','Upcoming Girls','Theater Girls'];
 const nRows=sl=>sl.length?Math.max(...sl.map(x=>x.r))+1:1,rowsOf=sl=>{const n=nRows(sl),c=Array(n).fill(0);sl.forEach(x=>c[x.r]++);return c},rowCounts=a=>rowsOf(a).join('-');
 const defRows=(size,nc)=>rowsOf(defForm(size,nc)).filter(x=>x>0);
-function buildForm(rows,nc){const F=rows[0],st=Math.max(0,(F-nc)>>1),sl=[];let n=0;rows.forEach((c,r)=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return sl}
+function buildForm(rows,nc){const F=rows[0],st=Math.max(0,(F-nc)>>1),sl=[];let n=0;rows.forEach((c,r)=>{for(let i=0;i<c;i++)sl.push({r,i,n:++n,c:r==0&&i>=st&&i<st+nc?1:0,m:null})});return fmRenum(sl)}
+// position numbers: #1 = center (Row 1), then the positions next to it alternating left / right outward; the next rows continue the same way
+function fmRenum(sl){if(!Array.isArray(sl))return sl;let n=0;[...new Set(sl.map(x=>x.r))].sort((a,b)=>a-b).forEach(r=>{const L=sl.filter(x=>x.r==r),C=L.filter(x=>x.c),mid=C.length?(Math.min(...C.map(x=>x.i))+Math.max(...C.map(x=>x.i)))/2:(Math.max(...L.map(x=>x.i))+Math.min(...L.map(x=>x.i)))/2;
+ L.sort((a,b)=>(b.c-a.c)||(Math.abs(a.i-mid)-Math.abs(b.i-mid))||(a.i-b.i)).forEach(x=>x.n=++n)});return sl}
 const genForm=(size,nc)=>buildForm(defRows(size,nc),nc);
 const rowSh=(r,n)=>n<=1||r==0?'Front':r==n-1?'Back':'Middle',rowNm=(r,n)=>`Row ${r+1} · ${rowSh(r,n)}`;
 function posWeights(sl){const W=CFG.posW,R=rowsOf(sl),nR=R.length,f0=sl.filter(x=>x.r==0),cs=f0.filter(x=>x.c).map(x=>x.i),st=cs.length?Math.min(...cs):0,ce=cs.length?Math.max(...cs):-1,kOf=x=>x.i<st?st-1-x.i:x.i-ce-1,km=Math.max(1,...f0.filter(x=>!x.c&&x.i!=st-1&&x.i!=ce+1).map(kOf));
