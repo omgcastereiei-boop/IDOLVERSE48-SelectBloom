@@ -1102,3 +1102,13 @@ select:not([multiple]):not([size]){cursor:pointer}
  .thtl li select{max-width:46%;min-width:0}
  .thtl li .b.s{padding:5px 9px;font-size:12px}
 }
+/* General Election voting statistics */
+.gevs .row{gap:8px;flex-wrap:wrap;align-items:center}
+.gevhl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px;margin:8px 0}
+.gevh{display:flex;gap:8px;align-items:center;padding:8px;border-radius:12px;background:linear-gradient(135deg,#fff7e8,#fff0f6);border:1px solid #f1dcc0}.gevh>div{display:flex;flex-direction:column;min-width:0}.gevh small{font-size:11px;color:#a0782d;font-weight:800}.gevh b{font-size:1.02em}.gevh span{font-size:12px;color:var(--mut)}
+.gevtw{overflow-x:auto;-webkit-overflow-scrolling:touch}.gevt{width:100%;border-collapse:collapse;font-size:.9em;min-width:420px}.gevt th,.gevt td{padding:5px 6px;border-bottom:1px solid #f0eaf5;text-align:right;vertical-align:middle;white-space:nowrap}.gevt th:first-child,.gevt td:first-child{text-align:left;white-space:normal}
+.gevt td small{display:block;font-size:10px}.gevt small.up{color:#2f8f62}.gevt small.dn{color:#c4513a}.gevt tr.wd{opacity:.6}
+.gevsb{border:0;background:none;font:800 12px Quicksand;color:var(--ink,#3a2350);cursor:pointer;padding:2px}.gevsb.on{color:var(--pk)}
+.gevm{display:flex;gap:6px;align-items:center;min-width:150px}.gevm>div{display:flex;flex-direction:column;min-width:0;gap:3px}
+.gevmix{display:flex;height:5px;width:96px;border-radius:3px;overflow:hidden;background:#eee}.gevmix i{display:block;height:100%}
+.gevlink{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.gevlink .st{flex:1 1 200px}
