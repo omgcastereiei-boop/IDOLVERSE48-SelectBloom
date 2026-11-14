@@ -773,3 +773,73 @@ Group & Team now has two separate features (`js/ui/org.js`, `js/ui/org2.js`):
   After disbanding:
   - The group is marked `g.dis` and its teams, theaters and leadership end.
   - It disappears from the group switcher and the Groups page, and stays listed as *Disbanded* in the company history.
+
+## Concert System (`js/ui/concert.js`, `js/ui/concert2.js`, `js/ui/concert-ui.js`)
+Events & Concerts › **Concerts**. One record per concert in `S.cc.list` (statuses: Planning, Confirmed, Ticket Sales, Ongoing, Completed, Cancelled). Both parts of the system use the same records.
+
+### Types and participants
+- **Types**:
+  - **Regular Concert**.
+  - **Anniversary Concert**: group, sister group, team or generation. The date comes from the stored debut/founding date, the team founding date (`t.founded`, recorded for new teams, otherwise the first member's join date) or the generation's join date.
+  - **Graduation Concert**: individual or joint. Only members whose graduation is announced can be chosen, and they must be participants. The concert never graduates anyone.
+- **Participants**: any members of any groups. The picker has search, filters (group, team, generation) and sorts (popularity, fans, Vocal, Dance, Energy).
+- Schedule conflicts come from `gsCommits`. Confirmed concerts are added to it, so the theater and other groups see the members as busy on performance days.
+
+### Venues
+- **Real Japanese venues** (`CC_V`):
+  - the Zepp halls (published reference price ranges, tax excluded; 10% tax is added when charged);
+  - Tokyo International Forum Hall A (official time-slot prices);
+  - GMO ARENA saitama, arena and stadium configurations (official prices);
+  - Tokyo Dome and the expansion venues (NHK Hall, TIF Hall C, Tokyo Garden Theater, Nippon Budokan, Yokohama Arena, K-Arena Yokohama, Osaka-jo Hall, Nippon Gaishi Hall, Nissan Stadium, Kyocera Dome Osaka, Vantelin Dome Nagoya, Mizuho PayPay Dome Fukuoka).
+- Every price is labelled **Official**, **Published reference** or **Estimated game price**. Tokyo Dome and the expansion venues use estimated game prices.
+- Holidays: fixed-date Japanese national holidays only.
+- Any venue can be chosen. The recommendation (expected audience, fit, previous attendance) and the risk warnings never block a choice.
+
+### Schedule and preparation
+- At most 3 consecutive days and 5 performances (afternoon / evening), all at one venue.
+- Preparation days are automatic. They depend on the venue category, members and length. They are not rehearsal and use no Energy.
+- Rental is charged per actual rental day: performance days at the performance rate, preparation and hold days at the setup rate. It is never charged per performance.
+
+### Setlists, formations, MC and costumes
+- **Setlists**: per performance, reusable (several performances can share one), copyable, and savable to a setlist library (`S.cc.lib`). Songs come from the existing song libraries of every group.
+- **Formations**: each song is a copy of its original formation. Original members who are not participants, or who have graduated, leave their position empty, and the original center stays empty if she does not take part. Nobody is replaced automatically, and the original song is never written to. The player can add, remove and move members, change centers and rows, and add or remove positions.
+- **MC**: all participants or chosen speakers. MC never counts as a song.
+- **Costumes** per song: the original song costume, the previous song's costume, one design for everyone, or one design per member (with copy to all). New designs (random, or made in the Costume Designer) go to the shared Costume Library.
+
+### Expenses
+- Calculated automatically. There is no production budget or quality to choose.
+- Categories: Venue Rental, Stage Production, Operational, Transportation, Accommodation, Marketing, Miscellaneous, plus Streaming and Ticketing fees.
+- House equipment included in the Zepp rentals is not charged twice.
+
+### Tickets and sales
+- **Ticket types** per venue configuration: General Admission, Reserved, Premium, VIP. Online General and Online Premium have no seats.
+- Physical quantities can never exceed the capacity. Each performance has its own prices and quantities.
+- Recommended prices follow the venue, its prestige, the concert type, the seat category, popularity, history, the number of performances, the location and fan spending.
+- **Demand** is simulated per fan segment of the existing fanbase:
+  - each fan is counted once, even if she supports several participants;
+  - the price response depends on fan category, spending power and willingness;
+  - Kami Oshi and Oshi of participants, group interest, the general idol audience and online viewers all contribute.
+- The forecast shows the expected result. The sale draws its own random result and sells along a curve between the opening and closing dates.
+
+### Performances, fans and money
+- **Performance**:
+  - 20 Energy per performing member per performance. A member below 20 sits out: no deduction and no replacement.
+  - Efficiency comes from Vocal, Dance, Passion, Energy, Physical and Mental Health, song intensity, member–song compatibility, fatigue and coordination, with random mistakes.
+- **Fan response**:
+  - Song, member, position, performance, physical and online satisfaction are calculated per fan segment, using the existing music tastes (`muVal`).
+  - Results are kept per fan category and per member fandom. Negative reactions are listed even when the overall score is good.
+  - Fan trust per group (`S.cc.trust`) moves with satisfaction and ticket prices.
+  - Repeated poor treatment of a popular member (few songs, back row) builds frustration over several concerts (`S.cc.mt`).
+- **Fan growth**, using the existing segments only:
+  - casual → regular;
+  - new Oshi;
+  - new Kami Oshi, and Kami Oshi changes under the existing rule;
+  - fans lost;
+  - new fans through `fbAcquire`;
+  - member recognition, which updates popularity.
+- **Money**:
+  - venue rental is paid at confirmation;
+  - ticket revenue is booked per performance;
+  - the other expenses are booked once when the concert ends, which also creates the combined financial report.
+  - Cancellation refunds 50% of the rental if preparation starts in 30 days or more.
+- **History**: completed and cancelled concerts stay in the history with member name snapshots, setlists, formations, ticket results, reports and finances. This survives graduation, transfers and team changes.
