@@ -73,7 +73,7 @@ function thSetC2(mid){const s=thEd();if(!thGuardEdit(s))return;mid=mid?+mid:null
 // ---- per-member Stage costumes ---------------------------------------------------------------------------------
 const thZ=it=>{if(!it.cdz||typeof it.cdz!='object')it.cdz={mem:{}};if(!it.cdz.mem||typeof it.cdz.mem!='object')it.cdz.mem={};return it.cdz};
 function thCzOf(it,mid){const z=it&&it.cdz&&it.cdz.mem&&it.cdz.mem[mid];if(z&&z.ok&&z.own&&z.own.p)return z.own.p;return it&&it.cz?thCzP(it.cz):null}
-const thCzDone=(s,it)=>thMem(s,it).map(id=>[id,!!thCzOf(it,id)]);
+const thCzDone=(s,it)=>{let M=thMem(s,it);try{const o=thForm(s,it).o;M=M.slice().sort((a,b)=>{const i=o.indexOf(a),j=o.indexOf(b);return(i<0?999:i)-(j<0?999:j)})}catch(e){}return M.map(id=>[id,!!thCzOf(it,id)])};
 const thSetOwn=(it,mid,p)=>{const m=get(mid),o=S.songs[it.song];if(!m)return;thZ(it).mem[mid]={own:{name:`${o?o.title:'Song'} — ${m.name}`,p:czClone(p),updated:S.day},ok:true}};
 const thCzAny=it=>{const z=it&&it.cdz&&it.cdz.mem;if(z)for(const k in z)if(z[k].ok&&z[k].own&&z[k].own.p)return z[k].own.p;return it&&it.cz?thCzP(it.cz):null};
 // the Stage costume can be the costumes of one song of the Stage ('thz:<item id>') or an older library design

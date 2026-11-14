@@ -48,3 +48,8 @@ function perfSync(){if(!S)return;(S.members||[]).forEach(perfDef);(S.alumni||[])
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{perfSync()}catch(e){}return r}}
 {const f=train;train=function(id,k){if(k=='cha')return toast('Performance is the average of Vocal and Dance — train those instead.','err');return f.apply(this,arguments)}}
 SKL.cha='Performance';
+// ---- Theater Unit member picker: 3 / 4 / 5 columns (same control as the member lists) ------------------------------------
+GCOL_DEF.unit=4;
+{const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{if(h.includes('<div class="thpg">')){let first=true;h=h.split('<div class="thpg">').join('\u0001');h=h.replace(/\u0001/g,()=>{const b=first?gcolBar('unit'):'';first=false;return b+`<div class="thpg gcolu gcolu-${gcolGet('unit')}">`})}}catch(e){console.error(e)}return h}}
+// ---- member profile: ✕ close button at the top right ---------------------------------------------------------------------
+{const f=render;render=function(){const r=f.apply(this,arguments);try{if(ui.mod&&ui.mod.t=='prof'){const d=document.querySelector('.mod [role=dialog]');if(d&&!d.querySelector('.mxclose')){const b=document.createElement('button');b.type='button';b.className='mxclose';b.setAttribute('aria-label','Close');b.textContent='✕';b.onclick=()=>{ui.mod=null;render()};d.insertBefore(b,d.firstChild)}}}catch(e){}return r}}

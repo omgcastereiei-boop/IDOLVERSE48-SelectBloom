@@ -1204,6 +1204,10 @@ select:not([multiple]):not([size]){cursor:pointer}
 .capr{margin:6px 0 0 4px;padding:0;list-style:none;font-size:12.5px}.capr li{margin:2px 0}.capr li.pos{color:#2f7d58}.capr li.neg{color:#b04a3a}
 .caplv.excellent{background:#d9f2e3;color:#1f6b45}.caplv.good{background:#e3efff;color:#2a5a9a}.caplv.average{background:#fff3d6;color:#8a6a1a}.caplv.poor{background:#fde4e4;color:#9a3030}
 .capprof .capb{margin:2px 0}
+/* unit picker columns · profile close button */
+.thpg.gcolu{grid-template-columns:repeat(4,minmax(0,1fr))}.thpg.gcolu-3{grid-template-columns:repeat(3,minmax(0,1fr))}.thpg.gcolu-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.thpg.gcolu>.gepm{min-width:0;overflow:hidden;padding:6px 3px}.thpg.gcolu>.gepm svg{max-width:100%;height:auto}.thpg.gcolu b{font-size:12px;overflow-wrap:anywhere}.thpg.gcolu-5 b{font-size:10px}.thpg.gcolu-5 i{font-size:9px}
+.mxclose{position:sticky;top:0;float:right;z-index:6;width:38px;height:38px;margin:-4px -4px -38px 0;border-radius:50%;border:1px solid #e6dcf3;background:rgba(255,255,255,.92);box-shadow:0 2px 8px rgba(60,30,80,.18);font-size:18px;font-weight:800;color:#5b3f78;cursor:pointer;line-height:1}
 
 </style>
 </head><body>
@@ -3834,7 +3838,7 @@ function plSczMembers(p){p=p||S.pj;if(!p||plAlb(p))return[];const mn=S.songs[p.m
 function plSczHost(p){p.scz=p.scz||{id:'__single',title:'Single Costume',cdz:{mode:'individual',main:null,mem:{}}};return p.scz}
 // formation position of every member of a song: ordered row by row (Front first), Center marked
 function plCzPos(o){const sl=(o&&o.fm&&o.fm.sl)||[],out={};let n=1;try{n=nRows(sl)}catch(e){}const nm=r=>n<=1?'Front':r==0?'Front':r==n-1?'Back':n==3?'Middle':'Row '+(r+1);const cnt={};let k=0;
- const L=sl.map((x,i)=>({x,i})).filter(z=>z.x.m).sort((a,b)=>(a.x.r|0)-(b.x.r|0)||a.i-b.i);L.forEach(({x})=>{const r=x.r|0;if(!x.c)cnt[r]=(cnt[r]||0)+1;out[x.m]={k:k++,c:!!x.c,l:x.c?'Center':`${nm(r)} ${cnt[r]}`}});return out}
+ const L=sl.map((x,i)=>({x,i})).filter(z=>z.x.m).sort((a,b)=>(a.x.n||999)-(b.x.n||999)||(a.x.r|0)-(b.x.r|0)||a.i-b.i);L.forEach(({x})=>{const r=x.r|0;out[x.m]={k:k++,c:!!x.c,l:x.c?`#${x.n} Center`:`#${x.n} · ${nm(r)}`}});return out}
 function plCzHost(key){const p=S.pj;if(!p)return null;if(key=='__single'){if(plAlb(p))return null;return{o:plSczHost(p),mem:plSczMembers(p),single:1,locked:false}}const o=S.songs[key];return o?{o,mem:czMembers(o),locked:lockedSong(key)}:null}
 plCzOpen=function(id,mid){const H=plCzHost(id);if(!H)return;const mem=H.mem;if(!mem.length)return toast(H.single?'Every eligible member is in the Title Track Senbatsu, so nobody needs a Single Costume.':'Select this song\'s Senbatsu first.','err');if(!H.single&&plReused(S.pj,H.o))return toast('This released song keeps its original costumes.','err');czLib();
  const same=ui.scz&&ui.scz.song==id&&ui.scz.mid==mid;if(same&&view=='songcz')return;const go=()=>{ui.scz={song:id,mid:mid&&mem.some(m=>m.id==mid)?mid:mem[0].id};plCzLoad();view='songcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='songcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()};
@@ -5606,7 +5610,7 @@ function thSetC2(mid){const s=thEd();if(!thGuardEdit(s))return;mid=mid?+mid:null
 // ---- per-member Stage costumes ---------------------------------------------------------------------------------
 const thZ=it=>{if(!it.cdz||typeof it.cdz!='object')it.cdz={mem:{}};if(!it.cdz.mem||typeof it.cdz.mem!='object')it.cdz.mem={};return it.cdz};
 function thCzOf(it,mid){const z=it&&it.cdz&&it.cdz.mem&&it.cdz.mem[mid];if(z&&z.ok&&z.own&&z.own.p)return z.own.p;return it&&it.cz?thCzP(it.cz):null}
-const thCzDone=(s,it)=>thMem(s,it).map(id=>[id,!!thCzOf(it,id)]);
+const thCzDone=(s,it)=>{let M=thMem(s,it);try{const o=thForm(s,it).o;M=M.slice().sort((a,b)=>{const i=o.indexOf(a),j=o.indexOf(b);return(i<0?999:i)-(j<0?999:j)})}catch(e){}return M.map(id=>[id,!!thCzOf(it,id)])};
 const thSetOwn=(it,mid,p)=>{const m=get(mid),o=S.songs[it.song];if(!m)return;thZ(it).mem[mid]={own:{name:`${o?o.title:'Song'} — ${m.name}`,p:czClone(p),updated:S.day},ok:true}};
 const thCzAny=it=>{const z=it&&it.cdz&&it.cdz.mem;if(z)for(const k in z)if(z[k].ok&&z[k].own&&z[k].own.p)return z[k].own.p;return it&&it.cz?thCzP(it.cz):null};
 // the Stage costume can be the costumes of one song of the Stage ('thz:<item id>') or an older library design
@@ -10955,6 +10959,11 @@ function perfSync(){if(!S)return;(S.members||[]).forEach(perfDef);(S.alumni||[])
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{perfSync()}catch(e){}return r}}
 {const f=train;train=function(id,k){if(k=='cha')return toast('Performance is the average of Vocal and Dance — train those instead.','err');return f.apply(this,arguments)}}
 SKL.cha='Performance';
+// ---- Theater Unit member picker: 3 / 4 / 5 columns (same control as the member lists) ------------------------------------
+GCOL_DEF.unit=4;
+{const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{if(h.includes('<div class="thpg">')){let first=true;h=h.split('<div class="thpg">').join('\u0001');h=h.replace(/\u0001/g,()=>{const b=first?gcolBar('unit'):'';first=false;return b+`<div class="thpg gcolu gcolu-${gcolGet('unit')}">`})}}catch(e){console.error(e)}return h}}
+// ---- member profile: ✕ close button at the top right ---------------------------------------------------------------------
+{const f=render;render=function(){const r=f.apply(this,arguments);try{if(ui.mod&&ui.mod.t=='prof'){const d=document.querySelector('.mod [role=dialog]');if(d&&!d.querySelector('.mxclose')){const b=document.createElement('button');b.type='button';b.className='mxclose';b.setAttribute('aria-label','Close');b.textContent='✕';b.onclick=()=>{ui.mod=null;render()};d.insertBefore(b,d.firstChild)}}}catch(e){}return r}}
 
 </script>
 <script>
