@@ -1135,3 +1135,4 @@ select:not([multiple]):not([size]){cursor:pointer}
 .tf7m{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:2px;cursor:pointer;font:inherit;color:inherit;min-width:0}
 .tf7m small{font-size:11px;line-height:1.2;text-align:center;overflow-wrap:anywhere}
 .tf7bd .thpic{cursor:default}
+.tf7set .thsgm{min-width:0}.tf7um{margin-top:6px;grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}

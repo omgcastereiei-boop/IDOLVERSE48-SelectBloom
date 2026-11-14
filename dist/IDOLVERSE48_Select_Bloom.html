@@ -1217,6 +1217,7 @@ select:not([multiple]):not([size]){cursor:pointer}
 .tf7m{display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:2px;cursor:pointer;font:inherit;color:inherit;min-width:0}
 .tf7m small{font-size:11px;line-height:1.2;text-align:center;overflow-wrap:anywhere}
 .tf7bd .thpic{cursor:default}
+.tf7set .thsgm{min-width:0}.tf7um{margin-top:6px;grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}
 
 </style>
 </head><body>
@@ -11179,6 +11180,21 @@ thStageSvg=function(o,ids,rows,nc,cdOf,poseOf,mic,hue,w,deco){const L=ids.map(ge
  <path d="M0 0H120Q90 180 60 ${H}H0Z" fill="#7a1f3d"/><path d="M${W} 0H${W-120}Q${W-90} 180 ${W-60} ${H}H${W}Z" fill="#7a1f3d"/><path d="M0 0H${W}V26Q${W/2} 50 0 26Z" fill="#9a2a4e"/>${[0,1,2,3,4].map(i=>`<circle cx="${180+i*135}" cy="14" r="5" fill="#ffe8a3"/>`).join('')}
  ${fg}<path d="M0 ${H-4}H${W}" stroke="#e9c46a" stroke-width="3"/>${L.length?'':`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="#ffe8a3" font-size="22">No performers yet</text>`}</svg>`};
 
+// ---- Performance History: the report opened from a history list has no per-member section ------------------------------
+{const f=thPfRow;thPfRow=function(p){return f.apply(this,arguments).replace(`onclick="thOpenPerf(`,`onclick="ui.thFromH=1;thOpenPerf(`)}}
+{const f=thOpenPerf;thOpenPerf=function(id){const fromH=!!ui.thFromH;ui.thFromH=0;const r=f.apply(this,arguments);try{if(fromH&&ui.mod&&ui.mod.t=='html'){let h=ui.mod.h;const k=h.indexOf('<h3>Members</h3>');if(k>=0){const d=h.indexOf('<div class="thfx2"',k);const e=d>=0?tf7End(h,d):k+16;ui.mod.h=h.slice(0,k)+h.slice(e);render()}}}catch(e){console.error(e)}return r}}
+// ---- Stage Archive: simple Setlist (Unit songs: members), no Units section ----------------------------------------------
+function tf7SetHtml(items){let n=0,e=0,eh=0;const nm=id=>{const m=ctMem(id);return m?m.name:''};
+ return`<ol class="thtl ro tf7set">${(items||[]).map(it=>{const hd=it.enc&&!eh++?'<li class="thench"><b>ENCORE</b><span class="st">アンコール</span></li>':'';
+  if(it.k=='ov')return`<li class="thov"><span class="thnum">OV</span><b>${esc(it.name||'Overture')}</b></li>`;
+  if(it.k=='mc')return`${hd}<li class="thmc"><span class="thnum">MC</span><b>${esc(it.name||'MC')}</b><span class="thmcm">${(it.mem||[]).map(id=>thMini(id,20)).join('')}</span></li>`;
+  if(it.k!='song')return'';if(it.enc)e++;else n++;const unit=it.pt=='unit',cs=[it.center,it.c2].filter(x=>x!=null).map(nm).filter(Boolean);
+  return`${hd}<li class="thsg ${it.enc?'enc':''}"><span class="thnum">${it.enc?'E'+String(e).padStart(2,'0'):'M'+String(n).padStart(2,'0')}</span><div class="thsgm"><b>${esc(it.title||(S.songs[it.song]||{}).title||'')}</b><small><span class="thptb ${unit?'unit':'team'}">${unit?'UNIT · '+esc((it.unit||{}).name||''):'Team'}</span>${cs.length?' Center '+esc(cs.join(' & ')):''}</small>${unit?`<div class="tf7mem tf7um">${(it.mem||[]).map(id=>{const m=ctMem(id);return m?`<span class="tf7m">${ptc(m,34)}<small>${esc(m.stage||m.name)}</small></span>`:''}).join('')}</div>`:''}</div></li>`}).join('')}</ol>`}
+{const f=thOpenStage;thOpenStage=function(id){const r=f.apply(this,arguments);try{const s=thStage(id);if(!s||!ui.mod||ui.mod.t!='html')return r;let h=ui.mod.h;
+ const mk=['<h3>Original Setlist (as debuted)</h3>','<h3>Setlist</h3>'].find(x=>h.includes(x));if(mk){const a=h.indexOf(mk)+mk.length,b=h.indexOf('<h3>',a);h=h.slice(0,a)+tf7SetHtml(s.orig||thSnapItems(s))+(b<0?'':h.slice(b))}
+ const u=h.indexOf('<h3>Units');if(u>=0){const b=h.indexOf('<h3>',u+5);h=h.slice(0,u)+(b<0?'':h.slice(b))}
+ h=h.replace(/<h3>📸 Debut performance · ([^<]*)<\/h3>/,'<h3>📸 First performance photos · $1</h3><p class="st">Costumes as worn on that day. Costume changes made later appear in the photos of later performances (Performance History).</p>');h=h.replace(/onclick="thOpenPerf\(/g,'onclick="ui.thFromH=1;thOpenPerf(');ui.mod.h=h;render()}catch(e){console.error(e)}return r}}
+
 </script>
 <script>
 // =====================================================================================
@@ -11830,6 +11846,8 @@ I18N_TH_TPL.unshift(["{0} is now {1} of {2}.","{0} ได้รับแต่�
 Object.assign(I18N_TH,{"↶ Undo":"↶ ย้อนกลับ","↷ Redo":"↷ ทำซ้ำ","🎲 Randomize Costume":"🎲 สุ่มชุด"});
 Object.assign(I18N_TH,{"🎓 Graduation Stage":"🎓 กราดูเอชั่นสเตจ","First performance":"การแสดงรอบแรก","Final performance":"การแสดงรอบสุดท้าย","Latest performance":"การแสดงล่าสุด","Report":"รายงาน","Not performed yet.":"ยังไม่ได้แสดง","Performance report":"รายงานการแสดง","Other costumes":"ชุดอื่น ๆ","Single costumes":"ชุดซิงเกิล","Theater costumes":"ชุดเธียเตอร์","A Birthday Stage is for one member only. Choose another performance.":"เบิร์ธเดย์สเตจจัดได้ 1 เมมเบอร์ต่อรอบเท่านั้น เลือกรอบการแสดงอื่น","A Birthday Stage is for one member only.":"เบิร์ธเดย์สเตจจัดได้ 1 เมมเบอร์ต่อรอบเท่านั้น","Scored at the first performance of this Stage, with the members who perform each song (Unit songs: the Unit only). Later performances keep these scores.":"ให้คะแนนในการแสดงรอบแรกของสเตจนี้ ตามเมมเบอร์ที่แสดงแต่ละเพลง (เพลงยูนิต: เฉพาะยูนิต) รอบต่อ ๆ ไปใช้คะแนนนี้","Scored at this performance because the performers changed. Other songs keep the score from their first performance.":"ให้คะแนนใหม่ในรอบนี้เพราะผู้แสดงเปลี่ยน เพลงอื่นใช้คะแนนจากรอบแรก"});
 I18N_TH_TPL.unshift(["First & {0} performance","การแสดงรอบแรกและรอบ{0}"],["No Birthday Stage on {0}.","ไม่สามารถจัดเบิร์ธเดย์สเตจใน{0}"]);
+Object.assign(I18N_TH,{"Costumes as worn on that day. Costume changes made later appear in the photos of later performances (Performance History).":"ชุดที่ใส่ในวันนั้น ถ้าเปลี่ยนชุดภายหลัง จะเห็นในรูปของการแสดงรอบหลัง ๆ (Performance History)"});
+I18N_TH_TPL.unshift(["📸 First performance photos · {0}","📸 รูปการแสดงรอบแรก · {0}"]);
 
 </script>
 <script>
