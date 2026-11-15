@@ -114,7 +114,7 @@ function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(
  // per-member counts and efficiency
  const MR={};const mr=id=>MR[id]=MR[id]||{songs:0,center:0,front:0,middle:0,back:0,mc:0,en:ok.has(id)?20:0,eff:[],sc:0};C.parts.forEach(id=>mr(id));
  const seen={},songRes=[];let vS=0,dS=0,pS=0,w0=0,mistakes=0;
- items.forEach((it,i)=>{if(it.k=='mc'){ccMcMem(C,it).filter(id=>ok.has(id)||!need.has(id)).forEach(id=>mr(id).mc++);return}const o=ccSong(it.gid,it.song),L=ccPerf(it).filter(id=>ok.has(id));const gi=o&&MUI.g[o.genre]||{vw:.5,int:5};const vw=gi.vw??.5,inten=gi.int??5;
+ items.forEach((it,i)=>{if(it.k=='vtr'||it.k=='pv')return;if(it.k=='mc'){ccMcMem(C,it).filter(id=>ok.has(id)||!need.has(id)).forEach(id=>mr(id).mc++);return}const o=ccSong(it.gid,it.song),L=ccPerf(it).filter(id=>ok.has(id));const gi=o&&MUI.g[o.genre]||{vw:.5,int:5};const vw=gi.vw??.5,inten=gi.int??5;
   let sv=0,sd=0,sp=0,n=0,miss=0;L.forEach(id=>{const m=get(id),R=mr(id);R.songs++;const pc=ccPosCls(it,id);R[pc]++;const W=wlOf(m),cond=(.5+.5*Math.min(100,en[id]-R.songs*inten*.15)/100)*(.6+.4*W.ph/100)*(.7+.3*W.mh/100);const comp=o?seComp(m,o.concept):50,fat=Math.max(0,R.songs-10)*.006;
    const v=(m.sing||0)*(.85+.15*comp/100)*cond*(1-fat),d=(m.dance||0)*(.85+.15*comp/100)*cond*(1-fat),ps=((m.pas||50)*.6+(m.cha||0)*.4)*cond;let sc=vw*v+(1-vw)*d;
    const pm=Math.max(.01,Math.min(.45,.02+(1-cond)*.35+inten*.006-((vw*(m.sing||0)+(1-vw)*(m.dance||0))-50)/400));if(Math.random()<pm){sc-=8+Math.random()*7;miss++}

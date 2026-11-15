@@ -1030,3 +1030,12 @@ Music › Song Library opens on **Your Library** (no Home page); **Search** is t
 - Setlists can have an **Overture** and an **Encore** (EN button moves a song — and the MC right after it — into the Encore).
 - Formation rows fill from the centre outwards (centre, right, left, …); each row has **⇔ Center out** (center, then most popular, alternating) and **Clear row**.
 - **Select all shown (not yet in this song)** on the formation page adds every member the sort bar currently shows (in its sorted order, filters respected) to the chosen row, filling empty positions first.
+
+## Library, covers and concert segments (recdvd2.js, concert3.js)
+- Your Library no longer lists Theater Stages or Theater DVDs. In a single's tracklist every track of an edition uses that edition's cover.
+- Discography and release results show each Senbatsu as member cards (face, name, team, ★ center, First Time).
+- **Studio Recording covers** use the same Cover Studio as singles (layers, poses, text, stickers, backgrounds, random tools); members wear the costumes of the recorded Stage songs. 🎲 Random cover creates one instantly.
+- **Theater DVD covers** are DVD-case size (portrait): a first-performance stage photo in Stage costumes with editable group, team, Stage name, subtitle, photo song, layout and colour.
+- Concerts can include **VTR** and **PV** segments; the player writes what they are about or rolls a random idea.
+- Stage songs added to a concert keep the members, rows and centers of the Stage's first performance (only concert participants are placed).
+- The song picker has Group / Single / Stage tabs; Stages are listed group → team → stage number, without Revival Stages.
