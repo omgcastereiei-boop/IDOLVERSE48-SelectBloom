@@ -162,7 +162,7 @@ function ccCzFor(C,set,idx,mid,depth=0){const it=set.items[idx];if(!it||it.k!='s
  if(z.mode=='prev'){for(let j=idx-1;j>=0;j--)if(set.items[j].k=='song')return ccCzFor(C,set,j,mid,depth+1);return null}
  if(z.mode=='one'){const d=czD(z.d);return d?d.p:null}if(z.mode=='mem'){const d=czD((z.mem||{})[mid]);return d?d.p:null}
  const o=ccSong(it.gid,it.song);if(!o)return null;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,mid)})}catch(e){}return p}
-const ccCzTxt=(C,set,idx)=>{const it=set.items[idx],z=it.cz||{mode:'orig'};if(z.mode=='prev')return'Same as the previous song';if(z.mode=='one'){const d=czD(z.d);return d?'Design: '+d.name:'Choose a design'}if(z.mode=='mem')return`Per-member costumes (${Object.keys({...(z.mem||{}),...(z.memP||{})}).length} chosen)`;return'Original song costume'};
+const ccCzTxt=(C,set,idx)=>{const it=set.items[idx],z=it.cz||{mode:'orig'};if(z.mode=='prev')return'Same as the previous song';if(z.mode=='same'){const L=set.items.filter(x=>x.k=='song'),j=L.findIndex(x=>x.id==z.src);return j>=0?`Same as ${L[j].enc?'EN':'M'+String(j+1).padStart(2,'0')} · ${L[j].title}`:'Same as another song'}if(z.mode=='one'){const d=czD(z.d);return d?'Design: '+d.name:'Choose a design'}if(z.mode=='mem')return`Per-member costumes (${Object.keys({...(z.mem||{}),...(z.memP||{})}).length} chosen)`;return'Original song costume'};
 // ---- expenses (automatic) --------------------------------------------------------------------------------------------------
 const CC_PROD={lh:1800000,hall:4500000,lhall:9000000,arena:32000000,stad:70000000,dome:90000000};
 const CC_CREW={lh:14,hall:24,lhall:40,arena:90,stad:160,dome:180};

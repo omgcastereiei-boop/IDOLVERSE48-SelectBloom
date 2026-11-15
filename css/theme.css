@@ -1225,3 +1225,4 @@ select:not([multiple]):not([size]){cursor:pointer}
 .rccvc .rccvp{width:150px;flex:none}.rccvbig{width:150px;height:150px;border-radius:8px;display:block}.rccvh{display:flex;flex-direction:column;gap:4px}
 .rcdvdw{display:flex;gap:12px;flex-wrap:wrap}.rcdvdp{flex:0 0 220px;max-width:100%}.rcdvdp svg{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 4px 14px rgba(40,20,60,.3)}.rcdvdf{flex:1 1 200px;display:flex;flex-direction:column;gap:6px;min-width:0}.rcdvdf input,.rcdvdf select{width:100%}
 img.rcdvdimg{aspect-ratio:540/766;object-fit:cover;height:auto}
+.ccm3 .ccm3u{color:#7a62c8;font-weight:700}.ccczi .b.s{font-size:11px;padding:4px 6px}

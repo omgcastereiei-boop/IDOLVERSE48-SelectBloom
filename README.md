@@ -1039,3 +1039,6 @@ Music › Song Library opens on **Your Library** (no Home page); **Search** is t
 - Concerts can include **VTR** and **PV** segments; the player writes what they are about or rolls a random idea.
 - Stage songs added to a concert keep the members, rows and centers of the Stage's first performance (only concert participants are placed).
 - The song picker has Group / Single / Stage tabs; Stages are listed group → team → stage number, without Revival Stages.
+- Concert songs can be marked **Unit**; the formation page shows which Unit songs each member is already in ("Unit M03").
+- Costumes: Stage songs wear their Stage costumes; members added to a song automatically wear that song's original costume; **Same as M0x** reuses another song's costumes; **Copy to members without a costume**; the member costume library has Single / Stage / Other and group filters plus a name search.
+- Every popup has a ✕ in its top-right corner, and closing a popup keeps the page at the same scroll position.
