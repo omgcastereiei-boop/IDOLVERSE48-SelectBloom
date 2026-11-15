@@ -1029,3 +1029,4 @@ Music › Song Library opens on **Your Library** (no Home page); **Search** is t
 - Member cards in concert pickers show only the picture, name, group and team; sorting and filtering use the game-wide sort bar (one sort per list).
 - Setlists can have an **Overture** and an **Encore** (EN button moves a song — and the MC right after it — into the Encore).
 - Formation rows fill from the centre outwards (centre, right, left, …); each row has **⇔ Center out** (center, then most popular, alternating) and **Clear row**.
+- **Select all shown (not yet in this song)** on the formation page adds every member the sort bar currently shows (in its sorted order, filters respected) to the chosen row, filling empty positions first.
