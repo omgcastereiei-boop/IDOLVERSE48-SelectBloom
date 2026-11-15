@@ -66,7 +66,7 @@ const ccGet=id=>(ccS().list.find(c=>c.id==id))||null;
 const ccCur=()=>ui.cc?ccGet(ui.cc):null;
 const ccMem=id=>get(id)||(S.alumni||[]).find(m=>m.id==id)||null;
 const ccNm=(C,id)=>{const m=ccMem(id);return m?m.name:((C&&C.snap&&C.snap[id])||{}).name||'#'+id};
-const ccEdit=C=>C&&C.status=='plan';
+var CC_SETOK=0;const ccEdit=C=>C&&(C.status=='plan'||(CC_SETOK&&typeof ccSetEditable=='function'&&ccSetEditable(C)));
 function ccSnap(C){C.snap=C.snap||{};C.parts.forEach(id=>{const m=ccMem(id);if(!m)return;const g=grp(gsGid(m)),t=teamOf(m);C.snap[id]={name:m.name,gid:g?g.id:null,gname:g?g.name:'',team:t?t.name:(m.status=='trainee'?TL():''),gen:m.gen||1,pop:m.pop||0}})}
 // ---- creation & types -----------------------------------------------------------------------------------------------------
 function ccNew(){const X=ccS(),id='cc'+(++X.seq),host=gsAg();const C={id,name:`${(grp(host)||{}).name||'Concert'} Live ${X.seq}`,type:'reg',host,anni:null,grad:[],vid:null,vcfg:'seat',start:S.day+60,pf:[],parts:[],sets:{},snap:{},status:'plan',created:S.day,log:[]};
@@ -162,7 +162,7 @@ function ccCzFor(C,set,idx,mid,depth=0){const it=set.items[idx];if(!it||it.k!='s
  if(z.mode=='prev'){for(let j=idx-1;j>=0;j--)if(set.items[j].k=='song')return ccCzFor(C,set,j,mid,depth+1);return null}
  if(z.mode=='one'){const d=czD(z.d);return d?d.p:null}if(z.mode=='mem'){const d=czD((z.mem||{})[mid]);return d?d.p:null}
  const o=ccSong(it.gid,it.song);if(!o)return null;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,mid)})}catch(e){}return p}
-const ccCzTxt=(C,set,idx)=>{const it=set.items[idx],z=it.cz||{mode:'orig'};if(z.mode=='prev')return'Same as the previous song';if(z.mode=='one'){const d=czD(z.d);return d?'Design: '+d.name:'Choose a design'}if(z.mode=='mem')return`Individual designs (${Object.keys(z.mem||{}).length})`;return'Original song costume'};
+const ccCzTxt=(C,set,idx)=>{const it=set.items[idx],z=it.cz||{mode:'orig'};if(z.mode=='prev')return'Same as the previous song';if(z.mode=='one'){const d=czD(z.d);return d?'Design: '+d.name:'Choose a design'}if(z.mode=='mem')return`Per-member costumes (${Object.keys({...(z.mem||{}),...(z.memP||{})}).length} chosen)`;return'Original song costume'};
 // ---- expenses (automatic) --------------------------------------------------------------------------------------------------
 const CC_PROD={lh:1800000,hall:4500000,lhall:9000000,arena:32000000,stad:70000000,dome:90000000};
 const CC_CREW={lh:14,hall:24,lhall:40,arena:90,stad:160,dome:180};

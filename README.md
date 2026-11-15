@@ -1025,3 +1025,7 @@ Music › Song Library opens on **Your Library** (no Home page); **Search** is t
 - Tapping a song opens its **formation page**: no member limit, up to 10 rows, tap a position then a member; ★ center, ◀ ▶ order, ▲ ▼ rows.
 - Costumes can be chosen **per member**: one of her own single / Stage costumes, a library design or a random one; the others keep theirs.
 - Stage pictures are bigger (1200×560); large halls, arenas, stadiums and domes get a thrust stage and an upper stage level where the back row stands.
+- Concert dates must be at least 2 months ahead; after confirmation the **setlists stay editable until the first performance day** (schedule, venue, participants and tickets are fixed).
+- Member cards in concert pickers show only the picture, name, group and team; sorting and filtering use the game-wide sort bar (one sort per list).
+- Setlists can have an **Overture** and an **Encore** (EN button moves a song — and the MC right after it — into the Encore).
+- Formation rows fill from the centre outwards (centre, right, left, …); each row has **⇔ Center out** (center, then most popular, alternating) and **Clear row**.
