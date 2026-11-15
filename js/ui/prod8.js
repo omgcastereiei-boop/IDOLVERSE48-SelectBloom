@@ -26,7 +26,9 @@ function plLimCovHtml(p){return plLimEds(p).map(e=>{const key=seEdKey(p,e),cc=S.
 // ---- a new song: Senbatsu first, then its Song Sheet ------------------------------------------------------------------------
 let PL8_NEW=0;
 ['plAddCoup','plNewAlbSong'].forEach(fn=>{const f=window[fn];if(typeof f!='function')return;window[fn]=function(){PL8_NEW++;try{return f.apply(this,arguments)}finally{PL8_NEW--}}});
-{const f=seSheet;seSheet=function(id){if(PL8_NEW&&S.songs[id]&&!lockedSong(id)){S.songs[id].shPend=1;ui.mod=null;editLine(id,'music');return}return f.apply(this,arguments)}}
+{const f=seSheet;seSheet=function(id){if(PL8_NEW&&S.songs[id]&&!lockedSong(id)){S.songs[id].shPend=1;ui.mod=null;view='music';ui.mstep=2;ui.psong=id;PL8_FOCUS=id;render();return}return f.apply(this,arguments)}}
+// a new song opens on its song card (title, genre, concept, lyrics) in step 2
+let PL8_FOCUS=null;{const f=render;render=function(){const r=f.apply(this,arguments);if(PL8_FOCUS&&view=='music'){const id=PL8_FOCUS;setTimeout(()=>{try{const el=document.querySelector(`input[oninput*="plTitle('${id}'"]`);if(el){PL8_FOCUS=null;el.closest('.songc').scrollIntoView({block:'center'});el.closest('.songc').classList.add('plnew')}}catch(e){}},60)}return r}}
 {const f=fmSave;fmSave=function(){const o=S.songs[ui.es];const r=f.apply(this,arguments);try{if(o&&o.shPend&&o.fm&&o.fm.saved&&!fmCheck(o).length){delete o.shPend;view='music';seSheet(o.id)}}catch(e){console.error(e)}return r}}
 {const f=seSheetHtml;seSheetHtml=function(id){let h=f.apply(this,arguments);try{const o=S.songs[id];if(o&&o.fm&&o.fm.saved)h=h.replace('<p class="st">Concept Compatibility and Senbatsu Ability are shown after you choose this song\'s Senbatsu.</p>','').replace(`<button class="b p"  onclick="ui.mod=null;editLine('${id}','music')">Proceed to Senbatsu Selection ▶</button>`,`<button class="b p" onclick="ui.mod=null;goView('music')">Back to Single Production ▶</button>`)}catch(e){}return h}}
 // ---- Popularity Index is no longer shown (it still works inside the simulation) ----------------------------------------------

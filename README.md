@@ -1009,3 +1009,9 @@ Management › 🔕 Notifications: turn off the pop-ups for Member birthdays, Th
 
 ## Song Library (streaming style)
 Music › Song Library opens on **Your Library** (no Home page); **Search** is the second section; the previous production list stays available as "Production list". Dark streaming-app design with large artwork (existing CD covers, song artwork, Stage / recording covers drawn as light images), categories (All, Songs, Singles, Albums, EPs, Theater Stages, Studio Recordings, Theater DVDs), Grid / List view, sort (Recently Added, Release Date, Alphabetical, Popularity from existing values), detail pages for Singles (Types A–D, tracklist, Title Track Senbatsu, Center, MV), Albums / EPs, Songs (genre, concept, lyrics, popularity, Song Preference, MV views, Senbatsu, history, links to single / album / Stages / recordings / DVDs), Theater Stages (original first-performance setlist with Units, MC and Encore), Studio Recordings and Theater DVDs. A small info bar shows the selected item (no audio playback). Read-only: no game data is changed.
+
+## UI & costume updates (ux9)
+- **Promotion pictures**: in a single's promotion record, tapping the Handshake Event picture opens its results and tapping a Roadshow picture opens its details (the separate "View results" / "Details" buttons were removed).
+- **New songs** open on their song card in step 2 (title, genre, concept, lyrics); the song sheet still appears after the Senbatsu is saved.
+- **Costume presets** open as a 3-column picture grid; the "Use existing costume" library picker is also 3 columns.
+- **Costume parts**: pants hips follow the body (no box at the hips) and reach the shoes; puff sleeves and armbands sit on the shoulder; new *Off-shoulder sleeves*, *Strapless top* and necklines *V-neck*, *Wide neckline*, *Shirt collar*, *Crew neck (T-shirt)*.
