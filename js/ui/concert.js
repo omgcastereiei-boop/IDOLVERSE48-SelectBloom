@@ -167,7 +167,7 @@ const ccCzTxt=(C,set,idx)=>{const it=set.items[idx],z=it.cz||{mode:'orig'};if(z.
 const CC_PROD={lh:1800000,hall:4500000,lhall:9000000,arena:32000000,stad:70000000,dome:90000000};
 const CC_CREW={lh:14,hall:24,lhall:40,arena:90,stad:160,dome:180};
 const CC_PSHARE=[['stage','Stage structures',.24],['deco','Stage decoration',.09],['light','Lighting equipment',.19],['sound','Sound equipment',.17],['led','LED screens',.15],['video','Video systems',.08],['fx','Visual effects',.05],['setup','Setup and dismantling',.03]];
-const ccCap=C=>{const V=ccV(C.vid);return V?(V.cap[C.vcfg]||V.cap.seat||V.cap.stand||0):0};
+const ccCap=C=>{const V=ccV(C.vid);if(!V)return 0;if(C.vcfg=='mix'&&V.cap.seat&&V.cap.stand&&typeof ccMixCap=='function'){const K=ccMixCap(C,V);return K.stand+K.seat}return V.cap[C.vcfg]||V.cap.seat||V.cap.stand||0};
 const ccTokyo=V=>['Tokyo','Kanagawa','Saitama'].includes(V.pref);
 // rental for one calendar day: kind 'perf' (with the slots used that day) or 'prep'
 function ccRentDay(V,day,kind,slots){const we=ccWE(day);if(V.slots){if(kind=='prep')return{a:we?V.slots.prepWe:V.slots.prep.wd,t:we?'Weekend/holiday full-day setup':'Weekday setup 09:00–23:00'};if(we)return{a:V.slots.perfWe,t:'Weekend/holiday full-day performance'};const a=slots.includes('a'),e=slots.includes('e');return a&&e?{a:V.slots.perf.ae,t:'Weekday 09:00–23:00'}:a?{a:V.slots.perf.a,t:'Weekday 09:00–17:00'}:{a:V.slots.perf.e,t:'Weekday 13:00–23:00 (setup before an evening show)'}}

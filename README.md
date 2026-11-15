@@ -1015,3 +1015,13 @@ Music › Song Library opens on **Your Library** (no Home page); **Search** is t
 - **New songs** open on their song card in step 2 (title, genre, concept, lyrics); the song sheet still appears after the Senbatsu is saved.
 - **Costume presets** open as a 3-column picture grid; the "Use existing costume" library picker is also 3 columns.
 - **Costume parts**: pants hips follow the body (no box at the hips) and reach the shoes; puff sleeves and armbands sit on the shoulder; new *Off-shoulder sleeves*, *Strapless top* and necklines *V-neck*, *Wide neckline*, *Shirt collar*, *Crew neck (T-shirt)*.
+
+## Concert screens, round 3 (concert3.js)
+- The old *Theater & Events* page was removed; **Concerts** is the first page of Events & Concerts.
+- Participants and MC speakers are chosen from member cards (face, name, group, team) in 3–5 columns, with filters and sorting.
+- Venues with both seats and a standing floor offer **Mixed: standing + seated**: a slider sets the standing share; standing tickets (General Admission) and seats (Reserved / Premium / VIP) are priced and capped separately.
+- **Add songs** opens a picker sorted by Group, Single, Stage and Team.
+- The setlist uses the Theater timeline (M01, M02 … with MC breaks; +MC inserts a break after a song).
+- Tapping a song opens its **formation page**: no member limit, up to 10 rows, tap a position then a member; ★ center, ◀ ▶ order, ▲ ▼ rows.
+- Costumes can be chosen **per member**: one of her own single / Stage costumes, a library design or a random one; the others keep theirs.
+- Stage pictures are bigger (1200×560); large halls, arenas, stadiums and domes get a thrust stage and an upper stage level where the back row stands.
