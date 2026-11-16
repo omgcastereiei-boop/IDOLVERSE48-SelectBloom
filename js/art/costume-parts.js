@@ -72,7 +72,7 @@ function czHeadAcc(cd){const A=(cd&&cd.a)||{};let s='';const L=czLine;
  if(A.hbow){const P=A.hbow;s+=bowSvg(A.hribbon?24:76,22,1,A.hribbon?-18:18,P.c1,L(P.c1))}
  if(A.earrings){const P=A.earrings;s+=[20.6,79.4].map(x=>`<path d="M${x} 68v3" stroke="${P.c2}" stroke-width=".5"/><circle cx="${x}" cy="73" r="1.5" fill="${P.c1}" stroke="${L(P.c1)}" stroke-width=".4"/>`).join('')}
  return s}
-const czHasHead=cd=>!!(cd&&cd.a&&CZ_HEAD.some(k=>cd.a[k]));
+const czHasHead=cd=>!!(cd&&((cd.a&&CZ_HEAD.some(k=>cd.a[k]))||(typeof czxHasHead=='function'&&czxHasHead(cd))));
 
 // ---- body pieces (figure frame) -------------------------------------------------------
 function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P)=>{if(!P)return'#fff';const r=czPat(id+'Z'+k,P);defs+=r.d;return r.f};
@@ -85,6 +85,7 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
  if(T.t=='shirt'){top+=`<path d="M49 46V${hem}M51 46V${hem}" stroke="${lT}" stroke-width=".3" opacity=".6"/>`+[52,57,62,67].map(y=>`<circle cx="50" cy="${y}" r=".5" fill="${T.c3}"/>`).join('')+(T.v?`<path d="M53.4 54h4.4v4Q55.6 59.4 53.4 58Z" fill="none" stroke="${lT}" stroke-width=".3"/>`:'')}
  if(T.t=='crop'&&!T.v)top+='';
  if(T.t=='tee')top+=`<path d="M45 52Q50 56 55 52Q54 60 50 60Q46 60 45 52Z" fill="${T.c2}" opacity=".9"/><path d="M47 55l1.4-1.4 1.6 1.6 1.6-1.6 1.4 1.4-3 3z" fill="${T.c3}"/>`;
+ if(typeof CZX_TOP!='undefined'&&CZX_TOP[T._x||T.t])top+=CZX_TOP[T._x||T.t](T,fT,lT,hem,sk,id);
  top+=`<path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)" fill="none" stroke="${lT}" stroke-width=".7" clip-path="url(#${id}hm)"/></g><clipPath id="${id}hm"><rect width="100" height="${hem}"/></clipPath>`;
  if(T.t=='sleeveless')top+=`<path d="M34 46L44 45L44.6 50L39 56L34 54ZM66 46L56 45L55.4 50L61 56L66 54Z" fill="${sk[0]}"/><path d="M44.4 45.6L44.8 50.4L39.6 55.6M55.6 45.6L55.2 50.4L60.4 55.6" stroke="${lT}" stroke-width=".35" fill="none"/>`;
  if(T.t=='tube')top+=`<path d="M37.4 50.6Q50 49.2 62.6 50.6" stroke="${lT}" stroke-width=".5" fill="none"/><path d="M37.6 51.6Q50 50.2 62.4 51.6" stroke="${T.c2}" stroke-width=".7" fill="none" opacity=".8"/>`;
@@ -98,6 +99,7 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
  else if(BO.t=='flared'){hemY=len;bottom=lay(69,8.2,len,18+(BO.v|0)*1.6,fB,lB,7)+[44,50,56].map(x=>`<path d="M${x} 71Q${x+(x-50)*.6} ${(69+len)/2} ${x+(x-50)*1.4} ${len+3}" stroke="${lB}" stroke-width=".3" fill="none" opacity=".5"/>`).join('')}
  else if(BO.t=='layered'){hemY=len+2;const fB2=pat('bot2',{...BO,c1:BO.c2,pat:'solid'});bottom=lay(69,8.4,len+2,18.4,fB,lB,12)+`<path d="${skirtD(len,18,len+2,18.4,12,1.4,2.2)}" fill="${BO.dc}" stroke="${czLine(BO.dc)}" stroke-width=".3"/>`+lay(69,8.4,len-6,15,fB2,czLine(BO.c2),10)+`<path d="${skirtD(len-8,14.6,len-6,15,10,1.3,2.2)}" fill="${BO.dc}" stroke="${czLine(BO.dc)}" stroke-width=".3"/>`+lay(69,8.4,len-14,11.4,fB,lB,8)}
  else if(BO.t=='mini'){hemY=84;bottom=`<path d="M41.2 69L58.8 69L61.6 84Q50 86 38.4 84Z" fill="${fB}" stroke="${lB}" stroke-width=".35"/><path d="M41 70.6H59" stroke="${BO.c2}" stroke-width="1.2"/>`}
+ else if(typeof CZX_BOT!='undefined'&&CZX_BOT[BO.t]){const R=CZX_BOT[BO.t](BO,fB,lB,id,pat,cd);hemY=R.hem;bottom=R.svg;pantsFn=R.pf||null}
  else{const wide=BO.t=='wide',full=BO.t!='shorts';hemY=0;bottom=`<clipPath id="${id}pc"><rect x="0" y="69" width="100" height="60"/></clipPath><path d="${torsoD}" fill="${fB}" stroke="${fB}" stroke-width="1.1" clip-path="url(#${id}pc)"/><clipPath id="${id}pd"><rect x="0" y="69" width="100" height="${full?11:13}"/></clipPath><path d="${torsoD}" fill="none" stroke="${lB}" stroke-width=".35" clip-path="url(#${id}pd)"/><path d="M50 ${full?79:78}V75" stroke="${lB}" stroke-width=".35"/><path d="M41.2 70.6H58.8" stroke="${BO.c2}" stroke-width="1.2"/><circle cx="50" cy="70.6" r=".6" fill="${BO.c3}"/>`;
   pantsFn=LJ=>LJ.map(J=>{const S=limbPts(J,t=>legProf(t)+(wide?1.6+t*9:1.2)+Math.max(0,.2-t)*9,16);return`<path d="${limbPath(S,0,full?1:.24,.15,full?.2:.6)}" fill="${fB}" stroke="${lB}" stroke-width=".35"/>`+(full?'':`<path d="${limbPath(S,.2,.24,.4)}" fill="${BO.c2}"/>`)}).join('')}
  // overskirts
@@ -116,7 +118,8 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
  // outerwear
  let sleeveOv=null;
  if(OU.t!='none'){const f=pat('out',OU),l=czLine(OU.c1),LN=`stroke="${l}" stroke-width=".4" stroke-linejoin="round"`;
-  if(OU.t=='vest')outer=`<g clip-path="url(#${id}tc)"><path d="M41 44L47.6 46.4L50 58L52.4 46.4L59 44L64 50L62 70Q56 72.4 50 73.4Q44 72.4 38 70L36 50Z" fill="${f}" ${LN}/>${[61,64.6,68].map(y=>`<circle cx="48.4" cy="${y}" r=".55" fill="${OU.c3}"/><circle cx="51.6" cy="${y}" r=".55" fill="${OU.c3}"/>`).join('')}</g>`;
+  if(typeof CZX_OUT!='undefined'&&CZX_OUT[OU.t]){const R=CZX_OUT[OU.t](OU,f,l,id);outer=R.outer||'';back+=R.back||'';sleeveOv=R.sl||null}
+  else if(OU.t=='vest')outer=`<g clip-path="url(#${id}tc)"><path d="M41 44L47.6 46.4L50 58L52.4 46.4L59 44L64 50L62 70Q56 72.4 50 73.4Q44 72.4 38 70L36 50Z" fill="${f}" ${LN}/>${[61,64.6,68].map(y=>`<circle cx="48.4" cy="${y}" r=".55" fill="${OU.c3}"/><circle cx="51.6" cy="${y}" r=".55" fill="${OU.c3}"/>`).join('')}</g>`;
   else{const yb={jacket:66,cardigan:84,bolero:56.6,coat:71}[OU.t],lap=OU.t=='jacket'||OU.t=='coat';
    const panel=s=>`<path d="M${50-s*13.6} 47.6Q${50-s*9} 45.8 ${50-s*5.4} 45.6L${50-s*(lap?3.2:4.6)} ${lap?60:52}L${50-s*(OU.t=='bolero'?7:4.2)} ${yb}Q${50-s*11} ${yb+1} ${50-s*(OU.t=='cardigan'?12.6:11.4)} ${yb}L${50-s*14.6} 52Z" fill="${f}" ${LN}/>`;
    outer=panel(1)+panel(-1);
@@ -127,6 +130,7 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
    sleeveOv={t:OU.t=='bolero'?'puff':'long',f,l,cuff:OU.t=='coat'?OU.c3:OU.c2}}}
  // collars & neck pieces
  if(CO.t!='none'){const f=pat('col',CO),l=czLine(CO.c1);
+  if(typeof CZX_COL!='undefined'&&CZX_COL[CO.t])collar+=CZX_COL[CO.t](CO,f,l,sk);
   if(CO.t=='round')collar+=`<path d="M45.2 45.2C43 47 43 50.6 46.6 51.4L50 48.6ZM54.8 45.2C57 47 57 50.6 53.4 51.4L50 48.6Z" fill="${f}" stroke="${l}" stroke-width=".35"/><path d="M44.2 50.2Q45 51.2 46.6 51.4M55.8 50.2Q55 51.2 53.4 51.4" stroke="${CO.dc}" stroke-width=".5" fill="none"/>`;
   if(CO.t=='sailor')collar+=`<path d="M43.2 45.4L50 57L56.8 45.4L63.8 49.4L60 55.4L50 60L40 55.4L36.2 49.4Z" fill="${f}" stroke="${l}" stroke-width=".35"/><path d="M37.6 50.2L41 54.4L50 58.6L59 54.4L62.4 50.2" stroke="${CO.c2}" stroke-width=".5" fill="none"/>`;
   if(CO.t=='frill')collar+=`<path d="${skirtD(45.4,5.2,49.6,7.6,9,1.4,1.6)}" fill="${f}" stroke="${l}" stroke-width=".3"/>`;
@@ -155,7 +159,7 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
  O.leg=leg||{};O.shoe={t:{boots:'boot',ankle:'boot',heels:'heel',mary:'mary',sneakers:'sneaker',loafers:'loafer'}[SH.t]||'sneaker',c:SH.c1,a:SH.c2,deco:A.sdeco?A.sdeco.c1:null};
  if(A.legacc)O.garter=A.legacc.c1;
  O.top=top;O.vestL='';O.skirt=bottom+over;O.cover=0;O.mid=mid;O.outer=outer;O.collar=collar+front;O.back=back;O.pantsFn=pantsFn;
- O.defs=defs;return O}
+ O.defs=defs;O.hemY=hemY;O.topHem=hem;O.bot=BO.t;return O}
 
 // ---- costume presets: starting points only (every piece stays editable) --------------
 const CZ_PRESETS=(()=>{const P=czPiece,x=(o)=>o;const mk=(top,sleeve,collar,outer,bottom,over,shoes,legs,X={},A={})=>({top,sleeve,collar,outer,bottom,over,shoes,legs,x:X,a:A});

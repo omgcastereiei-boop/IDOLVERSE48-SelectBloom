@@ -1226,3 +1226,8 @@ select:not([multiple]):not([size]){cursor:pointer}
 .rcdvdw{display:flex;gap:12px;flex-wrap:wrap}.rcdvdp{flex:0 0 220px;max-width:100%}.rcdvdp svg{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 4px 14px rgba(40,20,60,.3)}.rcdvdf{flex:1 1 200px;display:flex;flex-direction:column;gap:6px;min-width:0}.rcdvdf input,.rcdvdf select{width:100%}
 img.rcdvdimg{aspect-ratio:540/766;object-fit:cover;height:auto}
 .ccm3 .ccm3u{color:#7a62c8;font-weight:700}.ccczi .b.s{font-size:11px;padding:4px 6px}
+/* costume designer expansion */
+.czxgrp{gap:6px;margin:0 0 6px;flex-wrap:wrap}.czxgrp i{font-style:normal;background:#fff;color:#c25a9a;border-radius:9px;padding:0 5px;font-size:11px}
+.czxfil{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}.czxfil input{flex:1;min-width:120px}
+.czxpl{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}.czxpl .row b{min-width:48px;font-size:12px}.czxrg{display:flex;align-items:center;gap:6px}.czxrg input{flex:1}.czxrg b{min-width:38px;text-align:right;font-size:11px}
+.czxpg{gap:4px;flex-wrap:wrap;margin:2px 0 4px}.czxplib{display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start}.czxpx{padding:0 6px;font-size:10px;margin-left:-6px}

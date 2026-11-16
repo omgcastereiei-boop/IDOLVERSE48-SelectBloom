@@ -1042,3 +1042,17 @@ Music › Song Library opens on **Your Library** (no Home page); **Search** is t
 - Concert songs can be marked **Unit**; the formation page shows which Unit songs each member is already in ("Unit M03").
 - Costumes: Stage songs wear their Stage costumes; members added to a song automatically wear that song's original costume; **Same as M0x** reuses another song's costumes; **Copy to members without a costume**; the member costume library has Single / Stage / Other and group filters plus a name search.
 - Every popup has a ✕ in its top-right corner, and closing a popup keeps the page at the same scroll position.
+
+## Costume Designer expansion (cz-core.js, cz-items1/2/3a/3b.js, costume-designer2.js)
+Additive: the same Costume Designer, Costume Library and save format. New components are ordinary pieces stored in the design (`design[category][component]`), so old costumes draw exactly as before (tested byte-for-byte).
+- **Category groups**: Basics · Details · Accessories · Festival & Graduation · Traditional, with search and collection / style filters for large categories, and real thumbnails.
+- **Details**: Bodice details (13), Skirt structures (13), Shoulders & arms (12, arm parts follow the arm in every pose), Back details (9), Trims (13, placed on skirt hem / top hem / neckline / waist / cuffs).
+- **Accessories**: Ornaments (14), Fantasy & stage (12), localized Embroidery (12 motifs × 8 areas), Head accessories (39: seasonal, royal, Thai / Chinese / Japanese, idol) drawn above the hair.
+- **Festival & seasonal** (53): Christmas, Halloween, Valentine's Day, Spring & Sakura, Summer festival, New Year, Easter, Winter, Autumn, Birthday.
+- **Traditional-inspired**: new tops (Sabai, Thai fitted top, Dusit bodice, Kimono, Hanfu cross-collar, Qipao), bottoms (Pha sin, Hakama, Horse-face skirt, Chest-high skirt, Kimono lower), sleeves (Kimono, Furisode, Hanfu wide, Water sleeves), collars (Kimono eri, Jiaoling), Song-style beizi, 22 components, and 19 complete presets (7 Thai Chut Thai styles, 6 Chinese, 6 Japanese).
+- **Dresses** (26 one-piece silhouettes) — Top/Bottom are kept but hidden while a dress is worn.
+- **Placement**: left / right / both, layer (behind the body · on the outfit · on top · above the arms), size, position, rotation and sheerness, clamped per part.
+- **Materials**: lace, chiffon and organza (sheer), metallic, glitter, embroidered fabric (added to satin, velvet, sequins, tulle…).
+- **Patterns**: 31 new reusable textile patterns (Thai, Chinese, Japanese, universal) usable on any piece, pattern rotation, and a **Pattern Library** to save patterns and apply them to any costume.
+- Skipped as duplicates of existing pieces: Corset overlay, Peplum, Apron, Back bustle, Cape, Detached sleeves, Mandarin collar, Tiara / Royal crown, Beret / Mini top hat, Hair ribbon, star / heart clips, Necklace, Choker, Earrings, Graduation train, Graduation corsage, Scalloped lace trim.
+- Random costume generation keeps using the original pieces only.
