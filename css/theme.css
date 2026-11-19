@@ -1259,3 +1259,10 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .nwempty{text-align:center;padding:24px}
 .nwban{flex-wrap:nowrap;padding-right:30px}.nwbi{flex:1 1 auto}.nwbi span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}.nwbi i{font-style:normal;opacity:.8;font-weight:400}.nwbi.nwbc{flex:0 0 auto;max-width:96px;align-items:center;text-align:center}
 .nwrow>.nwsev{flex:0 0 auto;display:inline-block;white-space:nowrap}
+/* ---- Practice Room & skills (skills.js) ---- */
+.skbox{display:flex;flex-direction:column;gap:4px}.skr{display:grid;grid-template-columns:76px 74px 1fr;align-items:center;gap:6px;font-size:13px}.skr b{font-weight:700}.skr span small{opacity:.55;font-size:10px;margin-left:1px}.skr.spec b::after{content:" ★";color:#e0a020}.skr.sub{grid-template-columns:76px 74px 1fr;opacity:.85}
+.skbar{display:block;height:8px;border-radius:6px;background:#efe7f6;overflow:hidden}.skbar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#f39ac1,#9b7ae0)}
+.skmot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0}.skmot .tag.up{background:#e3f7e9;color:#21794a}.skmot .tag.dn{background:#fde4e8;color:#a32f3f}.skmot .tag.on{background:#fff1d6;color:#8a5a00}
+.trsl{display:flex;flex-direction:column;gap:6px}.trs{display:flex;gap:10px;align-items:center;padding:8px}.trs.group{border-left:4px solid #9b7ae0}.trs.self{border-left:4px solid #f39ac1}.trsf{display:flex;flex-wrap:wrap;gap:2px;max-width:50%}.trsf span{cursor:pointer}.trs small{display:block;color:#8a7a99;font-size:11px}
+.trg2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.trc2{display:flex;gap:10px;align-items:flex-start}.trc2.on{box-shadow:0 0 0 2px #ffd38a}.trc2 .av{flex:0 0 auto;cursor:pointer;position:relative}.trb{flex:1;min-width:0}.trwhy{font-style:italic;margin-top:3px}
+@media(max-width:560px){.trg2{grid-template-columns:1fr}.skr{grid-template-columns:62px 64px 1fr;font-size:12px}.trc2 .av{width:84px}.trsf{max-width:42%}}

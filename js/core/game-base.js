@@ -41,10 +41,8 @@ function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs)
  if(S.pj&&S.pj.status=='producing'&&S.pj.releaseDay!=null&&S.prod){const l=Math.max(0,S.pj.releaseDay-S.day),was=S.prod.left;S.prod.left=l;if(was>0&&l==0)toast(`Release day for "${S.prod.title}" has arrived!`);prodDay()}else if(S.prod&&S.prod.left>0){S.prod.left--;if(!S.prod.left)toast(`"${S.prod.title}" is ready to release!`)}promoDay()}
 function adv(n=1){ui.newRes=[];ui.hsDone=null;ui.rsDone=[];for(let i=0;i<n;i++)tick();const hd=ui.hsDone&&(S.singles.flatMap(x=>x.promo||[]).find(r=>r.id==ui.hsDone&&r.v==2));const rl=ui.rsDone.at(-1);if(rl)ui.mod={t:'rsres',id:rl.id,tab:rsGet(rl.id)&&rsGet(rl.id).done&&rl.part==2?'d2':'d'+rl.part,extra:ui.newRes.join('')};else if(hd)ui.mod={t:'hsres',P:hd.res,extra:ui.newRes.join('')};else if(ui.newRes.length)ui.mod={t:'html',h:'<h2 class="ht">Promotion results</h2>'+ui.newRes.join('')};ui.newRes=null;ui.hsDone=null;ui.rsDone=null;render()}
 function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:0}
-// training
-function train(id,k){const m=get(id);if(m.en<25)return toast(`${m.name} is too tired (energy ${m.en}/100).`,'err');
- if(m[k]>=100)return toast(`${k} is already maxed.`,'err');if(!spend(10000,`Training: ${m.name} (${k})`))return;
- const g=Math.min(100-m[k],rnd(1,3)+(m.pot>60?1:0)+(m.pas>70?1:0));m[k]+=g;m.en-=25;m.mor=cl(m.mor+2);toast(`${m.name}'s ${k} +${g}!`);render()}
+// training: see js/ui/skills.js (members practise on their own)
+function train(){}
 function mkGroup(){const n=$('#gn').value.trim();if(!n)return toast('Enter a group name.','err');if(S.groups.some(g=>g.name.toLowerCase()==n.toLowerCase()))return toast('A group with that name exists.','err');
  const g={id:++S.gid,name:n,color:PAL[S.groups.length%PAL.length],teams:[],cap:null,tl:{},active:false,founded:S.day,debutDay:null};S.groups.push(g);ui.g=g.id;toast(`Group "${n}" created. Assign members below.`);render()}
 // senbatsu

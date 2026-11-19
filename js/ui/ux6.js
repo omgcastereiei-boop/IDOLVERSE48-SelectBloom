@@ -46,7 +46,6 @@ function perfSync(){if(!S)return;(S.members||[]).forEach(perfDef);(S.alumni||[])
 {const f=render;render=function(){try{perfSync()}catch(e){}return f.apply(this,arguments)}}
 {const f=tick;tick=function(){try{perfSync()}catch(e){}return f.apply(this,arguments)}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{perfSync()}catch(e){}return r}}
-{const f=train;train=function(id,k){if(k=='cha')return toast('Performance is the average of Vocal and Dance — train those instead.','err');return f.apply(this,arguments)}}
 SKL.cha='Performance';
 // ---- Theater Unit member picker: 3 / 4 / 5 columns (same control as the member lists) ------------------------------------
 GCOL_DEF.unit=4;

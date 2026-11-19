@@ -77,13 +77,6 @@ const _wlConc=holdConcert;holdConcert=function(p,x){const ev=_wlConc.apply(this,
 
 // ---- lessons: per-skill Energy costs and the Mental/Physical Health effect on EXP ------------------
 function wlTrainMul(m,k){const w=wlOf(m);let f=WL.mhMul(w.mh);if((k=='dance'||k=='cha')&&w.ph<40)f*=.9;if(w.red)f*=.8;const md=WL.mood[w.mood][1];if(w.mood=='Motivated'||w.mood=='Excited')f*=1.05;else if(md=='neg')f*=.95;return f}
-function wlTrainBlock(m,k){const w=wlOf(m);if(w.leave)return`${m.name} is on ${WLT[w.leave.type]} until ${longDate(w.leave.ret)}.`;if(w.off==S.day)return`${m.name} is resting today.`;if(k=='dance'&&w.ph<20)return`${m.name}'s Physical Health is Critical — Dance lessons are unavailable.`;return''}
-train=function(id,k){const m=get(id);if(!m)return;const b=wlTrainBlock(m,k);if(b)return toast(b,'err');const c=WL.cost[k]||25;if(m.en<c)return toast(`${m.name} is too tired (energy ${m.en}/100, ${SKL[k]} needs ${c}).`,'err');
- if(m[k]>=100)return toast(`${SKL[k]} is already maxed.`,'err');if(!spend(10000,`Training: ${m.name} (${k})`))return;
- const base=rnd(1,3)+(m.pot>60?1:0)+(m.pas>70?1:0),v=base*wlTrainMul(m,k),g=Math.min(100-m[k],Math.floor(v)+(Math.random()<v%1?1:0));m[k]+=g;m.en-=c;m.mor=cl(m.mor+2);
- const w=wlOf(m);if(w.mh<40&&w.mh>=20&&Math.random()<.15&&WL.mood[w.mood][1]!='neg'){const k2=pick(['Frustrated','Nervous','Pressured']);wlMood(m,k2,rnd(2,4));wlLog(m,{t:'mood',txt:`Lesson left her ${k2.toLowerCase()} (low Mental Health).`})}
- wlAdj(m,{load:WL.load[k]||5,str:k=='dance'?2:1},'lessons');toast(g?`${m.name}'s ${SKL[k]} +${g}!`:`${m.name} could not focus — no progress this lesson.`,g?'ok':'err');render()};
-
 // ---- recovery activities ---------------------------------------------------------------------------
 const WLA={
  rest:{n:'Rest',d:'Free · +40 Energy, lighter workload · she takes the rest of today off'},
@@ -234,16 +227,4 @@ const _wlProf=profHtml;profHtml=function(m,cand){let h=_wlProf.apply(this,argume
 const _wlCard=mcard;mcard=function(m){const h=_wlCard.apply(this,arguments);return wlAway(m)?h.replace('<div class="mart">',`<span class="wlbadge">On Leave</span><div class="mart">`):h};
 const _wlCardT=mcardT;mcardT=function(m){const h=_wlCardT.apply(this,arguments);return wlAway(m)?h.replace('<div><b>','<div><span class="wlbadge in">On Leave</span><b>'):h};
 
-// ---- Lesson Room: per-skill costs, Rest, condition and leave ----------------------------------------
-V.training=function(){const f=ui.trf=ui.trf||{grp:'all',st:'all',sk:'name'};if(!S.members.length)return`<div class="c">${emptyBox('No idols yet. Recruit members through an audition first.')}<button class="b p" onclick="goSec('audition')">Go to Audition</button></div>`;
- const op=(a,v)=>a.map(([k,n])=>`<option value="${k}" ${String(k)==String(v)?'selected':''}>${n}</option>`).join('');
- const L=S.members.filter(m=>(f.grp=='all'||m.group==+f.grp)&&(f.st=='all'||(f.st=='act'?isAct(m):f.st=='leave'?wlAway(m):!isAct(m)))).sort((a,b)=>f.sk=='name'?a.name.localeCompare(b.name):f.sk=='en'?b.en-a.en:f.sk=='ph'?wlOf(a).ph-wlOf(b).ph:f.sk=='mh'?wlOf(a).mh-wlOf(b).mh:b[f.sk]-a[f.sk]);
- const card=m=>{const w=wlOf(m),away=!!w.leave,off=w.off==S.day,low=m.en<10||away||off,mo=WL.mood[w.mood];
-  return`<div class="c trc ${low?'tired':''} ${away?'wlaway':''}"><div class="av" onclick="${prof(m.id)}">${CH.half(m,0,m.en<25?9:7)}<span class="avt">${isAct(m)?esc(teamLbl(m)):esc(TLm(m))}</span>${away?'<span class="wlbadge">On Leave</span>':''}</div><div><div class="trh"><b>${esc(m.name)}</b> <span class="tag rr${rar(m)}">${rar(m)}</span> <span class="wlmood sm ${mo[1]}" title="Mood: ${w.mood}">${mo[0]} ${w.mood}</span></div>
-  <div class="en ${m.en<25?'low':''}">Energy ${m.en}/100${bar(m.en)}</div><div class="wlmini"><span>Physical ${Math.round(w.ph)}</span>${wlBar(w.ph,wlLvCls(w.ph))}<span>Mental ${Math.round(w.mh)}</span>${wlBar(w.mh,wlLvCls(w.mh))}</div>
-  ${away?`<div class="wlleave sm">🏥 ${WLT[w.leave.type]} · returns ${longDate(w.leave.ret)}</div>`:off?'<div class="st">Resting today — back tomorrow.</div>':''}
-  ${ABK.map(k=>{const c=WL.cost[k],dis=away||off||m[k]>=100||m.en<c||(k=='dance'&&w.ph<20);return`<div class="trr"><b>${SKL[k]}</b><span>${m[k]}</span>${bar(m[k])}${k=='cha'?'<small class="st">Average of Vocal &amp; Dance</small>':`<button class="b s" ${dis?'disabled':''} title="Uses ${c} Energy" onclick="train(${m.id},'${k}')">Train −${c}</button>`}</div>`}).join('')}
-  <div class="row"><button class="b s" ${away||w.rest==S.day?'disabled':''} onclick="wlDo(${m.id},'rest')">Rest +40</button><span class="st">EXP ×${wlTrainMul(m,'sing').toFixed(2)}</span></div></div></div>`};
- return`<h2 class="ht">Lesson Room</h2><div class="c tools"><div class="row"><span class="tag rrR">Each lesson: ${yen(10000)}</span><span class="tag">Energy: Vocal −15 · Dance −25 · Performance −20 · Variety −10 · Rest +40</span><span class="tag">+1–3 points (bonus for high Potential / Passion)</span><span class="tag">Mental Health changes lesson EXP</span><span class="tag">Energy recovers +15 per day</span></div>
- <div class="row"><select onchange="ui.trf.grp=this.value;render()">${op([['all','All groups'],...S.groups.map(g=>[g.id,g.name])],f.grp)}</select><select onchange="ui.trf.st=this.value;render()">${op([['all','All statuses'],['act','Active members'],['tr',TL()+'s'],['leave','On leave']],f.st)}</select><select onchange="ui.trf.sk=this.value;render()">${op([['name','Sort: Name'],['en','Sort: Energy'],['ph','Sort: Physical Health (low first)'],['mh','Sort: Mental Health (low first)'],...ABK.map(k=>[k,'Sort: '+SKL[k]])],f.sk)}</select><span class="st">${L.length} idols</span><button class="b s" onclick="adv(1)">Next day</button></div></div>
- <div class="trg">${L.map(card).join('')||emptyBox('No idols match these filters.')}</div>`};
+// ---- (Lesson Room removed: members practise on their own — see js/ui/skills.js)
