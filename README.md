@@ -62,7 +62,7 @@ expressions, poses and costumes) and `tools/scene-preview.html` (all environment
 | `js/ui/mv.js` | Music Video production: per-song MV choice, style / location / storyline planning, itemised dynamic budget, Week 3 filming, Release Day publication, daily views and Buzz, MV library |
 | `js/ui/stability.js` | Save safety (IndexedDB mirror, validation & repair, backups, recovery screen, auto-resume) and runtime guards |
 | `js/ui/event-visuals.js` | Event images (Release Day Mini Concert, Roadshow, Handshake Event) and Roadshow ↔ latest released single synchronization |
-| `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` + `th-more.js` hold the Thai text and sentence templates |
+| `js/i18n/` | Language layer (English / ภาษาไทย): `i18n.js` translates the rendered screen; `th.js` … `th-ct.js` hold the Thai text and sentence templates, `th-ui3.js` (costumes, concepts, genres, lyrics, bookings, Theater, toasts) and `th-voice.js` (everything members say) are loaded last |
 | `css/base.css` | Original structural CSS, verbatim |
 | `css/theme.css` | New visual identity (pastel pink · lavender · sky blue · champagne · ivory · warm beige) |
 | `original/` | Untouched backup of the original single‑file game |
@@ -1067,3 +1067,9 @@ New **Media & PR** section: News Feed, Crisis Room, News Archive, Reputation & O
 - **Images**: every article has an image: the real CD cover, group or member portraits, the Theater or concert stage, rival emblems, chart graphics, or a labelled editorial illustration for sensitive stories (never a fabricated photo, nothing explicit).
 - **Language**: each article stores English and Thai text under one ID. The UI follows the global language setting, and switching keeps the same article, image and facts.
 - **Outlets**: 8 fictional outlets with focus, credibility and tone. Trending is ranked from attention, follow-ups, severity and member popularity.
+
+## Thai language pass (th-voice.js, th-ui3.js, i18n.js)
+- **Member voice**: every line a member says was rewritten in natural Thai that follows her tone: bright (Genki, Airhead) is lively and uses “หนู”; calm (Cool, Elegant) is poised and uses “ฉัน”; soft (Shy) hesitates (“อ-เอ่อ…”, “ห-หนู…”); firm (Serious) is resolute and ends with “ค่ะ”. This covers Senbatsu reactions, election speeches, greetings, team and role changes, contract talks, graduation requests, talks and persuasion replies, monthly hints and the final graduation message. Fan comments sound like real fans online.
+- **Joined text**: speeches and notes built from several sentences (final message, graduation talk, help text) are translated sentence by sentence, using the longest known run of sentences. A template blank never swallows a sentence break. Names and titles written inside quotes are kept exactly as typed.
+- **Newly translated**: costume catalogue (pieces, patterns, presets), all 120 concepts and their descriptions, 120 genre descriptions (genre names stay in English, as Thai listeners use them), 114 lyric themes, prefectures, event types, music programs, Theater and booking screens, fan and chart screens, member profile and care options, the single-production timeline, release pop-ups, and about 340 toast and confirmation messages. Organiser, rival and song names are proper nouns and stay as they are.
+- Wrong partial translations were fixed (for example “Back to production” no longer becomes the Senbatsu back row).

@@ -12,16 +12,25 @@ function i18nLang(){if(!UIP.lang)UIP.lang=/^th/i.test(navigator.language||'')?'t
 function i18nBuild(){if(I18N.re)return;const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  const keys=Object.keys(I18N_TH).filter(k=>/[^A-Za-z]/.test(k)&&/[A-Za-z]{2}/.test(k)&&k.length>3).sort((a,b)=>b.length-a.length);
  I18N.re=new RegExp('(?<![A-Za-z])('+keys.map(esc).join('|')+')(?![A-Za-z])','g');
- I18N.tpl=(typeof I18N_TH_TPL!='undefined'?I18N_TH_TPL:[]).map(([e,t])=>{const num=/^\{0\} [^{}]*$/.test(e)&&e.split(' ').length<=3;const dot=e.includes(' · ');let r=esc(e).replace(/\\\{(\d)\\\}/g,dot?'(.+?)':'((?:(?! · ).)+?)');if(num)r=r.replace(/^\(\(\?:\(\?! · \)\.\)\+\?\)/,'([\\d][\\d,./%]*)');return[new RegExp('^'+r+'$'),t,dot]});
+ I18N.tpl=(typeof I18N_TH_TPL!='undefined'?I18N_TH_TPL:[]).flatMap(([e,t])=>{const l=(e.match(I18N_SYM)||[''])[0];return l&&l.length<e.length&&t.startsWith(l)&&/[A-Za-z]{3}/.test(e.slice(l.length).replace(/\{\d\}/g,''))?[[e,t],[e.slice(l.length),t.slice(l.length)]]:[[e,t]]}).map(([e,t])=>{const raw=new Set([...e.matchAll(/[“"]\{(\d)\}[”"]/g)].map(m=>+m[1]));const num=/^\{0\} [^{}]*$/.test(e)&&e.split(' ').length<=3;const dot=e.includes(' · ');let r=esc(e).replace(/\\\{(\d)\\\}/g,dot?'(.+?)':'((?:(?! · ).)+?)');if(num)r=r.replace(/^\(\(\?:\(\?! · \)\.\)\+\?\)/,'([\\d][\\d,./%]*)');return[new RegExp('^'+r+'$'),t,dot,raw]});
  const M=Object.keys(I18N_TH_MON).join('|');I18N.dRe=[[new RegExp('\\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun), ','g'),(m,d)=>I18N_TH_DAY[d]+' '],[new RegExp('\\b('+M+') (\\d{1,2}), (\\d{4})','g'),(m,a,b,c)=>`${b} ${I18N_TH_MON[a]} ${c}`],[new RegExp('\\b('+M+') (\\d{4})\\b','g'),(m,a,b)=>`${I18N_TH_MON[a]} ${b}`],[new RegExp('\\b('+M+') (\\d{1,2})\\b','g'),(m,a,b)=>`${b} ${I18N_TH_MON[a]}`]]}
 const I18N_SYM=/^[^A-Za-z0-9"'(¥~@]+/;
 function i18nCap(c){if(c==null)return'';c=c.replace(/^(\d+)(st|nd|rd|th)$/,'$1');return I18N_TH[c]!=null?I18N_TH[c]:/[A-Za-z]{2}/.test(c)?trCore(c):c}
+// one sentence (or a run of sentences) found in the dictionary or matching a sentence template; a template blank never spans a sentence break
+function i18nExact(s){const D=I18N_TH;if(D[s]!=null)return D[s];i18nBuild();for(const[re,t,,raw]of I18N.tpl){const m=s.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?](?:[”"])?\s|…\s/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null}
+// speech and notes made of several sentences joined together: translate the longest known run of sentences at each point
+function i18nSent(k){if(k.length<12||!/[.!?…][”"]?\s+\S/.test(k))return null;const P=k.split(/(?<=[.!?…][”"]?)\s+/);if(P.length<2||P.length>40)return null;
+ const out=[];let hit=0;for(let i=0;i<P.length;){let done=0;for(let j=P.length;j>i;j--){const seg=P.slice(i,j).join(' '),q=seg.match(/^([“"]?)([\s\S]*?)([”"]?)$/),r=i18nExact(seg)??(q[1]||q[3]?i18nExact(q[2]):null);if(r!=null){out.push(I18N_TH[seg]!=null||!(q[1]||q[3])||i18nExact(seg)!=null?r:q[1]+r+q[3]);hit++;i=j;done=1;break}}if(!done){out.push(P[i]);i++}}
+ if(!hit)return null;return out.map(x=>/[A-Za-z]{2}/.test(x)&&!/[\u0E00-\u0E7F]/.test(x)?trCore(x):x).join(' ')}
 function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
- const lead=(k.match(I18N_SYM)||[''])[0];if(lead&&lead.length<k.length){const core=k.slice(lead.length),r=trCore(core);return lead+r}
- const T=dotOnly=>{for(const[re,t,dot]of I18N.tpl){if(dotOnly&&!dot)continue;const m=k.match(re);if(m)return t.replace(/\{(\d)\}/g,(_,i)=>i18nCap(m[+i+1]))}return null};
- if(k.includes(' · ')){const r=T(1);if(r!=null)return r;return k.split(' · ').map(p=>p.trim()?trCore(p.trim()):p).join(' · ')}
+ {const q=k.match(/^([“"])([^“”"]+)([”"])$/);if(q){const r=i18nExact(q[2])??i18nSent(q[2]);if(r!=null)return q[1]+r+q[3]}}
+ {const r=i18nSent(k);if(r!=null)return r}
+ const T=dotOnly=>{for(const[re,t,dot,raw]of I18N.tpl){if(dotOnly&&!dot)continue;const m=k.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?][”"]?\s+[A-Z“"]/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null};
+ const lead=(k.match(I18N_SYM)||[''])[0];if(lead&&lead.length<k.length){{const r=T(k.includes(' · ')?1:0);if(r!=null)return r}const core=k.slice(lead.length),r=trCore(core);return lead+r}
+ if(k.includes(' · ')){const r=T(1);if(r!=null)return r;{const q=i18nSent(k);if(q!=null)return q}return k.split(' · ').map(p=>p.trim()?trCore(p.trim()):p).join(' · ')}
  {const r=T(0);if(r!=null)return r}
  if(/^[A-Z][a-z]+( \/ [A-Z][a-z]+)+$/.test(k))return k.split(' / ').map(w=>D[w]||w).join(' / ');
+ {const r=i18nSent(k);if(r!=null)return r}
  let out=k;for(const[r,v]of I18N_TH_RX)out=out.replace(r,v);for(const[r,f]of I18N.dRe)out=out.replace(r,f);
  out=out.replace(/(?<![A-Za-z])([A-Z][a-z]+(?:(?: \/ | )[A-Z][a-z]+)?)(?= [\d¥~#+×]|:? ?\d)/g,w=>D[w]??w.split(' / ').map(x=>D[x]??x).join(' / '));
  return out.replace(I18N.re,m=>D[m]??m)}
