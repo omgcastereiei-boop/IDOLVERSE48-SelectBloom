@@ -4365,7 +4365,7 @@ const fbTeamName=m=>{const t=teamOf(m);return t?t.name:TL()};
 // rows for the ranking: All Time = current totals & all-time net; Current Month = now, change this month; Last Month = end of last month
 function fbRows(st){const u=fbUI(),fb=S.fb,last=fb.hist[fb.hist.length-1];let R=st.act.map(m=>{const X=st.M[m.id],L=fb.life[m.id]||{kg:0,kl:0,og:0,ol:0};let r={m,k:X.k,o:X.o,sup:X.sup,loy:X.loy,kl:X.kl,ol:X.ol,eng:X.eng,pop:m.pop,mp:X.mp};
   if(u.per=='cur')r.net=X.net;else if(u.per=='all')r.net=L.kg+L.og-L.kl-L.ol;else{const h=last&&last.mem[m.id];r=h?{...r,k:h[0],o:h[1],sup:h[2],loy:h[3],pop:h[4],net:h[5],mp:h[7]}:{...r,k:0,o:0,sup:0,net:0,loy:0}}return r});
- if(u.team!='all')R=R.filter(r=>String(r.m.tid||'none')==u.team);if(u.gen!='all')R=R.filter(r=>(r.m.gen||1)==+u.gen);R.sort((a,b)=>u.dir*((a[u.sort]||0)-(b[u.sort]||0))||a.m.id-b.m.id);return R}
+ if(u.team!='all')R=R.filter(r=>String(r.m.tid||'none')==u.team);if(u.gen!='all')R=R.filter(r=>(r.m.gen||1)==+u.gen);const nv=v=>Number.isFinite(+v)?+v:0;R.sort((a,b)=>u.dir*(nv(a[u.sort])-nv(b[u.sort]))||a.m.id-b.m.id);return R}
 function fbFilters(st,showPer=true){const u=fbUI(),T=uniq(st.act.map(m=>m.tid||'none')),gens=uniq(st.act.map(m=>m.gen||1)).sort((a,b)=>a-b),tn=id=>{const m=st.act.find(x=>(x.tid||'none')==id);return id=='none'?TL()+'s':m?fbTeamName(m):id};
  return`<div class="row fbfil"><label class="st">Team <select onchange="fbSet('team',this.value)"><option value="all">All teams</option>${T.map(t=>`<option value="${t}" ${String(u.team)==String(t)?'selected':''}>${esc(tn(t))}</option>`).join('')}</select></label><label class="st">Generation <select onchange="fbSet('gen',this.value)"><option value="all">All generations</option>${gens.map(g=>`<option value="${g}" ${String(u.gen)==String(g)?'selected':''}>${ord(g)} Gen</option>`).join('')}</select></label>${showPer?`<span class="fbseg">${[['cur','Current Month'],['last','Last Month'],['all','All Time']].map(([k,n])=>`<button class="${u.per==k?'on':''}" onclick="fbSet('per','${k}')">${n}</button>`).join('')}</span>`:''}</div>`}
 function fbTile(l,v,sub,cls=''){return`<div class="fbtile ${cls}"><small>${l}</small><b>${v}</b>${sub?`<span>${sub}</span>`:''}</div>`}
@@ -10094,7 +10094,7 @@ V.fanbase=function(){const fb=fbState(),u=fxUI(),st=fxStats(),G=st.G,X=fxS(),las
   <div class="g2"><div class="c"><h3>Where new fans came from (this month)</h3>${Object.entries(A.src).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,n])=>`<div class="fbrow"><b>${esc(k)}</b><span>+${fbN(n)}</span></div>`).join('')||'<p class="st">No new fans yet this month.</p>'}</div><div class="c"><h3>Why fans left (all time)</h3>${Object.entries(X.fmr.by).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`<div class="fbrow"><b>${esc(k)}</b><span>${fbN(n)}</span></div>`).join('')||'<p class="st">No former fans yet.</p>'}</div></div>`}
  else if(u.tab=='rank'){const SORT=[['k','Kami Oshi'],['o','Other Oshi'],['uniq','Unique supporters'],['act','Active supporters'],['grow','Fan growth'],['loy','Fan loyalty'],['eng','Fan engagement'],['af','Fan affinity'],['spend','Spending'],...FX_CATS.map(([k,n])=>['c:'+k,'Most '+n+' fans'])];
   let L=Object.values(st.M).filter(a=>u.who=='cur'?a.cur:u.who=='grad'?!a.cur:true).map(a=>({a,m:ctMem(a.id)})).filter(z=>z.m);if(u.scope!='all'){const[t,id]=u.scope.split(':');L=L.filter(z=>t=='g'?gsGid(z.m)==+id||(z.m.kn&&z.m.kn.gid==+id):z.m.tid==id)}
-  const val=z=>u.sort.startsWith('c:')?z.a.cat[u.sort.slice(2)]:z.a[u.sort];L.sort((x,y)=>u.dir*(val(x)-val(y)));const mx=Math.max(1,...L.map(z=>z.a.uniq));
+  const val=z=>u.sort.startsWith('c:')?z.a.cat[u.sort.slice(2)]:z.a[u.sort];const nv=v=>Number.isFinite(+v)?+v:0;L.sort((x,y)=>u.dir*(nv(val(x))-nv(val(y)))||x.a.id-y.a.id);const mx=Math.max(1,...L.map(z=>z.a.uniq));
   body=`<div class="c"><div class="row"><label class="st">Sort <select onchange="fxSet('sort',this.value)">${SORT.map(([k,n])=>`<option value="${k}" ${u.sort==k?'selected':''}>${n}</option>`).join('')}</select></label><button class="b s" onclick="ui.fx.dir*=-1;render()">${u.dir<0?'High → low':'Low → high'}</button><select onchange="fxSet('scope',this.value)"><option value="all">Entire company</option>${S.groups.map(g=>`<option value="g:${g.id}" ${u.scope=='g:'+g.id?'selected':''}>${esc(g.name)}${g.type=='sister'?' (Sister Group)':''}</option>${(g.teams||[]).map(t=>`<option value="t:${t.id}" ${u.scope=='t:'+t.id?'selected':''}>— ${esc(t.name)}</option>`).join('')}`).join('')}</select><select onchange="fxSet('who',this.value)">${[['cur','Current members'],['grad','Graduated members'],['all','Everyone']].map(([k,n])=>`<option value="${k}" ${u.who==k?'selected':''}>${n}</option>`).join('')}</select><span class="st">${L.length} member(s) · unique supporters of this list: ${fbN(fxUnique(L.map(z=>z.a.id)))}</span></div>${fxLegend()}
   <div class="fxrank">${L.map((z,i)=>{const a=z.a,m=z.m;return`<button class="c fxrow" onclick="${a.cur?`ui.ptab='stats';ui.mod={t:'prof',id:${m.id}};render()`:`ctFormerOpen(${m.id})`}"><span class="fxno">${i+1}</span>${a.cur?ptc(m,38):pt(m,38)}<div class="fxrn"><b>${esc(m.stage||m.name)}</b><small>${a.cur?esc(fbTeamName(m)):'graduated'}</small></div><div class="fxrv"><span><i style="color:${FB_K}">♥</i> ${fbN(a.k)}</span><span><i style="color:${FB_O}">♡</i> ${fbN(a.o)}</span><span>= <b>${fbN(a.uniq)}</b></span><span class="st">${u.sort.startsWith('c:')?FX_CN[u.sort.slice(2)]+' '+fbN(val(z)):u.sort=='spend'?yen(a.spend):u.sort=='grow'?fbSg(a.grow):u.sort=='loy'||u.sort=='eng'||u.sort=='af'?Math.round(val(z)):''}</span></div><div class="fxrb">${fxBarStack(a.cat,Math.max(8,100*a.uniq/mx)+'%')}</div></button>`}).join('')||emptyBox('No members.')}</div></div>`}
  else if(u.tab=='spend'){const kinds=Object.entries(FX_KIND).map(([k,n])=>[k,n,(T.k[k]||{}).y||0,(T.k[k]||{}).u||0,(T.k[k]||{}).t||0]),tot=T.tot||0,fans=tot-T.pub,ub=fxBuyersAny(),mem=Object.entries(T.mem).map(([id,o])=>[ctMem(+id),Object.values(o).reduce((a,b)=>a+b,0),o]).filter(z=>z[0]).sort((a,b)=>b[1]-a[1]).slice(0,12),mm=Math.max(1,...mem.map(z=>z[1])),mk=Math.max(1,...kinds.map(z=>z[2])),mc=Math.max(1,...Object.values(T.cat));
@@ -14003,6 +14003,42 @@ V.training=function(){const f=ui.trf=ui.trf||{grp:'all',st:'all',sk:'mot'};if(!S
  <div class="trg2">${L.map(card).join('')}</div></div>`};
 // profile: the skills block replaces the old Abilities/lesson buttons
 {const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{h=h.replace(/<h3>Abilities<\/h3>[\s\S]*?(?=<h3>Concept affinity<\/h3>)/,skProfHtml(m,cand)).replace(/<div class="sr"><b>Potential<\/b>[\s\S]*?<\/div>(?=<div class="sr">)/,'').replace(/<p class="st">(?:Training costs|Lessons cost)[^<]*<\/p>/,'')}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — repair numbers broken by the old album-sales NaN bug
+// -------------------------------------------------------------------------------------
+//  Before the fix, an album release could compute NaN sales. That NaN then flowed into
+//  S.fans, member popularity (grantRep), the fanbase segments and the album record, and
+//  a save turns NaN into null. This repair runs on load, after each release and once a
+//  day when something looks broken. It never touches Company Money (moneyOk does that).
+//  · members / former members: a broken number takes the median of the other members
+//  · fanbase segments: broken counts are dropped, broken traits get neutral values
+//  · S.fans: rebuilt from the fanbase segments
+//  · album / single records: broken sales, revenue and fans become 0
+//  · any remaining NaN anywhere in the state becomes 0
+// =====================================================================================
+const nrBad=v=>v===null||(typeof v=='number'&&!Number.isFinite(v));
+// null (a saved NaN) is only repaired on these stat fields; other fields can be null on purpose
+const NR_STAT=new Set(['mor','fans','buzz','en','loy','pas','pop','st','sing','dance','variety','cha','age']);
+function nrMembers(L){if(!Array.isArray(L)||!L.length)return 0;let n=0;const keys=new Set();L.forEach(m=>{for(const k in m)if(typeof m[k]=='number')keys.add(k)});
+ keys.forEach(k=>{const ok=L.map(m=>m[k]).filter(v=>typeof v=='number'&&Number.isFinite(v)).sort((a,b)=>a-b);if(ok.length<L.length/2)return;const med=ok[Math.floor(ok.length/2)];const nul=NR_STAT.has(k);L.forEach(m=>{const v=m[k];if(k in m&&(nul?nrBad(v):typeof v=='number'&&!Number.isFinite(v))){m[k]=med;n++}})});return n}
+function nrFb(fb){if(!fb||!Array.isArray(fb.segs))return 0;let n=0;const N0=fb.segs.length;fb.segs=fb.segs.filter(s=>s&&typeof s.n=='number'&&Number.isFinite(s.n)&&s.n>0);n+=N0-fb.segs.length;
+ fb.segs.forEach(s=>{[['loy',40],['eng',50],['sp',40]].forEach(([k,d])=>{if(nrBad(s[k])){s[k]=d;n++}});for(const j in s.o||{})if(nrBad(s.o[j])){delete s.o[j];n++}});if(n)fb.ver=(fb.ver|0)+1;return n}
+function nrRel(L){let n=0;(L||[]).forEach(r=>{if(!r)return;['sales','rev','fans','cost'].forEach(k=>{if(k in r&&nrBad(r[k])){r[k]=0;n++}})});return n}
+function nrWalk(o,seen,skip){let n=0;if(!o||typeof o!='object'||seen.has(o))return 0;seen.add(o);for(const k in o){if(skip.has(k))continue;const v=o[k];if(typeof v=='number'){if(Number.isNaN(v)){o[k]=0;n++}}else if(v&&typeof v=='object')n+=nrWalk(v,seen,skip)}return n}
+function nanRepair(quiet){if(!S)return 0;let n=0;try{
+ n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
+ n+=nrRel(S.albums)+nrRel(S.singles);(S.groups||[]).forEach(g=>{if(g&&g.ctx){n+=nrRel(g.ctx.albums)+nrRel(g.ctx.singles)}});
+ n+=nrWalk(S,new WeakSet(),new Set(['money','mOk']));
+ if(nrBad(S.fans)){S.fans=S.fb&&Array.isArray(S.fb.segs)?S.fb.segs.reduce((a,s)=>a+s.n,0):0;n++}
+ if(n&&S.fb){S.fb.ver=(S.fb.ver|0)+1;if(S.fb.fx)S.fb.fx.tv=(S.fb.fx.tv|0)+1}
+ if(n){console.warn('nanRepair: repaired '+n+' broken value(s)');if(!quiet)toast(`Repaired ${n} broken value(s) in this save (fans / popularity).`)}}catch(e){console.error(e)}return n}
+const nrSuspect=()=>{try{return nrBad(S.fans)||(S.members||[]).some(m=>nrBad(m.pop)||nrBad(m.fans))||(S.fb&&(S.fb.segs||[]).some(s=>nrBad(s.n)))}catch(e){return false}};
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);nanRepair(true);return r}}
+{const f=doRelease;doRelease=function(){const r=f.apply(this,arguments);if(nrSuspect())nanRepair(true);return r}}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);if(nrSuspect())nanRepair(true);return r}}
 
 </script>
 <script>

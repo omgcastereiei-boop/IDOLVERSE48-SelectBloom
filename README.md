@@ -1099,3 +1099,8 @@ New **Media & PR** section: News Feed, Crisis Room, News Archive, Reputation & O
 - **Cover**: album covers are portrait **3:4** (512×683 in the editor, 600×800 PNG export). Random covers and random positions use the full height. Singles stay 1:1. Albums released before this update keep their square covers.
 - **Fix**: album sales could become NaN (the album fan factor read a fan type that is not always present), which gave no revenue. The factor now falls back safely.
 - **Fix**: the Lyrics theme could not be chosen by hand in Thai mode (the option value became the Thai label). Options without a value now keep their English value when translated, for every dropdown in the game.
+
+## Fanbase NaN repair
+- **Cause**: before the album fix above, an album release could compute NaN sales. The NaN then reached `S.fans`, member popularity (`grantRep`) and the fanbase segments, so the Fanbase screen showed “NaN” and its rankings could not be sorted (a NaN breaks the sort).
+- **Repair** (`js/ui/nan-repair.js`): runs on load, after each release and on any day where something looks broken. Broken member stats take the median of the other members; broken fan segments are dropped and broken traits reset to neutral values; `S.fans` is rebuilt from the fan segments; broken album/single sales become 0; any other NaN becomes 0. Company Money is left to its own repair.
+- **Sorting**: Fanbase ranking sorts now treat a missing value as 0, so one bad value can no longer stop the sort.
