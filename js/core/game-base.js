@@ -32,8 +32,11 @@ function onboard(){const g=S.groups[0];if(!g||isLive(g))return'';const mem=S.mem
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.members)&&Array.isArray(s.groups)&&Array.isArray(s.led)&&typeof s.money=='number'&&s.sen&&Array.isArray(s.sen.slots)&&s.sen.slots.length==16)return s}catch(e){}return null}
 function save(){try{if(S)localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function cont(){const s=load();if(!s)return toast('No valid save found. Start a New Game.','err');S=s;migrate();ui.g=S.groups[0]?.id;ui.t=false;view='dash';toast('Save loaded.');render()}
-function earn(a,l){S.money+=a;S.inc+=a;S.led.unshift({d:S.day,l,a});S.led.length=Math.min(S.led.length,80)}
-function spend(a,l){if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
+// money safety: an invalid amount (NaN / Infinity / text) must never reach the company funds.
+// A NaN balance would make every purchase pass the "enough money?" check and would block every save.
+function moneyOk(){if(!S)return;if(typeof S.money!='number'||!isFinite(S.money)){console.error('Company funds were invalid ('+S.money+'); restored to the last valid balance.');S.money=typeof S.mOk=='number'&&isFinite(S.mOk)?S.mOk:0}S.mOk=S.money;['inc','exp'].forEach(k=>{if(typeof S[k]!='number'||!isFinite(S[k]))S[k]=0})}
+function earn(a,l){a=+a;if(!isFinite(a)){console.error('earn: invalid amount for "'+l+'":',a);return}moneyOk();S.money+=a;S.inc+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a});S.led.length=Math.min(S.led.length,80)}
+function spend(a,l){a=+a;if(!isFinite(a)||a<0){console.error('spend: invalid amount for "'+l+'":',a);toast('That cost could not be calculated, so nothing was charged or bought.','err');return false}moneyOk();if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
 function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.en=cl(m.en+15);m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
  earn(Math.round(S.fans*3),'Merch & streaming');
  if(dt().getDate()==1){const s=S.members.length*25000,p=Math.min(s,S.money);S.money-=p;S.exp+=p;S.led.unshift({d:S.day,l:'Monthly salaries',a:-p});

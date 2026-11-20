@@ -1388,8 +1388,11 @@ function onboard(){const g=S.groups[0];if(!g||isLive(g))return'';const mem=S.mem
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.members)&&Array.isArray(s.groups)&&Array.isArray(s.led)&&typeof s.money=='number'&&s.sen&&Array.isArray(s.sen.slots)&&s.sen.slots.length==16)return s}catch(e){}return null}
 function save(){try{if(S)localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function cont(){const s=load();if(!s)return toast('No valid save found. Start a New Game.','err');S=s;migrate();ui.g=S.groups[0]?.id;ui.t=false;view='dash';toast('Save loaded.');render()}
-function earn(a,l){S.money+=a;S.inc+=a;S.led.unshift({d:S.day,l,a});S.led.length=Math.min(S.led.length,80)}
-function spend(a,l){if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
+// money safety: an invalid amount (NaN / Infinity / text) must never reach the company funds.
+// A NaN balance would make every purchase pass the "enough money?" check and would block every save.
+function moneyOk(){if(!S)return;if(typeof S.money!='number'||!isFinite(S.money)){console.error('Company funds were invalid ('+S.money+'); restored to the last valid balance.');S.money=typeof S.mOk=='number'&&isFinite(S.mOk)?S.mOk:0}S.mOk=S.money;['inc','exp'].forEach(k=>{if(typeof S[k]!='number'||!isFinite(S[k]))S[k]=0})}
+function earn(a,l){a=+a;if(!isFinite(a)){console.error('earn: invalid amount for "'+l+'":',a);return}moneyOk();S.money+=a;S.inc+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a});S.led.length=Math.min(S.led.length,80)}
+function spend(a,l){a=+a;if(!isFinite(a)||a<0){console.error('spend: invalid amount for "'+l+'":',a);toast('That cost could not be calculated, so nothing was charged or bought.','err');return false}moneyOk();if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
 function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.en=cl(m.en+15);m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
  earn(Math.round(S.fans*3),'Merch & streaming');
  if(dt().getDate()==1){const s=S.members.length*25000,p=Math.min(s,S.money);S.money-=p;S.exp+=p;S.led.unshift({d:S.day,l:'Monthly salaries',a:-p});
@@ -7560,7 +7563,7 @@ const _svChrome=chrome;chrome=function(h){const w=SV.warn||SV.lastErr;return _sv
 // =====================================================================================
 const SVP={lsOff:false,tm:null,dirty:false,n:0};
 try{SVP.lsOff=localStorage.getItem('iv48_lsoff')=='1'}catch(e){}
-save=function(){if(!S||!svValid(S))return;SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
+save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
  let ok=false;if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
  SV.idbMain=j;SVP.n++;clearTimeout(SV.t);const put=()=>svPut('main',j).then(r=>{
   if(r){if(!ok&&!SVP.lsOff){SVP.lsOff=true;try{localStorage.removeItem(KEY)}catch(e){}try{localStorage.setItem('iv48_lsoff','1')}catch(e){}}if(SV.warn){SV.warn=null;if(S&&!ui.t)render()}}
@@ -7572,6 +7575,12 @@ function svAuto(){if(!S)return;SVP.dirty=true;clearTimeout(SVP.tm);SVP.tm=setTim
 const svNow=()=>{try{if(S&&!ui.t){SVP.now=1;try{save()}finally{SVP.now=0}}}catch(e){}};
 window.addEventListener('pagehide',svNow);window.addEventListener('beforeunload',svNow);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')svNow()});
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>{if(!p)navigator.storage.persist()}).catch(()=>{})}catch(e){}
+
+// money is checked every day and on load, so an invalid amount from any calculation can never stop autosave
+{const f=tick;tick=function(){try{moneyOk()}catch(e){}const r=f.apply(this,arguments);try{moneyOk()}catch(e){}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{moneyOk()}catch(e){}return r}}
+// phones may stop the page right after it is hidden, before the IndexedDB write finishes: keep a synchronous copy too
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden')return;try{if(S&&!ui.t&&SVP.lsOff&&SV.idbMain)localStorage.setItem(KEY,SV.idbMain)}catch(e){}});
 
 </script>
 <script>
@@ -8931,6 +8940,9 @@ const ctMem=id=>get(id)||(S.alumni||[]).find(a=>a.id==id)||null;
 const ctY=d=>dayDate(d).getFullYear();
 const ctAddY=(d,n)=>{const t=dayDate(d);return dateDay(new Date(t.getFullYear()+n,t.getMonth(),t.getDate()))};
 const ctPay=m=>200000+Math.round(m.pop||0)*5000; // estimated monthly value of a member's activities
+// Early graduation compensation: only when SHE asked to leave (the agency loses value it planned on), at most 12 months.
+// When the agency proposes the graduation there is no fee — otherwise recruiting and releasing members would print money.
+const ctFee=(m,mo,why)=>['prop','exp','dis'].includes(why)||!(mo>0)?0:Math.round(Math.min(mo,12)*ctPay(m));
 const ctMonths=(a,b)=>Math.max(0,Math.ceil((b-a)/30));
 function ctLog(m,t,txt){ctS().log.unshift({day:S.day,mid:m?m.id:null,name:m?m.name:'',t,txt});if(S.ct.log.length>300)S.ct.log.length=300}
 // ---- birthdays -----------------------------------------------------------------------------------------------------
@@ -8972,19 +8984,19 @@ function ctRenew(mid){const m=get(mid);if(!m||!m.ct)return;const c=m.ct,t=c.talk
 function ctAgreeP(m){const t=m.ct&&m.ct.talk;return cl(.3+(m.age-20)*.04+(60-m.pas)/150+(60-m.mor)/250+(t&&t.int=='grad'?.4:0)+(m.req?.6:0),.05,.97)}
 function ctGradDlg(mid,why){const m=get(mid);if(!m)return;if(m.grad)return toast(`${m.name}'s graduation is already announced (${longDate(m.grad.target)}).`,'err');ctEnsure(m);const c=m.ct;
  const D=ui.ctd&&ui.ctd.mid==mid?ui.ctd:(ui.ctd={mid,why:why||(m.req?'req':c.talk&&c.talk.res!='renew'&&c.end-S.day<=90?'exp':'prop'),days:90,early:'ret'});if(why)D.why=why;
- const target=D.why=='exp'?Math.max(S.day+14,c.end):S.day+D.days,early=target<c.end-30,mo=ctMonths(target,c.end),fee=Math.round(mo*ctPay(m));
+ const target=D.why=='exp'?Math.max(S.day+14,c.end):S.day+D.days,early=target<c.end-30,mo=ctMonths(target,c.end),fee=ctFee(m,mo,D.why);
  const box=`<h2 class="ht">🎓 Graduation — ${esc(m.name)}</h2><div class="fbrow">${ptc(m,56)}<div><b>${esc(m.stage||m.name)}</b><div class="st">${ctTermTxt(c)} · contract ends ${longDate(c.end)}</div></div></div>
  <div class="row"><label class="st">Reason <select onchange="ui.ctd.why=this.value;ctGradDlg(${mid})">${['req','prop','exp'].map(k=>`<option value="${k}" ${D.why==k?'selected':''} ${k=='req'&&!m.req?'disabled':''}>${CT_GR[k]}${k=='req'&&!m.req?' (she has not asked)':''}</option>`).join('')}</select></label>
  ${D.why!='exp'?`<label class="st">Activities continue for <select onchange="ui.ctd.days=+this.value;ctGradDlg(${mid})">${[30,45,60,75,90].map(n=>`<option value="${n}" ${D.days==n?'selected':''}>${n} days</option>`).join('')}</select></label>`:''}</div>
  <p class="st">Graduation date: <b>${longDate(target)}</b> at the latest. She keeps all activities until then and graduates at her <b>Graduation Stage</b> (required — a Theater performance of her team on or before that date; it can be earlier).</p>
  ${D.why=='prop'?`<p class="st">This is your proposal: ${esc(m.name)} must agree (about ${Math.round(ctAgreeP(m)*100)}% chance). If she refuses, you can propose again after 30 days.</p>`:''}
- ${early?`<div class="c"><h3>Early graduation · ${mo} month(s) before the contract end</h3><label class="ctopt"><input type="radio" name="cte" ${D.early=='fee'?'checked':''} onchange="ui.ctd.early='fee';ctGradDlg(${mid})"> <b>A) Contract termination fee</b> — ${yen(fee)} (${mo} remaining month(s)). The contract ends at graduation and she is free.</label><label class="ctopt"><input type="radio" name="cte" ${D.early=='ret'?'checked':''} onchange="ui.ctd.early='ret';ctGradDlg(${mid})"> <b>B) Agency Retained</b> — she graduates from the group but stays under contract until ${longDate(c.end)}, without any entertainment work.</label></div>`:''}
+ ${early?`<div class="c"><h3>Early graduation · ${mo} month(s) before the contract end</h3><label class="ctopt"><input type="radio" name="cte" ${D.early=='fee'?'checked':''} onchange="ui.ctd.early='fee';ctGradDlg(${mid})"> ${fee>0?`<b>A) Contract termination fee</b> — ${yen(fee)} (${Math.min(mo,12)} of ${mo} remaining month(s), at most 12). The contract ends at graduation and she is free.`:`<b>A) Release from her contract</b> — no fee, because the agency proposed this graduation. The contract ends at graduation and she is free.`}</label><label class="ctopt"><input type="radio" name="cte" ${D.early=='ret'?'checked':''} onchange="ui.ctd.early='ret';ctGradDlg(${mid})"> <b>B) Agency Retained</b> — she graduates from the group but stays under contract until ${longDate(c.end)}, without any entertainment work.</label></div>`:''}
  <div class="row"><button class="b p" onclick="ctGradGo(${mid})">📣 Announce graduation</button><button class="b s" onclick="ui.ctd=null;ui.mod=null;render()">Cancel</button></div>`;
  ui.mod={t:'html',h:box};render()}
 function ctGradGo(mid){const m=get(mid),D=ui.ctd;if(!m||!D)return;const c=m.ct;if(D.why=='prop'){if(m.ctProp!=null&&S.day-m.ctProp<30)return toast(`${m.name} refused recently. Propose again after ${jd(m.ctProp+30)}.`,'err');
   if(Math.random()>ctAgreeP(m)){m.ctProp=S.day;m.mor=cl(m.mor-6);hev(m,{t:'ct_gprop_no'});ctLog(m,'gprop','Refused a graduation proposal');ui.ctd=null;ui.mod={t:'html',h:`<h2 class="ht">${esc(m.name)} wants to stay</h2><p class="ctsay">“I'm sorry, Producer… I'm not ready to graduate yet. I still want to perform with everyone.”</p><p class="st">She did not agree. You can propose again after ${jd(S.day+30)}.</p>`};return render()}}
  const target=D.why=='exp'?Math.max(S.day+14,c.end):S.day+D.days,early=target<c.end-30;ctAnnounce(m,{reason:D.why,target,early:early?D.early:null});ui.ctd=null;render()}
-function ctAnnounce(m,o){const c=m.ct,mo=ctMonths(o.target,c.end);m.grad={ann:S.day,reason:o.reason,target:o.target,early:o.early||null,fee:o.early=='fee'?Math.round(mo*ctPay(m)):0,kind:o.kind||'grad',dis:o.dis||null,stage:null,cz:null,songs:[],singles:[]};m.req=null;if(c.talk)c.talk.res='grad';
+function ctAnnounce(m,o){const c=m.ct,mo=ctMonths(o.target,c.end);m.grad={ann:S.day,reason:o.reason,target:o.target,early:o.early||null,fee:o.early=='fee'?ctFee(m,mo,o.reason):0,kind:o.kind||'grad',dis:o.dis||null,stage:null,cz:null,songs:[],singles:[]};m.req=null;if(c.talk)c.talk.res='grad';
  m.buzz=cl((m.buzz||0)+12);hev(m,{t:'ct_ann',reason:CT_GR[o.reason]||o.reason,target:o.target,early:o.early||null});ctLog(m,'ann',`${o.kind=='dismiss'?'Dismissal announced':'Graduation announced'} (${CT_GR[o.reason]||o.reason}) · until ${longDate(o.target)}${o.early=='fee'?' · termination fee':o.early=='ret'?' · Agency Retained':''}`);
  const h=ctAnnHtml(m);if(o.quiet)CTQ.push(h);else ui.mod={t:'html',h};return m.grad}
 function ctAnnHtml(m){const G=m.grad,t=teamOf(m),dis=G.kind=='dismiss';return`<div class="ctann"><div class="gekicker">${dis?'Announcement':'Graduation Announcement'}</div><div class="fbrow">${ptc(m,72)}<div><h2 class="ht">${esc(m.stage||m.name)}</h2><div class="st">${esc(gn(m.group))}${t&&isAct(m)?' · '+esc(t.name):' · '+esc(TLm(m))} · ${ord(m.gen||1)} Generation</div></div></div>
@@ -8999,7 +9011,7 @@ function ctComplete(m,o){o=o||{};const G=m.grad||{},c=m.ct||{},dis=G.kind=='dism
  if(G.cz){const d=czD(G.cz);if(d){m.czHist=m.czHist||[];if(m.profCz)m.czHist.push(m.profCz);m.profCz={p:czClone(d.p),title:'Graduation costume',kind:'grad',did:d.id,day:S.day};m.gradCz={did:d.id,name:d.name,day:S.day}}}
  const R=ctLeave(m);hev(m,{t:dis?'ct_dis_done':'graduate'});
  m.dep={kind:dis?'dismiss':'grad',day:S.day,reason:G.reason,ann:G.ann,target:G.target,early:G.early,fee:G.fee||0,ret:G.early=='ret',dis:G.dis||o.dis||null,stage:o.rec||null,songs:G.songs||[],singles:G.singles||[]};
- if(G.early=='fee'&&G.fee>0){earn(G.fee,`Contract termination fee: ${m.name}`);c.term=S.day;c.hist&&c.hist.push({day:S.day,kind:'term',fee:G.fee,end:S.day});ctLog(m,'fee',`Contract terminated early · fee ${yen(G.fee)} (Finance History)`)}
+ if(G.early=='fee'){const fee=['prop','exp','dis'].includes(G.reason)?0:Math.min(+G.fee||0,Math.round(12*ctPay(m)));G.fee=fee;if(fee>0)earn(fee,`Contract termination fee: ${m.name}`);c.term=S.day;c.hist&&c.hist.push({day:S.day,kind:'term',fee,end:S.day});ctLog(m,'fee',fee>0?`Contract terminated early · fee ${yen(fee)} (Finance History)`:'Released from her contract early (no fee)')}
  if(G.early=='ret'){c.hist&&c.hist.push({day:S.day,kind:'ret',end:c.end});hev(m,{t:'ct_ret',end:c.end});ctLog(m,'ret',`Agency Retained until ${longDate(c.end)}`)}
  m.career={due:(G.early=='ret'?Math.max(c.end,S.day):S.day)+30,v:null};delete m.grad;
  ctLog(m,dis?'dis':'grad',dis?`Dismissed${o.rec?' after her Graduation Stage':' (immediate)'}`:`Graduated${o.rec?' at her Graduation Stage':''}`);
@@ -9638,19 +9650,19 @@ function oblUpdate(m){const W=oblWin(m);if(!W||m.grad.kind=='dismiss')return;m.g
 {const f=spWin;spWin=function(m,kind){if(kind=='grad'&&m.grad&&m.grad.kind!='dismiss'){oblUpdate(m);return[Math.max(S.day+1,m.grad.min||0),m.grad.target]}return f.apply(this,arguments)}}
 // the announcement dialog: ~90 days, obligations, early-graduation options
 ctGradDlg=function(mid,why){const m=get(mid);if(!m)return;if(m.grad)return toast(`${m.name}'s graduation is already announced.`,'err');ctEnsure(m);const c=m.ct;const D=ui.ctd&&ui.ctd.mid==mid?ui.ctd:(ui.ctd={mid,why:why||(m.req?'req':c.talk&&c.talk.res!='renew'&&c.end-S.day<=90?'exp':'prop'),early:'ret'});if(why)D.why=why;
- const tmp={ann:S.day,reason:D.why,kind:'grad'},O=oblSnap(m),est=D.why=='exp'?Math.max(c.end-30,S.day+14):S.day+90,early=D.why!='exp'&&est<c.end-30,mo=ctMonths(est,c.end),fee=Math.round(mo*ctPay(m));
+ const tmp={ann:S.day,reason:D.why,kind:'grad'},O=oblSnap(m),est=D.why=='exp'?Math.max(c.end-30,S.day+14):S.day+90,early=D.why!='exp'&&est<c.end-30,mo=ctMonths(est,c.end),fee=ctFee(m,mo,D.why);
  const OL=[...O.ev.map(o=>`${o.t} (${jd(o.day)})`),...O.pj.map(o=>`Release of “${o.t}” and its events`),...O.ge.map(o=>`${o.t} until its election single's Handshake Event`)];
  ui.mod={t:'html',h:`<h2 class="ht">🎓 Graduation — ${esc(m.name)}</h2><div class="fbrow">${ptc(m,56)}<div><b>${esc(m.stage||m.name)}</b><div class="st">${ctTermTxt(c)} · contract ends ${longDate(c.end)}</div></div></div>
  <div class="row"><label class="st">Reason <select onchange="ui.ctd.why=this.value;ctGradDlg(${mid})">${['req','prop','exp'].map(k=>`<option value="${k}" ${D.why==k?'selected':''} ${k=='req'&&!m.req?'disabled':''}>${CT_GR[k]}${k=='req'&&!m.req?' (she has not asked)':''}</option>`).join('')}</select></label></div>
  <p class="st">${D.why=='exp'?`She graduates when her contract ends (${longDate(c.end)}).`:`She stays with the group for about 90 days (until about ${longDate(est)}).`} She keeps all activities and Theater performances until her <b>Graduation Stage</b>, which is her graduation date.</p>
  ${OL.length?`<div class="c"><h4>Confirmed obligations she must complete first</h4><ul class="ms">${OL.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><p class="st">The Graduation Stage is arranged within 30 days after the last one (never before the ~90-day period ends).</p></div>`:''}
  ${D.why=='prop'?`<p class="st">This is your proposal: ${esc(m.name)} must agree (about ${Math.round(ctAgreeP(m)*100)}% chance).</p>`:''}
- ${early?`<div class="c"><h3>Early graduation · ${mo} month(s) before the contract end</h3><label class="ctopt"><input type="radio" name="cte" ${D.early=='fee'?'checked':''} onchange="ui.ctd.early='fee';ctGradDlg(${mid})"> <b>A) Contract termination fee</b> — ${yen(fee)}. The contract ends at graduation and she is free to work in entertainment.</label><label class="ctopt"><input type="radio" name="cte" ${D.early=='ret'?'checked':''} onchange="ui.ctd.early='ret';ctGradDlg(${mid})"> <b>B) Agency Retained</b> — she leaves the group but stays under contract until ${longDate(c.end)}: no entertainment work, freelance work, other agency or idol group until then.</label></div>`:''}
+ ${early?`<div class="c"><h3>Early graduation · ${mo} month(s) before the contract end</h3><label class="ctopt"><input type="radio" name="cte" ${D.early=='fee'?'checked':''} onchange="ui.ctd.early='fee';ctGradDlg(${mid})"> ${fee>0?`<b>A) Contract termination fee</b> — ${yen(fee)} (at most 12 months of her value). The contract ends at graduation and she is free to work in entertainment.`:`<b>A) Release from her contract</b> — no fee, because the agency proposed this graduation. The contract ends at graduation and she is free to work in entertainment.`}</label><label class="ctopt"><input type="radio" name="cte" ${D.early=='ret'?'checked':''} onchange="ui.ctd.early='ret';ctGradDlg(${mid})"> <b>B) Agency Retained</b> — she leaves the group but stays under contract until ${longDate(c.end)}: no entertainment work, freelance work, other agency or idol group until then.</label></div>`:''}
  <div class="row"><button class="b p" onclick="ctGradGo(${mid})">📣 Announce graduation</button><button class="b s" onclick="ui.ctd=null;ui.mod=null;render()">Cancel</button></div>`};render()};
 {const f=ctAgreeP;ctAgreeP=function(m){return cl(f.apply(this,arguments)+(motPress(m).P-20)/150,.05,.97)}}
 ctGradGo=function(mid){const m=get(mid),D=ui.ctd;if(!m||!D||m.grad)return;const c=m.ct;if(D.why=='prop'){if(m.ctProp!=null&&S.day-m.ctProp<30)return toast(`${m.name} refused recently. Propose again after ${jd(m.ctProp+30)}.`,'err');
   if(Math.random()>ctAgreeP(m)){m.ctProp=S.day;m.mor=cl(m.mor-6);m.loy=cl((m.loy??50)-3);hev(m,{t:'ct_gprop_no'});ui.ctd=null;ui.mod={t:'html',h:`<h2 class="ht">${esc(m.name)} wants to stay</h2><p class="ctsay">“I'm sorry, Producer… I'm not ready to graduate yet.”</p><p class="st">You can propose again after ${jd(S.day+30)}.</p>`};return render()}}
- const est=D.why=='exp'?Math.max(c.end,S.day+14):S.day+120,early=D.why!='exp'&&S.day+90<c.end-30;ctAnnounce(m,{reason:D.why,target:est,early:early?D.early:null});if(m.grad){m.grad.fee=early&&D.early=='fee'?Math.round(ctMonths(S.day+90,c.end)*ctPay(m)):0}ui.ctd=null;render()};
+ const est=D.why=='exp'?Math.max(c.end,S.day+14):S.day+120,early=D.why!='exp'&&S.day+90<c.end-30;ctAnnounce(m,{reason:D.why,target:est,early:early?D.early:null});if(m.grad){m.grad.fee=early&&D.early=='fee'?ctFee(m,ctMonths(S.day+90,c.end),D.why):0}ui.ctd=null;render()};
 // contract-expiry / unanswered requests use the same path (no duplicate announcements)
 // ---- General Election: the confirmation date decides -------------------------------------------------------------------------
 {const f=startSingle;startSingle=function(){const p=S.pj;const r=f.apply(this,arguments);try{if(p&&p.ge){const e=geGet(p.ge);if(e&&e.st=='producing'&&e.conf==null){e.conf=S.day;geGradFilter(e)}}}catch(x){console.error(x)}return r}}
@@ -15622,6 +15634,12 @@ Object.assign(I18N_TH,{"Lai Kanok (Thai)":"ลายกนก (ไทย)",
 "She keeps all activities and Theater performances until her":"เธอยังทำกิจกรรมทั้งหมดและขึ้นแสดงเธียเตอร์ต่อไปจนถึง",
 "Practice Room":"ห้องซ้อม",
 "Members practise on their own — there is nothing to assign.":"เมมเบอร์ฝึกซ้อมกันเอง — ไม่ต้องสั่งการ",
+"A) Release from her contract":"A) ปล่อยออกจากสัญญา",
+"— no fee, because the agency proposed this graduation. The contract ends at graduation and she is free.":"— ไม่มีค่าธรรมเนียม เพราะทางค่ายเป็นฝ่ายเสนอให้จบการศึกษา สัญญาสิ้นสุดเมื่อจบการศึกษา และเธอเป็นอิสระ",
+"— no fee, because the agency proposed this graduation. The contract ends at graduation and she is free to work in entertainment.":"— ไม่มีค่าธรรมเนียม เพราะทางค่ายเป็นฝ่ายเสนอให้จบการศึกษา สัญญาสิ้นสุดเมื่อจบการศึกษา และเธอมีอิสระที่จะทำงานในวงการบันเทิง",
+"That cost could not be calculated, so nothing was charged or bought.":"คำนวณค่าใช้จ่ายไม่ได้ จึงไม่มีการเรียกเก็บเงินหรือซื้ออะไร",
+"The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.":"บันทึกเกมไม่ได้เพราะข้อมูลบางส่วนในเกมไม่ถูกต้อง ให้ส่งออกไฟล์เซฟจากหน้า จัดการ › บันทึกและโหลด แล้วแจ้งปัญหานี้",
+"Released from her contract early (no fee)":"ปล่อยออกจากสัญญาก่อนกำหนด (ไม่มีค่าธรรมเนียม)",
 "Add at least one member to the cover.":"ใส่เมมเบอร์บนปกอย่างน้อยหนึ่งคน",
 "No saved version of this edition yet.":"เวอร์ชันนี้ยังไม่มีงานที่บันทึกไว้",
 "Saved version loaded.":"โหลดเวอร์ชันที่บันทึกไว้แล้ว",
@@ -16387,12 +16405,14 @@ I18N_TH_TPL.unshift(["A Revival Stage is a new production of an existing Stage (
 ["The best-ranked members take the front and middle positions (and the Center positions unless you keep the chosen Centers).","เมมเบอร์อันดับสูงจะได้ยืนแถวหน้าและแถวกลาง (รวมถึงตำแหน่งเซ็นเตอร์ เว้นแต่คุณจะคงเซ็นเตอร์ที่เลือกไว้)"],
 ["Load slot {0}? Unsaved progress in the current game is replaced (the current game is still in the autosave until you act).","โหลดช่องเซฟ {0} ใช่ไหม? ความคืบหน้าที่ยังไม่ได้บันทึกในเกมปัจจุบันจะถูกแทนที่ (เกมปัจจุบันยังอยู่ในออโต้เซฟจนกว่าคุณจะทำอะไรต่อ)"],
 ["Original company career: joined {0} · {1} Generation. One member record (ID {2}) is shared by every group she belongs to.","เส้นทางในบริษัท: เข้าร่วมเมื่อ {0} · รุ่นที่ {1} ข้อมูลเมมเบอร์ชุดเดียว (ID {2}) ใช้ร่วมกันในทุกวงที่เธอสังกัด"],
+["— {0} (at most 12 months of her value). The contract ends at graduation and she is free to work in entertainment.","— {0} (สูงสุด 12 เดือนของมูลค่างานของเธอ) สัญญาสิ้นสุดเมื่อจบการศึกษา และเธอมีอิสระที่จะทำงานในวงการบันเทิง"],
 ["Give the current design to the {0} member(s) without a costume? You can still change each one afterwards.","ใช้ดีไซน์ปัจจุบันให้เมมเบอร์ {0} คนที่ยังไม่มีชุดใช่ไหม? ภายหลังยังเปลี่ยนรายคนได้"],
 ["A member can be in several Units, or in none — every eligible {0} member still performs the Team songs.","เมมเบอร์หนึ่งคนอยู่ได้หลายยูนิตหรือไม่อยู่เลยก็ได้ — เมมเบอร์ {0} ทุกคนที่มีสิทธิ์ยังคงแสดงเพลงของทีมตามปกติ"],
 ["Setlist “{0}” loaded (formations re-copied from the original songs for this concert's participants).","โหลดเซ็ตลิสต์ “{0}” แล้ว (คัดลอกฟอร์เมชันจากเพลงต้นฉบับใหม่ให้ผู้เข้าร่วมคอนเสิร์ตนี้)"],
 ["Lessons cost {0} and Energy (Vocal {1} · Dance {2} · Performance {3} · Variety {4}); Energy recovers {5} per day.","บทเรียนมีค่าใช้จ่าย {0} และใช้พลังงาน (ร้องเพลง {1} · เต้น {2} · การแสดง {3} · วาไรตี้ {4}) พลังงานฟื้นวันละ {5}"],
 ["{0} is in the Senbatsu of \"{1}\", which is in production. Graduation is possible after its release.","{0} อยู่ในเซ็มบัตสึของ \"{1}\" ซึ่งกำลังผลิตอยู่ จบการศึกษาได้หลังซิงเกิลวางขายแล้ว"],
 ["Import \"{0}\" (day {1})? Your current progress in this browser will be replaced (a backup is kept).","นำเข้า \"{0}\" (วันที่ {1}) ใช่ไหม? ความคืบหน้าในเบราว์เซอร์นี้จะถูกแทนที่ (มีสำเนาสำรองเก็บไว้)"],
+["— {0} ({1} of {2} remaining month(s), at most 12). The contract ends at graduation and she is free.","— {0} ({1} จาก {2} เดือนที่เหลือ สูงสุด 12 เดือน) สัญญาสิ้นสุดเมื่อจบการศึกษา และเธอเป็นอิสระ"],
 ["Switching to {0} ({1} eligible members): {2} assigned member(s) will be removed, size {3}→{4}, centers {5}→{6}.","เปลี่ยนเป็น {0} (มีสิทธิ์ {1} คน): เมมเบอร์ที่จัดไว้ {2} คนจะถูกเอาออก ขนาด {3}→{4} เซ็นเตอร์ {5}→{6}"],
 ["{0} already has a Roadshow for \"{1}\". Choose another location, or wait for the next single.","{0} มีโรดโชว์ของ \"{1}\" แล้ว เลือกสถานที่อื่น หรือรอซิงเกิลหน้า"],
 ["Formation arranged by {0}: {1} member(s), {2} Center(s){3}. Adjust positions by hand if you like.","จัดฟอร์เมชันตาม{0}แล้ว: เมมเบอร์ {1} คน เซ็นเตอร์ {2} คน{3} ปรับตำแหน่งเองได้ตามต้องการ"],

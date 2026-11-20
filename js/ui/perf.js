@@ -12,7 +12,7 @@
 // =====================================================================================
 const SVP={lsOff:false,tm:null,dirty:false,n:0};
 try{SVP.lsOff=localStorage.getItem('iv48_lsoff')=='1'}catch(e){}
-save=function(){if(!S||!svValid(S))return;SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
+save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
  let ok=false;if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
  SV.idbMain=j;SVP.n++;clearTimeout(SV.t);const put=()=>svPut('main',j).then(r=>{
   if(r){if(!ok&&!SVP.lsOff){SVP.lsOff=true;try{localStorage.removeItem(KEY)}catch(e){}try{localStorage.setItem('iv48_lsoff','1')}catch(e){}}if(SV.warn){SV.warn=null;if(S&&!ui.t)render()}}
@@ -24,3 +24,9 @@ function svAuto(){if(!S)return;SVP.dirty=true;clearTimeout(SVP.tm);SVP.tm=setTim
 const svNow=()=>{try{if(S&&!ui.t){SVP.now=1;try{save()}finally{SVP.now=0}}}catch(e){}};
 window.addEventListener('pagehide',svNow);window.addEventListener('beforeunload',svNow);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')svNow()});
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>{if(!p)navigator.storage.persist()}).catch(()=>{})}catch(e){}
+
+// money is checked every day and on load, so an invalid amount from any calculation can never stop autosave
+{const f=tick;tick=function(){try{moneyOk()}catch(e){}const r=f.apply(this,arguments);try{moneyOk()}catch(e){}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{moneyOk()}catch(e){}return r}}
+// phones may stop the page right after it is hidden, before the IndexedDB write finishes: keep a synchronous copy too
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden')return;try{if(S&&!ui.t&&SVP.lsOff&&SV.idbMain)localStorage.setItem(KEY,SV.idbMain)}catch(e){}});
