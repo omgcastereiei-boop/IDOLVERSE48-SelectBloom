@@ -21,8 +21,18 @@ function nrFb(fb){if(!fb||!Array.isArray(fb.segs))return 0;let n=0;const N0=fb.s
  fb.segs.forEach(s=>{[['loy',40],['eng',50],['sp',40]].forEach(([k,d])=>{if(nrBad(s[k])){s[k]=d;n++}});for(const j in s.o||{})if(nrBad(s.o[j])){delete s.o[j];n++}});if(n)fb.ver=(fb.ver|0)+1;return n}
 function nrRel(L){let n=0;(L||[]).forEach(r=>{if(!r)return;['sales','rev','fans','cost'].forEach(k=>{if(k in r&&nrBad(r[k])){r[k]=0;n++}})});return n}
 function nrWalk(o,seen,skip){let n=0;if(!o||typeof o!='object'||seen.has(o))return 0;seen.add(o);for(const k in o){if(skip.has(k))continue;const v=o[k];if(typeof v=='number'){if(Number.isNaN(v)){o[k]=0;n++}}else if(v&&typeof v=='object')n+=nrWalk(v,seen,skip)}return n}
+
+// fans of a member: use her supporters in the fanbase (Kami Oshi + Oshi), which survived the bug.
+// Popularity of those members is re-estimated from the healthy members' popularity per supporter.
+function nrSupporters(){try{const st=fbStats();if(!st||!st.M)return null;const r={};for(const id in st.M){const X=st.M[id];r[id]=Math.max(0,Math.round((+X.k||0)+(+X.o||0)))}return r}catch(e){return null}}
+function nrFansFromFb(ids){const sup=nrSupporters();if(!sup||!ids.size)return 0;let n=0;const L=S.members||[];
+ const healthy=L.filter(m=>!ids.has(m.id)&&Number.isFinite(m.pop)&&sup[m.id]>0),ratio=healthy.map(m=>m.pop/sup[m.id]).sort((a,b)=>a-b),rt=ratio.length?ratio[Math.floor(ratio.length/2)]:null,pmax=healthy.length?Math.max(...healthy.map(m=>m.pop)):100;
+ L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;n++;if(rt!=null){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
 function nanRepair(quiet){if(!S)return 0;let n=0;try{
- n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
+ const brk=new Set((S.members||[]).filter(m=>nrBad(m.fans)).map(m=>m.id));n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
+ // one-time pass for saves repaired by the first version (fans set to 0 although she still has supporters)
+ if(!S.nrFansV){S.nrFansV=1;(S.members||[]).forEach(m=>{if(m.fans===0&&!m.left)brk.add(m.id)})}
+ n+=nrFansFromFb(brk);
  n+=nrRel(S.albums)+nrRel(S.singles);(S.groups||[]).forEach(g=>{if(g&&g.ctx){n+=nrRel(g.ctx.albums)+nrRel(g.ctx.singles)}});
  n+=nrWalk(S,new WeakSet(),new Set(['money','mOk']));
  if(nrBad(S.fans)){S.fans=S.fb&&Array.isArray(S.fb.segs)?S.fb.segs.reduce((a,s)=>a+s.n,0):0;n++}
