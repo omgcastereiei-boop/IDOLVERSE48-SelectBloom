@@ -23,7 +23,7 @@ let SL_C={k:null,v:null};
 function slData(){const key=[S.day,S.sid,(S.singles||[]).length,(S.groups||[]).length,S.rec?[...(S.rec.sr||[]),...(S.rec.dvd||[])].map(p=>p.status).join(''):'',Object.keys((S.th&&S.th.st)||{}).length].join('|');if(SL_C.k==key)return SL_C.v;
  const out=[],GL=(S.groups&&S.groups.length?S.groups:[{id:null,name:''}]);
  GL.forEach(g=>{try{gsWith(g.id,()=>{const gn=g.name||'',sOf=new Map(),aOf=new Map();
-  (S.singles||[]).forEach(x=>{const ids=[...new Set([x.mainId,...((x.types||[]).flatMap(t=>t.songs||[]))])].filter(Boolean);ids.forEach(id=>{if(!sOf.has(id))sOf.set(id,x)});
+  (S.singles||[]).filter(x=>x.kind!='album').forEach(x=>{const ids=[...new Set([x.mainId,...((x.types||[]).flatMap(t=>t.songs||[]))])].filter(Boolean);ids.forEach(id=>{if(!sOf.has(id))sOf.set(id,x)});
    out.push({k:'single',id:x.rid||('x'+slNum(x.title)),gid:g.id,gn,title:x.title,date:x.relDay??x.day,added:slNum(x.rid),pop:x.sales||0,n:ids.length,x})});
   (S.albums||[]).forEach(a=>{const ids=(a.tracks||[]).filter(Boolean),ep=a.kind=='ep';ids.forEach(id=>{if(!aOf.has(id))aOf.set(id,a)});out.push({k:ep?'ep':'album',id:a.id,gid:g.id,gn,title:a.title,date:a.relDay??a.day,added:slNum(a.id),pop:a.sales||0,n:ids.length,a})});
   Object.values(S.songs||{}).forEach(o=>{if(!o||!o.title)return;let pop=0;try{pop=thSongPop(o)}catch(e){}out.push({k:'song',id:o.id,gid:g.id,gn,title:o.title,date:o.relDay??null,added:slNum(o.id),pop,o,x:sOf.get(o.id)||null,a:aOf.get(o.id)||null,rel:!!o.rel})})})}catch(e){console.error(e)}});

@@ -1106,3 +1106,9 @@ New **Media & PR** section: News Feed, Crisis Room, News Archive, Reputation & O
 - **Whole-generation repair**: member stats are repaired even when most members are broken (for example a whole first generation): the median of the healthy members is used, or a neutral default when none is healthy. Number displays (`fans`, `sales`, `views`, `pop`, `buzz`, `rev`) treat a missing value as 0 instead of crashing the screen.
 - **Member fans from the fanbase**: a broken member fan count is rebuilt from her supporters in the fanbase (Kami Oshi + Oshi), which the bug did not damage. The check runs on every load and every day (no one-time flag): any member with 0 fans who still has supporters gets her fans rebuilt, counted directly from the fan segments. If her popularity was broken too, it is estimated from the healthy members (popularity per supporter), capped at twice the highest healthy popularity.
 - **Sorting**: Fanbase ranking sorts now treat a missing value as 0, so one bad value can no longer stop the sort.
+
+## Albums share the single release pipeline
+- New albums are released through the same pipeline as singles. The release is stored in `S.singles` with `kind:'album'` and mirrored in `S.albums` (same id, `sx:1`) for the album views, song library and discography (listed once).
+- So an album now: enters the **Monthly Sales Chart**, can hold a **Handshake Event** (step 7 of planning), can be promoted with **Roadshows**, updates members' **profile costumes** (main-song costume for its Senbatsu, Album Costume for Under Girls), gets MVs, fan growth and music-program offers like a single.
+- **Numbering**: singles and albums keep their own numbers (Single 3 → Album 1 → Single 4), while the Senbatsu history counts them as one sequence of releases.
+- Songs reused from the Song Library keep their original release (they are referenced, not re-released). Albums released before this update stay as they were.

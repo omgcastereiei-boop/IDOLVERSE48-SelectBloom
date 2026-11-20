@@ -35,7 +35,7 @@ const _rpCost=cost;cost=function(p){return plAlb(p)?plAlbCost(p):_rpCost.apply(t
 function plSetKind(k){const p=S.pj;if(!p||guard())return;if(plKind(p)==k)return;
  if(k=='album'){p.kind='album';p.num=(S.albums||[]).length+1;p.hs={...hsNew(),on:false};if(!p.titleSet)p.title='';toast('Planning an Album: one new Main Song, new songs and released songs, up to 20 songs per track type.');return render()}
  const rel=p.coup.filter(i=>S.songs[i]&&S.songs[i].rel),big=p.types.some(t=>t.songs.length>CFG.maxPerTypeSingle);
- const go=()=>{rel.forEach(i=>{p.coup=p.coup.filter(x=>x!=i);p.types.forEach(t=>t.songs=t.songs.filter(x=>x!=i))});p.types.forEach(t=>{if(t.songs.length>CFG.maxPerTypeSingle){const extra=t.songs.splice(CFG.maxPerTypeSingle)}});p.kind='single';p.num=S.singles.length+1;p.hs=hsNew();p.title=S.songs[p.mainId].title;toast('Planning a Single.');render()};
+ const go=()=>{rel.forEach(i=>{p.coup=p.coup.filter(x=>x!=i);p.types.forEach(t=>t.songs=t.songs.filter(x=>x!=i))});p.types.forEach(t=>{if(t.songs.length>CFG.maxPerTypeSingle){const extra=t.songs.splice(CFG.maxPerTypeSingle)}});p.kind='single';p.num=plSingleN();p.hs=hsNew();p.title=S.songs[p.mainId].title;toast('Planning a Single.');render()};
  if(rel.length||big)ask(`Switch to a Single? ${rel.length?`${rel.length} released song(s) leave the tracklist (they stay in the Song Library). `:''}${big?`Each edition of a Single holds ${CFG.maxPerTypeSingle} tracks; extra tracks are taken off the editions (the songs stay in the plan).`:''}`,go,'Switch to Single');else go()}
 function plTitle(id,v){const p=S.pj,o=S.songs[id];if(!o||lockedSong(id))return;o.title=v;if(p&&!plAlb(p)&&id==p.mainId)p.title=v;const e=document.getElementById('plrelname');if(e&&!plAlb(p))e.textContent=v||'—'}
 function plAlbTitle(v){if(!S.pj||guard())return;S.pj.title=v;S.pj.titleSet=1}
@@ -73,7 +73,31 @@ function plAlbumRelease(){const p=S.pj;if(!p||p.status!='producing'||!plAlb(p))r
  S.curAlb=r.id;S.prod=null;S.pj=null;ui.cd=null;syncEds();plRelRecord('album',r.id,r.title,S.day);
  if(typeof fbSync=='function'){fbSync({org:'Album release: '+r.title});fbOnAlbum(r)}
  ui.mod={t:'html',h:`<h2 class="ht">✦ Album "${esc(r.title)}" released! ✦</h2>${coverSvg(covers['Album Cover'],{size:240})}<p>${ids.length} songs (${nw.length} new, ${reu.size} from the Song Library) · ${p.types.length} track type(s)<br>Sales <b>${sales.toLocaleString()}</b> · Revenue <b>${yen(rev)}</b> · Fans <b>+${fans.toLocaleString()}</b></p><p class="st">Release date ${jd(S.day)}</p>${repTable(rl)}`};render()}
-const _rpRelease=doRelease;doRelease=function(){const p=S.pj;if(p&&p.status=='producing'&&plAlb(p))return plAlbumRelease();const n=S.singles.length;const r=_rpRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)plRelRecord('single',x.rid,x.title,x.relDay??x.day);return r};
+const _rpRelease=doRelease;doRelease=function(){const p=S.pj;if(p&&p.status=='producing'&&plAlb(p))return plAlbumRelease2();const n=S.singles.length;const r=_rpRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)plRelRecord('single',x.rid,x.title,x.relDay??x.day);return r};
+// Albums are released through the same pipeline as singles (sales, chart, MV, Handshake Event, Roadshow,
+// profile costumes, Senbatsu history). The release is stored in S.singles with kind:'album' and mirrored
+// in S.albums (same id, sx:1) for the album views. Album numbers stay separate from single numbers.
+function plAlbumRelease2(){const p=S.pj;const ids=plTracks(p),reu=ids.filter(i=>S.songs[i]&&S.songs[i].rel),nw=ids.filter(i=>!reu.includes(i)),title=p.title.trim(),anum=p.num;
+ const keep=reu.map(i=>{const o=S.songs[i];return[i,{rel:o.rel,relDay:o.relDay,videoPub:o.videoPub,lib:o.lib}]});
+ const n=S.singles.length;const r=_rpRelease.apply(this,arguments);const x=S.singles[n];if(!x||S.singles.length<=n)return r;
+ try{keep.forEach(([i,k])=>{const o=S.songs[i];Object.assign(o,k);if(k.videoPub===undefined)delete o.videoPub});
+  x.kind='album';x.num=anum;x.title=title;x.tracks=ids.slice();x.trk=ids.map((i,k)=>({id:i,pos:k+1,reused:reu.includes(i),types:x.types.filter(t=>t.songs.includes(i)).map(t=>t.name)}));
+  const X={rid:x.rid,num:anum,title:'Album: '+title,mainId:x.mainId,types:x.types,relDay:x.relDay};nw.forEach(i=>{const o=S.songs[i];o.rel='Album: '+title;plStamp(o,X,ids.indexOf(i)+1);if(o.lib)o.lib.kind='album'});
+  reu.forEach(i=>{const o=S.songs[i];o.albums=(o.albums||[]).filter(a=>a.id!=x.rid);o.albums.push({id:x.rid,title,pos:ids.indexOf(i)+1,types:x.trk.find(t=>t.id==i).types,day:S.day})});
+  const covers={...(x.covers||{})};covers['Album Cover']=covers['Album Cover']||Object.values(covers)[0];
+  const a={id:x.rid,sx:1,kind:'album',title,num:anum,pid:x.pid,concept:x.concept,tracks:ids.slice(),mainId:x.mainId,types:x.types,trk:x.trk,covers,cost:x.cost,sales:x.sales,rev:x.rev,fans:x.fans,day:x.day,relDay:x.relDay,ann:x.ann||null,repLog:x.repLog};
+  S.albums=S.albums||[];S.albums.push(a);S.curAlb=x.rid;
+  S.relHist=(S.relHist||[]).filter(h=>h.id!=x.rid);plRelRecord('album',x.rid,title,x.relDay??x.day);
+  (S.cal||[]).forEach(e=>{if(e.pid==p.id&&e.type=='release'&&e.result&&e.result.rid==x.rid)e.title='Album Release Day — '+title});
+  if(S.pj&&S.pj.status=='draft'&&!plAlb(S.pj))S.pj.num=plSingleN();
+  if(ui.mod&&ui.mod.t=='html')ui.mod.h=ui.mod.h.replace(/Single "|single "/,'Album "')}catch(e){console.error(e)}
+ return r}
+// the album mirror is the same release as its S.singles entry: keep both in sync when sales grow
+function plAlbSync(){if(S.pj&&S.pj.status=='draft'&&!plAlb(S.pj)&&S.singles.some(x=>x.kind=='album'))S.pj.num=plSingleN();(S.albums||[]).forEach(a=>{if(!a.sx)return;const x=S.singles.find(s=>s.rid==a.id);if(x){a.sales=x.sales;a.rev=x.rev;a.fans=x.fans}})}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{plAlbSync()}catch(e){}return r}}
+// single numbers count singles only (albums have their own numbers)
+const plSingleN=()=>S.singles.filter(x=>x.kind!='album').length+1;
+{const f=newPj;newPj=function(){const r=f.apply(this,arguments);try{if(S.pj&&!plAlb(S.pj))S.pj.num=plSingleN()}catch(e){}return r}}
 
 // ---- release-level Senbatsu history (Singles and Albums together) ---------------------------------
 const plRidNo=id=>+String(id).replace(/\D/g,'')||0;
@@ -168,10 +192,10 @@ V.music=function(){if(ui.cvCtx){ui.cvCtx=null;ui.cd=null}if(!S.pj)newPj();plMigr
  // 4 · CD covers (available from the start)
  const S5=`<div data-step="6"><h3 class="sth">6 · CD cover design</h3><p class="st">Each ${alb?'track type':'edition'} has its own cover. Design it any time before Release Day; confirmed covers can be edited again later. Members on the cover wear their Title Track costumes.</p><div class="covg">${p.types.map(t=>{const cc=S.cov[t.name];return`<div class="c covc"><b>${esc(t.name)}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(t.name)}')">🎨 Design cover</button><button class="b s" onclick="plCoverRand('${esc(t.name)}')">🎲 Randomize CD Cover</button></div></div>`}).join('')}${plLimCovHtml(p)}</div></div>`;
  // 5 · budget & start
- const S6=`<div data-step="7">${alb?'':hsPlanHtml(p,dis)}<div class="c" style="margin-top:10px"><h3>7 · Budget &amp; start production</h3><table>${C.L.map(([n,v])=>`<tr><td>${n}</td><td>${yen(v)}</td></tr>`).join('')}<tr><td><b>Total</b></td><td><b>${yen(C.t)}</b></td></tr></table><div class="st">Funds ${yen(S.money)} · charged once when production starts · ${CFG.prodDays} days to Release Day</div>${!lk&&C.t>S.money?`<p style="color:var(--err)">Insufficient funds: short by ${yen(C.t-S.money)}.</p>`:''}${lk?'':`<ul class="ms">${rq.map(x=>`<li style="color:var(--err)">✗ ${esc(x)}</li>`).join('')||'<li class="ok">✔ The plan is complete</li>'}</ul>${rq.length?'':`<details class="psum"><summary>Preview the full plan</summary><pre>${esc(planSummary(p))}</pre></details>`}<button class="b p big" onclick="confirmProd()">Start ${alb?'Album':'Single'} Production (${yen(C.t)})</button>`}</div></div>`;
+ const S6=`<div data-step="7">${hsPlanHtml(p,dis)}<div class="c" style="margin-top:10px"><h3>7 · Budget &amp; start production</h3><table>${C.L.map(([n,v])=>`<tr><td>${n}</td><td>${yen(v)}</td></tr>`).join('')}<tr><td><b>Total</b></td><td><b>${yen(C.t)}</b></td></tr></table><div class="st">Funds ${yen(S.money)} · charged once when production starts · ${CFG.prodDays} days to Release Day</div>${!lk&&C.t>S.money?`<p style="color:var(--err)">Insufficient funds: short by ${yen(C.t-S.money)}.</p>`:''}${lk?'':`<ul class="ms">${rq.map(x=>`<li style="color:var(--err)">✗ ${esc(x)}</li>`).join('')||'<li class="ok">✔ The plan is complete</li>'}</ul>${rq.length?'':`<details class="psum"><summary>Preview the full plan</summary><pre>${esc(planSummary(p))}</pre></details>`}<button class="b p big" onclick="confirmProd()">Start ${alb?'Album':'Single'} Production (${yen(C.t)})</button>`}</div></div>`;
  const SMV=plMvStepHtml(p,all,dis),SSL=plSaleStepHtml(p);const body=st==0?S1+S2+S4+SMV+SSL+S5+S6:[S1,S2,S4,SMV,SSL,S5,S6][st-1]||S1;
  const prog=lk&&S.prod?(p.startDay!=null&&p.releaseDay!=null?prodPanel(p):''):'';
- const disc=[...S.singles.map(x=>({k:'Single',x,i:S.singles.indexOf(x),d:x.relDay??x.day})),...(S.albums||[]).map(a=>({k:'Album',x:a,d:a.relDay??a.day}))].sort((a,b)=>b.d-a.d);
+ const disc=[...S.singles.filter(x=>x.kind!='album').map(x=>({k:'Single',x,i:S.singles.indexOf(x),d:x.relDay??x.day})),...(S.albums||[]).map(a=>({k:'Album',x:a,d:a.relDay??a.day}))].sort((a,b)=>b.d-a.d);
  return`<h2 class="ht">New ${alb?'Album':'Single'} Planning #${p.num}</h2>${lk?`<p class="st lockn">🔒 Production has started: songs and Senbatsu are locked. CD covers can still be edited before Release Day.</p>`:''}${bar}<div class="mbody">${body}</div>${navb}${prog}
  <div class="c" style="margin-top:10px"><h3>Discography</h3>${disc.map(({k,x,i})=>{const cv=k=='Single'?fc(x):(x.covers&&(x.covers['Album Cover']||Object.values(x.covers)[0]));return`<div class="row disc" ${k=='Single'?`onclick="showEds(${i})"`:''}>${cv?coverSvg(cv,{size:46}):`<span class="cover" style="width:34px;height:34px;background:${x.color||'#cdbdf5'}"></span>`}<span class="tag ${k=='Single'?'tmain':'tcoup'}">${k}</span>#${x.num||''} ${esc(x.title)} – ${(x.sales||0).toLocaleString()} sold${x.relDay!=null||x.day!=null?` · released ${jd(x.relDay??x.day)}`:''}</div>`}).join('')||'<p class="st">No releases yet.</p>'}<button class="b s" onclick="goView('songlib')">Open Song Library</button></div>`};
 // the library designer never edits a member's song costume by mistake
