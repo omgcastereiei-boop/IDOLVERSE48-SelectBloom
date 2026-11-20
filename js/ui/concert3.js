@@ -17,7 +17,7 @@ V.events=function(){view='concert';return V.concert()};
 {const f=render;render=function(){if(view=='events')view='concert';return f.apply(this,arguments)}}
 
 // ---- shared: selectable member cards -------------------------------------------------------------------------------------------
-const CC_MSORT=[['pop','Popularity'],['fans','Fans'],['sing','Vocal'],['dance','Dance'],['en','Energy'],['name','Name']];
+const CC_MSORT=[['pop','Popularity'],['fans','Fans'],['sing','Vocal'],['dance','Dance'],['en','Energy'],['age','Age'],['name','Name']];
 function ccSortM(L,k){const f={pop:m=>-m.pop,fans:m=>-(m.fans||0),sing:m=>-m.sing,dance:m=>-m.dance,en:m=>-m.en}[k];return L.slice().sort(f?(a,b)=>f(a)-f(b):(a,b)=>a.name.localeCompare(b.name))}
 function ccMCard(m,on,click,extra=''){const g=grp(gsGid(m)),tc=bgOf(m)||'#cdbdf5';return`<button type="button" class="ccm3 ${on?'on':''}" data-mid="${m.id}" style="--tc:${tc}" onclick="${click}"><span class="ccm3a">${ptc(m)}</span>${on?'<i class="ccm3k">✓</i>':''}<b>${esc(m.name)}</b><small>${esc(g?g.name:'')}</small><small>${esc(teamLbl(m))}</small>${extra}</button>`}
 

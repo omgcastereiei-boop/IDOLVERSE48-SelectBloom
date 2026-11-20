@@ -1131,3 +1131,12 @@ Extends the existing character art engine and Character Creator; no separate sys
 - **Editor**: categories Face Shape · Skin Color · Bangs · Back Hair · Ahoge · Eyebrows · Eyes · Mouth · Hair Color (+ Outfits, Accessories); thumbnails drawn by the real renderer; live preview (pinned on phones).
 - **Saves**: new optional fields `fs, ah, mt, hcx, hc2x, skx, ecx, bcx, lcx` (exact `#rrggbb`). Records without them draw exactly as before; verified byte-identical for characters without an ahoge (the ahoge itself is now attached to the bangs, as requested).
 - The page no longer uses `overflow-x:hidden` on html/body (now `overflow-x:clip`), which had silently disabled every sticky panel.
+
+## Member profile & event participant picker
+- **Discography & Achievements tab** (`js/ui/profile2.js`), in this order:
+  1. **Team History** (oldest first): only group/team/leadership moves, e.g. “Joined OMG48 as 1st Generation”, “Promoted to Team O”. Debut, birthdays, Birthday Stages, first-Senbatsu notes and election results are no longer listed here.
+  2. **Senbatsu Election**: “OMG48 1st General Election: 12th Place (Senbatsu)”.
+  3. **Senbatsu**: per group (her own group first, then the other groups she sang for), each with A-Sides and B-Sides. Released songs re-used on an album are not counted again.
+- **Member Stats tab**: Birthday Stage history shows the date, age and the photos button only; “Recent emotional events” is removed.
+- **External event participant picker**: 3–5 cards per row (3 on phones); each card shows name, group · team · generation, availability and “⭐ Latest Senbatsu · group” when she is in the latest Title Track Senbatsu of her group (or of another group she sang for). Sorting and filters use the shared member sort bar like every other member list.
+- **Age** is now a sort option in the shared member sort bar (every member list) and in the restructuring sort.

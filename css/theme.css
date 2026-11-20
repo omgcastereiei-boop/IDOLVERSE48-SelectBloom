@@ -1293,3 +1293,11 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 @media(max-width:700px){.apcr{grid-template-columns:1fr}.apside{position:static}.approw>svg{width:52%}.apth .tb{width:74px}.apsv{height:150px}}
 @media(max-width:700px){.apside{position:sticky;top:58px;z-index:6;padding:6px 8px;box-shadow:0 6px 16px rgba(60,30,90,.18)}.apside select{margin-bottom:2px;padding:4px 8px}.approw{height:150px}.approw>svg{height:150px;width:auto}.apfull{width:auto;height:150px}.apfull svg{height:150px;width:auto}.apside>.st{display:none}.apside .row{margin-top:2px;gap:4px}.apside .row .b{padding:6px 10px;font-size:12px}}
 @media(max-width:700px){.apcr{display:block}.apcr>div+div{margin-top:8px}}
+/* external event participant picker: 3-5 columns, compact cards */
+.xesel{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1100px){.xesel{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:620px){.xesel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.xesm{padding:6px 4px}.xesm b{font-size:12.5px;line-height:1.2}.xesm small{font-size:10.5px;line-height:1.25}}
+.xesm b{overflow-wrap:anywhere}.xelsen{color:#b0457f;font-weight:700}
+/* profile: team history / election / senbatsu lists */
+.pfl{list-style:none;padding:0;margin:6px 0 12px}.pfl li{padding:5px 0;border-bottom:1px dashed var(--line)}.pfl li:last-child{border:0}
+.pfsen h4{margin:10px 0 2px}.pfsen h5{margin:6px 0 2px;font-size:13px;color:var(--mut)}

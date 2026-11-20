@@ -1375,6 +1375,14 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 @media(max-width:700px){.apcr{grid-template-columns:1fr}.apside{position:static}.approw>svg{width:52%}.apth .tb{width:74px}.apsv{height:150px}}
 @media(max-width:700px){.apside{position:sticky;top:58px;z-index:6;padding:6px 8px;box-shadow:0 6px 16px rgba(60,30,90,.18)}.apside select{margin-bottom:2px;padding:4px 8px}.approw{height:150px}.approw>svg{height:150px;width:auto}.apfull{width:auto;height:150px}.apfull svg{height:150px;width:auto}.apside>.st{display:none}.apside .row{margin-top:2px;gap:4px}.apside .row .b{padding:6px 10px;font-size:12px}}
 @media(max-width:700px){.apcr{display:block}.apcr>div+div{margin-top:8px}}
+/* external event participant picker: 3-5 columns, compact cards */
+.xesel{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1100px){.xesel{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:620px){.xesel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.xesm{padding:6px 4px}.xesm b{font-size:12.5px;line-height:1.2}.xesm small{font-size:10.5px;line-height:1.25}}
+.xesm b{overflow-wrap:anywhere}.xelsen{color:#b0457f;font-weight:700}
+/* profile: team history / election / senbatsu lists */
+.pfl{list-style:none;padding:0;margin:6px 0 12px}.pfl li{padding:5px 0;border-bottom:1px dashed var(--line)}.pfl li:last-child{border:0}
+.pfsen h4{margin:10px 0 2px}.pfsen h5{margin:6px 0 2px;font-size:13px;color:var(--mut)}
 
 </style>
 </head><body>
@@ -3007,7 +3015,7 @@ function selAll(v){audSess().cands.forEach(c=>{if(c.st=='pending')c.sel=v});rend
 function audGen(v){const a=audSess(),n=Number(v);if(!a||a.done)return;if(!Number.isInteger(n)||n<1){toast('Generation must be a positive whole number.','err');return render()}a.gen=n;render()}
 function finishSess(a){if(!a.cands.some(c=>c.st=='pending'))a.done=true}
 function recruitAsk(){const a=audSess(),n=a.cands.filter(c=>c.st=='pending'&&c.sel).length;if(!n)return toast('Select at least one candidate.','err');if(!S.groups.some(g=>g.id==a.gid))return toast('The destination group no longer exists.','err');if(!Number.isInteger(a.gen)||a.gen<1)return toast('Generation must be a positive whole number.','err');ask(`Recruit ${n} candidate${n>1?'s':''} into ${gn(a.gid)} as ${ord(a.gen)} Generation? No extra audition fee is charged.`,()=>recruitSel(a.id),'Recruit')}
-function recruitSel(sid){const a=S.auds.find(x=>x.id==sid);if(!a)return;let n=0;a.cands.forEach(c=>{if(c.st!='pending'||!c.sel)return;if(S.members.some(m=>m.id==c.id)){c.st='recruited';c.m=null;return}const m=c.m;m.group=a.gid;m.gen=a.gen;m.joined=S.day;m.team='—';m.tid=null;m.status='trainee';m.stSince=S.day;m.tjoined=null;m.cosOv=null;m.hist=[];m.mh=[];S.members.push(m);hev(m,{t:'group_join',gid:a.gid,gname:gn(a.gid)});c.st='recruited';c.sel=false;c.m=null;n++});finishSess(a);if(n)toast(`${n} member${n>1?'s':''} joined ${gn(a.gid)} (${ord(a.gen)} Generation).`);else toast('Nothing to recruit.','err');render()}
+function recruitSel(sid){const a=S.auds.find(x=>x.id==sid);if(!a)return;let n=0;a.cands.forEach(c=>{if(c.st!='pending'||!c.sel)return;if(S.members.some(m=>m.id==c.id)){c.st='recruited';c.m=null;return}const m=c.m;m.group=a.gid;m.gen=a.gen;m.joined=S.day;m.team='—';m.tid=null;m.status='trainee';m.stSince=S.day;m.tjoined=null;m.cosOv=null;m.hist=[];m.mh=[];S.members.push(m);hev(m,{t:'group_join',gid:a.gid,gname:gn(a.gid),gen:a.gen});c.st='recruited';c.sel=false;c.m=null;n++});finishSess(a);if(n)toast(`${n} member${n>1?'s':''} joined ${gn(a.gid)} (${ord(a.gen)} Generation).`);else toast('Nothing to recruit.','err');render()}
 function rejectOne(id){const a=audSess(),c=a&&a.cands.find(x=>x.id==id);if(!c||c.st!='pending')return toast('Only pending candidates can be rejected.','err');c.st='rejected';c.sel=false;finishSess(a);render()}
 function rejectAsk(){const a=audSess(),n=a.cands.filter(c=>c.st=='pending').length;if(!n)return toast('No pending candidates.','err');ask(`Reject all ${n} remaining candidate${n>1?'s':''}? They cannot be recruited afterwards.`,()=>{a.cands.forEach(c=>{if(c.st=='pending'){c.st='rejected';c.sel=false}});finishSess(a);toast('Remaining candidates rejected.');render()},'Reject all')}
 function candCard(c,a){const m=c.st=='recruited'?get(c.id):c.m;if(!m)return'';const top=AFL.map(([k,l])=>[l,m.aff[k]]).sort((x,y)=>y[1]-x[1]).slice(0,2).map(x=>x[0]+' '+x[1]).join(', '),pd=c.st=='pending';
@@ -5384,7 +5392,7 @@ function wlProfHtml(m){const w=wlOf(m),r=srOf(m),mo=WL.mood[w.mood],lv=v=>`<span
  <div class="wl2"><div><h4>Senbatsu record</h4><div class="wlkv">${[['Selected',r.sel],['Center',r.cen],['Front Row',r.front],['Middle Row',r.mid],['Back Row',r.back],['Not Selected',r.none],['Selected in a row',r.cons],['Not selected in a row',r.consNone]].map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('')}</div>
  <div class="st">${r.firstSen?`First Senbatsu: “${esc(r.firstSen.title)}” · `:'No Senbatsu yet · '}${r.firstCen?`First Center: “${esc(r.firstCen.title)}”`:'No Center yet'}${r.lastCen&&r.prev!='center'?` · Last Center: “${esc(r.lastCen.title)}”`:''}</div>
  <ul class="wll">${sl.map(x=>`<li><b>${esc(x.title)}</b> <span class="st">${dayDate(x.day).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</span> <span class="wlpos ${x.pos}">${WL.posN[x.pos]}</span></li>`).join('')||'<li class="st">No Senbatsu announcements yet.</li>'}</ul></div>
- <div><h4>Recent emotional events</h4><ul class="wll">${recent.map(x=>`<li><span class="st">${dayDate(x.day).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span> ${esc(x.txt||'')}${x.line?`<br><q>${esc(x.line)}</q>`:''}</li>`).join('')||'<li class="st">Nothing notable yet.</li>'}</ul></div></div></div>`}
+</div></div>`}
 const _wlProf=profHtml;profHtml=function(m,cand){let h=_wlProf.apply(this,arguments);if(cand||!m||!S.members.includes(m))return h;try{const tab=ui.ptab||'stats';if(wlAway(m))h=h.replace('</h2>',`</h2><span class="tag wltag">On ${WLT[m.wel.leave.type]}</span>`);h=h.replace('Training costs ¥10,000 and 25 Stamina; Stamina recovers 15 per day.','Lessons cost ¥10,000 and Energy (Vocal 15 · Dance 25 · Performance 20 · Variety 10); Energy recovers 15 per day. Mental Health changes lesson EXP.');if(tab=='stats'){const s=wlProfHtml(m),i=h.indexOf('<h3>Growth &amp; management</h3>');h=i>=0?h.slice(0,i)+s+h.slice(i):h+s}}catch(e){console.error(e)}return h};
 // member cards: leave badge
 const _wlCard=mcard;mcard=function(m){const h=_wlCard.apply(this,arguments);return wlAway(m)?h.replace('<div class="mart">',`<span class="wlbadge">On Leave</span><div class="mart">`):h};
@@ -7834,8 +7842,8 @@ function mpClose(){ui.pov=null;render()}
 function mpHtml(){if(!ui.pov)return'';const r=mlGet(ui.pov);if(!r){ui.pov=null;return''}let h='';try{h=profHtml(r.m,r.cand)}catch(e){console.error(e);h=`<h2 class="ht">${esc(r.m.name)}</h2>`}
  return`<div class="mod t-prof pov" onclick="if(event.target==this)mpClose()"><div role="dialog" aria-modal="true" aria-label="Member profile">${h}<div class="row" style="margin-top:10px"><button class="b p" onclick="mpClose()">◀ Back</button><span class="st">Your current screen is kept as it was.</span></div></div></div>`}
 const ML_RAR={UR:4,SR:3,R:2,N:1};
-const ML_KEYS=()=>[['','Default order'],['name','Name'],...STATS.map(x=>[x[0],x[1]]),...(S&&S.groups&&S.groups.length>1?[['grp','Group']]:[]),['gen','Generation'],['team','Team'],['trend','Trend (Buzz)']];
-function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='rar')return ML_RAR[rar(m)]||0;if(k=='grp'){const g=S.groups.find(x=>x.id==m.group);return g?g.name:'~'}if(k=='gen')return m.gen||1;if(k=='team'){const t=teamOf(m);return m.status=='trainee'?'~':t?t.name:'~~'}if(k=='trend')return m.buzz||0;const v=sv(m,k);return typeof v=='number'?v:+v||0}
+const ML_KEYS=()=>[['','Default order'],['name','Name'],['age','Age'],...STATS.map(x=>[x[0],x[1]]),...(S&&S.groups&&S.groups.length>1?[['grp','Group']]:[]),['gen','Generation'],['team','Team'],['trend','Trend (Buzz)']];
+function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='age')return+m.age||0;if(k=='rar')return ML_RAR[rar(m)]||0;if(k=='grp'){const g=S.groups.find(x=>x.id==m.group);return g?g.name:'~'}if(k=='gen')return m.gen||1;if(k=='team'){const t=teamOf(m);return m.status=='trainee'?'~':t?t.name:'~~'}if(k=='trend')return m.buzz||0;const v=sv(m,k);return typeof v=='number'?v:+v||0}
 function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d',team:'all',gen:'all',rar:'all',grp:'all'};if(f=='d')c.d=c.d=='a'?'d':'a';else c[f]=v;render()}
 const ML_SKIP='.apcr,.ccfstage,.ccczg,.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.trg2,.trsf,.trsl,.czlineup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
@@ -8907,8 +8915,8 @@ function orgOpen(pid){const p=orgP(pid);if(!p)return;const fx=Object.values(p.fx
 // =====================================================================================
 const orgNm=m=>m?(m.stage||m.name):'';
 const orgSelL=()=>{let L=ui.orgsel;if(L!=null&&!Array.isArray(L))L=ui.orgsel=[L];return(L||[]).map(get).filter(Boolean)};
-const ORG_SORT=[['','Default order'],['name','Name'],['geRk','Election Rank'],['pop','Popularity Index'],['fans','Fanbase'],['gen','Generation'],['sing','Vocal'],['dance','Dance'],['cha','Performance']];
-function orgSortF(a,b){const k=ui.orgsort||'';if(!k)return 0;if(k=='name')return orgNm(a).localeCompare(orgNm(b));if(k=='gen')return(a.gen||1)-(b.gen||1)||orgNm(a).localeCompare(orgNm(b));const v=m=>{const x=sv(m,k);return typeof x=='number'?x:+x||0};return v(b)-v(a)}
+const ORG_SORT=[['','Default order'],['name','Name'],['geRk','Election Rank'],['pop','Popularity Index'],['fans','Fanbase'],['gen','Generation'],['age','Age'],['sing','Vocal'],['dance','Dance'],['cha','Performance']];
+function orgSortF(a,b){const k=ui.orgsort||'';if(!k)return 0;if(k=='age')return(+b.age||0)-(+a.age||0);if(k=='name')return orgNm(a).localeCompare(orgNm(b));if(k=='gen')return(a.gen||1)-(b.gen||1)||orgNm(a).localeCompare(orgNm(b));const v=m=>{const x=sv(m,k);return typeof x=='number'?x:+x||0};return v(b)-v(a)}
 const orgSortSel=()=>`<label class="st">Sort <select onchange="ui.orgsort=this.value;render()">${ORG_SORT.map(([k,n])=>`<option value="${k}" ${(ui.orgsort||'')==k?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`;
 orgPick=function(mid){const L=(orgSelL().map(m=>m.id));const i=L.indexOf(mid);if(i>=0)L.splice(i,1);else L.push(mid);ui.orgsel=L.length?L:null;render()};
 orgMoveTo=function(tid){const D=orgDr('sh'),L=orgSelL();if(!L.length)return toast('Tap a member first.','err');let n=0,skip=0;L.forEach(m=>{const a=orgTo(D,m);if(a.gid!=D.gid){skip++;return}a.tid=tid=='tr'?null:tid;if(!a.tid)a.kn=null;orgSet(D,m.id,a);D.log.push({day:S.day,op:'move',mid:m.id,to:tid});n++});ui.orgsel=null;if(skip)toast(`${skip} member(s) leave the group in the plan and were not moved.`);else if(n>1)toast(`${n} members moved.`);render()};
@@ -9332,7 +9340,7 @@ function ctDefHtml(){const d=ctS().def;return`<div class="c ctdef"><h3>📄 Cont
 // ---- profile -----------------------------------------------------------------------------------------------------------------
 function ctProfHtml(m){ctEnsure(m);const c=m.ct,G=m.grad,nb=ctNextBd(m),k=ctStatus(m),days=nb-S.day,mo=m.bd.mo,dd=m.bd.d;
  const H=(c.hist||[]).map(h=>`<li>${jd(h.day)} · ${h.kind=='sign'?'Signed':h.kind=='renew'?'Renewed':h.kind=='term'?`Terminated early (fee ${yen(h.fee)})`:h.kind=='ret'?'Agency Retained':h.kind=='comp'?`Dismissal compensation ${yen(h.fee)}`:h.kind}${h.end!=null&&h.kind!='comp'?` · until ${jd(h.end)}`:''}${h.type?` · ${ctTermTxt(h)}`:''}${h.auto?' (initial contract)':''}</li>`).join('');
- const bdh=(m.bdh||[]).slice().reverse().map(b=>`<li>${jd(b.day)} · age ${b.age} · ${esc(b.team)} · “${esc(b.stage)}” + ${b.songs.map(s=>`“${esc(s.title)}”`).join(', ')}</li>`).join('');
+ const bdh=(m.bdh||[]).slice().reverse().map(b=>`<li>${jd(b.day)} · age ${b.age}</li>`).join('');
  const gs=G?`<div class="c ctgr"><h4>🎓 ${G.kind=='dismiss'?'Dismissal (with Graduation Stage)':'Graduation announced'} · ${longDate(G.ann)}</h4><div class="st">${esc(CT_GR[G.reason]||G.reason)} · graduates at her Graduation Stage by <b>${longDate(G.target)}</b>${G.early=='fee'?` · termination fee ${yen(G.fee)}`:G.early=='ret'?` · Agency Retained until ${longDate(c.end)}`:''}</div>${spGradLine(m)}
   <div class="row">${G.cz&&czD(G.cz)?`${czDesignThumb(czD(G.cz),m,40)}<span class="st">Graduation costume: ${esc(czD(G.cz).name)}</span><button class="b s" onclick="ctGradCz(${m.id})">✎ Edit in Costume Studio</button>`:`<button class="b s p" onclick="ctGradCz(${m.id})">👗 Create Graduation Costume</button><span class="st thwarn">Required for the Graduation Stage and her final profile image.</span>`}</div>
   ${(()=>{const L=ctSongsFor(m);return`<div class="st">Graduation Songs: ${L.length?L.map(o=>`<label><input type="checkbox" ${o.on?'checked':''} onchange="ctSongTog(${m.id},'${o.id}')"> “${esc(o.title)}”${o.rel?'':' (in production)'}</label>`).join(' '):'none yet — she must be the Center of a song in an official release (title track, coupling or album track).'}</div>`})()}</div>`:'';
@@ -12618,12 +12626,11 @@ function xePosMv(i,mid,d){const z=xeSelOf(xeGet(ui.xe)).songs[i];if(!z)return;co
 function xeSongsFor(r){const gids=[...new Set(xeScope(r).map(id=>gsGid(get(id))).filter(g=>g!=null))];const L=[];gids.forEach(gid=>{try{gsWith(gid,()=>Object.values(S.songs||{}).filter(o=>o&&o.rel).forEach(o=>L.push({gid,song:o.id,title:o.title,gn:(grp(gid)||{}).name||''})))}catch(e){}});return L}
 V.xesel=function(){const r=xeGet(ui.xe);if(!r)return V.xedet();if(r.mode!='player'||r.status!='open')return V.xedet();const D=xeSelOf(r),F=ui.xesf=ui.xesf||{g:'',t:'',gen:'',q:'',k:'pop'};
  const scope=xeScope(r).map(get).filter(Boolean),teams=[...new Map(scope.filter(m=>m.tid).map(m=>{const g=grp(gsGid(m)),t=g&&(g.teams||[]).find(x=>x.id==m.tid);return[m.tid,t?`${g.name} · ${t.name}`:'Team']})).entries()];
- const L=scope.filter(m=>(!F.g||gsGid(m)==+F.g)&&(!F.t||m.tid==F.t)&&(!F.gen||(m.gen||1)==+F.gen)&&(!F.q||m.name.toLowerCase().includes(F.q.toLowerCase()))).sort((a,b)=>F.k=='en'?(b.en|0)-(a.en|0):F.k=='fans'?b.fans-a.fans:(b[F.k]||0)-(a[F.k]||0));
+ const L=scope.slice(),LS=xeLatestSen();
  const SG=xeSongsFor(r),E=xeCheck(r,D.sel);
  return`<h2 class="ht">Participant Selection</h2><p class="st"><b>${esc(r.name)}</b> · ${wd(r.day)} ${xeHM(r.st)}–${xeHM(r.et)} · requested ${r.n} member(s) from ${esc((r.gr||[]).map(xeGrTxt).join(' · '))}. You decide who performs and how many; the fixed payment (${yen(r.pay)}) does not change.</p>
- <div class="c"><div class="row"><select onchange="ui.xesf.g=this.value;render()"><option value="">All groups</option>${[...new Set(scope.map(m=>gsGid(m)))].map(g=>`<option value="${g}" ${F.g==g?'selected':''}>${esc((grp(g)||{}).name||'')}</option>`).join('')}</select><select onchange="ui.xesf.t=this.value;render()"><option value="">All teams</option>${teams.map(([id,n])=>`<option value="${id}" ${F.t==id?'selected':''}>${esc(n)}</option>`).join('')}</select><select onchange="ui.xesf.gen=this.value;render()"><option value="">All generations</option>${gensOf(scope).map(g=>`<option value="${g}" ${F.gen==g?'selected':''}>Gen ${g}</option>`).join('')}</select>
-  <select onchange="ui.xesf.k=this.value;render()">${[['pop','Popularity'],['fans','Fans'],['sing','Vocal'],['dance','Dance'],['en','Energy']].map(([k,n])=>`<option value="${k}" ${F.k==k?'selected':''}>Sort: ${n}</option>`).join('')}</select><input placeholder="Search members" value="${esc(F.q)}" onchange="ui.xesf.q=this.value;render()"></div><p class="st"><b>${D.sel.length}</b> selected · requested ${r.n}</p></div>
- <div class="xesel">${L.map(m=>{const on=D.sel.includes(m.id),fr=xeFree(m.id,r.day,r.id),B=fr?[]:xeBusy(m.id,r.day,r.id),w=wlOf(m),th=xeThDay(m.id,r.day);return`<button class="c xesm ${on?'on':''} ${fr?'':'off'}" onclick="xeSelTog(${m.id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,52)}<b>${esc(m.name)}</b><small>${esc((grp(gsGid(m))||{}).name||'')} · Gen ${m.gen||1}</small><small>Vocal ${skV(m,'sing')} · Dance ${skV(m,'dance')} · Fans ${(+m.fans||0).toLocaleString()}</small><small>⚡ ${m.en|0} · 🧠 ${w.mh|0} · 💪 ${w.ph|0}</small><small class="${fr?'ok':'thwarn'}">${fr?(th?'✔ free (Theater that day → replaced)':'✔ available'):'✗ '+esc((B[0]&&(B[0].label||B[0].type))||'unavailable')}</small></button>`}).join('')||emptyBox('No member in the requested groups.')}</div>
+ <div class="c"><p class="st"><b>${D.sel.length}</b> selected · requested ${r.n}</p></div>
+ <div class="xesel">${L.map(m=>{const on=D.sel.includes(m.id),fr=xeFree(m.id,r.day,r.id),B=fr?[]:xeBusy(m.id,r.day,r.id),w=wlOf(m),th=xeThDay(m.id,r.day);return`<button class="c xesm ${on?'on':''} ${fr?'':'off'}" onclick="xeSelTog(${m.id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,52)}<b>${esc(m.name)}</b><small>${esc((grp(gsGid(m))||{}).name||'')}${teamOf(m)?' · '+esc(teamOf(m).name):''} · Gen ${m.gen||1}</small>${(LS.get(m.id)||[]).map(g=>`<small class="xelsen">⭐ Latest Senbatsu · ${esc(g)}</small>`).join('')}<small class="${fr?'ok':'thwarn'}">${fr?(th?'✔ free (Theater that day → replaced)':'✔ available'):'✗ '+esc((B[0]&&(B[0].label||B[0].type))||'unavailable')}</small></button>`}).join('')||emptyBox('No member in the requested groups.')}</div>
  ${r.songs?`<div class="c"><h3>Setlist (${D.songs.length}/${r.songs} song(s))</h3><p class="st">Songs come from the Song Library. Centers and positions are saved for this event only — the songs' original Senbatsu, Center and formation are never changed.</p>
   ${D.songs.map((z,i)=>`<div class="c xesong"><div class="row"><b>${i+1}. ${esc(z.title)}</b><span class="st">${esc((grp(z.gid)||{}).name||'')}</span><button class="b s" onclick="xeSongMv(${i},-1)">▲</button><button class="b s" onclick="xeSongMv(${i},1)">▼</button><button class="b s" onclick="xeSongRm(${i})">✕</button><label class="st">Center <select onchange="xeSongCen(${i},this.value)"><option value="">No Center</option>${z.o.map(id=>`<option value="${id}" ${z.center==id?'selected':''}>${esc((get(id)||{}).name||'')}</option>`).join('')}</select></label></div>
    <div class="xepos">${z.o.map((id,k)=>{const m=get(id);return m?`<span class="xep">${ptc(m,30)}<small>#${k+1}</small><span><button class="b s" onclick="xePosMv(${i},${id},-1)">◀</button><button class="b s" onclick="xePosMv(${i},${id},1)">▶</button></span></span>`:''}).join('')}</div></div>`).join('')}
@@ -12644,6 +12651,8 @@ V.xeprep=function(){const L=xeS().list.filter(r=>r.status=='accepted').sort((a,b
 V.xeorg=function(){const O=Object.values(xeS().orgs).sort((a,b)=>b.sat-a.sat||b.ev.length-a.ev.length);return`<h2 class="ht">Organizers</h2><p class="st">Successful events raise satisfaction (Neutral → Good → Excellent). Satisfied organizers send Direct Offers, exclusive invitations and slightly higher fixed payments.</p>
  <div class="c"><div class="wrap"><table><tr><th>Organizer</th><th>Type</th><th>Events</th><th>Satisfaction</th><th>Status</th><th>Last event</th></tr>${O.map(o=>{const L=o.ev.map(xeGet).filter(Boolean),last=L.sort((a,b)=>b.day-a.day)[0];return`<tr><td><b>${esc(o.nm)}</b></td><td>${esc(o.type)}</td><td>${o.ev.length}</td><td>${Math.round(o.sat)}</td><td><span class="tag xeos ${xeOrgSt(o)}">${xeOrgSt(o)}</span></td><td>${last?`<button class="b s" onclick="xeOpen('${last.id}')">${jd(last.day)}</button>`:'—'}</td></tr>`}).join('')||'<tr><td colspan="6">No organizer yet.</td></tr>'}</table></div></div>`};
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S)xeS()}catch(e){}return r}}
+// members in the Title Track Senbatsu of the latest single of each group (her own group and the main group)
+function xeLatestSen(){const M=new Map();try{(S.groups||[]).forEach(g=>{const go=()=>{const x=typeof latestSingle=='function'?latestSingle():(S.singles||[]).at(-1);if(!x)return;const ids=(x.tt&&x.tt.members)||((S.songs[x.mainId]||{}).slots||[]).filter(Boolean);ids.forEach(id=>{const L=M.get(id)||[];if(!L.includes(g.name))L.push(g.name);M.set(id,L)})};typeof gsWith=='function'?gsWith(g.id,go):go()})}catch(e){console.error(e)}return M}
 
 </script>
 <script>
@@ -13086,7 +13095,7 @@ V.events=function(){view='concert';return V.concert()};
 {const f=render;render=function(){if(view=='events')view='concert';return f.apply(this,arguments)}}
 
 // ---- shared: selectable member cards -------------------------------------------------------------------------------------------
-const CC_MSORT=[['pop','Popularity'],['fans','Fans'],['sing','Vocal'],['dance','Dance'],['en','Energy'],['name','Name']];
+const CC_MSORT=[['pop','Popularity'],['fans','Fans'],['sing','Vocal'],['dance','Dance'],['en','Energy'],['age','Age'],['name','Name']];
 function ccSortM(L,k){const f={pop:m=>-m.pop,fans:m=>-(m.fans||0),sing:m=>-m.sing,dance:m=>-m.dance,en:m=>-m.en}[k];return L.slice().sort(f?(a,b)=>f(a)-f(b):(a,b)=>a.name.localeCompare(b.name))}
 function ccMCard(m,on,click,extra=''){const g=grp(gsGid(m)),tc=bgOf(m)||'#cdbdf5';return`<button type="button" class="ccm3 ${on?'on':''}" data-mid="${m.id}" style="--tc:${tc}" onclick="${click}"><span class="ccm3a">${ptc(m)}</span>${on?'<i class="ccm3k">✓</i>':''}<b>${esc(m.name)}</b><small>${esc(g?g.name:'')}</small><small>${esc(teamLbl(m))}</small>${extra}</button>`}
 
@@ -14418,6 +14427,49 @@ V.creator=function(){if(!S.members.length)return`<h2 class="ht">Character Creato
 {const f=rapp;rapp=function(){const a=f.apply(this,arguments);a.ft=rnd(0,FTN.length-1);a.bk=rnd(0,BKN.length-1);a.ey=rnd(0,EYN.length-1);a.br=rnd(0,BRN.length-1);a.fs=rnd(0,AP_FACES.length-1);a.ah=rnd(0,AP_AHN.length-1);a.mt=rnd(0,APMT.length-1);return a}}
 // a pointer released outside the colour square still ends the drag
 if(typeof window!='undefined')window.addEventListener('pointerup',()=>{if(AP_DRAG)apSvUp()});
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Member profile: Discography & history layout
+// -------------------------------------------------------------------------------------
+//  The "Discography & Achievements" tab shows, in this order:
+//   1. Team History       — oldest first; group/team/leadership moves only
+//                           ("Joined OMG48 as 1st Generation", "Promoted to Team O", …)
+//   2. Senbatsu Election  — "OMG48 1st General Election: 12th Place (Senbatsu)"
+//   3. Senbatsu           — per group (her own group first, then the other groups she sang for),
+//                           each split into A-Sides (title track / album main song) and B-Sides.
+//                           Released songs re-used on an album are not counted again.
+//  Birthdays, Birthday Stages, debut and "first Senbatsu" notes are no longer listed here.
+// =====================================================================================
+const PF_TEAM_EV=new Set(['group_join','group_transfer','team_join','team_transfer','team_leave','demote','reclass','gcap','cap','vice','lead_end','kennin','kennin_end','kennin_change','cap_start','cap_end','org_lead','team_disband','group_disband','graduate']);
+function pfTeamText(e,E,m){const tn=String(e.tname||'').trim();
+ if(e.t=='group_join'){const g=e.gname||(grp(e.gid)||{}).name||'the group',gen=e.gen||(e.gid==null||e.gid==m.group?m.gen:null);return`Joined ${esc(g)}${gen?` as ${ord(gen)} Generation`:''}`}
+ if(e.t=='team_join'){const prom=E.some(p=>p.t=='promote'&&p.day==e.day);return`${prom?'Promoted to':'Joined'} ${esc(tn||'a team')}`}
+ return evText(e)}
+function pfTeamHtml(m){const E=(m.mh||[]).map((e,i)=>({...e,_i:i})).sort((a,b)=>(a.day??0)-(b.day??0)||a._i-b._i),L=E.filter(e=>PF_TEAM_EV.has(e.t)),g=grp(m.group),t=teamOf(m);
+ return`<h3>Team History <span class="st">(oldest first)</span></h3><div class="st">Current: ${g?esc(g.name):'No group'}${t?' · '+esc(t.name):''} · ${isAct(m)&&t?'Active':esc(TLm(m))}</div><ul class="pfl">${L.map(e=>`<li><b>${pfTeamText(e,E,m)}</b> <span class="st">· ${jd(e.day)}</span></li>`).join('')||'<li class="st">No team history recorded yet.</li>'}</ul>`}
+// group that held an election (elections live in each group's own context)
+function pfElGroup(eid){for(const g of (S.groups||[])){const c=g.id==S.ag?S:g.ctx,L=c&&c.ge&&Array.isArray(c.ge.list)?c.ge.list:[];if(L.some(x=>x&&x.id==eid))return g.name}return null}
+function pfElecHtml(m){const E=(m.mh||[]).map((e,i)=>({...e,_i:i})).filter(e=>e.t=='ge').sort((a,b)=>(a.day??0)-(b.day??0)||a._i-b._i);
+ const rn=n=>typeof geRn=='function'?geRn(n):ord(n)+' Place';
+ return`<h3>Senbatsu Election</h3><ul class="pfl">${E.map(e=>{const gname=pfElGroup(e.eid)||(grp(m.group)||{}).name||'';return`<li><b>${gname?`<span>${esc(gname)}</span> `:''}<span>${esc(e.ename||'General Election')}</span>: <span>${e.rank?rn(e.rank):'Unranked'}</span>${e.rank&&e.gname?` (<span>${esc(e.gname)}</span>)`:''}</b> <span class="st">· ${jd(e.day)}</span></li>`}).join('')||'<li class="st">No election yet.</li>'}</ul>`}
+function pfSenHtml(m){const rel=h=>S.singles.find(x=>x.rid==h.rid)||(S.albums||[]).find(a=>a.id==h.rid)||(()=>{for(const g of (S.groups||[])){if(g.id==S.ag||!g.ctx)continue;const x=(g.ctx.singles||[]).find(z=>z.rid==h.rid)||(g.ctx.albums||[]).find(a=>a.id==h.rid);if(x)return x}return null})();
+ const ym=d=>d==null?'':jd(d);
+ // re-used songs on an album are not a new Senbatsu
+ const reused=h=>{const r=rel(h);if(!r)return false;const T=(r.trk||[]).find(t=>t.id==h.song);if(T)return!!T.reused;const o=S.songs[h.song];return!!(r.kind=='album'&&o&&o.relDay!=null&&r.relDay!=null&&o.relDay<r.relDay)};
+ const H=(m.hist||[]).filter(h=>!reused(h)).slice().sort((a,b)=>(a.day??0)-(b.day??0)||plRidNo(a.rid)-plRidNo(b.rid));
+ const isA=h=>{const r=rel(h);return h.cat=='main'||!!(r&&r.kind=='album'&&r.mainId==h.song)};
+ const mainOf=h=>{const r=rel(h);if(!r)return h.rel||'';if(r.kind=='album')return'Album: '+(r.title||'');const o=S.songs[r.mainId];return o?o.title:(r.title||'')};
+ const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':''}</li>`};
+ // her own group first, then every other group in company order
+ const gidOf=h=>h.gid!=null?h.gid:m.group,own=m.group,ids=[...new Set(H.map(gidOf))].sort((a,b)=>(a==own?-1:0)-(b==own?-1:0)||(S.groups||[]).findIndex(g=>g.id==a)-(S.groups||[]).findIndex(g=>g.id==b));
+ const tot=H.length,A0=H.filter(isA).length;
+ return`<h3>Senbatsu</h3><div class="row"><span class="pill">A-Sides ${A0}</span><span class="pill">B-Sides ${tot-A0}</span><span class="pill">Center ×${H.filter(h=>h.center).length}</span></div>${ids.map(gid=>{const G=H.filter(h=>gidOf(h)==gid),A=G.filter(isA),B=G.filter(h=>!isA(h)),gn0=(grp(gid)||{}).name||(G[0]&&G[0].gname)||'Group';
+  return`<div class="shist pfsen"><h4><span>${esc(gn0)}</span> <span>Senbatsu</span></h4><h5>A-Sides</h5><ul>${A.map(h=>li(h,0)).join('')||'<li class="st">None yet.</li>'}</ul><h5>B-Sides</h5><ul>${B.map(h=>li(h,1)).join('')||'<li class="st">None yet.</li>'}</ul></div>`}).join('')||'<p class="st">No Senbatsu yet.</p>'}`}
+// the tab: Team History → Senbatsu Election → Senbatsu (tlHtml is folded into histHtml)
+histHtml=function(m){return pfTeamHtml(m)+pfElecHtml(m)+pfSenHtml(m)};
+tlHtml=function(){return''};
 
 </script>
 <script>
@@ -17331,6 +17383,17 @@ Object.assign(I18N_TH,{"Lai Kanok (Thai)":"ลายกนก (ไทย)",
 "Randomize":"สุ่ม",
 "Reset":"รีเซ็ต",
 "Confirm & Save":"ยืนยันและบันทึก",
+"Team History":"ประวัติทีม",
+"(oldest first)":"(เก่าสุดก่อน)",
+"Senbatsu Election":"เลือกตั้งเซ็มบัตสึ",
+"Senbatsu":"เซ็มบัตสึ",
+"A-Sides":"เพลงด้าน A",
+"B-Sides":"เพลงด้าน B",
+"No team history recorded yet.":"ยังไม่มีประวัติทีม",
+"No election yet.":"ยังไม่มีการเลือกตั้ง",
+"No Senbatsu yet.":"ยังไม่เคยติดเซ็มบัตสึ",
+"Age":"อายุ",
+"Unranked":"ไม่ติดอันดับ",
 "Add at least one member to the cover.":"ใส่เมมเบอร์บนปกอย่างน้อยหนึ่งคน",
 "No saved version of this edition yet.":"เวอร์ชันนี้ยังไม่มีงานที่บันทึกไว้",
 "Saved version loaded.":"โหลดเวอร์ชันที่บันทึกไว้แล้ว",
@@ -19035,6 +19098,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["· incl. {0} substitute(s)","· รวมตัวสำรอง {0} คน"],
 ["{0} is not available on {1}.","{0} ไม่ว่างวันที่ {1}"],
 ["Saved {0} to your colors.","บันทึก {0} ลงสีของคุณแล้ว"],
+["Joined {0} as {1} Generation","เข้าร่วม {0} ในฐานะรุ่นที่ {1}"],
 ["Seats are limited to {0}.","ที่นั่งจำกัดอยู่ที่ {0} ที่"],
 ["{0} holds at most {1} songs.","{0} มีได้สูงสุด {1} เพลง"],
 ["{0} random song(s) added.","เพิ่มเพลงแบบสุ่มแล้ว {0} เพลง"],
@@ -19085,6 +19149,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["— final performance {0}","— รอบสุดท้าย {0}"],
 ["was cancelled by {0}: {1}.{2}{3}","ถูกยกเลิกโดย {0}: {1}{2}{3}"],
 ["member recognition +{0}","การเป็นที่รู้จักของเมมเบอร์ +{0}"],
+["⭐ Latest Senbatsu · {0}","⭐ เซ็มบัตสึล่าสุด · {0}"],
 ["“{0}” goes on sale on {1}.","“{0}” จะวางขายวันที่ {1}"],
 ["{0} Roadshow(s) booked.","จองโรดโชว์แล้ว {0} แห่ง"],
 ["{0} is not available: {1}.","{0} ไม่ว่าง: {1}"],
@@ -19333,6 +19398,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["{0} completed: {1}","{0} เสร็จแล้ว: {1}"],
 ["performance {0}","การแสดง {0}"],
 ["Lesson EXP ×{0}","EXP บทเรียน ×{0}"],
+["Promoted to {0}","ได้เลื่อนขึ้นสู่ {0}"],
 ["{0} \"{1}\" created.","สร้าง{0} \"{1}\" แล้ว"],
 ["{0} appointed {1}.","แต่งตั้ง {0} เป็น {1} แล้ว"],
 ["Schedule “{0}”","จัดตาราง “{0}”"],
@@ -19405,6 +19471,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["→ {0} (auto)","→ {0} (อัตโนมัติ)"],
 ["new Unit {0}","ยูนิตใหม่ {0}"],
 ["Standing {0}","ยืน {0}"],
+["{0} Senbatsu","เซ็มบัตสึ {0}"],
 ["Draft of {0}","ร่างของ {0}"],
 ["Added “{0}”.","เพิ่ม “{0}” แล้ว"],
 ["#{0} Center","#{0} เซ็นเตอร์"],
@@ -19425,6 +19492,8 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["{0} ranking","อันดับ{0}"],
 ["overall {0}","โดยรวม {0}"],
 ["{0} ready: {1}","{0} พร้อมแล้ว: {1}"],
+["A-Sides {0}","เพลงด้าน A {0}"],
+["B-Sides {0}","เพลงด้าน B {0}"],
 ["{0} set: {1} {2}.","ตั้ง {0} แล้ว: {1} {2}"],
 ["{0} {1} added.","เพิ่ม {0} {1} แล้ว"],
 ["{0} Center","{0} เซ็นเตอร์"],
@@ -19453,6 +19522,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 I18N_TH_RX.push([/(\d+)(?:st|nd|rd|th) Anniversary/g,'ครบรอบ $1 ปี'],[/(\d+)(?:st|nd|rd|th) Stage\b/g,'สเตจที่ $1'],[/ Interview$/,' สัมภาษณ์'],[/ Presenter$/,' พรีเซนเตอร์'],[/ Advertisement$/,' โฆษณา'],[/\bexhausted\b/g,'เหนื่อยล้า'],[/\boverlooked\b/g,'ถูกมองข้าม'],[/\(fictional\)/g,'(สมมติ)'],[/^([A-Z][\w-]*(?: [A-Z][\w-]*)?) [Tt]heater$/,'เธียเตอร์ $1'],[/ — Center$/,' — เซ็นเตอร์'],[/\bfelt (Excited|Nervous|Happy|Motivated|Neutral|Proud|Sad|Pressured|Frustrated|Anxious|Calm|Grateful)\b/g,(m,a)=>'รู้สึก'+(I18N_TH[a]||a)],[/(รู้สึก[^ .]+)\.$/,'$1'],[/\bWeek (\d+)\b/g,'สัปดาห์ที่ $1']);
 I18N_TH_RX.push([/ \(disbanded\)$/,' (ยุบแล้ว)'],[/ \(today\)$/,' (วันนี้)'],[/ \(Stage\)$/,' (สเตจ)'],[/ \(former\)$/,' (อดีตเมมเบอร์)'],[/ Revival$/,' รีไววัล'],[/^(.+) ranking$/,'อันดับ $1']);
 I18N_TH_RX.push([/\bStaff \/ Crew\b/g,'ทีมงาน']);
+I18N_TH_RX.push([/^(\d+)(?:st|nd|rd|th) Place$/,'อันดับ $1'],[/^(\d+)(?:st|nd|rd|th) General Election$/,'เลือกตั้งทั่วไปครั้งที่ $1']);
 
 </script>
 <script>

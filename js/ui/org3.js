@@ -11,8 +11,8 @@
 // =====================================================================================
 const orgNm=m=>m?(m.stage||m.name):'';
 const orgSelL=()=>{let L=ui.orgsel;if(L!=null&&!Array.isArray(L))L=ui.orgsel=[L];return(L||[]).map(get).filter(Boolean)};
-const ORG_SORT=[['','Default order'],['name','Name'],['geRk','Election Rank'],['pop','Popularity Index'],['fans','Fanbase'],['gen','Generation'],['sing','Vocal'],['dance','Dance'],['cha','Performance']];
-function orgSortF(a,b){const k=ui.orgsort||'';if(!k)return 0;if(k=='name')return orgNm(a).localeCompare(orgNm(b));if(k=='gen')return(a.gen||1)-(b.gen||1)||orgNm(a).localeCompare(orgNm(b));const v=m=>{const x=sv(m,k);return typeof x=='number'?x:+x||0};return v(b)-v(a)}
+const ORG_SORT=[['','Default order'],['name','Name'],['geRk','Election Rank'],['pop','Popularity Index'],['fans','Fanbase'],['gen','Generation'],['age','Age'],['sing','Vocal'],['dance','Dance'],['cha','Performance']];
+function orgSortF(a,b){const k=ui.orgsort||'';if(!k)return 0;if(k=='age')return(+b.age||0)-(+a.age||0);if(k=='name')return orgNm(a).localeCompare(orgNm(b));if(k=='gen')return(a.gen||1)-(b.gen||1)||orgNm(a).localeCompare(orgNm(b));const v=m=>{const x=sv(m,k);return typeof x=='number'?x:+x||0};return v(b)-v(a)}
 const orgSortSel=()=>`<label class="st">Sort <select onchange="ui.orgsort=this.value;render()">${ORG_SORT.map(([k,n])=>`<option value="${k}" ${(ui.orgsort||'')==k?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`;
 orgPick=function(mid){const L=(orgSelL().map(m=>m.id));const i=L.indexOf(mid);if(i>=0)L.splice(i,1);else L.push(mid);ui.orgsel=L.length?L:null;render()};
 orgMoveTo=function(tid){const D=orgDr('sh'),L=orgSelL();if(!L.length)return toast('Tap a member first.','err');let n=0,skip=0;L.forEach(m=>{const a=orgTo(D,m);if(a.gid!=D.gid){skip++;return}a.tid=tid=='tr'?null:tid;if(!a.tid)a.kn=null;orgSet(D,m.id,a);D.log.push({day:S.day,op:'move',mid:m.id,to:tid});n++});ui.orgsel=null;if(skip)toast(`${skip} member(s) leave the group in the plan and were not moved.`);else if(n>1)toast(`${n} members moved.`);render()};
