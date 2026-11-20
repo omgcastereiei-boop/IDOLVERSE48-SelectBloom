@@ -14,8 +14,9 @@
 const nrBad=v=>v===null||(typeof v=='number'&&!Number.isFinite(v));
 // null (a saved NaN) is only repaired on these stat fields; other fields can be null on purpose
 const NR_STAT=new Set(['mor','fans','buzz','en','loy','pas','pop','st','sing','dance','variety','cha','age']);
-function nrMembers(L){if(!Array.isArray(L)||!L.length)return 0;let n=0;const keys=new Set();L.forEach(m=>{for(const k in m)if(typeof m[k]=='number')keys.add(k)});
- keys.forEach(k=>{const ok=L.map(m=>m[k]).filter(v=>typeof v=='number'&&Number.isFinite(v)).sort((a,b)=>a-b);if(ok.length<L.length/2)return;const med=ok[Math.floor(ok.length/2)];const nul=NR_STAT.has(k);L.forEach(m=>{const v=m[k];if(k in m&&(nul?nrBad(v):typeof v=='number'&&!Number.isFinite(v))){m[k]=med;n++}})});return n}
+const NR_DEF={mor:50,en:100,loy:50,pas:50,st:50,sing:40,dance:40,variety:40,cha:40,age:18,fans:0,buzz:0,pop:1};
+function nrMembers(L){if(!Array.isArray(L)||!L.length)return 0;let n=0;const keys=new Set();L.forEach(m=>{for(const k in m)if(typeof m[k]=='number'||(NR_STAT.has(k)&&m[k]===null))keys.add(k)});
+ keys.forEach(k=>{const ok=L.map(m=>m[k]).filter(v=>typeof v=='number'&&Number.isFinite(v)).sort((a,b)=>a-b);const med=ok.length?ok[Math.floor(ok.length/2)]:(NR_DEF[k]??0);const nul=NR_STAT.has(k);L.forEach(m=>{const v=m[k];if(k in m&&(nul?nrBad(v):typeof v=='number'&&!Number.isFinite(v))){m[k]=med;n++}})});return n}
 function nrFb(fb){if(!fb||!Array.isArray(fb.segs))return 0;let n=0;const N0=fb.segs.length;fb.segs=fb.segs.filter(s=>s&&typeof s.n=='number'&&Number.isFinite(s.n)&&s.n>0);n+=N0-fb.segs.length;
  fb.segs.forEach(s=>{[['loy',40],['eng',50],['sp',40]].forEach(([k,d])=>{if(nrBad(s[k])){s[k]=d;n++}});for(const j in s.o||{})if(nrBad(s.o[j])){delete s.o[j];n++}});if(n)fb.ver=(fb.ver|0)+1;return n}
 function nrRel(L){let n=0;(L||[]).forEach(r=>{if(!r)return;['sales','rev','fans','cost'].forEach(k=>{if(k in r&&nrBad(r[k])){r[k]=0;n++}})});return n}
