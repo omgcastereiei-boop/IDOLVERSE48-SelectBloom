@@ -9,9 +9,10 @@
 //    Pattern Library (patterns are saved on their own and can be applied to any piece of any costume)
 // =====================================================================================
 CZX_CAT.forEach(c=>{if(CZ_CATS.some(x=>x.k==c.k))return;const vars={};c.items.forEach(([k])=>{if(CZX[k]&&CZX[k].vars)vars[k]=CZX[k].vars});CZ_CATS.push({...c,vars})});
-const CZ_GRPS=[['basic','Basics',['top','dr','sleeve','collar','outer','bottom','over','shoes','legs','x','a']],['detail','Details',['bod','skx','shd','bk','trim']],['acc','Accessories',['orn','emb','hd','fan']],['fes','Festival & Graduation',['fes','g']],['trad','Traditional',['trad']]];
+const CZ_GRPS=[['basic','Basics',['top','dr','sleeve','collar','ncol','outer','wrap','bottom','over','sko','belt','cuff','g','shoes','legs','x','a']],['detail','Details',['bod','skx','shd','bk','trim']],['acc','Accessories',['orn','emb','hd','fan']],['fes','Festival & Graduation',['fes']],['trad','Traditional',['trad']]];
 Object.assign(CZ_CROP,{dr:'8 36 84 150',bod:'26 40 48 40',skx:'4 60 92 110',shd:'16 34 68 56',bk:'0 30 100 140',trim:'24 40 52 80',orn:'26 40 48 44',fan:'0 20 100 120',emb:'22 40 56 80',hd:'24 -12 52 44',fes:'14 30 72 90',trad:'14 30 72 110'});
-const CZ_SEC_N={basic:'Basics',detail:'Details',acc:'Accessories',fes:'Festival & Graduation',trad:'Traditional'};
+const CZ_SEC_N={basic:'Basics',detail:'Details',acc:'Accessories',fes:'Festival',trad:'Traditional'};
+try{Object.assign(CZ_CROP,CZX_MOVE_CROP)}catch(e){}
 const czxGrpOf=k=>(CZ_GRPS.find(g=>g[2].includes(k))||CZ_GRPS[0])[0];
 // tags used by the filters
 const CZX_FTAGS={trad:['Thai','Chinese','Japanese'],fes:['Christmas','Halloween','Valentine','Spring','Summer','New Year','Easter','Winter','Autumn','Birthday','Graduation'],hd:['Christmas','Halloween','Royal','Elegant','Thai','Chinese','Japanese','Cute','Fantasy']};
@@ -45,7 +46,7 @@ function czxPatSave(){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(!P||(P.pat||'sol
 function czxPatUse(i){const P=czGetSlot(ui.czE.p,ui.czE.sel),x=czxPatLib()[i];if(!P||!x||!czCanEdit())return;Object.assign(P,{pat:x.pat,pc:x.pc,dc:x.dc,ps:x.ps,pd:x.pd,pr:x.pr||0});czMark();toast(`“${x.n}” applied. The fabric colour stays your own.`);render()}
 function czxPatDel(i){const L=czxPatLib();if(!L[i])return;L.splice(i,1);render()}
 // the grid: category groups, filters and the new editor sections
-{const f=czGridHtml;czGridHtml=function(E,o,d,model){const g=czxGrpOf(E.cat),G=[g,'',CZ_CATS.map(c=>c.k)];if(!G[2].includes(E.cat)){E.cat=G[2][0];const c=CZ_CATS.find(x=>x.k==E.cat);if(c&&c.multi){const on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0]}else E.sel=E.cat}
+{const f=czGridHtml;czGridHtml=function(E,o,d,model){try{czxNorm(E.p)}catch(e){}const g=czxGrpOf(E.cat),G=[g,'',CZ_CATS.map(c=>c.k)];if(!G[2].includes(E.cat)){E.cat=G[2][0];const c=CZ_CATS.find(x=>x.k==E.cat);if(c&&c.multi){const on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0]}else E.sel=E.cat}
  const all=CZ_CATS.slice(),cat=CZ_CATS.find(x=>x.k==E.cat),items0=cat?cat.items:null,F=ui.czxF=ui.czxF||{q:'',tag:'',sty:''};
  if(cat&&cat.items.length>12&&CZX_CAT.some(c=>c.k==cat.k)){const q=(F.q||'').toLowerCase();cat.items=cat.items.filter(([k,n])=>{const D=CZX[k]||{tags:[]};return(!q||n.toLowerCase().includes(q))&&(!F.tag||D.tags.includes(F.tag))&&(!F.sty||D.tags.includes(F.sty))})}
  CZ_CATS.length=0;all.filter(c=>G[2].includes(c.k)).forEach(c=>CZ_CATS.push(c));let h;try{h=f.apply(this,arguments)}finally{CZ_CATS.length=0;all.forEach(c=>CZ_CATS.push(c));if(cat)cat.items=items0}
