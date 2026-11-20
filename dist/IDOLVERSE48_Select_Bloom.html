@@ -1348,6 +1348,16 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .trsl{display:flex;flex-direction:column;gap:6px}.trs{display:flex;gap:10px;align-items:center;padding:8px}.trs.group{border-left:4px solid #9b7ae0}.trs.self{border-left:4px solid #f39ac1}.trsf{display:flex;flex-wrap:wrap;gap:2px;max-width:50%}.trsf span{cursor:pointer}.trs small{display:block;color:#8a7a99;font-size:11px}
 .trg2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.trc2{display:flex;gap:10px;align-items:flex-start}.trc2.on{box-shadow:0 0 0 2px #ffd38a}.trc2 .av{flex:0 0 auto;cursor:pointer;position:relative}.trb{flex:1;min-width:0}.trwhy{font-style:italic;margin-top:3px}
 @media(max-width:560px){.trg2{grid-template-columns:1fr}.skr{grid-template-columns:62px 64px 1fr;font-size:12px}.trc2 .av{width:84px}.trsf{max-width:42%}}
+/* costume designer: every part on one page, grouped in labelled sections */
+.czcats.czsec{display:block;padding:8px 8px 4px}
+.czsec .czsh{font:800 11px Quicksand,'Noto Sans Thai Looped',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:8px 4px 4px}
+.czsec .czsh:first-child{margin-top:0}
+.czsec .czsh i{font-style:normal;background:var(--grad);color:#fff;border-radius:9px;padding:0 6px;font-size:10px;letter-spacing:0}
+.czsec .czsr{display:flex;flex-wrap:wrap;gap:4px}
+.czsec .czsr button{flex:0 0 auto;flex-direction:row;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12.5px}
+.czsec .czsr button.on{background:linear-gradient(90deg,#fde3ec,#eee7fb);box-shadow:none;border-color:var(--pk)}
+.czsec .czsr button i{position:static;display:inline-grid}
+@media(max-width:700px){.czcats.czsec{display:block;overflow:visible}}
 
 </style>
 </head><body>
@@ -3545,9 +3555,7 @@ V.dash=function(){const quick=[['members','Members','メンバー'],['training',
  <div class="board"><div class="c note-c"><h3>Notice board</h3>${nt.map(t=>`<div class="note">✿ ${t}</div>`).join('')}${p&&!p.left?'<button class="b p" onclick="release()">Release now</button>':''}</div>
  <div class="c"><h3>Current activities</h3>${p?`<div class="uprow"><span class="tag rrSR">Production</span><span style="flex:1">"${esc(p.title)}"</span><b>${p.left?p.left+' days left':'Ready!'}</b></div>`:`<div class="uprow"><span class="st">No single in production.</span><button class="b s" onclick="goView('music')">Plan a single</button></div>`}${c?`<div class="uprow"><span class="tag">Now playing</span><span style="flex:1">${esc(c.title)}</span><b>${(c.sales||0).toLocaleString()} sold</b></div>`:''}${tired?`<div class="uprow"><span class="tag warn">Rest</span><span>${tired} members are tired</span></div>`:''}${c&&c.covers&&fc(c)?`<div style="margin-top:8px">${coverSvg(fc(c),{size:110})}</div>`:''}</div>
  <div class="c"><h3>Upcoming schedule</h3>${up.map(e=>`<div class="uprow">${dchip(e.day)}<span style="flex:1">${esc(e.title||evTL[e.type]||e.type)}</span><span class="tag">${evTL[e.type]||e.type}</span></div>`).join('')||emptyBox('Nothing on the calendar yet.','🗓')}</div>${S.cal&&S.cal.some(e=>!e.done)?`<div class="c"><h3>Calendar</h3>${calHtml()}</div>`:''}
- <div class="c"><h3>Groups</h3>${grps||emptyBox('No groups yet.')}</div>
- <div class="c"><h3>Missions</h3><ul class="ms">${ms.map(([t,d])=>`<li class="${d?'ok':''}">${d?'✔':'○'} ${t}</li>`).join('')}</ul></div>
- <div class="c" style="padding:8px"><div class="ban" style="--bh:${hh};margin:0"><span>${EV[fe].n}<br><small style="font-size:12px">Featured event · cost ${yen(EV[fe].cost)}</small></span><button class="b p" onclick="openEv('${fe}')">Plan now</button></div></div></div>`};
+ <div class="c"><h3>Groups</h3>${grps||emptyBox('No groups yet.')}</div></div>`};
 
 // ---- Members: idol card (same click → same profile modal) ----
 mcard=function(m){const r=rar(m),rl=roles(m),t=teamOf(m),tc=bgOf(m)||'#cdbdf5';return`<div class="mc r${r}" style="--tc:${tc}" onclick="${prof(m.id)}" tabindex="0" onkeydown="if(event.key=='Enter')this.click()"><div class="mart">${ptc(m)}</div><i class="rb">${r}</i><span class="mcpop" title="Popularity">♥ ${m.pop}</span>${rl.length?`<span class="mcrole" title="${esc(rl[0])}">★</span>`:''}<div class="np"><b>${esc(m.name)}</b><span class="mteam">${ord(m.gen||1)} Gen · ${esc(teamLbl(m))}</span><span class="mst">Vo ${skV(m,'sing')} · Da ${skV(m,'dance')} · Pf ${skV(m,'cha')}</span><div class="mini">${SK.map(k=>`<u style="--v:${m[k]}%"></u>`).join('')}</div></div></div>`};
@@ -3778,6 +3786,7 @@ const _czCover=V.cover;V.cover=function(){czLib();czCoverSync();let h=_czCover.c
 CZX_CAT.forEach(c=>{if(CZ_CATS.some(x=>x.k==c.k))return;const vars={};c.items.forEach(([k])=>{if(CZX[k]&&CZX[k].vars)vars[k]=CZX[k].vars});CZ_CATS.push({...c,vars})});
 const CZ_GRPS=[['basic','Basics',['top','dr','sleeve','collar','outer','bottom','over','shoes','legs','x','a']],['detail','Details',['bod','skx','shd','bk','trim']],['acc','Accessories',['orn','emb','hd','fan']],['fes','Festival & Graduation',['fes','g']],['trad','Traditional',['trad']]];
 Object.assign(CZ_CROP,{dr:'8 36 84 150',bod:'26 40 48 40',skx:'4 60 92 110',shd:'16 34 68 56',bk:'0 30 100 140',trim:'24 40 52 80',orn:'26 40 48 44',fan:'0 20 100 120',emb:'22 40 56 80',hd:'24 -12 52 44',fes:'14 30 72 90',trad:'14 30 72 110'});
+const CZ_SEC_N={basic:'Basics',detail:'Details',acc:'Accessories',fes:'Festival & Graduation',trad:'Traditional'};
 const czxGrpOf=k=>(CZ_GRPS.find(g=>g[2].includes(k))||CZ_GRPS[0])[0];
 // tags used by the filters
 const CZX_FTAGS={trad:['Thai','Chinese','Japanese'],fes:['Christmas','Halloween','Valentine','Spring','Summer','New Year','Easter','Winter','Autumn','Birthday','Graduation'],hd:['Christmas','Halloween','Royal','Elegant','Thai','Chinese','Japanese','Cute','Fantasy']};
@@ -3811,12 +3820,14 @@ function czxPatSave(){const P=czGetSlot(ui.czE.p,ui.czE.sel);if(!P||(P.pat||'sol
 function czxPatUse(i){const P=czGetSlot(ui.czE.p,ui.czE.sel),x=czxPatLib()[i];if(!P||!x||!czCanEdit())return;Object.assign(P,{pat:x.pat,pc:x.pc,dc:x.dc,ps:x.ps,pd:x.pd,pr:x.pr||0});czMark();toast(`“${x.n}” applied. The fabric colour stays your own.`);render()}
 function czxPatDel(i){const L=czxPatLib();if(!L[i])return;L.splice(i,1);render()}
 // the grid: category groups, filters and the new editor sections
-{const f=czGridHtml;czGridHtml=function(E,o,d,model){const g=ui.czGrp||czxGrpOf(E.cat),G=CZ_GRPS.find(x=>x[0]==g)||CZ_GRPS[0];if(!G[2].includes(E.cat)){E.cat=G[2][0];const c=CZ_CATS.find(x=>x.k==E.cat);if(c&&c.multi){const on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0]}else E.sel=E.cat}
+{const f=czGridHtml;czGridHtml=function(E,o,d,model){const g=czxGrpOf(E.cat),G=[g,'',CZ_CATS.map(c=>c.k)];if(!G[2].includes(E.cat)){E.cat=G[2][0];const c=CZ_CATS.find(x=>x.k==E.cat);if(c&&c.multi){const on=Object.keys(E.p[E.cat]||{}).find(x=>E.p[E.cat][x]);E.sel=on?E.cat+'.'+on:E.cat+'.'+c.items[0][0]}else E.sel=E.cat}
  const all=CZ_CATS.slice(),cat=CZ_CATS.find(x=>x.k==E.cat),items0=cat?cat.items:null,F=ui.czxF=ui.czxF||{q:'',tag:'',sty:''};
  if(cat&&cat.items.length>12&&CZX_CAT.some(c=>c.k==cat.k)){const q=(F.q||'').toLowerCase();cat.items=cat.items.filter(([k,n])=>{const D=CZX[k]||{tags:[]};return(!q||n.toLowerCase().includes(q))&&(!F.tag||D.tags.includes(F.tag))&&(!F.sty||D.tags.includes(F.sty))})}
  CZ_CATS.length=0;all.filter(c=>G[2].includes(c.k)).forEach(c=>CZ_CATS.push(c));let h;try{h=f.apply(this,arguments)}finally{CZ_CATS.length=0;all.forEach(c=>CZ_CATS.push(c));if(cat)cat.items=items0}
- try{const grp=`<div class="row czxgrp" role="tablist">${CZ_GRPS.map(([k,n,ks])=>{const cnt=ks.reduce((a,c)=>{const v=E.p[c];return a+(!v?0:CZ_CATS.find(x=>x.k==c&&x.multi)?Object.values(v).filter(Boolean).length:v.t&&v.t!='none'?1:0)},0);return`<button class="b s ${k==g?'p':''}" onclick="ui.czGrp='${k}';render()">${n}${cnt?` <i>${cnt}</i>`:''}</button>`}).join('')}</div>`;
-  h=h.replace('<div class="czcats" role="tablist">',grp+'<div class="czcats" role="tablist">');
+ try{const cnt=c=>{const v=E.p[c.k];return!v?0:c.multi?Object.values(v).filter(Boolean).length:(v.t&&v.t!='none'?1:0)};
+   const sec=CZ_GRPS.map(([k,n,ks])=>{const C=ks.map(x=>CZ_CATS.find(c=>c.k==x)).filter(Boolean);if(!C.length)return'';const tot=C.reduce((a,c)=>a+cnt(c),0);
+    return`<div class="czsh">${CZ_SEC_N[k]||n}${tot?` <i>${tot}</i>`:''}</div><div class="czsr">${C.map(c=>{const on=cnt(c);return`<button role="tab" class="${c.k==E.cat?'on':''}" onclick="czCat('${c.k}')"><b>${c.n}</b>${on?`<i>${c.multi?on:'✓'}</i>`:''}</button>`}).join('')}</div>`}).join('');
+   const i0=h.indexOf('<div class="czcats" role="tablist">');if(i0>=0){const i1=h.indexOf('</div>',i0);h=h.slice(0,i0)+`<div class="czcats czsec" role="tablist">${sec}</div>`+h.slice(i1+6)}
   if(cat&&CZX_CAT.some(c=>c.k==cat.k)&&items0.length>12){const tags=CZX_FTAGS[cat.k]||[],fil=`<div class="czxfil"><input placeholder="Search ${esc(cat.n.toLowerCase())}" value="${esc(F.q)}" onchange="ui.czxF.q=this.value;render()">${tags.length?`<select onchange="ui.czxF.tag=this.value;render()"><option value="">All collections</option>${tags.map(t=>`<option ${F.tag==t?'selected':''}>${t}</option>`).join('')}</select>`:''}<select onchange="ui.czxF.sty=this.value;render()"><option value="">All styles</option>${CZX_STY.map(t=>`<option ${F.sty==t?'selected':''}>${t}</option>`).join('')}</select></div>`;h=h.replace('<div class="czitems">',fil+'<div class="czitems">')}
   const P=czGetSlot(E.p,E.sel),D=P&&CZX[P.t];
   if(P&&P.t&&P.t!='none'){const i=h.indexOf('<div class="czsub">Pattern</div>');if(i>=0){let j=h.indexOf('<div class="czsub">Fabric &amp; texture</div>',i);if(j<0)j=h.length;const mid=h.slice(i,j),pre=mid.indexOf('<div class="row"><label class="st">Pattern size');const sizes=pre>=0?mid.slice(pre):'';h=h.slice(0,i)+(D?czxPlaceHtml(D,P):'')+`<div class="czsub">Pattern</div>`+czxPatHtml(P)+sizes+h.slice(j)}}

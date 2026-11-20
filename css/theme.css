@@ -1266,3 +1266,13 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .trsl{display:flex;flex-direction:column;gap:6px}.trs{display:flex;gap:10px;align-items:center;padding:8px}.trs.group{border-left:4px solid #9b7ae0}.trs.self{border-left:4px solid #f39ac1}.trsf{display:flex;flex-wrap:wrap;gap:2px;max-width:50%}.trsf span{cursor:pointer}.trs small{display:block;color:#8a7a99;font-size:11px}
 .trg2{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.trc2{display:flex;gap:10px;align-items:flex-start}.trc2.on{box-shadow:0 0 0 2px #ffd38a}.trc2 .av{flex:0 0 auto;cursor:pointer;position:relative}.trb{flex:1;min-width:0}.trwhy{font-style:italic;margin-top:3px}
 @media(max-width:560px){.trg2{grid-template-columns:1fr}.skr{grid-template-columns:62px 64px 1fr;font-size:12px}.trc2 .av{width:84px}.trsf{max-width:42%}}
+/* costume designer: every part on one page, grouped in labelled sections */
+.czcats.czsec{display:block;padding:8px 8px 4px}
+.czsec .czsh{font:800 11px Quicksand,'Noto Sans Thai Looped',sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:8px 4px 4px}
+.czsec .czsh:first-child{margin-top:0}
+.czsec .czsh i{font-style:normal;background:var(--grad);color:#fff;border-radius:9px;padding:0 6px;font-size:10px;letter-spacing:0}
+.czsec .czsr{display:flex;flex-wrap:wrap;gap:4px}
+.czsec .czsr button{flex:0 0 auto;flex-direction:row;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12.5px}
+.czsec .czsr button.on{background:linear-gradient(90deg,#fde3ec,#eee7fb);box-shadow:none;border-color:var(--pk)}
+.czsec .czsr button i{position:static;display:inline-grid}
+@media(max-width:700px){.czcats.czsec{display:block;overflow:visible}}

@@ -1112,3 +1112,7 @@ New **Media & PR** section: News Feed, Crisis Room, News Archive, Reputation & O
 - So an album now: enters the **Monthly Sales Chart**, can hold a **Handshake Event** (step 7 of planning), can be promoted with **Roadshows**, updates members' **profile costumes** (main-song costume for its Senbatsu, Album Costume for Under Girls), gets MVs, fan growth and music-program offers like a single.
 - **Numbering**: singles and albums keep their own numbers (Single 3 → Album 1 → Single 4), while the Senbatsu history counts them as one sequence of releases.
 - Songs reused from the Song Library keep their original release (they are referenced, not re-released). Albums released before this update stay as they were.
+
+## Office and Costume Designer clean-up
+- The Producer Office no longer shows the Missions card or the featured “Mini Concert” banner.
+- Costume Designer: the five category tabs (Basics / Details / Accessories / Festival & Graduation / Traditional) are replaced by one list of every costume part, grouped in labelled sections. Each part shows ✓ (or a count) when it is in use, and each section shows how many parts it uses. On a phone the list wraps instead of scrolling sideways.
