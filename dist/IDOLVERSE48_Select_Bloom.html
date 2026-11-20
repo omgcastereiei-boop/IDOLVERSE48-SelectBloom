@@ -14032,21 +14032,22 @@ function nrWalk(o,seen,skip){let n=0;if(!o||typeof o!='object'||seen.has(o))retu
 
 // fans of a member: use her supporters in the fanbase (Kami Oshi + Oshi), which survived the bug.
 // Popularity of those members is re-estimated from the healthy members' popularity per supporter.
-function nrSupporters(){try{const st=fbStats();if(!st||!st.M)return null;const r={};for(const id in st.M){const X=st.M[id];r[id]=Math.max(0,Math.round((+X.k||0)+(+X.o||0)))}return r}catch(e){return null}}
-function nrFansFromFb(ids){const sup=nrSupporters();if(!sup||!ids.size)return 0;let n=0;const L=S.members||[];
+function nrSupporters(){try{const segs=S.fb&&S.fb.segs;if(!Array.isArray(segs)||!segs.length)return null;const r={};segs.forEach(s=>{const n=+s.n;if(!(n>0))return;if(s.k!=null)r[s.k]=(r[s.k]||0)+n;for(const j in s.o||{}){const c=+s.o[j];if(c>0)r[j]=(r[j]||0)+c}});for(const k in r)r[k]=Math.round(r[k]);return r}catch(e){return null}}
+function nrFansFromFb(ids,popIds){popIds=popIds||new Set();const sup=nrSupporters();if(!sup||!ids.size)return 0;let n=0;const L=S.members||[];
  const healthy=L.filter(m=>!ids.has(m.id)&&Number.isFinite(m.pop)&&sup[m.id]>0),ratio=healthy.map(m=>m.pop/sup[m.id]).sort((a,b)=>a-b),rt=ratio.length?ratio[Math.floor(ratio.length/2)]:null,pmax=healthy.length?Math.max(...healthy.map(m=>m.pop)):100;
- L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;n++;if(rt!=null){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
+ L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;n++;if(rt!=null&&popIds.has(m.id)){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
 function nanRepair(quiet){if(!S)return 0;let n=0;try{
- const brk=new Set((S.members||[]).filter(m=>nrBad(m.fans)).map(m=>m.id));n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
- // one-time pass for saves repaired by the first version (fans set to 0 although she still has supporters)
- if(!S.nrFansV){S.nrFansV=1;(S.members||[]).forEach(m=>{if(m.fans===0&&!m.left)brk.add(m.id)})}
- n+=nrFansFromFb(brk);
+ const brk=new Set((S.members||[]).filter(m=>nrBad(m.fans)).map(m=>m.id)),brkPop=new Set((S.members||[]).filter(m=>nrBad(m.pop)).map(m=>m.id));n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
+ // a member with 0 fans who still has supporters in the fanbase is inconsistent (saves repaired by the first version): rebuild her fans
+ (S.members||[]).forEach(m=>{if(!(+m.fans>0))brk.add(m.id)});
+ n+=nrFansFromFb(brk,brkPop);
  n+=nrRel(S.albums)+nrRel(S.singles);(S.groups||[]).forEach(g=>{if(g&&g.ctx){n+=nrRel(g.ctx.albums)+nrRel(g.ctx.singles)}});
  n+=nrWalk(S,new WeakSet(),new Set(['money','mOk']));
  if(nrBad(S.fans)){S.fans=S.fb&&Array.isArray(S.fb.segs)?S.fb.segs.reduce((a,s)=>a+s.n,0):0;n++}
  if(n&&S.fb){S.fb.ver=(S.fb.ver|0)+1;if(S.fb.fx)S.fb.fx.tv=(S.fb.fx.tv|0)+1}
  if(n){console.warn('nanRepair: repaired '+n+' broken value(s)');if(!quiet)toast(`Repaired ${n} broken value(s) in this save (fans / popularity).`)}}catch(e){console.error(e)}return n}
-const nrSuspect=()=>{try{return nrBad(S.fans)||(S.members||[]).some(m=>nrBad(m.pop)||nrBad(m.fans))||(S.fb&&(S.fb.segs||[]).some(s=>nrBad(s.n)))}catch(e){return false}};
+function nrZeroWithSup(){const z=(S.members||[]).filter(m=>!(+m.fans>0));if(!z.length)return false;const sup=nrSupporters();return!!sup&&z.some(m=>sup[m.id]>0)}
+const nrSuspect=()=>{try{return nrZeroWithSup()||nrBad(S.fans)||(S.members||[]).some(m=>nrBad(m.pop)||nrBad(m.fans))||(S.fb&&(S.fb.segs||[]).some(s=>nrBad(s.n)))}catch(e){return false}};
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);nanRepair(true);return r}}
 {const f=doRelease;doRelease=function(){const r=f.apply(this,arguments);if(nrSuspect())nanRepair(true);return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);if(nrSuspect())nanRepair(true);return r}}
