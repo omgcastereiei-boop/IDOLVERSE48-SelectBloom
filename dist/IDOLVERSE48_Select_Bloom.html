@@ -93,8 +93,8 @@ details summary{cursor:pointer}
  --grad:linear-gradient(135deg,#f5a3c4,#b9a2ec 60%,#8cc8ef);
 }
 *{-webkit-tap-highlight-color:transparent}
-html{overflow-x:hidden}
-body{background:#f6ece3;font-family:Quicksand,'Zen Maru Gothic',system-ui,sans-serif;overflow-x:hidden}
+html{overflow-x:hidden;overflow-x:clip}
+body{background:#f6ece3;font-family:Quicksand,'Zen Maru Gothic',system-ui,sans-serif;overflow-x:hidden;overflow-x:clip}
 body::before{display:none}
 /* ---------------- illustrated environment layer ---------------- */
 #scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#f3e6dc}
@@ -1358,6 +1358,23 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .czsec .czsr button.on{background:linear-gradient(90deg,#fde3ec,#eee7fb);box-shadow:none;border-color:var(--pk)}
 .czsec .czsr button i{position:static;display:inline-grid}
 @media(max-width:700px){.czcats.czsec{display:block;overflow:visible}}
+/* Character Creator: appearance categories & colour picker */
+.apcr{grid-template-columns:minmax(240px,320px) 1fr}
+.apside{position:sticky;top:76px}
+.approw{display:flex;gap:6px;align-items:flex-end;justify-content:center}.approw>svg{width:58%;height:auto}.apfull{width:38%;flex:none}.apfull svg{width:100%;height:auto}
+.apnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.apth .tb{width:84px}.apth .tb small{display:block;font-size:10.5px;line-height:1.2;padding:2px 2px 4px}
+.appk .appkh{gap:8px;align-items:center}.apcur{width:26px;height:26px;border-radius:8px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.apsvw{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.apsv{position:relative;height:170px;border-radius:12px;touch-action:none;cursor:crosshair;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.apdot{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35),0 2px 6px rgba(0,0,0,.3);pointer-events:none}
+.aphue{width:100%;height:18px;-webkit-appearance:none;appearance:none;border-radius:9px;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);outline:none}
+.aphue::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #555;cursor:pointer}
+.aphue::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #555;cursor:pointer}
+.apin{gap:8px;flex-wrap:wrap;align-items:center}.apin input{width:64px}.apin #aphex{width:86px;font-family:monospace}.apnat input{width:36px;height:30px;padding:0;border:0;background:none;vertical-align:middle}
+@media(max-width:700px){.apcr{grid-template-columns:1fr}.apside{position:static}.approw>svg{width:52%}.apth .tb{width:74px}.apsv{height:150px}}
+@media(max-width:700px){.apside{position:sticky;top:58px;z-index:6;padding:6px 8px;box-shadow:0 6px 16px rgba(60,30,90,.18)}.apside select{margin-bottom:2px;padding:4px 8px}.approw{height:150px}.approw>svg{height:150px;width:auto}.apfull{width:auto;height:150px}.apfull svg{height:150px;width:auto}.apside>.st{display:none}.apside .row{margin-top:2px;gap:4px}.apside .row .b{padding:6px 10px;font-size:12px}}
+@media(max-width:700px){.apcr{display:block}.apcr>div+div{margin-top:8px}}
 
 </style>
 </head><body>
@@ -1575,13 +1592,13 @@ function exOf(m,ex){if(ex!=null&&ex!==''&&EXS[+ex])return+ex;const a=ap(m);retur
 
 // eye geometry: [halfWidth, height, outerTilt (neg = upturned), irisScale]
 const EYG=[[10.4,17,-.4,1],[11,14.6,-2,.97],[11.4,12,-1.4,.94],[10.6,15,-3.6,.98],[10.4,15.6,2.6,1],[10.2,16,1.2,1]];
-function eyes(a,D,X,ec,id,hb){const g=EYG[a.ey]||EYG[0],w=g[0]*D.es,h=g[1]*D.es,t=g[2],ir=g[3],y=61.5,lc=mixc('#2b1a26',hb[2],.2);let o='';
+function eyes(a,D,X,ec,id,hb){const g=EYG[a.ey]||EYG[0],w=g[0]*D.es,h=g[1]*D.es,t=g[2],ir=g[3],y=61.5,lc=apOkHex(a.lcx)?a.lcx:mixc('#2b1a26',hb[2],.2),pk=g[4]||0,lo=g[5]||1,ls=g[6]!=null?g[6]:D.lash,dr=g[7]||0,sq=g[8]||1;let o='';
  const one=(c,d,k)=>{const st=X.e;
   if(st=='h'||(st=='half'&&k==1&&X.x=='wink')){return`<path d="M${N2(c-d*w*.85)} ${N2(y+1.5)}Q${N2(c)} ${N2(y-h*.62)} ${N2(c+d*w*.95)} ${N2(y+1+t*.3)}" stroke="${lc}" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M${N2(c+d*w*.95)} ${N2(y+1+t*.3)}l${N2(d*2.4)} -1.4" stroke="${lc}" stroke-width="1.3" stroke-linecap="round"/>`}
-  const op=st=='half'?.62:st=='d'?.8:st=='w'||st=='s'?1.08:st=='f'?.76:1,irs=st=='s'?.68:1,dy=st=='sad'?1:0;
-  const ix=c-d*w*.86,iy=y+h*.02,ox=c+d*w,oy=y-h*.18+t,topY=y-h*.56*op+dy;
-  const top=`M${N2(ix)} ${N2(iy)}C${N2(c-d*w*.8)} ${N2(topY-h*.02)} ${N2(c+d*w*.55)} ${N2(topY-h*.06+t*.4)} ${N2(ox)} ${N2(oy+(1-op)*h*.5)}`;
-  const bot=`C${N2(c+d*w*.75)} ${N2(y+h*.42)} ${N2(c+d*w*.2)} ${N2(y+h*.56)} ${N2(c-d*w*.2)} ${N2(y+h*.54)}C${N2(c-d*w*.6)} ${N2(y+h*.5)} ${N2(ix-d*.6)} ${N2(y+h*.32)} ${N2(ix)} ${N2(iy)}Z`,cid=`${id}c${k}`;
+  const op=(st=='half'?.62:st=='d'?.8:st=='w'||st=='s'?1.08:st=='f'?.76:1)*(st=='w'||st=='s'?1:sq),irs=st=='s'?.68:1,dy=st=='sad'?1:0;
+  const ix=c-d*w*.86,iy=y+h*.02+dr,ox=c+d*w,oy=y-h*.18+t,topY=y-h*.56*op+dy;
+  const top=`M${N2(ix)} ${N2(iy)}C${N2(c-d*w*(.8-pk*.5))} ${N2(topY-h*.02)} ${N2(c+d*w*(.55+pk*.35))} ${N2(topY-h*.06+t*.4)} ${N2(ox)} ${N2(oy+(1-op)*h*.5)}`;
+  const bot=`C${N2(c+d*w*.75)} ${N2(y+h*.42*lo)} ${N2(c+d*w*.2)} ${N2(y+h*.56*lo)} ${N2(c-d*w*.2)} ${N2(y+h*.54*lo)}C${N2(c-d*w*.6)} ${N2(y+h*.5*lo)} ${N2(ix-d*.6)} ${N2(y+h*.32*lo+dr*.5)} ${N2(ix)} ${N2(iy)}Z`,cid=`${id}c${k}`;
   const icx=c+d*w*.04,icy=y+h*.04+(1-op)*h*.12,rx=w*.8*ir*irs,ry=h*.66*ir*irs,dk=mixc(ec[1],'#120818',.6);
   let s=`<clipPath id="${cid}"><path d="${top}${bot}"/></clipPath><path d="${top}${bot}" fill="#fff"/><g clip-path="url(#${cid})">`;
   s+=`<ellipse cx="${N2(icx)}" cy="${N2(icy)}" rx="${N2(rx)}" ry="${N2(ry)}" fill="url(#${id}ir)"/>`;
@@ -1595,17 +1612,18 @@ function eyes(a,D,X,ec,id,hb){const g=EYG[a.ey]||EYG[0],w=g[0]*D.es,h=g[1]*D.es,
   if(D.hl==2||st=='w')s+=`<path d="M${N2(icx+rx*.28)} ${N2(icy-ry*.66)}l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z" fill="#fff"/>`;
   s+=`</g>`;
   // upper lash: filled, thicker toward the outer corner, small wing
-  const lw=[1.5,1.9,2.3][D.lash];
+  const lw=[1.5,1.9,2.3,2.1][ls]||1.9;
   s+=`<path d="${top}L${N2(ox+d*.4)} ${N2(oy+(1-op)*h*.5+lw*1.1)}C${N2(c+d*w*.35)} ${N2(topY-h*.04+t*.4+lw)} ${N2(c-d*w*.6)} ${N2(topY+h*.04+lw*.7)} ${N2(ix+d*.6)} ${N2(iy+.5)}Z" fill="${lc}" stroke="${lc}" stroke-width=".7" stroke-linejoin="round"/>`;
-  s+=`<path d="M${N2(ox-d*1.4)} ${N2(oy+(1-op)*h*.5-.2)}l${N2(d*3.6)} ${N2(-1.8+(D.lash==2?-.6:0))}l${N2(-d*1.2)} 2.8Z" fill="${lc}"/>`;
-  if(D.lash==2)s+=`<path d="M${N2(c+d*w*.55)} ${N2(topY+t*.45)}l${N2(d*1.5)} -2" stroke="${lc}" stroke-width=".8" stroke-linecap="round"/>`;
+  s+=`<path d="M${N2(ox-d*1.4)} ${N2(oy+(1-op)*h*.5-.2)}l${N2(d*3.6)} ${N2(-1.8+(ls==2?-.6:0))}l${N2(-d*1.2)} 2.8Z" fill="${lc}"/>`;
+  if(ls==2)s+=`<path d="M${N2(c+d*w*.55)} ${N2(topY+t*.45)}l${N2(d*1.5)} -2" stroke="${lc}" stroke-width=".8" stroke-linecap="round"/>`;
+  if(ls==3)s+=[.15,.45,.75].map(f=>`<path d="M${N2(c+d*w*(f-.1))} ${N2(y+h*.5*lo)}l${N2(d*.5)} 1.5" stroke="${lc}" stroke-width=".55" stroke-linecap="round"/>`).join('');
   s+=`<path d="M${N2(ox-d*1.2)} ${N2(y+h*.3)}Q${N2(c+d*w*.55)} ${N2(y+h*.5)} ${N2(c+d*w*.25)} ${N2(y+h*.53)}" stroke="${lc}" stroke-width=".7" fill="none" opacity=".55" stroke-linecap="round"/>`;
   if(X.x=='tear'&&k==1)s+=`<path d="M${N2(ox-d*1)} ${N2(y+h*.5)}q-1.4 3 0 3.8q1.4 -.8 0 -3.8z" fill="#d6efff" stroke="#8cc8ef" stroke-width=".4"/>`;
   return s};
  return one(35.4-D.sp,-1,0)+one(64.6+D.sp,1,1)}
-function brows(a,D,X,bc){const by=45.6-(EYG[a.ey]||EYG[0])[1]*.08,sp=D.sp;
- const b=(c,d)=>{const i=c-d*6,u=c+d*8.4,yi=by+X.bi,yo=by+X.bo+(a.br==3?-1:0),arch=[-.8,-2,-3.2,-1][a.br]||0,th=[.8,.9,.75,1][a.br]||.8;
-  return`<path d="M${N2(i)} ${N2(yi)}Q${N2((i+u)/2)} ${N2(Math.min(yi,yo)+arch)} ${N2(u)} ${N2(yo+.9)}Q${N2((i+u)/2)} ${N2(Math.min(yi,yo)+arch+th)} ${N2(i)} ${N2(yi+th)}Z" fill="${bc}"/>`};
+function brows(a,D,X,bc){const by=45.6-(EYG[a.ey]||EYG[0])[1]*.08,sp=D.sp,S=APBR[a.br]||APBR[0];
+ const b=(c,d)=>{const i=c-d*S.li,u=c+d*S.lo,yi=by+X.bi,yo=by+X.bo+S.tilt,arch=S.arch,th=S.th,mx=i+(u-i)*S.pk;
+  return`<path d="M${N2(i)} ${N2(yi)}Q${N2(mx)} ${N2(Math.min(yi,yo)+arch)} ${N2(u)} ${N2(yo+.9)}Q${N2(mx)} ${N2(Math.min(yi,yo)+arch+th)} ${N2(i)} ${N2(yi+th)}Z" fill="${bc}"/>`};
  return b(35.4-sp,-1)+b(64.6+sp,1)}
 function mouthX(X,D){const w=D.mw,lc='#a8455c',fill='#a33a55',tg='#f490a8',L=x=>N2(50+(x-50)*w),y=76;switch(X.mo){
  case'flat':return`<path d="M${L(48)} ${y}Q50 ${y+.6} ${L(52)} ${y}" stroke="${lc}" stroke-width="1" fill="none" stroke-linecap="round"/>`;
@@ -1631,8 +1649,8 @@ function accSvg(ac,a,D,hb){const rc=hslx(D.rib,72,76),rl=hslx(D.rib,50,44);switc
  case 6:return`<g fill="#ffffff22" stroke="#6b5a7a" stroke-width="1"><rect x="22" y="52" width="26" height="18" rx="7"/><rect x="52" y="52" width="26" height="18" rx="7"/></g><path d="M48 58Q50 56.4 52 58" stroke="#6b5a7a" stroke-width="1" fill="none"/><path d="M25 55l4.6 -1.6M55 55l4.6 -1.6" stroke="#fff" stroke-width=".9" opacity=".85"/>`}return''}
 
 // ---- head assembly -------------------------------------------------------------------
-function headParts(m,ex,id,opt={}){const a=opt.a||apEff(m),D=dz(m),X=EXS[exOf(m,ex)],hb=HC[a.hc]||HC[0],ec=EC[a.ec]||EC[0],sk=SKN[D.skin]||SKN[1],seed=((m.id|0)+1)*131;
- const bc=a.bc<0||a.bc==null?mixc(hb[2],'#2a1622',.25):(HC[a.bc]||hb)[2],hl=mixc(hb[2],'#22121e',.4),hlite=mixc(hb[1],'#ffffff',.6),hdark=mixc(hb[1],hb[2],.7);
+function headParts(m,ex,id,opt={}){const a=opt.a||apEff(m),D=dz(m),X=EXS[exOf(m,ex)],hb=apHairC(a),ec=apEyeC(a),sk=apSkinC(a,D),seed=((m.id|0)+1)*131;
+ const bc=apOkHex(a.bcx)?a.bcx:a.bc<0||a.bc==null?mixc(hb[2],'#2a1622',.25):(HC[a.bc]||hb)[2],hl=mixc(hb[2],'#22121e',.4),hlite=mixc(hb[1],'#ffffff',.6),hdark=mixc(hb[1],hb[2],.7);
  const B=backHair(a.bk,D,seed),F=BANGS[a.ft]||BANGS[0],hs=`stroke="${hl}" stroke-width=".7" stroke-linejoin="round"`,HF=`url(#${id}hf)`,HB=`url(#${id}hb)`;
  const defs=`<linearGradient id="${id}hf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mixc(hb[1],'#fff',.18)}"/><stop offset=".35" stop-color="${hb[1]}"/><stop offset="1" stop-color="${mixc(hb[1],hb[2],.55)}"/></linearGradient><linearGradient id="${id}hb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${hdark}"/><stop offset=".55" stop-color="${mixc(hb[1],hb[2],.45)}"/><stop offset="1" stop-color="${mixc(hb[1],hb[2],.25)}"/></linearGradient><linearGradient id="${id}ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mixc(ec[1],'#120818',.55)}"/><stop offset=".45" stop-color="${ec[1]}"/><stop offset="1" stop-color="${mixc(ec[2],'#fff',.15)}"/></linearGradient><radialGradient id="${id}bl"><stop offset="0" stop-color="#ff8eaa" stop-opacity=".75"/><stop offset="1" stop-color="#ff8eaa" stop-opacity="0"/></radialGradient>`;
  // back hair
@@ -1645,19 +1663,19 @@ function headParts(m,ex,id,opt={}){const a=opt.a||apEff(m),D=dz(m),X=EXS[exOf(m,
  if(B.top)back+=`<path d="M56 7C62 -2 73 0 71 9C67 6 62 6 59 9Z" fill="${HF}" ${hs}/>`;
  const ties=(B.tie||[]).map(([x,y])=>bowSvg(x,y,.6,0,hslx(D.rib,72,76),hslx(D.rib,50,44))).join('');
  let over='';(B.ftails||[]).forEach(T=>over+=tail(T));
- if(B.braid){const[x0,y0,x1,y1]=B.braid;let br='';for(let i=0;i<10;i++){const t=i/9,x=x0+(x1-x0)*t,y=y0+(y1-y0)*t,w=5.6-t*1.6;br+=`<ellipse cx="${N2(x-1.7)}" cy="${N2(y)}" rx="${N2(w)}" ry="${N2(w*1.1)}" transform="rotate(-24 ${N2(x)} ${N2(y)})"/><ellipse cx="${N2(x+1.7)}" cy="${N2(y+4.2)}" rx="${N2(w)}" ry="${N2(w*1.1)}" transform="rotate(24 ${N2(x)} ${N2(y+4.2)})"/>`}
-  over+=`<g fill="${HF}" ${hs}><path d="M33 72C29 78 27 82 28 88L32 88C33 82 35 78 37 74Z"/>${br}<path d="M${x1-3} ${y1+2}L${x1-2} ${y1+12}L${x1} ${y1+4}L${x1+2} ${y1+13}L${x1+3} ${y1+3}Z"/></g>`}
+ [...(B.braid?[B.braid]:[]),...(B.braids||[])].forEach(BR=>{const g=apBraidG(BR,HF,hs);over+=BR[4]?mir(g):g});
+ if(B.bun2)back+=[28,72].map(x=>`<circle cx="${x}" cy="8" r="10.5" fill="${HF}" ${hs}/><path d="M${x-7} 6Q${x} 0 ${x+7} 6M${x-6} 11Q${x} 7 ${x+6} 11" stroke="${hl}" stroke-width=".6" fill="none" opacity=".55"/>`).join('');
  // face
  let face='';
  if(B.ears)face+=`<path d="M22.4 55C17 52 16.4 64 22 68Z" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".6"/><path d="M77.6 55C83 52 83.6 64 78 68Z" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".6"/>`;
- face+=`<path d="${facePath(D.face)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".7"/>`;
+ face+=`<path d="${apFaceD(a,D)}" fill="${sk[0]}" stroke="${sk[2]}" stroke-width=".7"/>`;
  
  if(B.ears&&D.er)face+=`<circle cx="20.4" cy="69" r="1.4" fill="#ffe28e" stroke="#c8a040" stroke-width=".4"/><circle cx="79.6" cy="69" r="1.4" fill="#ffe28e" stroke="#c8a040" stroke-width=".4"/>`;
  const bx=28-D.sp*.5,bx2=72+D.sp*.5,bop=X.bl==2?1:X.bl?D.blush+.15:D.blush*.7,bl=`<ellipse cx="${bx}" cy="70.5" rx="7" ry="3.6" fill="url(#${id}bl)" opacity="${N2(bop)}"/><ellipse cx="${bx2}" cy="70.5" rx="7" ry="3.6" fill="url(#${id}bl)" opacity="${N2(bop)}"/>`+((X.bl==2||(X.bl&&D.bl))?`<path d="M${bx-3} 69.4l-1.2 2.4M${bx} 69.4l-1.2 2.4M${bx+3} 69.4l-1.2 2.4M${bx2-3} 69.4l-1.2 2.4M${bx2} 69.4l-1.2 2.4M${bx2+3} 69.4l-1.2 2.4" stroke="#ef8aa2" stroke-width=".55" stroke-linecap="round" opacity=".8"/>`:'');
  const nose=[`<path d="M50.4 69.4l-.7 1.4" stroke="${sk[2]}" stroke-width=".6" stroke-linecap="round" opacity=".7"/>`,`<ellipse cx="50.2" cy="70.4" rx=".6" ry=".4" fill="${sk[2]}" opacity=".55"/>`][D.nose];
  const mole=D.mole==1?`<circle cx="${45.4+D.sp}" cy="79.6" r=".5" fill="${sk[2]}"/>`:D.mole==2?`<circle cx="${72+D.sp}" cy="66" r=".5" fill="${sk[2]}"/>`:'';
  const fr=D.fr?[[26,68],[29,69.6],[31.4,67.6],[68.6,67.6],[71,69.6],[74,68]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r=".38" fill="${sk[2]}" opacity=".55"/>`).join(''):'';
- let feat=bl+fr+eyes(a,D,X,ec,id,hb)+nose+mouthX(X,D)+mole;
+ let feat=bl+fr+eyes(a,D,X,ec,id,hb)+nose+((ex==null||ex==='')&&a.mt!=null&&APMT[a.mt]?APMT[a.mt][1](D):mouthX(X,D))+mole;
  if(X.x=='sweat')feat+=`<path d="M80 40q-2.4 4 0 5.6q2.4 -1.6 0 -5.6z" fill="#d6edff" stroke="#8cc8ef" stroke-width=".5"/>`;
  if(X.x=='spark')feat+=`<path d="M90 26l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z M10 34l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z" fill="#ffd96a"/>`;
  if(X.x=='fire')feat+=`<path d="M88 44l4 -3M89 48l5 0M88 52l4 3" stroke="#ff8a8a" stroke-width="1.2" stroke-linecap="round"/>`;
@@ -1671,10 +1689,12 @@ function headParts(m,ex,id,opt={}){const a=opt.a||apEff(m),D=dz(m),X=EXS[exOf(m,
  bangs+=`<g fill="none" stroke="${hl}" stroke-width=".5" opacity=".38">${tips.map(([x,y])=>`<path d="M${N2(50+(x-50)*.35)} ${N2(14+Math.abs(x-50)*.1)}Q${N2(50+(x-50)*.8)} ${N2((y+20)/2)} ${N2(x+(x<50?.8:-.8))} ${N2(y-5)}"/>`).join('')}</g>`;
  bangs+=`<g fill="${mixc(hb[1],hb[2],.35)}" opacity=".45">${tips.filter(([x])=>x>18&&x<82).map(([x,y])=>`<path d="M${N2(x-2.2)} ${N2(y-9)}Q${N2(x)} ${N2(y-3)} ${N2(x)} ${N2(y-.6)}Q${N2(x+.6)} ${N2(y-4)} ${N2(x+2.2)} ${N2(y-9)}Z"/>`).join('')}</g>`;
  bangs+=`<path d="M24 24Q37 12.4 50 12.2Q63 12.4 76 24L74.4 26.6L71.6 23.6L69 26.4L66 22.4L62.6 25L60 21.2L56.6 23.6L53.4 20.4L50 22.6L46.6 20.4L43.4 23.6L40 21.2L37.4 25L34 22.4L31 26.4L28.4 23.6L25.6 26.6Z" fill="${hlite}" opacity="${N2(D.ring*.55)}"/>`;
- if(D.ahoge)bangs+=D.ahoge==1?`<path d="M50 5C47 -5 57 -9 61 -4C55 -5 52 -1 51.6 5Z" fill="${HF}" ${hs}/>`:`<path d="M48 5C43 -2 45 -8 50 -7C47 -4 48 0 50 5ZM51 5C55 -2 61 -3 63 0C58 -1 54 1 52.6 5Z" fill="${HF}" ${hs}/>`;
+const ahk=a.ah!=null?a.ah:D.ahoge;if(ahk)bangs+=apAhoge(ahk,hb,hl,hlite);
+ if(0)bangs+=D.ahoge==1?`<path d="M50 5C47 -5 57 -9 61 -4C55 -5 52 -1 51.6 5Z" fill="${HF}" ${hs}/>`:`<path d="M48 5C43 -2 45 -8 50 -7C47 -4 48 0 50 5ZM51 5C55 -2 61 -3 63 0C58 -1 54 1 52.6 5Z" fill="${HF}" ${hs}/>`;
  if(F.flip)bangs=mir(bangs);
+ if(B.cbraid)bangs+=apCrownBraid(HF,hs);
  // shadow of the bangs on the forehead
- const shadow=`<clipPath id="${id}fc"><path d="${facePath(D.face)}"/></clipPath><g clip-path="url(#${id}fc)"><path d="${bd}" transform="translate(0 2.4)${F.flip?' translate(100 0) scale(-1 1)':''}" fill="${sk[1]}" opacity=".9"/></g>`;
+ const shadow=`<clipPath id="${id}fc"><path d="${apFaceD(a,D)}"/></clipPath><g clip-path="url(#${id}fc)"><path d="${bd}" transform="translate(0 2.4)${F.flip?' translate(100 0) scale(-1 1)':''}" fill="${sk[1]}" opacity=".9"/></g>`;
  const sl=`<g fill="${HF}" ${hs}>${sideLocks(B.sk,B.s,seed)}</g>`;
  const browL=`<g opacity="${F.part?'.95':'.5'}">${brows(a,D,X,bc)}</g>`;
  return{defs,back,over,face:face+shadow,feat,sl,bangs,brow:browL,acc:a.cd&&(czHasHead(a.cd)||(a.cd.a&&a.cd.a.earrings))?czHeadAcc(a.cd)+(czHasHead(a.cd)?'':accSvg(a.ac,a,D,hb)):accSvg(a.ac,a,D,hb),ties,a,D,sk}}
@@ -1801,7 +1821,7 @@ function bodyParts(m,a,pose,id,D,sk){const Pz=NPOSE[pose|0]||NPOSE[0],C=ocol(a),
  if(Pz[4]=='point')g=`<path d="M${N2(hR[0])} ${N2(hR[1])}l4.6 -1" stroke="${O.glove||sk[0]}" stroke-width="1.3" stroke-linecap="round"/>`;
  if(Pz[4]=='kiss')g=`<path d="M${N2(hR[0]+6)} ${N2(hR[1]-6)}c-3 -3 -1 -5 1 -3c2 -2 4 0 1 3l-1 1z" fill="#ff8fb7"/><path d="M${N2(hR[0]+11)} ${N2(hR[1]-12)}c-2 -2 -.6 -3.4.7 -2c1.4 -1.4 2.8 0 .7 2l-.7.7z" fill="#ffc2da"/>`;
  return{Pz,O,C,legs,neck,torso:body,collar:O.collar||'',back:(O.defs?`<defs>${O.defs}</defs>`:'')+(O.back||''),arms:L.s+R.s,g,hR}}
-function figBuild(m,l,id){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac,...(l.cd?{cd:l.cd}:{})},mm={...m,_x:1,ap:a},D=dz(m),sk=SKN[D.skin]||SKN[1];
+function figBuild(m,l,id){const a={...ap(m),of:l.of,oh:l.oh,ac:l.ac,...(l.cd?{cd:l.cd}:{})},mm={...m,_x:1,ap:a},D=dz(m),sk=apSkinC(a,D);
  const H=headParts(mm,l.ex,id,{a}),B=bodyParts(m,a,l.pose,id,D,sk),tilt=B.Pz[0],HT=`translate(${N2(HTX)} ${HTY}) scale(${HK})`,G=s=>`<g transform="rotate(${tilt} 50 40)"><g transform="${HT}">${s}</g></g>`;
  const pr=(l.prop==1||B.Pz[5]==1)?`<g transform="translate(${N2(B.hR[0])} ${N2(B.hR[1])}) rotate(-20)"><rect x="-1.2" y="-8.6" width="2.4" height="9.6" rx="1" fill="#3b3346"/><circle cy="-10" r="2.8" fill="#d6dbe4" stroke="#8a8f9a" stroke-width=".45"/><path d="M-2 -11h4M-2 -9.2h4" stroke="#a7acb6" stroke-width=".35"/></g>`:l.prop==2?`<g transform="translate(${N2(B.hR[0])} ${N2(B.hR[1])}) rotate(-12)"><rect x="-.9" y="-20" width="1.8" height="21" rx=".9" fill="#ff9ec4"/><rect x="-1.4" y="-2" width="2.8" height="5" rx="1" fill="#555"/><circle cy="-20" r="2.2" fill="#fff6c0" opacity=".9"/></g>`:'';
  const ear=l.ear?`<circle cx="20.4" cy="69" r="1.8" fill="#ffd966"/><circle cx="79.6" cy="69" r="1.8" fill="#ffd966"/>`:'',nk=l.neck?`<path d="M46.6 45.6Q50 50 53.4 45.6" stroke="#ffd966" stroke-width=".7" fill="none"/><circle cx="50" cy="48.6" r="1.1" fill="#ff7eb6"/>`:'';
@@ -1836,6 +1856,154 @@ const CHAR_ASSETS={
  half:(m,w,ex,pose=0)=>{const e=apEff(m),a=ap(m);return`<svg viewBox="20 0 60 84" ${w?`width="${w}"`:''} class="chh" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:e.of,oh:e.oh,ac:a.ac,ex})}</svg>`},
  full:(m,w,ex,pose=0,of)=>{const e=apEff(m),a=ap(m);return`<svg class="chf" viewBox="10 -2 80 200" ${w?`width="${w}"`:''} role="img" aria-label="${esc(m.name||'Idol')}" xmlns="http://www.w3.org/2000/svg">${fig(m,{pose,of:of!=null?of[0]:e.of,oh:of!=null?of[1]:e.oh,ac:a.ac,ex})}</svg>`},
  entry:m=>({id:m.id,name:m.name,assets:{portrait:`char/${m.id}/portrait`,half:`char/${m.id}/half`,full:`char/${m.id}/full`,expressions:EXN.map((n,i)=>`char/${m.id}/expr/${i}`),costumes:OFN.map((n,i)=>`char/${m.id}/costume/${i}`)},design:{...ap(m),...dz(m)}})};
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Character Appearance expansion
+// -------------------------------------------------------------------------------------
+//  Extends the existing character art engine (characters.js); nothing is replaced.
+//  New optional fields of a member's appearance record (m.ap). A record without them draws
+//  exactly as before, so every existing character keeps her look.
+//    fs   face shape (index into AP_FACES)            · old records: the member's own face
+//    ft   bangs / front hair (BANGS, more styles)     · bk  back hair (backHair, more styles)
+//    ah   ahoge (0 none, 1..7 shapes)                 · old records: the member's own ahoge
+//    ey   eye shape (EYG, more silhouettes)           · br  eyebrow shape (APBR)
+//    mt   mouth shape (APMT)                          · used when no expression is forced
+//    hcx  custom hair colour  hc2x custom hair shadow colour
+//    skx  custom skin colour  ecx custom eye colour  bcx custom eyebrow colour  lcx custom eyelash colour
+//  Custom colours are exact "#rrggbb" strings; the palette indices (hc, ec, sk, bc) stay as they were.
+// =====================================================================================
+const apOkHex=v=>typeof v=='string'&&/^#[0-9a-f]{6}$/i.test(v);
+
+// ---- colours --------------------------------------------------------------------------
+// shading keeps working: the renderer builds its gradients, highlights and line colours from these
+function apHairC(a){if(apOkHex(a.hcx))return['Custom',a.hcx,apOkHex(a.hc2x)?a.hc2x:mixc(a.hcx,'#140c1c',.38)];return HC[a.hc]||HC[0]}
+function apEyeC(a){if(apOkHex(a.ecx))return['Custom',a.ecx,mixc(a.ecx,'#ffffff',.55)];return EC[a.ec]||EC[0]}
+function apSkinC(a,D){if(apOkHex(a.skx))return[a.skx,mixc(a.skx,'#c46a5c',.16),mixc(a.skx,'#4f241c',.45)];return SKN[D.skin]||SKN[1]}
+
+// ---- face shapes: genuinely different outlines (cheeks, jaw, chin), features stay aligned ---------
+// t temple x · sb cheek bulge · cy cheek control y · jx/jy jaw control · cw chin half width · ch chin y · cr chin roundness
+const AP_FACES=[
+ ['Round face',{t:21.4,sb:1.4,cy:62,jx:12,jy:6,cw:14,ch:84,cr:1.2}],
+ ['Oval face',{t:21.6,sb:.2,cy:58,jx:11,jy:7,cw:9.5,ch:86,cr:.8}],
+ ['Soft oval face',{t:21.6,sb:.6,cy:60,jx:12,jy:7,cw:11,ch:85.5,cr:1}],
+ ['Heart-shaped face',{t:21,sb:1,cy:55,jx:8,jy:10,cw:6,ch:87,cr:.4}],
+ ['V-shaped face',{t:21.6,sb:0,cy:55,jx:7,jy:12,cw:4.5,ch:88,cr:.2}],
+ ['Narrow face',{t:22.4,sb:-.6,cy:58,jx:9,jy:8,cw:7,ch:87,cr:.6}],
+ ['Wide face',{t:20.6,sb:1.6,cy:64,jx:13,jy:5,cw:15,ch:83.5,cr:1.2}],
+ ['Short face',{t:21.4,sb:.8,cy:59,jx:11,jy:5,cw:12.5,ch:82.4,cr:1}],
+ ['Long face',{t:21.8,sb:0,cy:60,jx:10,jy:10,cw:9,ch:90,cr:.8}],
+ ['Soft jawline',{t:21.4,sb:.8,cy:61,jx:14,jy:8,cw:12,ch:85,cr:1.4}],
+ ['Defined jawline',{t:21.6,sb:0,cy:67,jx:3.6,jy:9,cw:10,ch:86,cr:.3}],
+ ['Small chin',{t:21.6,sb:.6,cy:60,jx:13,jy:7,cw:5,ch:85,cr:.6}],
+ ['Rounded chin',{t:21.6,sb:.4,cy:59,jx:10,jy:7,cw:12,ch:86,cr:2.2}],
+ ['Pointed chin',{t:21.6,sb:.2,cy:57,jx:9,jy:11,cw:3,ch:88.6,cr:0}],
+ ['Mature proportions',{t:22.2,sb:-.2,cy:60,jx:10,jy:9,cw:8,ch:88,cr:.6}],
+ ['Youthful proportions',{t:21.2,sb:1.4,cy:63,jx:13,jy:5,cw:13,ch:83.6,cr:1.4}]];
+function apFacePath(P){const{t,sb,cy,jx,jy,cw,ch,cr}=P,r=100-t;
+ return`M${t} 46C${N2(t-sb)} ${cy} ${N2(50-cw-jx)} ${N2(ch-jy)} ${N2(50-cw*.4)} ${N2(ch-1)}Q50 ${N2(ch+cr)} ${N2(50+cw*.4)} ${N2(ch-1)}C${N2(50+cw+jx)} ${N2(ch-jy)} ${N2(r+sb)} ${cy} ${r} 46C${r} 27 66 18 50 18C34 18 ${t} 27 ${t} 46Z`}
+function apFaceD(a,D){const F=a&&a.fs!=null&&AP_FACES[a.fs];return F?apFacePath(F[1]):facePath(D.face)}
+
+// ---- bangs: more hand-tuned edges (right temple -> left temple, 't' = strand tip) --------------
+function apBangGen(n,tip,root,side=66,xs=x=>x){const e=[[85,side,'t'],[81,44]];for(let i=0;i<n;i++){const t=(i+.5)/n,x=78-56*t,tr=(i+1)/n;e.push([N2(xs(x)),N2(tip(t,i)),'t']);if(i<n-1)e.push([N2(78-56*tr),N2(root(tr,i))])}e.push([19,44],[15,side,'t']);return{e}}
+const AP_UNEVEN=[48,53.4,44,55,46.6,51.6,43,52.6,47];
+BANGS.push(
+ /*11 Straight*/   apBangGen(9,()=>51,()=>44),
+ /*12 Thin*/       {...apBangGen(12,()=>50,()=>40,64),thin:1},
+ /*13 Diagonal*/   apBangGen(8,t=>40+16*t,t=>33+14*t),
+ /*14 Split*/      apBangGen(9,(t,i)=>i==4?30:50,(t,i)=>i==3||i==4?30:38),
+ /*15 Rounded*/    apBangGen(9,t=>44+8*Math.sin(Math.PI*t),t=>37+6*Math.sin(Math.PI*t),62),
+ /*16 Long*/       apBangGen(7,t=>55+3*Math.sin(Math.PI*t),()=>42,70),
+ /*17 Layered*/    apBangGen(12,(t,i)=>i%2?54:45,()=>38),
+ /*18 Fluffy*/     apBangGen(6,()=>48,()=>40,64),
+ /*19 Uneven*/     apBangGen(9,(t,i)=>AP_UNEVEN[i],()=>37),
+ /*20 Curved*/     apBangGen(8,t=>49+2*Math.sin(Math.PI*t),()=>38,66,x=>x+(50-x)*.18),
+ /*21 Anime*/      apBangGen(5,(t,i)=>[46,54,62,54,46][i],(t,i)=>[34,32,32,34][i]||34,70));
+FTN[7]='Blunt bangs';
+FTN.push('Straight bangs','Thin bangs','Diagonal bangs','Split bangs','Rounded bangs','Long bangs','Layered bangs','Fluffy bangs','Uneven bangs','Curved bangs','Anime decorative bangs');
+
+// ---- back hair: more silhouettes (cases 16..24) --------------------------------------------------
+BKN[3]='Long wavy';BKN[9]='Side braid';BKN[15]='Short layered';
+BKN.push('Short wavy','Shoulder-length','Waist-length','Shaggy','Half-down','Braided hair','Double braids','Double buns','Voluminous');
+const AP_MED='M50 4C73 4 88 20 88 44C88 60 85 74 78 82L22 82C15 74 12 60 12 44C12 20 27 4 50 4Z';
+{const f=backHair;backHair=function(bk,D,seed){const v=D.vol;switch(bk){
+ case 16:return{b:`M50 3.6C73 3.6 88 20 88 42C90 54 86 62 90 70C86 74 88 80 84 84`+clumpEdge(tipsRow(84,16,84,7,3,seed,3))+`C12 80 14 74 10 70C14 62 10 54 12 42C12 20 27 3.6 50 3.6Z`,sk:5,s:84};
+ case 17:return{b:longBack(98+v,1,seed,0,7,5),sk:0,s:96};
+ case 18:return{b:longBack(176+v*2,2,seed,0,9,6),sk:1,s:150};
+ case 19:return{b:longBack(126,5,seed,2,10,10),sk:4,s:110};
+ case 20:return{b:longBack(146,3,seed,2),tie:[[74,22]],sk:1,s:124};
+ case 21:return{b:longBack(150+v,1,seed),cbraid:1,sk:1,s:128};
+ case 22:return{b:AP_MED,braids:[[30,80,24,156],[30,80,24,156,1]],tie:[[24,152],[76,152]],sk:0,s:78};
+ case 23:return{b:`M50 5C72 5 86 21 86 44C86 58 82 68 76 74L24 74C18 68 14 58 14 44C14 21 28 5 50 5Z`,bun2:1,sk:0,s:76,ears:1};
+ case 24:return{b:`M50 2C76 2 94 20 95 46C97 76 99 104 94 128`+clumpEdge(tipsRow(94,6,128,9,7,seed,4))+`C1 104 3 76 5 46C6 20 24 2 50 2Z`,sk:2,s:124}}
+ return f.apply(this,arguments)}}
+// braid over the shoulder: [x0,y0,x1,y1,mirror]; drawn exactly like the original side braid
+function apBraidG(B,HF,hs){const[x0,y0,x1,y1]=B;let br='';for(let i=0;i<10;i++){const t=i/9,x=x0+(x1-x0)*t,y=y0+(y1-y0)*t,w=5.6-t*1.6;br+=`<ellipse cx="${N2(x-1.7)}" cy="${N2(y)}" rx="${N2(w)}" ry="${N2(w*1.1)}" transform="rotate(-24 ${N2(x)} ${N2(y)})"/><ellipse cx="${N2(x+1.7)}" cy="${N2(y+4.2)}" rx="${N2(w)}" ry="${N2(w*1.1)}" transform="rotate(24 ${N2(x)} ${N2(y+4.2)})"/>`}
+ return`<g fill="${HF}" ${hs}><path d="M33 72C29 78 27 82 28 88L32 88C33 82 35 78 37 74Z"/>${br}<path d="M${x1-3} ${y1+2}L${x1-2} ${y1+12}L${x1} ${y1+4}L${x1+2} ${y1+13}L${x1+3} ${y1+3}Z"/></g>`}
+// braid across the crown (Braided hair)
+function apCrownBraid(HF,hs){let s='';const N=13;for(let i=0;i<N;i++){const a=Math.PI*(1.12+.76*i/(N-1)),x=50+Math.cos(a)*31,y=40+Math.sin(a)*28,r=a*180/Math.PI+90;
+ s+=`<ellipse cx="${N2(x)}" cy="${N2(y)}" rx="3.4" ry="2.3" transform="rotate(${N2(r+28)} ${N2(x)} ${N2(y)})"/>`}return`<g fill="${HF}" ${hs}>${s}</g>`}
+
+// ---- ahoge: part of the bangs. Its base sits inside the crown (filled with the crown colour, no
+//      outline across the base), so it grows out of the hair; it follows the bangs when they flip --
+const AP_AHN=['None','Single curved strand','Double strands','Short curved strand','Long curved strand','Heart-shaped curve','Small upward curl','Side-curved strand'];
+const AP_AHO={
+ 1:['M47.6 10C47 2 49 -5 56 -7C53 -3 52 2 52.4 10'],
+ 2:['M46.8 10.4C45 3 45 -3 49.6 -6.4C47.6 -2 48.4 3 49.6 10','M50.4 10C51.4 3 54 -2 59 -2.6C55 0 53 4 53.2 10.4'],
+ 3:['M48 10C48 5 50 1 54.6 0C52 3 51.6 6 52 10'],
+ 4:['M47.6 10C46 0 50 -11 60.4 -11C54 -8 52.2 -1 52.4 10'],
+ 5:['M48 10C47 3 41.6 -1 43.6 -6C45.6 -10.6 50 -7.4 50 -3.4C50 -7.4 54.4 -10.6 56.4 -6C58.4 -1 53 3 52 10'],
+ 6:['M48.4 10C48 6 49 3 51 1C53.4 -1 55.6 1.2 54.4 3.4C53.4 2.2 51.8 3 51.6 6C51.6 8 51.8 9 52 10'],
+ 7:['M38.4 11.6C36 4 31 0 25.6 1.2C31 -1.8 38.4 2 42.6 10.6']};
+function apAhoge(k,hb,hl,hlite){const P=AP_AHO[k];if(!P)return'';const fill=mixc(hb[1],'#ffffff',.16);
+ return P.map(d=>`<path d="${d}Z" fill="${fill}"/><path d="${d}" fill="none" stroke="${hl}" stroke-width=".7" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${hlite}" stroke-width=".5" opacity=".45" transform="translate(.5 .6) scale(.99)"/>`).join('')}
+
+// ---- eyes: new silhouettes [halfWidth, height, tilt, iris, peak shift, lower-lid roundness, lash style, inner drop, lid openness]
+EYG.push(
+ [11,13,-4.6,.9,.6,.8,2],      // Cat-like
+ [11.4,10.6,-2.8,.9,.4,.7,1],  // Sharp
+ [10.6,15.4,1.2,1,-.2,1.15,0], // Soft
+ [10.8,14,3.8,1,-.5,1,1,1.2],  // Droopy
+ [10,18,0,1.04,0,1.25,0],      // Innocent
+ [11.6,12.6,-2.4,.92,.5,.85,2],// Elegant
+ [11.8,11.6,-1.4,.9,.3,.8,1],  // Mature
+ [10.2,16.6,.4,1.06,-.1,1.2,3],// Cute
+ [11,13,1.6,.98,0,1,1,0,.7],   // Sleepy
+ [10.8,17.6,-1.2,1.02,.2,1.1,3]); // Expressive
+EYN.push('Cat-like','Sharp','Soft','Droopy','Innocent','Elegant','Mature','Cute','Sleepy','Expressive');
+
+// ---- eyebrows: li/lo inner & outer reach · arch · th thickness · tilt (outer end, + = down) · pk arch position
+const APBR=[
+ {li:6,lo:8.4,arch:-.8,th:.8,tilt:0,pk:.5},{li:6,lo:8.4,arch:-2,th:.9,tilt:0,pk:.5},{li:6,lo:8.4,arch:-3.2,th:.75,tilt:0,pk:.5},{li:6,lo:8.4,arch:-1,th:1,tilt:-1,pk:.5},
+ {li:6,lo:8.4,arch:-1.2,th:.45,tilt:0,pk:.5},   // Thin
+ {li:6,lo:8.4,arch:-1,th:1.6,tilt:0,pk:.5},     // Thick
+ {li:5,lo:7.4,arch:-2.6,th:1,tilt:0,pk:.45},    // Rounded
+ {li:6,lo:8.4,arch:-2.4,th:.9,tilt:.6,pk:.72},  // Sharp
+ {li:6,lo:8.4,arch:-1,th:.9,tilt:1.8,pk:.4},    // Downturned
+ {li:6,lo:8.4,arch:-1.4,th:.9,tilt:-2.2,pk:.6}, // Upturned
+ {li:3.6,lo:5.6,arch:-.8,th:.95,tilt:0,pk:.5},  // Short
+ {li:7,lo:10,arch:-1.6,th:.85,tilt:.2,pk:.5},   // Long
+ {li:6,lo:8.6,arch:-1.4,th:1.1,tilt:.2,pk:.6},  // Natural
+ {li:6.4,lo:9,arch:-3.4,th:1.2,tilt:-1.2,pk:.4}]; // Expressive anime
+BRN.push('Thin','Thick','Rounded','Sharp','Downturned','Upturned','Short','Long','Natural','Expressive anime');
+
+// ---- mouth shapes ------------------------------------------------------------------------------
+const APMT=[
+ ['Small smile',D=>mouthX({mo:'smile'},{...D,mw:D.mw*.78})],
+ ['Wide smile',D=>mouthX({mo:'smile'},{...D,mw:D.mw*1.38})],
+ ['Closed smile',D=>{const L=x=>N2(50+(x-50)*D.mw),y=76;return`<path d="M${L(45.8)} ${y-1.2}Q50 ${y+2.4} ${L(54.2)} ${y-1.2}" stroke="#a8455c" stroke-width="1.15" fill="none" stroke-linecap="round"/><path d="M${L(45.2)} ${y-1.8}l.8 .9M${L(54.8)} ${y-1.8}l-.8 .9" stroke="#a8455c" stroke-width=".7" stroke-linecap="round"/>`}],
+ ['Open smile',D=>mouthX({mo:'open'},D)],
+ ['Slightly open mouth',D=>{const L=x=>N2(50+(x-50)*D.mw),y=76;return`<path d="M${L(47.6)} ${y-.4}Q50 ${y-.1} ${L(52.4)} ${y-.4}Q${L(52)} ${y+2.2} 50 ${y+2.3}Q${L(48)} ${y+2.2} ${L(47.6)} ${y-.4}Z" fill="#a33a55" stroke="#a8455c" stroke-width=".5"/>`}],
+ ['Neutral mouth',D=>mouthX({mo:'flat'},D)],
+ ['Small rounded mouth',D=>`<ellipse cx="50" cy="76.8" rx="${N2(1.4*D.mw)}" ry="1.6" fill="#a33a55" stroke="#a8455c" stroke-width=".5"/>`],
+ ['Cat-like mouth',D=>{const y=76;return`<path d="M46.2 ${y-.6}Q48.1 ${y+1.8} 50 ${y-.2}Q51.9 ${y+1.8} 53.8 ${y-.6}" stroke="#a8455c" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`}],
+ ['Pout',D=>mouthX({mo:'pout'},D)],
+ ['Slight frown',D=>mouthX({mo:'sad'},D)],
+ ['Laughing mouth',D=>mouthX({mo:'big'},D)],
+ ['Cute anime mouth',D=>{const y=76;return`<path d="M48 ${y-.8}L52 ${y-.8}L50 ${y+2.2}Z" fill="#a33a55" stroke="#a8455c" stroke-width=".55" stroke-linejoin="round"/><path d="M49 ${y+.8}L51 ${y+.8}L50 ${y+2}Z" fill="#f490a8"/>`}],
+ ['Elegant smile',D=>{const L=x=>N2(50+(x-50)*D.mw),y=76;return`<path d="M${L(45.4)} ${y-1.4}C${L(47.4)} ${y+.6} ${L(52.6)} ${y+.6} ${L(54.6)} ${y-1.4}" stroke="#a8455c" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M49 ${y+1.9}Q50 ${y+2.4} 51 ${y+1.9}" stroke="#c97a8c" stroke-width=".5" fill="none" stroke-linecap="round"/>`}],
+ ['Asymmetrical smile',D=>mouthX({mo:'smirk'},D)]];
 
 </script>
 <script>
@@ -7669,7 +7837,7 @@ const ML_RAR={UR:4,SR:3,R:2,N:1};
 const ML_KEYS=()=>[['','Default order'],['name','Name'],...STATS.map(x=>[x[0],x[1]]),...(S&&S.groups&&S.groups.length>1?[['grp','Group']]:[]),['gen','Generation'],['team','Team'],['trend','Trend (Buzz)']];
 function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='rar')return ML_RAR[rar(m)]||0;if(k=='grp'){const g=S.groups.find(x=>x.id==m.group);return g?g.name:'~'}if(k=='gen')return m.gen||1;if(k=='team'){const t=teamOf(m);return m.status=='trainee'?'~':t?t.name:'~~'}if(k=='trend')return m.buzz||0;const v=sv(m,k);return typeof v=='number'?v:+v||0}
 function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d',team:'all',gen:'all',rar:'all',grp:'all'};if(f=='d')c.d=c.d=='a'?'d':'a';else c[f]=v;render()}
-const ML_SKIP='.ccfstage,.ccczg,.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.trg2,.trsf,.trsl,.czlineup';
+const ML_SKIP='.apcr,.ccfstage,.ccczg,.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.trg2,.trsf,.trsl,.czlineup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
  // member faces open the profile
  const HS=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.ccm3,.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||HS.some(x=>x[0]===host))return;HS.push([host,sv0])});
@@ -14175,6 +14343,85 @@ function cztItemsHtml(E){const L=cztList(),cur=cztCur(E,L),u=L.find(x=>x.k==cur)
 </script>
 <script>
 // =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Character Creator: appearance categories & colour picker
+// -------------------------------------------------------------------------------------
+//  The existing Character Creator (view 'creator', ui.draft, setAp / saveAp / resetAp) is kept
+//  and given clear categories: Face Shape · Skin Color · Bangs · Back Hair · Ahoge · Eyebrows ·
+//  Eyes · Mouth · Hair Color (+ the existing Outfits and Accessories). Every option is a thumbnail
+//  drawn by the real renderer. Colours use a full picker (saturation/brightness square, hue,
+//  HEX, RGB, presets, saved custom colours, reset). Changes show at once in the preview and are
+//  stored in the member's appearance record only when "Confirm & Save" is pressed.
+// =====================================================================================
+const AP_CATS=[['face','Face Shape'],['skin','Skin Color'],['bangs','Bangs'],['back','Back Hair'],['ahoge','Ahoge'],['brows','Eyebrows'],['eyes','Eyes'],['mouth','Mouth'],['hair','Hair Color'],['outfit','Outfits'],['acc','Accessories']];
+const AP_SKIN_PRE=['#fff4ee','#ffefe6','#fde6d6','#f5d7bd','#e6c0a0','#d2a07a','#b07a55','#8a5a3c','#6b4330','#4a2e22','#dfe8ff','#d8f5e4','#efe0ff','#bfe6ff'];
+const AP_HAIR_PRE=()=>HC.map(x=>x[1]).concat(['#ffe9a8','#f2f0ec','#ff9f6b','#9fe0d0','#c7a4ff','#ffb3c7']);
+const AP_EYE_PRE=()=>EC.map(x=>x[1]).concat(['#e0a020','#30c0a0','#ff6fa0','#9a7bff']);
+// ---- colour maths ------------------------------------------------------------------------
+const apH2R=h=>{const c=hx(h);return{r:c[0],g:c[1],b:c[2]}};
+const apR2H=(r,g,b)=>'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(+v||0))).toString(16).padStart(2,'0')).join('');
+function apR2V(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;if(d){h=mx==r?((g-b)/d)%6:mx==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}return{h,s:mx?d/mx:0,v:mx}}
+function apV2R(h,s,v){const c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c;let[r,g,b]=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];return apR2H((r+m)*255,(g+m)*255,(b+m)*255)}
+// ---- what each colour field means --------------------------------------------------------
+const AP_COL={
+ hcx:{n:'Hair color',cur:d=>apHairC(d)[1],pre:AP_HAIR_PRE,reset:d=>{delete d.hcx;delete d.hc2x}},
+ hc2x:{n:'Hair shadow color',cur:d=>apHairC(d)[2],pre:AP_HAIR_PRE,reset:d=>{delete d.hc2x}},
+ skx:{n:'Skin color',cur:d=>apSkinC(d,dz(get(ui.cm)||{id:0}))[0],pre:()=>AP_SKIN_PRE,reset:d=>{delete d.skx}},
+ ecx:{n:'Eye color',cur:d=>apEyeC(d)[1],pre:AP_EYE_PRE,reset:d=>{delete d.ecx}},
+ bcx:{n:'Eyebrow color',cur:d=>apOkHex(d.bcx)?d.bcx:mixc(apHairC(d)[2],'#2a1622',.25),pre:AP_HAIR_PRE,reset:d=>{delete d.bcx}},
+ lcx:{n:'Eyelash color',cur:d=>apOkHex(d.lcx)?d.lcx:mixc('#2b1a26',apHairC(d)[2],.2),pre:()=>['#2b1a26','#1a1a2e','#4a2c22','#6b3a5a','#2c3e6b','#7a2a3a'],reset:d=>{delete d.lcx}}};
+function apSavedCols(){const L=Array.isArray(UIP.apSaved)?UIP.apSaved:[];return L.filter(apOkHex).slice(0,16)}
+function apSaveCol(h){if(!apOkHex(h))return;const L=apSavedCols().filter(x=>x.toLowerCase()!=h.toLowerCase());L.unshift(h);UIP.apSaved=L.slice(0,16);try{localStorage.setItem('iv48ui',JSON.stringify(UIP))}catch(e){}toast(`Saved ${h} to your colors.`);render()}
+// set a colour (from any input); live drag updates only the preview, everything else on release
+function apSetCol(k,h,live){if(!ui.draft||!AP_COL[k])return;h=String(h||'').trim();if(/^[0-9a-f]{6}$/i.test(h))h='#'+h;if(!apOkHex(h))return toast('Enter a colour as #RRGGBB.','err');ui.draft[k]=h.toLowerCase();if(live)return apLive(k);ui.apPk=null;render()}
+function apResetCol(k){if(!ui.draft||!AP_COL[k])return;AP_COL[k].reset(ui.draft);ui.apPk=null;render()}
+function apLive(k){const P=document.getElementById('apprev');if(P)P.innerHTML=apPrevHtml();const h=ui.draft[k],sw=document.getElementById('apcur');if(sw)sw.style.background=h;const hx_=document.getElementById('aphex');if(hx_&&document.activeElement!=hx_)hx_.value=h;const c=apH2R(h);['r','g','b'].forEach(x=>{const e=document.getElementById('ap'+x);if(e&&document.activeElement!=e)e.value=c[x]})}
+let AP_DRAG=null;
+function apSvDown(e,k){const el=e.currentTarget;AP_DRAG={k,el};el.setPointerCapture&&el.setPointerCapture(e.pointerId);apSvMove(e)}
+function apSvMove(e){if(!AP_DRAG)return;const r=AP_DRAG.el.getBoundingClientRect(),s=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),v=1-Math.max(0,Math.min(1,(e.clientY-r.top)/r.height)),h=ui.apHue??0;
+ const dot=AP_DRAG.el.querySelector('.apdot');if(dot){dot.style.left=(s*100)+'%';dot.style.top=((1-v)*100)+'%'}ui.apSV={s,v};apSetCol(AP_DRAG.k,apV2R(h,s,v),1)}
+function apSvUp(){if(!AP_DRAG)return;AP_DRAG=null;render()}
+function apHue(k,h){ui.apHue=+h;const sv=ui.apSV||{s:.6,v:.8};const box=document.querySelector('.apsv');if(box)box.style.background=apSvBg(+h);apSetCol(k,apV2R(+h,sv.s,sv.v),1)}
+const apSvBg=h=>`linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,hsl(${h} 100% 50%))`;
+function apRgb(k,ch,v){const c=apH2R(AP_COL[k].cur(ui.draft));c[ch]=Math.max(0,Math.min(255,+v||0));apSetCol(k,apR2H(c.r,c.g,c.b))}
+function apPicker(k){const C=AP_COL[k],d=ui.draft,h=C.cur(d),rgb=apH2R(h),hsv=apR2V(rgb.r,rgb.g,rgb.b);if(ui.apPk!==k){ui.apHue=Math.round(hsv.h);ui.apSV={s:hsv.s,v:hsv.v};ui.apPk=k}
+ const sv=ui.apSV,hue=ui.apHue,custom=apOkHex(d[k]),sw=c=>`<button class="sw ${h.toLowerCase()==c.toLowerCase()?'on':''}" style="background:${c}" title="${c}" onclick="apSetCol('${k}','${c}')"></button>`,saved=apSavedCols();
+ return`<div class="c appk"><div class="row appkh"><b>${C.n}</b><span id="apcur" class="apcur" style="background:${h}"></span><code>${h}</code>${custom?'<span class="tag">Custom</span>':''}<span style="flex:1"></span><button class="b s" ${custom?'':'disabled'} onclick="apResetCol('${k}')">↺ Reset color</button></div>
+ <div class="apsvw"><div class="apsv" style="background:${apSvBg(hue)}" onpointerdown="apSvDown(event,'${k}')" onpointermove="apSvMove(event)" onpointerup="apSvUp()" onpointercancel="apSvUp()"><span class="apdot" style="left:${N2(sv.s*100)}%;top:${N2((1-sv.v)*100)}%"></span></div>
+ <input class="aphue" type="range" min="0" max="359" value="${Math.round(hue)}" aria-label="Hue" oninput="apHue('${k}',this.value)" onchange="render()"></div>
+ <div class="row apin"><label class="st">HEX <input id="aphex" value="${h}" maxlength="7" onchange="apSetCol('${k}',this.value)"></label>${['r','g','b'].map(x=>`<label class="st">${x.toUpperCase()} <input id="ap${x}" type="number" min="0" max="255" value="${rgb[x]}" onchange="apRgb('${k}','${x}',this.value)"></label>`).join('')}<label class="st apnat" title="System colour picker">🎨<input type="color" value="${h}" oninput="apSetCol('${k}',this.value,1)" onchange="apSetCol('${k}',this.value)"></label></div>
+ <div class="st">Presets</div><div class="th">${C.pre().map(sw).join('')}</div>
+ <div class="row" style="margin-top:6px"><span class="st">Saved colors</span><button class="b s" onclick="apSaveCol('${h}')">＋ Save this color</button></div><div class="th">${saved.map(sw).join('')||'<span class="st">No saved colors yet.</span>'}</div></div>`}
+// ---- option grids ---------------------------------------------------------------------------
+function apPM(o){const m=get(ui.cm);return{...m,_x:1,ap:{...ui.draft,...o}}}
+function apGrid(k,names,vb,extra={},orig){const d=ui.draft,cur=d[k];return`<div class="th apth">${orig?`<button class="tb ${cur==null?'on':''}" onclick="apPick('${k}',null)">${pt(apPM({[k]:undefined,...extra}),64,0,vb)}<small>${orig}</small></button>`:''}${names.map((n,i)=>`<button class="tb ${cur===i?'on':''}" onclick="apPick('${k}',${i})">${pt(apPM({[k]:i,...extra}),64,0,vb)}<small>${n}</small></button>`).join('')}</div>`}
+function apPick(k,v){if(!ui.draft)return;if(v==null)delete ui.draft[k];else ui.draft[k]=v;render()}
+function apPrevHtml(){const m=get(ui.cm);if(!m||!ui.draft)return'';const pm=apPM({});return`<div class="approw">${pt(pm,0)}<div class="apfull">${CHAR_ASSETS.full(pm)}</div></div>`}
+function apBody(cat){const d=ui.draft,m=get(ui.cm),D=dz(m);
+ switch(cat){
+  case'face':return`<div class="c"><b>Face Shape</b><p class="st">Each shape changes the cheeks, jaw and chin; eyes, nose, mouth and hair stay aligned.</p>${apGrid('fs',AP_FACES.map(x=>x[0]),'12 22 76 74',{bk:0},'Original')}</div>`;
+  case'skin':return apPicker('skx');
+  case'bangs':return`<div class="c"><b>Bangs / Front Hair</b><p class="st">Chosen independently of the back hair.</p>${apGrid('ft',FTN,'4 -2 92 82')}</div>`;
+  case'back':return`<div class="c"><b>Back Hair</b><p class="st">Chosen independently of the bangs.</p>${apGrid('bk',BKN,null)}</div>`;
+  case'ahoge':{const cur=d.ah!=null?d.ah:D.ahoge;return`<div class="c"><b>Ahoge</b><p class="st">Grows out of the bangs, takes the hair colour and follows the bangs when they change.</p><div class="th apth">${AP_AHN.map((n,i)=>`<button class="tb ${cur==i?'on':''}" onclick="apPick('ah',${i})">${pt(apPM({ah:i}),64,0,'14 -12 72 60')}<small>${n}</small></button>`).join('')}</div></div>`}
+  case'brows':return`<div class="c"><b>Eyebrows</b><p class="st">Independent of the eye shape. (Shown without bangs so the shape is visible.)</p>${apGrid('br',BRN,'18 34 64 26',{ft:0})}</div>${apPicker('bcx')}`;
+  case'eyes':return`<div class="c"><b>Eyes</b>${apGrid('ey',EYN,'18 40 64 36')}</div>${apPicker('ecx')}${ui.apEyeK=='lcx'?apPicker('lcx'):`<button class="b s" onclick="ui.apEyeK='lcx';render()">Eyelash color…</button>`}`;
+  case'mouth':return`<div class="c"><b>Mouth</b><p class="st">The resting mouth. Event expressions (surprised, sad…) still change it for the moment.</p>${apGrid('mt',APMT.map(x=>x[0]),'34 68 32 16',{},'Original')}</div>`;
+  case'hair':return apPicker('hcx')+(ui.apHairK=='hc2x'?apPicker('hc2x'):`<button class="b s" onclick="ui.apHairK='hc2x';render()">Hair shadow color…</button>`);
+  case'outfit':return`<div class="c"><b>Outfit</b>${apGrid('of',OFN,'0 62 100 58')}</div><div class="c"><b>Outfit color</b><div class="th">${OHS.map(h=>`<button class="sw ${d.oh==h?'on':''}" style="background:hsl(${h} 75% 78%)" onclick="setAp('oh',${h})"></button>`).join('')}</div></div>`;
+  case'acc':return`<div class="c"><b>Accessory</b>${apGrid('ac',ACN,'10 0 80 66')}</div>`}return''}
+V.creator=function(){if(!S.members.length)return`<h2 class="ht">Character Creator</h2><div class="c"><p class="st">No idols yet. Recruit members through an audition first.</p><button class="b p" onclick="view='audition';render()">Go to Audition</button></div>`;
+ if(!get(ui.cm)||!ui.draft){ui.cm=get(ui.cm)?ui.cm:S.members[0].id;ui.draft={...ap(get(ui.cm))}}
+ const m=get(ui.cm),cat=ui.apCat||'face',dirty=JSON.stringify(ui.draft)!=JSON.stringify(ap(m));
+ return`<h2 class="ht">Character Creator</h2><div class="cr apcr"><div class="c cprev stage apside"><select onchange="cmSel(this.value)">${S.members.map(x=>`<option value="${x.id}" ${x.id==m.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><div id="apprev">${apPrevHtml()}</div><div class="st">${(m.traits||[]).join(' / ')} · ${m.age}y ${dirty?'· <b>unsaved changes</b>':''}</div><div class="row" style="justify-content:center"><button class="b" onclick="rndAp()">Randomize</button><button class="b" onclick="resetAp()">Reset</button><button class="b p" onclick="saveAp()">Confirm &amp; Save</button></div></div>
+ <div><div class="apnav" role="tablist">${AP_CATS.map(([k,n])=>`<button class="b s ${k==cat?'on p':''}" role="tab" onclick="ui.apCat='${k}';render()">${n}</button>`).join('')}</div>${apBody(cat)}</div></div>`};
+// random appearance uses the whole new range (Randomize button only)
+{const f=rapp;rapp=function(){const a=f.apply(this,arguments);a.ft=rnd(0,FTN.length-1);a.bk=rnd(0,BKN.length-1);a.ey=rnd(0,EYN.length-1);a.br=rnd(0,BRN.length-1);a.fs=rnd(0,AP_FACES.length-1);a.ah=rnd(0,AP_AHN.length-1);a.mt=rnd(0,APMT.length-1);return a}}
+// a pointer released outside the colour square still ends the drag
+if(typeof window!='undefined')window.addEventListener('pointerup',()=>{if(AP_DRAG)apSvUp()});
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom!  —  Thai translation (ภาษาไทย)
 //  English text -> Thai. Used by js/i18n/i18n.js. Proper nouns (idol names, cities,
 //  countries, generated song titles) are intentionally kept as they are.
@@ -16934,6 +17181,156 @@ Object.assign(I18N_TH,{"Lai Kanok (Thai)":"ลายกนก (ไทย)",
 "Flowers & corsages":"ดอกไม้และคอร์ซาจ",
 "Wings & stage effects":"ปีกและเอฟเฟกต์เวที",
 "No piece matches.":"ไม่มีชิ้นที่ตรงกัน",
+"Face Shape":"รูปหน้า",
+"Skin Color":"สีผิว",
+"Bangs":"หน้าม้า",
+"Back Hair":"ผมด้านหลัง",
+"Ahoge":"อาโฮเกะ (ผมชี้)",
+"Eyebrows":"คิ้ว",
+"Eyes":"ดวงตา",
+"Mouth":"ปาก",
+"Hair Color":"สีผม",
+"Outfits":"ชุด",
+"Round face":"หน้ากลม",
+"Oval face":"หน้ารูปไข่",
+"Soft oval face":"หน้ารูปไข่มน",
+"Heart-shaped face":"หน้ารูปหัวใจ",
+"V-shaped face":"หน้าวีเชป",
+"Narrow face":"หน้าเรียว",
+"Wide face":"หน้ากว้าง",
+"Short face":"หน้าสั้น",
+"Long face":"หน้ายาว",
+"Soft jawline":"กรามมน",
+"Defined jawline":"กรามชัด",
+"Small chin":"คางเล็ก",
+"Rounded chin":"คางมน",
+"Pointed chin":"คางแหลม",
+"Mature proportions":"สัดส่วนหน้าผู้ใหญ่",
+"Youthful proportions":"สัดส่วนหน้าเด็ก",
+"Original":"แบบเดิม",
+"No bangs":"ไม่มีหน้าม้า",
+"Middle part":"แสกกลาง",
+"Side part (L)":"แสกข้าง (ซ้าย)",
+"Side part (R)":"แสกข้าง (ขวา)",
+"Side-swept":"ปัดข้าง",
+"Curtain bangs":"หน้าม้าผ้าม่าน",
+"Wispy bangs":"หน้าม้าซีทรู",
+"Blunt bangs":"หน้าม้าตัดตรง",
+"Asymmetrical":"ไม่สมมาตร",
+"Short fringe":"หน้าม้าสั้น",
+"Face-framing strands":"ปอยผมกรอบหน้า",
+"Straight bangs":"หน้าม้าตรง",
+"Thin bangs":"หน้าม้าบาง",
+"Diagonal bangs":"หน้าม้าเฉียง",
+"Split bangs":"หน้าม้าแยกกลาง",
+"Rounded bangs":"หน้าม้าโค้งมน",
+"Long bangs":"หน้าม้ายาว",
+"Layered bangs":"หน้าม้าซอยเป็นชั้น",
+"Fluffy bangs":"หน้าม้าฟู",
+"Uneven bangs":"หน้าม้าไม่เท่ากัน",
+"Curved bangs":"หน้าม้าโค้งงอ",
+"Anime decorative bangs":"หน้าม้าสไตล์อนิเมะ",
+"Short bob":"บ๊อบสั้น",
+"Medium straight":"ตรงประบ่า",
+"Long straight":"ยาวตรง",
+"Long wavy":"ยาวลอน",
+"Curly":"ลอนดัด",
+"High ponytail":"หางม้าสูง",
+"Low ponytail":"หางม้าต่ำ",
+"Side ponytail":"หางม้าข้าง",
+"Twin tails":"ทวินเทล",
+"Side braid":"เปียข้าง",
+"Bun":"มวยผม",
+"Half-up":"ครึ่งหัวมัดขึ้น",
+"Hime cut":"ฮิเมะคัท",
+"Wolf cut":"วูล์ฟคัท",
+"Layered":"ซอยเป็นชั้น",
+"Short layered":"สั้นซอยชั้น",
+"Short wavy":"สั้นลอน",
+"Shoulder-length":"ยาวประบ่า",
+"Waist-length":"ยาวถึงเอว",
+"Shaggy":"แชกกี้",
+"Half-down":"ครึ่งหัวปล่อยยาว",
+"Braided hair":"ผมถักเปียรอบศีรษะ",
+"Double braids":"เปียคู่",
+"Double buns":"มวยคู่",
+"Voluminous":"ผมพองฟู",
+"None":"ไม่มี",
+"Single curved strand":"เส้นโค้งเดี่ยว",
+"Double strands":"สองเส้น",
+"Short curved strand":"เส้นโค้งสั้น",
+"Long curved strand":"เส้นโค้งยาว",
+"Heart-shaped curve":"โค้งรูปหัวใจ",
+"Small upward curl":"ม้วนขึ้นเล็ก ๆ",
+"Side-curved strand":"เส้นโค้งด้านข้าง",
+"Large round":"กลมโต",
+"Almond":"รูปอัลมอนด์",
+"Narrow":"เรียวเล็ก",
+"Upturned":"หางตาชี้ขึ้น",
+"Downturned":"หางตาตก",
+"Gentle":"อ่อนโยน",
+"Cat-like":"ตาแมว",
+"Sharp":"คม",
+"Soft":"นุ่มนวล",
+"Droopy":"ตาปรือตก",
+"Innocent":"ใสซื่อบริสุทธิ์",
+"Elegant":"สง่างาม",
+"Cute":"น่ารัก",
+"Sleepy":"ง่วงนอน",
+"Expressive":"แสดงอารมณ์ชัด",
+"Straight":"ตรง",
+"Soft curved":"โค้งอ่อน",
+"High arch":"โก่งสูง",
+"Slightly angled":"หักมุมเล็กน้อย",
+"Thin":"บาง",
+"Thick":"หนา",
+"Rounded":"โค้งมน",
+"Short":"สั้น",
+"Long":"ยาว",
+"Natural":"ธรรมชาติ",
+"Expressive anime":"สไตล์อนิเมะ",
+"Small smile":"ยิ้มเล็ก ๆ",
+"Wide smile":"ยิ้มกว้าง",
+"Closed smile":"ยิ้มปิดปาก",
+"Open smile":"ยิ้มอ้าปาก",
+"Slightly open mouth":"ปากเผยอเล็กน้อย",
+"Neutral mouth":"ปากเฉย ๆ",
+"Small rounded mouth":"ปากกลมเล็ก",
+"Cat-like mouth":"ปากแมว",
+"Pout":"ทำปากยื่น",
+"Slight frown":"หน้าบึ้งเล็กน้อย",
+"Laughing mouth":"หัวเราะ",
+"Cute anime mouth":"ปากอนิเมะน่ารัก",
+"Elegant smile":"ยิ้มสง่า",
+"Asymmetrical smile":"ยิ้มมุมปาก",
+"Hair color":"สีผม",
+"Hair shadow color":"สีเงาผม",
+"Skin color":"สีผิว",
+"Eye color":"สีตา",
+"Eyebrow color":"สีคิ้ว",
+"Eyelash color":"สีขนตา",
+"↺ Reset color":"↺ รีเซ็ตสี",
+"Presets":"สีสำเร็จรูป",
+"Saved colors":"สีที่บันทึกไว้",
+"＋ Save this color":"＋ บันทึกสีนี้",
+"No saved colors yet.":"ยังไม่มีสีที่บันทึกไว้",
+"Eyelash color…":"สีขนตา…",
+"Hair shadow color…":"สีเงาผม…",
+"Bangs / Front Hair":"หน้าม้า / ผมด้านหน้า",
+"Chosen independently of the back hair.":"เลือกแยกจากผมด้านหลัง",
+"Chosen independently of the bangs.":"เลือกแยกจากหน้าม้า",
+"Each shape changes the cheeks, jaw and chin; eyes, nose, mouth and hair stay aligned.":"แต่ละแบบเปลี่ยนแก้ม กราม และคาง ตา จมูก ปาก และผมยังอยู่ตำแหน่งเดิม",
+"Grows out of the bangs, takes the hair colour and follows the bangs when they change.":"งอกออกจากหน้าม้า ใช้สีผมเดียวกัน และเปลี่ยนตามเมื่อเปลี่ยนหน้าม้า",
+"Independent of the eye shape. (Shown without bangs so the shape is visible.)":"เลือกแยกจากรูปตา (แสดงแบบไม่มีหน้าม้าเพื่อให้เห็นรูปคิ้ว)",
+"The resting mouth. Event expressions (surprised, sad…) still change it for the moment.":"ปากตอนปกติ สีหน้าตามเหตุการณ์ (ตกใจ เศร้า…) ยังเปลี่ยนปากชั่วคราวได้",
+"Outfit":"ชุด",
+"Outfit color":"สีชุด",
+"Accessory":"เครื่องประดับ",
+"Enter a colour as #RRGGBB.":"ใส่สีในรูปแบบ #RRGGBB",
+"Character Creator":"สร้างตัวละคร",
+"Randomize":"สุ่ม",
+"Reset":"รีเซ็ต",
+"Confirm & Save":"ยืนยันและบันทึก",
 "Add at least one member to the cover.":"ใส่เมมเบอร์บนปกอย่างน้อยหนึ่งคน",
 "No saved version of this edition yet.":"เวอร์ชันนี้ยังไม่มีงานที่บันทึกไว้",
 "Saved version loaded.":"โหลดเวอร์ชันที่บันทึกไว้แล้ว",
@@ -17151,7 +17548,6 @@ Object.assign(I18N_TH,{"Lai Kanok (Thai)":"ลายกนก (ไทย)",
 "Idol Classic":"ไอดอลคลาสสิก",
 "The timeless idol image: ribbons, matching uniforms and bright smiles.":"ภาพลักษณ์ไอดอลที่ไม่มีวันเชย ริบบิ้น ชุดยูนิฟอร์มเข้าชุด และรอยยิ้มสดใส",
 "Non-stop positivity and big gestures that make everyone smile.":"คิดบวกไม่หยุด กับท่าทางยิ่งใหญ่ที่ทำให้ทุกคนยิ้มได้",
-"Innocent":"ใสซื่อบริสุทธิ์",
 "A pure and youthful concept that expresses sincerity, freshness and simplicity.":"คอนเซ็ปต์ใสบริสุทธิ์วัยแรกรุ่น ถ่ายทอดความจริงใจ ความสดชื่น และความเรียบง่าย",
 "The sparkle of being young: running, laughing and believing in tomorrow.":"ประกายของวัยเยาว์ วิ่ง หัวเราะ และเชื่อมั่นในวันพรุ่งนี้",
 "Classrooms, uniforms and after-school moments shared with friends.":"ห้องเรียน ชุดนักเรียน และช่วงเวลาหลังเลิกเรียนที่ได้ใช้ร่วมกับเพื่อน ๆ",
@@ -18638,6 +19034,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["{0}: {1} · Day 1 {2} songs, {3} MC{4}","{0}: {1} · วันที่ 1 {2} เพลง, {3} MC{4}"],
 ["· incl. {0} substitute(s)","· รวมตัวสำรอง {0} คน"],
 ["{0} is not available on {1}.","{0} ไม่ว่างวันที่ {1}"],
+["Saved {0} to your colors.","บันทึก {0} ลงสีของคุณแล้ว"],
 ["Seats are limited to {0}.","ที่นั่งจำกัดอยู่ที่ {0} ที่"],
 ["{0} holds at most {1} songs.","{0} มีได้สูงสุด {1} เพลง"],
 ["{0} random song(s) added.","เพิ่มเพลงแบบสุ่มแล้ว {0} เพลง"],
