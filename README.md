@@ -1091,3 +1091,11 @@ New **Media & PR** section: News Feed, Crisis Room, News Archive, Reputation & O
 - **Practice Room** (Training menu): today's self and group sessions, plus each member's skills, motivation and why she feels that way. There is no scheduler, no assignment control and no development report. Profiles show the three skills, specialty, motivation and last practice.
 - **Old saves:** skills migrate ×10 (80 → 800). Rarity, identity and history are kept, Potential is removed, and past activities are not rewarded again.
 - Balance check: in a five-year simulation with Theater four times a week, the average best skill reached about 790 and the most consistent member about 999.
+
+## Albums work like Singles (MV, Under Girls costume, 20 songs, 3:4 cover)
+- **Music Video**: new album songs get the same MV planning as singles (style, location, budget, Week 3 filming). Their MVs are published on the Album Release Day and earn views and fans like single MVs. Songs reused from the Song Library keep their existing video.
+- **Under Girls costume**: albums have the same optional release outfit as singles, for members outside the Album Main Song Senbatsu (“ALBUM COSTUME”). It can be saved as the profile costume and is kept on the released album.
+- **Track types**: each album track type holds up to **20** songs (singles keep their edition limit).
+- **Cover**: album covers are portrait **3:4** (512×683 in the editor, 600×800 PNG export). Random covers and random positions use the full height. Singles stay 1:1. Albums released before this update keep their square covers.
+- **Fix**: album sales could become NaN (the album fan factor read a fan type that is not always present), which gave no revenue. The factor now falls back safely.
+- **Fix**: the Lyrics theme could not be chosen by hand in Thai mode (the option value became the Thai label). Options without a value now keep their English value when translated, for every dropdown in the game.

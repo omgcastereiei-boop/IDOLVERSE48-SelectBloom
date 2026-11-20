@@ -4,7 +4,7 @@
 //  · The familiar step-by-step New Single Planning page is back (6 steps + "All steps").
 //  · Release type: Single or Album, planned with the same workflow and the same
 //    28-day production / Release Day rules. Albums: a new Main Song, new songs and
-//    previously released songs (referenced, never copied), track types of up to 10 songs.
+//    previously released songs (referenced, never copied), track types of up to 20 songs.
 //  · Single name = Title Track title (kept in sync).
 //  · Senbatsu is chosen on its own screen ("Select Senbatsu"), with Title Track
 //    participation shown for the other songs and a "not in the Title Track" filter.
@@ -18,7 +18,7 @@
 (function(){const mem=SECS.find(s=>s.k=='members');mem.v=mem.v.filter(x=>x[0]!='groups');SECS.splice(SECS.indexOf(mem)+1,0,{k:'groups',n:'Group & Team',sh:'Groups',jp:'グループ・チーム',loc:'Members’ Lounge · Team Board',sc:'lounge',v:[['groups','Groups & Teams']]});
  ICO.groups='<path d="M5 20v-1.5c0-2.4 1.9-4.2 4.2-4.2h5.6c2.3 0 4.2 1.8 4.2 4.2V20"/><circle cx="12" cy="8.2" r="3"/><path d="M4 4.5h3.5M16.5 4.5H20"/><path d="M3 11.5c0-1.6 1-2.8 2.5-3.2M21 11.5c0-1.6-1-2.8-2.5-3.2"/>';
  const mu=SECS.find(s=>s.k=='music');mu.v=mu.v.filter(x=>x[0]!='albums');mu.hid=[...(mu.hid||[]),'albums','songcz']})();
-CFG.maxPerTypeSingle=CFG.maxPerType;Object.defineProperty(CFG,'maxPerType',{get(){return S&&S.pj&&S.pj.kind=='album'?10:CFG.maxPerTypeSingle},configurable:true});
+CFG.maxPerTypeSingle=CFG.maxPerType;Object.defineProperty(CFG,'maxPerType',{get(){return S&&S.pj&&S.pj.kind=='album'?20:CFG.maxPerTypeSingle},configurable:true});
 coverLock=function(){return null}; // CD covers can be designed from the start of planning
 
 const plKind=p=>(p&&p.kind)||'single',plAlb=p=>plKind(p)=='album';
@@ -33,7 +33,7 @@ const _rpCost=cost;cost=function(p){return plAlb(p)?plAlbCost(p):_rpCost.apply(t
 
 // ---- release type --------------------------------------------------------------------------
 function plSetKind(k){const p=S.pj;if(!p||guard())return;if(plKind(p)==k)return;
- if(k=='album'){p.kind='album';p.num=(S.albums||[]).length+1;p.hs={...hsNew(),on:false};if(!p.titleSet)p.title='';toast('Planning an Album: one new Main Song, new songs and released songs, up to 10 songs per track type.');return render()}
+ if(k=='album'){p.kind='album';p.num=(S.albums||[]).length+1;p.hs={...hsNew(),on:false};if(!p.titleSet)p.title='';toast('Planning an Album: one new Main Song, new songs and released songs, up to 20 songs per track type.');return render()}
  const rel=p.coup.filter(i=>S.songs[i]&&S.songs[i].rel),big=p.types.some(t=>t.songs.length>CFG.maxPerTypeSingle);
  const go=()=>{rel.forEach(i=>{p.coup=p.coup.filter(x=>x!=i);p.types.forEach(t=>t.songs=t.songs.filter(x=>x!=i))});p.types.forEach(t=>{if(t.songs.length>CFG.maxPerTypeSingle){const extra=t.songs.splice(CFG.maxPerTypeSingle)}});p.kind='single';p.num=S.singles.length+1;p.hs=hsNew();p.title=S.songs[p.mainId].title;toast('Planning a Single.');render()};
  if(rel.length||big)ask(`Switch to a Single? ${rel.length?`${rel.length} released song(s) leave the tracklist (they stay in the Song Library). `:''}${big?`Each edition of a Single holds ${CFG.maxPerTypeSingle} tracks; extra tracks are taken off the editions (the songs stay in the plan).`:''}`,go,'Switch to Single');else go()}
@@ -61,7 +61,7 @@ const _rpSched=scheduleSingle;scheduleSingle=function(p){const r=_rpSched.apply(
 // ---- album release --------------------------------------------------------------------------
 function plAlbumRelease(){const p=S.pj;if(!p||p.status!='producing'||!plAlb(p))return;const ids=plTracks(p),reu=new Set(ids.filter(i=>S.songs[i].rel)),nw=ids.filter(i=>!reu.has(i));p.status='released';
  const ps=ids.map(i=>avg((S.songs[i].slots||[]).filter(x=>x).map(j=>get(j)?.pop||0))||0);let sales=0;
- const calc=()=>{sales=Math.min(CD_MAX,Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*ids.length)*rnd(90,115)/100*seAlbumF(ids)))};if(typeof fbWith=='function')fbWith('album',calc);else calc();
+ const calc=()=>{sales=Math.min(CD_MAX,Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*ids.length)*rnd(90,115)/100*seAlbumF(ids)))};if(typeof fbWith=='function')fbWith('album',calc);else calc();if(!Number.isFinite(sales))sales=0;
  const rev=sales*250,fans=Math.round(sales*.15);earn(rev,'Album sales: '+p.title);S.fans+=fans;const rl=[];
  nw.forEach(i=>{const o=S.songs[i];rl.push(...grantRep(o,2+sales/3000));o.rel='Album: '+p.title;o.relDay=S.day});
  const covers={};p.types.forEach(t=>{covers[t.name]=JSON.parse(JSON.stringify(S.cov[t.name]));delete S.cov[t.name]});covers['Album Cover']=covers['Album Cover']||covers[p.types[0].name];
@@ -164,7 +164,7 @@ V.music=function(){if(ui.cvCtx){ui.cvCtx=null;ui.cd=null}if(!S.pj)newPj();plMigr
  <h3 class="sth">Tracklist &amp; ${alb?`track types (up to ${CFG.maxTypes}, ${CFG.maxPerType} songs each)`:`editions (up to ${CFG.maxTypes}, ${CFG.maxPerType} tracks each)`}</h3><div class="g2">${typT}</div><button class="b" ${dis} onclick="addType()">+ Add ${alb?'track type':'edition'}</button></div>`;
  // 3 · senbatsu
  // 3 · costumes
- const S4=`<div data-step="3"><h3 class="sth">3 · Costume design</h3><p class="st">Every song has its own costumes, designed member by member. Costumes are creative only: they do not change sales or stats. Manufacturing takes ${CFG.costumeDays} days after production starts.</p><div class="g2">${all.map(id=>{const o=S.songs[id];if(plReused(p,o))return`<div class="c songc"><div class="sh2">${tag(id)}<b>${esc(o.title)}</b></div><p class="st">Released song: it keeps its original costumes.</p></div>`;const D=plCzDone(o),dn=D.filter(x=>x[1]).length;return`<div class="c songc ${id==p.mainId?'main':''}"><div class="sh2">${tag(id)}<b>${esc(o.title)}</b><span class="st">${dn}/${D.length} designed</span></div><div class="plczmini">${D.map(([m,ok])=>{const cd=czFor(o,m.id),a=ap(m);return`<button class="plczt ${ok?'ok':''}" onclick="plCzOpen('${id}',${m.id})" title="${esc(m.name)}"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,...(cd&&ok?{cd}:{})})}</svg><small>${ok?'✔':'✗'} ${esc(m.name.split(' ')[0])}</small></button>`}).join('')||'<span class="st">Select the Senbatsu first.</span>'}</div><div class="row"><button class="b s p" ${D.length?'':'disabled'} onclick="plCzOpen('${id}')">👗 ${lk?'View costumes':'Design costumes'}</button><span class="st">${o.cosProd?(o.cosProd.done?'✔ Manufactured':`Manufacturing: ready ${jd(o.cosProd.ready)}`):''}</span></div></div>`}).join('')}</div>${alb?'':plSczCard(p,lk)}</div>`;
+ const S4=`<div data-step="3"><h3 class="sth">3 · Costume design</h3><p class="st">Every song has its own costumes, designed member by member. Costumes are creative only: they do not change sales or stats. Manufacturing takes ${CFG.costumeDays} days after production starts.</p><div class="g2">${all.map(id=>{const o=S.songs[id];if(plReused(p,o))return`<div class="c songc"><div class="sh2">${tag(id)}<b>${esc(o.title)}</b></div><p class="st">Released song: it keeps its original costumes.</p></div>`;const D=plCzDone(o),dn=D.filter(x=>x[1]).length;return`<div class="c songc ${id==p.mainId?'main':''}"><div class="sh2">${tag(id)}<b>${esc(o.title)}</b><span class="st">${dn}/${D.length} designed</span></div><div class="plczmini">${D.map(([m,ok])=>{const cd=czFor(o,m.id),a=ap(m);return`<button class="plczt ${ok?'ok':''}" onclick="plCzOpen('${id}',${m.id})" title="${esc(m.name)}"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,...(cd&&ok?{cd}:{})})}</svg><small>${ok?'✔':'✗'} ${esc(m.name.split(' ')[0])}</small></button>`}).join('')||'<span class="st">Select the Senbatsu first.</span>'}</div><div class="row"><button class="b s p" ${D.length?'':'disabled'} onclick="plCzOpen('${id}')">👗 ${lk?'View costumes':'Design costumes'}</button><span class="st">${o.cosProd?(o.cosProd.done?'✔ Manufactured':`Manufacturing: ready ${jd(o.cosProd.ready)}`):''}</span></div></div>`}).join('')}</div>${plSczCard(p,lk)}</div>`;
  // 4 · CD covers (available from the start)
  const S5=`<div data-step="6"><h3 class="sth">6 · CD cover design</h3><p class="st">Each ${alb?'track type':'edition'} has its own cover. Design it any time before Release Day; confirmed covers can be edited again later. Members on the cover wear their Title Track costumes.</p><div class="covg">${p.types.map(t=>{const cc=S.cov[t.name];return`<div class="c covc"><b>${esc(t.name)}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(t.name)}')">🎨 Design cover</button><button class="b s" onclick="plCoverRand('${esc(t.name)}')">🎲 Randomize CD Cover</button></div></div>`}).join('')}${plLimCovHtml(p)}</div></div>`;
  // 5 · budget & start

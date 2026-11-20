@@ -118,7 +118,7 @@ function tf7PfCard(p,lbl){const M=(p.mem||[]).map(id=>ctMem(id)).filter(Boolean)
 function tf7CzMap(){const M=new Map(),PJ=new Map(),GL=(S.groups&&S.groups.length)?S.groups:[{id:null,name:''}],gi=new Map(GL.map((g,i)=>[g.id,i])),multi=GL.length>1;
  const put=(id,v)=>{if(id&&!M.has(id))M.set(id,v)},zone=(z,v)=>{if(!z)return;put(z.main,v);Object.values(z.mem||{}).forEach(mm=>{if(!mm)return;if(mm.d)put(mm.d,v);if(mm.own&&mm.own.p){const k=JSON.stringify(mm.own.p);if(!PJ.has(k))PJ.set(k,v)}})};
  GL.forEach(g=>{try{gsWith(g.id,()=>{const ord=new Map();(S.singles||[]).forEach((x,i)=>{[x.mainId,...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))].forEach(sid=>{if(sid!=null&&!ord.has(sid))ord.set(sid,i)})});(S.albums||[]).forEach((a,i)=>(a.trk||[]).forEach(t=>{if(t&&!ord.has(t.id))ord.set(t.id,1000+i)}));
-  const hd=`Single costumes${multi?' · '+g.name:''}`;(S.singles||[]).forEach((x,i)=>zone(x.scz&&x.scz.cdz,{r:0,g:gi.get(g.id)|0,t:0,o:i,hd}));
+  const hd=`Single costumes${multi?' · '+g.name:''}`;[...(S.singles||[]),...(S.albums||[])].forEach((x,i)=>zone(x.scz&&x.scz.cdz,{r:0,g:gi.get(g.id)|0,t:0,o:i,hd}));
   Object.values(S.songs||{}).forEach(o=>{if(o&&o.cdz)zone(o.cdz,{r:0,g:gi.get(g.id)|0,t:0,o:ord.has(o.id)?ord.get(o.id):(o.rel?5000:9000),hd})});
   if(S.pj&&S.pj.scz)zone(S.pj.scz.cdz,{r:0,g:gi.get(g.id)|0,t:0,o:9000,hd})})}catch(e){}});
  try{const K=thKeysAll(),ki=new Map(K.map((x,i)=>[x.key,i]));Object.values((S.th&&S.th.st)||{}).forEach(s=>{const k=K.find(x=>x.key==s.k),v={r:1,g:k?gi.get(k.gid)|0:99,t:ki.has(s.k)?ki.get(s.k):99,o:s.no||900,hd:`Theater costumes · ${multi&&k?(grp(k.gid)||{}).name+' · ':''}${k?k.label:thLabel(s.k)}`};

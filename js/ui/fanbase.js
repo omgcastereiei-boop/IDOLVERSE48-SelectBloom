@@ -116,7 +116,8 @@ function fbSync(ctx){if(!S||FBW)return;const fb=fbState();if(!fb)return;const or
  if(dG<0||dG>0||W>0)fbApply();else if(S.fans!==fb.lastS)fbApply()}
 // run an existing formula with the fan count it should "see" (buyers / audience), keep its fan gains
 function fbWith(kind,fn,ctx){const fb=fbState();if(!fb)return fn();fbSync();const f=fbFactor(kind),outer=FBW;const cur=S.fans,E=Math.max(0,Math.round(cur*f/(outer?outer.f:1)));FBW={f};S.fans=E;let r;try{r=fn()}finally{const d=S.fans-E;S.fans=cur+d;FBW=outer}if(!FBW)fbSync(ctx);return r}
-function fbFactor(kind){const st=fbStats();if(!st||!st.G.total)return 1;const G=st.G,T=G.total,sh=k=>G.types[k]/T;
+function fbFactor(kind){const r=fbFactor0(kind);return Number.isFinite(r)?r:1}
+function fbFactor0(kind){const st=fbStats();if(!st||!st.G.total)return 1;const G=st.G,T=G.total,sh=k=>((G.types||{})[k]||0)/T;
  if(kind=='cd')return fbCl(.85+.5*(sh('dedicated')+sh('hardcore')+sh('oshi')*.5)+.5*(G.loy-50)/100,.6,1.4);
  if(kind=='album')return fbCl(.88+.9*(sh('hardcore')+sh('collector'))+.4*(G.loy-50)/100+.3*(G.sp-45)/100,.6,1.45);
  if(kind=='concert')return fbCl(.62+.45*G.eng/100+.2*G.pop/100+.2*G.loy/100,.6,1.4);return 1}

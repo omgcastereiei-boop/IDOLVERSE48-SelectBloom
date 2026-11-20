@@ -8,11 +8,11 @@
 // =====================================================================================
 var PL_STEP7=1;
 // ---- steps 4 · 5 · 6 -------------------------------------------------------------------------------------------------------
-function plMvDone(p,all){if(plAlb(p))return true;return all.every(id=>{const o=S.songs[id];if(!o||plReused(p,o))return true;const v=mvOf(o);return!v.on||v.st!='plan'})}
+function plMvDone(p,all){return all.every(id=>{const o=S.songs[id];if(!o||plReused(p,o))return true;const v=mvOf(o);return!v.on||v.st!='plan'})}
 function plMvStepHtml(p,all,dis){const alb=plAlb(p);
  return`<div data-step="4"><h3 class="sth">4 · Music Video</h3><p class="st">Choose for each song whether it gets a Music Video and plan it. The MV is filmed during production and published on Release Day. The Senbatsu and costumes chosen in steps 2–3 appear in the MV.</p>${all.map(id=>{const o=S.songs[id];if(!o)return'';const tg=`<span class="tag ${id==p.mainId?'tmain':'tcoup'}">${PL_ROLE(p,id)}</span>`;
   if(plReused(p,o))return`<div class="c songc"><div class="sh2">${tg}<b>${esc(o.title)}</b></div><p class="st">Released song: no new video.</p></div>`;
-  return`<div class="c songc ${id==p.mainId?'main':''}"><div class="sh2">${tg}<b>${esc(o.title)}</b></div>${alb?`<label class="st">Video <select ${dis} onchange="trVid('${o.id}',this.value)">${VID.map(([k,n])=>`<option value="${k}" ${o.video==k?'selected':''}>${n}</option>`).join('')}</select></label>`:mvCardHtml(o,p,dis)}</div>`}).join('')}</div>`}
+  return`<div class="c songc ${id==p.mainId?'main':''}"><div class="sh2">${tg}<b>${esc(o.title)}</b></div>${mvCardHtml(o,p,dis)}</div>`}).join('')}</div>`}
 function plSaleDone(p){if(plAlb(p)||p.ge)return true;try{return!seErrs(p).length}catch(e){return true}}
 function plSaleStepHtml(p){if(plAlb(p))return`<div data-step="5"><h3 class="sth">5 · Sales &amp; Editions</h3><p class="st">Albums are sold as one edition per track type — nothing to set here.</p></div>`;
  if(p.ge)return`<div data-step="5"><h3 class="sth">5 · Sales &amp; Editions</h3><p class="st">The General Election single follows the election schedule.</p></div>`;
@@ -66,7 +66,7 @@ function plCzNum(base,d){const L=czLib().ds,re=new RegExp('^'+base.replace(/[.*+
 // saves made before: rename the auto-saved library designs once
 function plCzRename(){if(!S||S.czNm8)return;S.czNm8=1;try{const L=czLib().ds.filter(d=>d.auto&&/ — /.test(d.name)).sort((a,b)=>(a.created|0)-(b.created|0));
  L.forEach(d=>{const i=d.name.lastIndexOf(' — '),title=d.name.slice(0,i),m=plCzMemN(d.name.slice(i+3));if(!m)return;let ctx=null;const key=JSON.stringify(d.p);
-  if(title=='Single Costume'){(S.groups&&S.groups.length?S.groups:[{id:null}]).forEach(g=>{if(ctx)return;try{gsWith(g.id,()=>{(S.singles||[]).forEach(x=>{if(ctx)return;const z=x.scz&&x.scz.cdz;if(z&&Object.values(z.mem||{}).some(mm=>mm&&mm.own&&JSON.stringify(mm.own.p)==key))ctx={gid:g.id,main:(S.songs[x.mainId]||{}).title||x.title||''}})})}catch(e){}});if(!ctx)ctx={gid:gsGid(m),main:''}}
+  if(title=='Single Costume'||title=='Album Costume'){(S.groups&&S.groups.length?S.groups:[{id:null}]).forEach(g=>{if(ctx)return;try{gsWith(g.id,()=>{[...(S.singles||[]),...(S.albums||[])].forEach(x=>{if(ctx)return;const z=x.scz&&x.scz.cdz;if(z&&Object.values(z.mem||{}).some(mm=>mm&&mm.own&&JSON.stringify(mm.own.p)==key))ctx={gid:g.id,main:(S.songs[x.mainId]||{}).title||x.title||''}})})}catch(e){}});if(!ctx)ctx={gid:gsGid(m),main:''}}
   else if(d.stg){const s=thStage(d.stg),it=s&&thAll(s).find(z=>(S.songs[z.song]||{}).title==title);ctx={cen:it?[it.center,it.center2].filter(x=>x!=null):[]}}
   else{let cen=null;(S.groups&&S.groups.length?S.groups:[{id:null}]).forEach(g=>{if(cen)return;try{gsWith(g.id,()=>{const o=Object.values(S.songs||{}).find(z=>z&&z.title==title);if(o)cen=o.centers||[]})}catch(e){}});ctx={cen:cen||[]}}
   const b=plCzBase(d.name,ctx);if(b)d.name=plCzNum(b.slice(0,34),d)})}catch(e){console.error(e)}}

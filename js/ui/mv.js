@@ -42,7 +42,7 @@ const MV_ST={plan:'Planning',confirmed:'Budget confirmed',filming:'Filming (Week
 
 // ---- data ---------------------------------------------------------------------------------------
 function mvOf(o){if(!o)return null;let v=o.mv;if(!v||typeof v!='object'){v=o.mv={on:o.video=='mv',style:'perf',loc:'dance',story:'none',sets:1,cast:0,eq:{},vfx:0,st:'plan',paid:0,tx:[]}}v.eq=v.eq||{};v.tx=Array.isArray(v.tx)?v.tx:[];if(!MV_STY[v.style])v.style='perf';if(!mvLoc(v.loc))v.loc='dance';if(!MV_STORY.some(s=>s.id==v.story))v.story='none';return v}
-const mvPlannable=(p,o)=>p&&o&&!plAlb(p)&&!plReused(p,o)&&(p.mainId==o.id||p.coup.includes(o.id));
+const mvPlannable=(p,o)=>p&&o&&!plReused(p,o)&&(p.mainId==o.id||p.coup.includes(o.id));
 const mvSen=o=>(o.slots||[]).filter(Boolean).map(get).filter(Boolean);
 function mvCost(o,v){v=v||mvOf(o);const S1=MV_STY[v.style],L=mvLoc(v.loc),St=mvStory(v.story),n=Math.max(1,mvSen(o).length);
  const eqOn=MV_EQ.filter(e=>v.eq[e[0]]),days=Math.round((S1.days+St.cx*.5+Math.max(0,(v.sets|0)-2)*.25+(L.ovs?.5:0))*2)/2,shoot=Math.ceil(days);
@@ -73,7 +73,7 @@ function mvRevise(id){const o=S.songs[id];if(!mvGuard(o))return;const v=mvOf(o);
 function mvRefund(o,a,l){if(!a)return;earn(a,`MV refund: ${o.title}`);mvOf(o).tx.push({d:S.day,a:+a,l});mvOf(o).paid=Math.max(0,(mvOf(o).paid|0)-a)}
 
 // ---- integration with Single Production ----------------------------------------------------------------
-const _mvReqs=reqs;reqs=function(p){const r=_mvReqs.apply(this,arguments);try{if(p&&p.status=='draft'&&!plAlb(p))plTracks(p).forEach(i=>{const o=S.songs[i];if(!mvPlannable(p,o))return;const v=mvOf(o);if(!v.on)return;mvErr(o).forEach(x=>r.push(x));if(!mvErr(o).length&&!mvOk(o))r.push(v.st=='plan'?`"${o.title}": confirm the Music Video budget (or choose No Music Video).`:`"${o.title}": the Senbatsu changed after the MV budget was confirmed — confirm the MV budget again.`)})}catch(e){console.error(e)}return r};
+const _mvReqs=reqs;reqs=function(p){const r=_mvReqs.apply(this,arguments);try{if(p&&p.status=='draft')plTracks(p).forEach(i=>{const o=S.songs[i];if(!mvPlannable(p,o))return;const v=mvOf(o);if(!v.on)return;mvErr(o).forEach(x=>r.push(x));if(!mvErr(o).length&&!mvOk(o))r.push(v.st=='plan'?`"${o.title}": confirm the Music Video budget (or choose No Music Video).`:`"${o.title}": the Senbatsu changed after the MV budget was confirmed — confirm the MV budget again.`)})}catch(e){console.error(e)}return r};
 {const f=rmCoup;rmCoup=function(id){const o=S.songs[id],v=o&&o.mv;if(v&&v.paid&&!lockedSong(id)&&S.pj&&S.pj.coup.includes(id)){return ask(`Remove "${o.title}"? Its confirmed MV budget (${yen(v.paid)}) is refunded.`,()=>{mvRefund(o,v.paid,'Song removed');v.on=false;v.st='plan';o.video='none';f(id)},'Remove')}return f.apply(this,arguments)}}
 if(typeof plSetKind=='function'){const f=plSetKind;plSetKind=function(k){const p=S.pj;if(k=='album'&&p&&plTracks(p).some(i=>S.songs[i]&&S.songs[i].mv&&S.songs[i].mv.paid))return toast('Albums have no Music Video production. Cancel the confirmed MVs first.','err');return f.apply(this,arguments)}}
 // week 3 filming, week 4 check (existing 28-day schedule; nothing is added)
@@ -85,7 +85,7 @@ function mvSnap(o){S.mvCz=S.mvCz||{};const mem=mvSen(o).map(m=>m.id),cz={};mem.f
 const thHashS=s=>{let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619)>>>0;return h.toString(36)};
 const _mvTick=tick;tick=function(){const r=_mvTick.apply(this,arguments);try{mvProdDay();mvViewsDay()}catch(e){console.error(e)}return r};
 // publication on the song's Release Day
-const _mvRel=doRelease;doRelease=function(){const p=S.pj,ids=p&&p.status=='producing'?usedSongs(p):[];const n=S.singles.length;const r=_mvRel.apply(this,arguments);try{const x=S.singles[n];if(x&&S.singles.length>n){
+const _mvRel=doRelease;doRelease=function(){const p=S.pj,ids=p&&p.status=='producing'?usedSongs(p):[];const n=S.singles.length,na=(S.albums||[]).length;const r=_mvRel.apply(this,arguments);try{let x=S.singles[n];if(!(x&&S.singles.length>n)&&(S.albums||[]).length>na){const a=S.albums[S.albums.length-1];x={rid:a.id,title:'Album: '+a.title,mainId:a.mainId,sales:a.sales,alb:1}}if(x&&(x.alb||S.singles.length>n)){
   ids.forEach(i=>{const o=S.songs[i];if(!o||!o.mv||!o.mv.on||o.mv.st=='published')return;const v=o.mv;if(v.st=='confirmed'){v.film=mvSnap(o);v.film.day=S.day}v.st='published';v.pub=S.day;v.rid=x.rid;v.single=x.title;v.track=i==x.mainId?'title':'coupling';v.v=0;v.dh=[];v.ev=[];v.bz=0;v.carry=0;mvInit(o,x)});
   Object.values(S.songs).forEach(o=>{const v=o.mv;if(v&&v.st=='published'&&v.rid!=x.rid&&S.day-v.pub>30&&Math.random()<.5){v.ev.push({d:S.day,k:'renewed',m:1.4+Math.random()*.6,len:7});if(v.ev.length>20)v.ev.shift()}});
   const pub=ids.filter(i=>S.songs[i]&&S.songs[i].mv&&S.songs[i].mv.st=='published'&&S.songs[i].mv.pub==S.day);if(pub.length&&ui.mod&&ui.mod.t=='html')ui.mod.h+=`<div class="c mvrelb"><h3>🎬 Music Videos published today</h3>${pub.map(i=>{const o=S.songs[i],v=o.mv;return`<div class="row">${mvThumb(o,90)}<div><b>${esc(o.title)}</b><div class="st">${MV_STY[v.style].n} · ${esc(mvLoc(v.loc).n)}${v.story!='none'?' · '+esc(mvStory(v.story).n):''} · first-day views ${v.v.toLocaleString()}</div></div></div>`}).join('')}</div>`}}catch(e){console.error(e)}return r};
@@ -165,7 +165,7 @@ V.mvplan=function(){const o=S.songs[ui.mvs],p=S.pj;if(!o||!p||!(p.mainId==o.id||
  <div class="row">${lk?`<span class="st">Production has started — this plan is fixed.</span>`:st=='plan'?`<button class="b p" ${er.length||due>S.money?'disabled':''} onclick="mvConfirm('${o.id}')">🎬 Confirm MV production · ${yen(Math.max(0,due))}</button>`:`<span class="tag rrSR">✓ Budget confirmed · ${yen(v.paid)}</span><button class="b s" onclick="mvRevise('${o.id}')">Revise plan</button>`}</div>
  <p class="st">The MV is filmed in Week 3 of the 28-day production, checked in Week 4 and published on the song's Release Day. Budget does not guarantee views — reception decides.</p></div>`};
 // song card in Single Production: MV choice replaces the old video dropdown
-function mvCardHtml(o,p,dis){const v=mvOf(o),lk=lockedSong(o.id);if(plAlb(p))return'';
+function mvCardHtml(o,p,dis){const v=mvOf(o),lk=lockedSong(o.id);
  return`<div class="mvcardb ${v.on?'on':''}"><b>🎬 Music Video</b><button class="b s ${v.on?'on':''}" ${dis} onclick="mvToggle('${o.id}',true)">Produce Music Video</button><button class="b s ${!v.on?'on':''}" ${dis} onclick="mvToggle('${o.id}',false)">No Music Video</button>${v.on?`<span class="mvsb ${v.st}">${MV_ST[v.st]}</span><span class="st">${MV_STY[v.style].n} · ${esc(mvLoc(v.loc).n)} · ${yen(v.st!='plan'?v.paid:mvCost(o).t)}</span><button class="b s p" onclick="ui.mvs='${o.id}';goView('mvplan')">${lk||v.st!='plan'?'View MV plan':'Plan MV'}</button>`:''}</div>`}
 {const f=V.music;V.music=function(){let h=f.apply(this,arguments);const p=S.pj;if(!p)return h;h=h.replace(/<label class="st">Video <select[^>]*onchange="trVid\('([^']+)',this.value\)">[\s\S]*?<\/select><\/label>/g,(m,id)=>{const o=S.songs[id];return o?'</div>'+mvCardHtml(o,p,p.status!='draft'?'disabled':'')+'<div>':m});return h}}
 

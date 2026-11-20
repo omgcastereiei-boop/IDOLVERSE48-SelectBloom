@@ -39,7 +39,7 @@ function seRand(id,part){const o=S.songs[id];if(!o)return;if(lockedSong(id))retu
  if(all||part=='genre')o.genre=pick(GENRES.filter(g=>g!=o.genre));if(all||part=='concept')o.concept=pick(CONCEPTS.filter(c=>c!=o.concept));if(all||part=='lyrics'||part=='theme')o.lyT=pick(LY_THEMES.filter(x=>x!=o.lyT));if(all||part=='lyrics'||part=='mood')o.lyM=pick(LY_MOODS.filter(x=>x!=o.lyM));
  delete o.ev;if(ui.mod&&ui.mod.t=='html'&&ui.sesh==id)ui.mod.h=seSheetHtml(id);render()}
 function seSetLy(id,k,v){const o=S.songs[id];if(!o||lockedSong(id))return;if(k=='lyT'&&LY_THEMES.includes(v))o.lyT=v;if(k=='lyM'&&LY_MOODS.includes(v))o.lyM=v;render()}
-const seOpt=(L,v)=>L.map(x=>`<option ${x==v?'selected':''}>${esc(x)}</option>`).join('');
+const seOpt=(L,v)=>L.map(x=>`<option value="${esc(x)}" ${x==v?'selected':''}>${esc(x)}</option>`).join('');
 function seCreateRow(o,dis){seFill(o);return`<div class="row selyr"><label class="st">Lyrics theme <select ${dis} onchange="seSetLy('${o.id}','lyT',this.value)">${seOpt(LY_THEMES,o.lyT)}</select></label><label class="st">Lyrics mood <select ${dis} onchange="seSetLy('${o.id}','lyM',this.value)">${seOpt(LY_MOODS,o.lyM)}</select></label></div>
  <div class="row serand"><span class="st">🎲 Random</span><button class="b s" ${dis} onclick="seRand('${o.id}','genre')">Genre</button><button class="b s" ${dis} onclick="seRand('${o.id}','concept')">Concept</button><button class="b s" ${dis} onclick="seRand('${o.id}','lyrics')">Lyrics</button><button class="b s p" ${dis} onclick="seRand('${o.id}','all')">🎲 Randomize all</button><button class="b s" onclick="seSheet('${o.id}')">📄 Song sheet</button></div>${o.ev&&(o.slots||[]).some(x=>x)?seMini(o.ev):''}`}
 // the song card of Single / Album planning: lyrics, randomisers, song sheet
