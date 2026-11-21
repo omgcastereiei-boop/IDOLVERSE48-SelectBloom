@@ -27,7 +27,7 @@ function nrWalk(o,seen,skip){let n=0;if(!o||typeof o!='object'||seen.has(o))retu
 function nrSupporters(){try{const segs=S.fb&&S.fb.segs;if(!Array.isArray(segs)||!segs.length)return null;const r={};segs.forEach(s=>{const n=+s.n;if(!(n>0))return;if(s.k!=null)r[s.k]=(r[s.k]||0)+n;for(const j in s.o||{}){const c=+s.o[j];if(c>0)r[j]=(r[j]||0)+c}});for(const k in r)r[k]=Math.round(r[k]);return r}catch(e){return null}}
 function nrFansFromFb(ids,popIds){popIds=popIds||new Set();const sup=nrSupporters();if(!sup||!ids.size)return 0;let n=0;const L=S.members||[];
  const healthy=L.filter(m=>!ids.has(m.id)&&Number.isFinite(m.pop)&&sup[m.id]>0),ratio=healthy.map(m=>m.pop/sup[m.id]).sort((a,b)=>a-b),rt=ratio.length?ratio[Math.floor(ratio.length/2)]:null,pmax=healthy.length?Math.max(...healthy.map(m=>m.pop)):100;
- L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;n++;if(rt!=null&&popIds.has(m.id)){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
+ L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;if(S.fb&&S.fb.mf)S.fb.mf[m.id]=s;n++;if(rt!=null&&popIds.has(m.id)){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
 function nanRepair(quiet){if(!S)return 0;let n=0;try{
  const brk=new Set((S.members||[]).filter(m=>nrBad(m.fans)).map(m=>m.id)),brkPop=new Set((S.members||[]).filter(m=>nrBad(m.pop)).map(m=>m.id));n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
  // a member with 0 fans who still has supporters in the fanbase is inconsistent (saves repaired by the first version): rebuild her fans

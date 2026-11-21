@@ -181,7 +181,7 @@ const RR={UR:[[8000,25000],[40,75],[65,95],[65,95],[60,95],[50,90],[70,100],[65,
 const STK_=['fans','buzz','sing','dance','cha','variety','pot','en','loy','pas'],ABK=['sing','dance','cha','variety'],AFK=['cute','mature','cool','pretty','dark','energetic'],TRAITS=['Cute','Cool','Funny','Elegant','Mysterious','Energetic','Shy','Natural'],CONTRA=[['Cute','Cool'],['Shy','Energetic'],['Mysterious','Funny'],['Elegant','Energetic']];
 const P2T={Genki:'Energetic',Cool:'Cool',Shy:'Shy',Elegant:'Elegant',Airhead:'Natural',Serious:'Mysterious'},T2P={Cute:'Genki',Cool:'Cool',Funny:'Airhead',Elegant:'Elegant',Mysterious:'Serious',Energetic:'Genki',Shy:'Shy',Natural:'Airhead'},RN2={UR:'Ultra Rare',SR:'Super Rare',R:'Rare',N:'Normal'};
 const popOf=m=>cl(Math.round(.75*100*Math.sqrt(m.fans/30000)+.25*m.buzz)),rollRar=()=>{const r=Math.random()*100;return r<5?'UR':r<20?'SR':r<50?'R':'N'};
-function gainPop(m,d){m.fans=Math.max(0,Math.round(m.fans+d*(60+m.fans*.015)));m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}
+function gainPop(m,d){const f0=Number.isFinite(+m.fans)?+m.fans:0;m.fans=Math.max(0,Math.round(f0+d*60+f0*Math.min(.3,.015*d)));m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}
 function pickTraits(R,first){const ok=(a,b)=>a!=b&&!CONTRA.some(c=>c.includes(a)&&c.includes(b)),t=[first||TRAITS[Math.floor(R()*8)]];if(R()<(first?.5:.6)){const c=TRAITS.filter(x=>ok(t[0],x));t.push(c[Math.floor(R()*c.length)])}return t}
 function genStats(m,rar,R,keep){const T=RR[rar],k=keep||{},u=()=>R(),ci=(a,b)=>Math.round(Math.max(0,Math.min(100,a+(b-a)*u())));m.rar=rar;
  const fr=T[0];m.fans=Math.round(fr[0]+(fr[1]-fr[0])*(keep&&typeof k.pop=='number'?Math.min(1,.65*k.pop/60+.35*u()):Math.pow(u(),1.6)));m.buzz=ci(...T[1]);

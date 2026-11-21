@@ -112,7 +112,8 @@ function fbSync(ctx){if(!S||FBW)return;const fb=fbState();if(!fb)return;const or
  if(!Number.isFinite(S.fans))S.fans=fb.lastS;const dG=Math.round((S.fans||0)-fb.lastS);
  if(dG>0){const ms=W>0?Math.min(.55,.2+.45*W/(W+dG)):0,nm=Math.round(dG*ms);fbAcquire(dG-nm,{via:'group',org,reg});if(nm>0)fbSpread(nm,sig,org,reg)}
  // recognition growth turns a few people into supporters of that member (fractions carried over)
- Object.entries(sig).forEach(([id,d])=>{const c=(fb.carry[id]||0)+d*.03,n=Math.floor(c);fb.carry[id]=c-n;if(n>0)fbAcquire(n,{via:'member',mid:+id,org:dG>0?org:'Member buzz',reg})});
+ const bz=Math.min(1,1/(1+Math.pow(Math.max(0,fb.lastS)/2500000,1.3)))*Math.min(1,(Math.max(0,fb.lastS)*.01+300)/Math.max(1,W*.03));
+ Object.entries(sig).forEach(([id,d])=>{const c=(fb.carry[id]||0)+d*.03*bz,n=Math.floor(c);fb.carry[id]=c-n;if(n>0)fbAcquire(n,{via:'member',mid:+id,org:dG>0?org:'Member buzz',reg})});
  if(dG<0||dG>0||W>0)fbApply();else if(S.fans!==fb.lastS)fbApply()}
 // run an existing formula with the fan count it should "see" (buyers / audience), keep its fan gains
 function fbWith(kind,fn,ctx){const fb=fbState();if(!fb)return fn();fbSync();const f=fbFactor(kind),outer=FBW;const cur=S.fans,E=Math.max(0,Math.round(cur*f/(outer?outer.f:1)));FBW={f};S.fans=E;let r;try{r=fn()}finally{const d=S.fans-E;S.fans=cur+d;FBW=outer}if(!FBW)fbSync(ctx);return r}

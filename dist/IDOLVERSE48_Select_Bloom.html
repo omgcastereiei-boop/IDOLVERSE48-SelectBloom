@@ -2978,7 +2978,7 @@ const RR={UR:[[8000,25000],[40,75],[65,95],[65,95],[60,95],[50,90],[70,100],[65,
 const STK_=['fans','buzz','sing','dance','cha','variety','pot','en','loy','pas'],ABK=['sing','dance','cha','variety'],AFK=['cute','mature','cool','pretty','dark','energetic'],TRAITS=['Cute','Cool','Funny','Elegant','Mysterious','Energetic','Shy','Natural'],CONTRA=[['Cute','Cool'],['Shy','Energetic'],['Mysterious','Funny'],['Elegant','Energetic']];
 const P2T={Genki:'Energetic',Cool:'Cool',Shy:'Shy',Elegant:'Elegant',Airhead:'Natural',Serious:'Mysterious'},T2P={Cute:'Genki',Cool:'Cool',Funny:'Airhead',Elegant:'Elegant',Mysterious:'Serious',Energetic:'Genki',Shy:'Shy',Natural:'Airhead'},RN2={UR:'Ultra Rare',SR:'Super Rare',R:'Rare',N:'Normal'};
 const popOf=m=>cl(Math.round(.75*100*Math.sqrt(m.fans/30000)+.25*m.buzz)),rollRar=()=>{const r=Math.random()*100;return r<5?'UR':r<20?'SR':r<50?'R':'N'};
-function gainPop(m,d){m.fans=Math.max(0,Math.round(m.fans+d*(60+m.fans*.015)));m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}
+function gainPop(m,d){const f0=Number.isFinite(+m.fans)?+m.fans:0;m.fans=Math.max(0,Math.round(f0+d*60+f0*Math.min(.3,.015*d)));m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}
 function pickTraits(R,first){const ok=(a,b)=>a!=b&&!CONTRA.some(c=>c.includes(a)&&c.includes(b)),t=[first||TRAITS[Math.floor(R()*8)]];if(R()<(first?.5:.6)){const c=TRAITS.filter(x=>ok(t[0],x));t.push(c[Math.floor(R()*c.length)])}return t}
 function genStats(m,rar,R,keep){const T=RR[rar],k=keep||{},u=()=>R(),ci=(a,b)=>Math.round(Math.max(0,Math.min(100,a+(b-a)*u())));m.rar=rar;
  const fr=T[0];m.fans=Math.round(fr[0]+(fr[1]-fr[0])*(keep&&typeof k.pop=='number'?Math.min(1,.65*k.pop/60+.35*u()):Math.pow(u(),1.6)));m.buzz=ci(...T[1]);
@@ -4445,7 +4445,8 @@ function fbSync(ctx){if(!S||FBW)return;const fb=fbState();if(!fb)return;const or
  if(!Number.isFinite(S.fans))S.fans=fb.lastS;const dG=Math.round((S.fans||0)-fb.lastS);
  if(dG>0){const ms=W>0?Math.min(.55,.2+.45*W/(W+dG)):0,nm=Math.round(dG*ms);fbAcquire(dG-nm,{via:'group',org,reg});if(nm>0)fbSpread(nm,sig,org,reg)}
  // recognition growth turns a few people into supporters of that member (fractions carried over)
- Object.entries(sig).forEach(([id,d])=>{const c=(fb.carry[id]||0)+d*.03,n=Math.floor(c);fb.carry[id]=c-n;if(n>0)fbAcquire(n,{via:'member',mid:+id,org:dG>0?org:'Member buzz',reg})});
+ const bz=Math.min(1,1/(1+Math.pow(Math.max(0,fb.lastS)/2500000,1.3)))*Math.min(1,(Math.max(0,fb.lastS)*.01+300)/Math.max(1,W*.03));
+ Object.entries(sig).forEach(([id,d])=>{const c=(fb.carry[id]||0)+d*.03*bz,n=Math.floor(c);fb.carry[id]=c-n;if(n>0)fbAcquire(n,{via:'member',mid:+id,org:dG>0?org:'Member buzz',reg})});
  if(dG<0||dG>0||W>0)fbApply();else if(S.fans!==fb.lastS)fbApply()}
 // run an existing formula with the fan count it should "see" (buyers / audience), keep its fan gains
 function fbWith(kind,fn,ctx){const fb=fbState();if(!fb)return fn();fbSync();const f=fbFactor(kind),outer=FBW;const cur=S.fans,E=Math.max(0,Math.round(cur*f/(outer?outer.f:1)));FBW={f};S.fans=E;let r;try{r=fn()}finally{const d=S.fans-E;S.fans=cur+d;FBW=outer}if(!FBW)fbSync(ctx);return r}
@@ -14272,7 +14273,7 @@ function nrWalk(o,seen,skip){let n=0;if(!o||typeof o!='object'||seen.has(o))retu
 function nrSupporters(){try{const segs=S.fb&&S.fb.segs;if(!Array.isArray(segs)||!segs.length)return null;const r={};segs.forEach(s=>{const n=+s.n;if(!(n>0))return;if(s.k!=null)r[s.k]=(r[s.k]||0)+n;for(const j in s.o||{}){const c=+s.o[j];if(c>0)r[j]=(r[j]||0)+c}});for(const k in r)r[k]=Math.round(r[k]);return r}catch(e){return null}}
 function nrFansFromFb(ids,popIds){popIds=popIds||new Set();const sup=nrSupporters();if(!sup||!ids.size)return 0;let n=0;const L=S.members||[];
  const healthy=L.filter(m=>!ids.has(m.id)&&Number.isFinite(m.pop)&&sup[m.id]>0),ratio=healthy.map(m=>m.pop/sup[m.id]).sort((a,b)=>a-b),rt=ratio.length?ratio[Math.floor(ratio.length/2)]:null,pmax=healthy.length?Math.max(...healthy.map(m=>m.pop)):100;
- L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;n++;if(rt!=null&&popIds.has(m.id)){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
+ L.forEach(m=>{if(!ids.has(m.id))return;const s=sup[m.id]|0;if(s>0){m.fans=s;if(S.fb&&S.fb.mf)S.fb.mf[m.id]=s;n++;if(rt!=null&&popIds.has(m.id)){const est=Math.round(rt*s);const cap=Math.min(100,Math.max(pmax*2,20));if(est>(m.pop||0))m.pop=Math.min(est,cap)}}});return n}
 function nanRepair(quiet){if(!S)return 0;let n=0;try{
  const brk=new Set((S.members||[]).filter(m=>nrBad(m.fans)).map(m=>m.id)),brkPop=new Set((S.members||[]).filter(m=>nrBad(m.pop)).map(m=>m.id));n+=nrMembers(S.members)+nrMembers(S.alumni);n+=nrFb(S.fb);
  // a member with 0 fans who still has supporters in the fanbase is inconsistent (saves repaired by the first version): rebuild her fans
@@ -14288,6 +14289,37 @@ const nrSuspect=()=>{try{return nrZeroWithSup()||nrBad(S.fans)||(S.members||[]).
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);nanRepair(true);return r}}
 {const f=doRelease;doRelease=function(){const r=f.apply(this,arguments);if(nrSuspect())nanRepair(true);return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);if(nrSuspect())nanRepair(true);return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — repair of runaway fan counts (older saves)
+// -------------------------------------------------------------------------------------
+//  Before this fix a very high-selling release (an election single near the 5M CD cap) gave
+//  members a popularity gain that multiplied their own fan count (×40 or more), and 3% of that
+//  gain was turned into new group fans without the usual large-fanbase damping. The next release
+//  compounded it, so a group could jump from ~1M to hundreds of millions of fans in one step.
+//  The cause is fixed in gainPop (game-systems.js) and fbSync (fanbase.js).
+//
+//  For saves that already jumped: the monthly fanbase history is searched for the jump
+//  (a rise of more than 8× to over 10M fans). Every fan segment, member fan count and the
+//  later history points are scaled back to the level before the jump (+30% growth allowance).
+//  Runs once per save; nothing happens to a fanbase without such a jump.
+// =====================================================================================
+function fcJump(fb,now){const P=[];(fb.hist||[]).forEach((h,i)=>{if(Number.isFinite(h.start))P.push({v:h.start,i});if(Number.isFinite(h.total))P.push({v:h.total,i})});P.push({v:now,i:(fb.hist||[]).length});
+ for(let k=1;k<P.length;k++){const a=P[k-1].v,b=P[k].v;if(a>=1000&&b>10000000&&b>a*8)return{pre:a,at:P[k].i}}return null}
+function fanCapRepair(){try{const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)||fb.blowFix)return 0;const now=fb.segs.reduce((a,s)=>a+(+s.n||0),0),J=fcJump(fb,now);
+ if(!J){fb.blowFix={day:S.day,none:1};return 0}
+ const target=Math.round(J.pre*1.3),k=Math.min(1,target/Math.max(1,now));if(!(k<1)){fb.blowFix={day:S.day,none:1};return 0}
+ fb.segs.forEach(s=>{s.n=Math.max(0,Math.round(s.n*k));for(const j in s.o){s.o[j]=Math.round(s.o[j]*k)}if(s.bx)for(const j in s.bx)s.bx[j]=Math.round(s.bx[j]*k);try{fbFix(s)}catch(e){}});
+ fb.segs=fb.segs.filter(s=>s.n>0);
+ (fb.hist||[]).forEach((h,i)=>{if(i<J.at)return;['start','total','net','newG','newM','lost'].forEach(x=>{if(Number.isFinite(h[x]))h[x]=Math.round(h[x]*k)});if(h.mem)for(const id in h.mem){const r=h.mem[id];if(Array.isArray(r))h.mem[id]=r.map(v=>Number.isFinite(v)?Math.round(v*k):v)}});
+ Object.values(fb.alum||{}).forEach(a=>{if(a&&Number.isFinite(a.n))a.n=Math.round(a.n*k)});
+ const T=fb.segs.reduce((a,s)=>a+s.n,0),lim=Math.max(100000,T*3);
+ [...(S.members||[]),...(S.alumni||[])].forEach(m=>{if(!m||!Number.isFinite(+m.fans))return;if(m.fans>lim)m.fans=Math.round(Math.min(lim,Math.max(lim*.5,m.fans*k)));if(fb.mf&&fb.mf[m.id]!=null)fb.mf[m.id]=m.fans;try{m.pop=popOf(m)}catch(e){}});
+ S.fans=T;fb.lastS=T;fb.carry={};fb.ver=(fb.ver||0)+1;fb.blowFix={day:S.day,from:now,to:T};console.log('[fan-cap] runaway fanbase repaired',now,'→',T);return 1}catch(e){console.error(e);return 0}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);if(fanCapRepair())try{toast(`Fan count repaired: ${S.fb.blowFix.from.toLocaleString()} → ${S.fb.blowFix.to.toLocaleString()} (a bug had inflated it).`)}catch(e){}return r}}
+try{I18N_TH_RX.push([/^Fan count repaired: ([\d,]+) → ([\d,]+) \(a bug had inflated it\)\.$/,'แก้ไขจำนวนแฟนคลับแล้ว: $1 → $2 (บั๊กทำให้ตัวเลขพุ่งผิดปกติ)'])}catch(e){}
 
 </script>
 <script>
