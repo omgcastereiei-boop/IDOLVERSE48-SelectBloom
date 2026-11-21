@@ -14480,7 +14480,7 @@ function pfTeamText(e,E,m){const tn=String(e.tname||'').trim();
  if(e.t=='team_join'){const prom=E.some(p=>p.t=='promote'&&p.day==e.day);return`${prom?'Promoted to':'Joined'} ${esc(tn||'a team')}`}
  return evText(e)}
 function pfTeamHtml(m){const E=(m.mh||[]).map((e,i)=>({...e,_i:i})).sort((a,b)=>(a.day??0)-(b.day??0)||a._i-b._i),L=E.filter(e=>PF_TEAM_EV.has(e.t)),g=grp(m.group),t=teamOf(m);
- return`<h3>Team History <span class="st">(oldest first)</span></h3><div class="st">Current: ${g?esc(g.name):'No group'}${t?' · '+esc(t.name):''} · ${isAct(m)&&t?'Active':esc(TLm(m))}</div><ul class="pfl">${L.map(e=>`<li><b>${pfTeamText(e,E,m)}</b> <span class="st">· ${jd(e.day)}</span></li>`).join('')||'<li class="st">No team history recorded yet.</li>'}</ul>`}
+ return`<h3>Team History <span class="st">(oldest first)</span></h3><div class="st">${(S.members||[]).includes(m)?`Current: ${g?esc(g.name):'No group'}${t?' · '+esc(t.name):''} · ${isAct(m)&&t?'Active':esc(TLm(m))}`:`<span>Former member</span> · ${g?esc(g.name):""} · ${esc((typeof CT_ST!='undefined'&&typeof ctStatus=='function'&&CT_ST[ctStatus(m)])||'Graduated')}`}</div><ul class="pfl">${L.map(e=>`<li><b>${pfTeamText(e,E,m)}</b> <span class="st">· ${jd(e.day)}</span></li>`).join('')||'<li class="st">No team history recorded yet.</li>'}</ul>`}
 // group that held an election (elections live in each group's own context)
 function pfElGroup(eid){for(const g of (S.groups||[])){const c=g.id==S.ag?S:g.ctx,L=c&&c.ge&&Array.isArray(c.ge.list)?c.ge.list:[];if(L.some(x=>x&&x.id==eid))return g.name}return null}
 function pfElecHtml(m){const E=(m.mh||[]).map((e,i)=>({...e,_i:i})).filter(e=>e.t=='ge').sort((a,b)=>(a.day??0)-(b.day??0)||a._i-b._i);
@@ -14502,6 +14502,13 @@ function pfSenHtml(m){const rel=h=>S.singles.find(x=>x.rid==h.rid)||(S.albums||[
 // the tab: Team History → Senbatsu Election → Senbatsu (tlHtml is folded into histHtml)
 histHtml=function(m){return pfTeamHtml(m)+pfElecHtml(m)+pfSenHtml(m)};
 tlHtml=function(){return''};
+// Former Members: the same Discography & Achievements as in the group (Team History → Senbatsu Election → Senbatsu),
+// and the same compact Birthday Stage history (date · age · photos) as the member profile
+function pfBdHtml(m){const L=(m.bdh||[]).slice().reverse();if(!L.length)return'';return`<details open><summary class="st">Birthday Stage history (${L.length})</summary><ul class="ms">${L.map(b=>`<li>${jd(b.day)} · age ${b.age}${b.img&&b.pf?` <button class="b s" onclick="bdPhotoOpen('${b.pf}',${m.id})">📸</button>`:''}</li>`).join('')}</ul></details>`}
+{const f=ctFormerOpen;ctFormerOpen=function(id){f.apply(this,arguments);try{const m=ctMem(id);if(!m||!ui.mod||ui.mod.t!='html')return;let h=ui.mod.h;
+ const cut=(start)=>{const i=h.indexOf(start);if(i<0)return;const j=h.indexOf('</ul></div>',i);if(j<0)return;h=h.slice(0,i)+h.slice(j+11)};
+ cut('<div class="c"><h3>Birthday Stage history</h3>');cut('<div class="c"><h3>History</h3>');
+ h+=`<div class="c pfdisc"><h2 class="ht">Discography &amp; Achievements</h2>${histHtml(m)}${pfBdHtml(m)}</div>`;ui.mod.h=h;render()}catch(e){console.error(e)}}}
 
 </script>
 <script>
