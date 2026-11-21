@@ -15603,6 +15603,132 @@ const ccDrCopyGo=ccOK(function(){const X=ccDrCtx(),D=ui.ccdc;if(!X||!D||!ccEdit(
 </script>
 <script>
 // =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Senbatsu reactions consider the WHOLE single
+// -------------------------------------------------------------------------------------
+//  Extends the existing reaction system (wellness.js: wlReact → wlSit / wlPickMood / wlMhDelta /
+//  wlLine / WLD, history m.senRec). Nothing runs in parallel: every member still gets exactly ONE
+//  reaction, ONE mood and ONE set of effects per announcement.
+//  · Before the reactions are made, every Coupling Song of the single is read (its formation:
+//    Center / front / middle / back) — the Title Track keeps the highest weight; a Coupling Center
+//    comes next, then Coupling selection.
+//  · The member's history is real data only: Title Track record (m.senRec), Coupling record
+//    (m.senRec.cp, kept from now on) and released songs (m.hist). "First Center" is only used when
+//    she has never been Center of any song.
+//  · Expectations come from her history (how often she makes the Title Track, last position, past
+//    Centers), popularity, Passion and personality (Serious / Cool and high Passion = ambitious;
+//    Shy / Airhead = humble) — the same result can feel different to different members.
+//  · New mixed situations: missed the Title Track but Coupling Center (first Center or not),
+//    Coupling only (as a chance, as a let-down, or in between), Title Track + Coupling Center.
+//    Title Track members who are also in Coupling Songs feel a little more recognised.
+//  · New moods for these reactions: Relieved, Conflicted (mixed feelings), Jealous, Hurt — they use
+//    the existing Morale / Passion / Loyalty / stress effects; Mental Health changes stay contextual.
+// =====================================================================================
+Object.assign(WL.mood,{Relieved:['😌','pos'],Conflicted:['🥲','neu'],Jealous:['😒','neg'],Hurt:['💔','neg']});
+Object.assign(WL.eff,{Relieved:{mor:3,pas:1},Conflicted:{mor:-1,pas:2},Jealous:{mor:-3,loy:-1,str:5},Hurt:{mor:-5,pas:-1,str:6}});
+// ---- lines (English · Thai) ------------------------------------------------------------------------------------------------
+const SR2_LINES={
+ cpFirstCenterNoMain:{
+  neu:{bright:['I didn\'t make the title track... but my first Center, on a coupling song! I don\'t know whether to laugh or cry!','หนูไม่ได้อยู่ในเพลงหลัก... แต่ได้เซ็นเตอร์ครั้งแรกในเพลงรอง! ไม่รู้จะหัวเราะหรือร้องไห้ดีค่ะ!'],calm:['Missing the title track stings. But my first Center... that I will treasure.','พลาดเพลงหลักก็เจ็บอยู่ แต่เซ็นเตอร์ครั้งแรก... ฉันจะเก็บไว้อย่างดี'],soft:['I wasn\'t in the title track... but I\'m the Center of a song. My first time... I\'m happy and sad at once.','หนูไม่ได้อยู่ในเพลงหลัก... แต่ได้เป็นเซ็นเตอร์ของเพลงหนึ่ง ครั้งแรกเลย... ดีใจแล้วก็เสียใจไปพร้อมกันค่ะ'],firm:['Not in the title track. Yet my first Center. I will use this to fight my way back.','ไม่ได้อยู่ในเพลงหลัก แต่ได้เซ็นเตอร์ครั้งแรก ฉันจะใช้โอกาสนี้กลับไปให้ได้ค่ะ']},
+  pos:{bright:['My first Center! Okay, no title track this time — but I\'ll make this coupling song the one everyone remembers!','เซ็นเตอร์ครั้งแรก! ครั้งนี้ไม่มีเพลงหลักก็ไม่เป็นไร หนูจะทำให้เพลงรองนี้เป็นเพลงที่ทุกคนจำค่ะ!'],calm:['A Center position, for the first time. The title track can wait — this song is mine to lead.','ได้ยืนเซ็นเตอร์เป็นครั้งแรก เพลงหลักรอไว้ก่อน เพลงนี้ฉันจะนำเอง'],soft:['My first Center... it means so much to me, even if it\'s not the title track.','เซ็นเตอร์ครั้งแรก... ถึงจะไม่ใช่เพลงหลักก็มีความหมายกับหนูมากเลยค่ะ'],firm:['My first Center. It is not the title track, but I will prove I can carry a song.','เซ็นเตอร์ครั้งแรก ถึงไม่ใช่เพลงหลัก ฉันจะพิสูจน์ว่าฉันแบกเพลงได้ค่ะ']},
+  neg:{bright:['I really wanted to be in the title track... the Center spot helps, but it still hurts a little.','หนูอยากอยู่ในเพลงหลักจริง ๆ... ได้เซ็นเตอร์ก็ช่วยได้นะ แต่ก็ยังเจ็บอยู่ดีค่ะ'],calm:['Being left out of the title track is hard to accept, Center or not.','ถูกตัดจากเพลงหลักเป็นเรื่องที่ทำใจยาก ต่อให้ได้เซ็นเตอร์ก็ตาม'],soft:['I\'m grateful for the Center... but missing the title track makes my chest hurt.','หนูขอบคุณที่ได้เซ็นเตอร์... แต่พลาดเพลงหลักมันเจ็บในใจค่ะ'],firm:['A Center on the coupling song does not change that I missed the title track.','ได้เซ็นเตอร์เพลงรองก็ไม่ได้เปลี่ยนความจริงที่ฉันพลาดเพลงหลักค่ะ']},
+  nrv:{bright:['My first Center?! Without being in the title track?! I\'m so nervous I could explode!','เซ็นเตอร์ครั้งแรก?! ทั้งที่ไม่ได้อยู่ในเพลงหลักเนี่ยนะ?! ตื่นเต้นจนจะระเบิดแล้วค่ะ!'],calm:['Leading a song for the first time... everyone will be watching how I do.','ได้นำเพลงเป็นครั้งแรก... ทุกคนจะจับตาดูว่าฉันทำได้แค่ไหน'],soft:['M-me in the middle? I wasn\'t even in the title track... I\'m scared but I\'ll try.','ห-หนูอยู่ตรงกลางเหรอคะ? ทั้งที่ไม่ได้อยู่ในเพลงหลักเลย... กลัวแต่จะลองดูค่ะ'],firm:['My first Center comes with pressure. I must not waste it.','เซ็นเตอร์ครั้งแรกมาพร้อมแรงกดดัน ฉันจะปล่อยให้เสียเปล่าไม่ได้ค่ะ']}},
+ cpCenterNoMain:{
+  neu:{bright:['No title track... but I get to lead a coupling song again! Mixed feelings, but I\'ll smile!','ไม่ได้อยู่เพลงหลัก... แต่ได้นำเพลงรองอีกครั้ง! ความรู้สึกปนกันไปหมด แต่หนูจะยิ้มค่ะ!'],calm:['The coupling Center again, and no title track. I am proud and frustrated at the same time.','เซ็นเตอร์เพลงรองอีกครั้ง แต่ไม่มีเพลงหลัก ทั้งภูมิใจและหงุดหงิดในเวลาเดียวกัน'],soft:['I\'m happy to be the Center... but I wish I was in the title track too.','หนูดีใจที่ได้เป็นเซ็นเตอร์... แต่ก็อยากอยู่ในเพลงหลักด้วยค่ะ'],firm:['Center of the coupling song, out of the title track. I take the first and I will fix the second.','เซ็นเตอร์เพลงรอง แต่หลุดจากเพลงหลัก อย่างแรกฉันรับไว้ อย่างหลังฉันจะแก้ให้ได้ค่ะ']},
+  pos:{bright:['I\'ll make this coupling song shine so brightly they\'ll put me in the title track next time!','หนูจะทำให้เพลงรองนี้เปล่งประกายจนครั้งหน้าต้องเลือกหนูเข้าเพลงหลักค่ะ!'],calm:['A song of my own to lead. That is a role worth taking seriously.','ได้เพลงที่ต้องนำเอง เป็นบทบาทที่ควรทำอย่างจริงจัง'],soft:['Being trusted with the middle of a song makes me really happy.','ได้รับความไว้ใจให้ยืนกลางเพลง หนูดีใจมากเลยค่ะ'],firm:['Center again. I will make this song impossible to ignore.','เซ็นเตอร์อีกครั้ง ฉันจะทำให้เพลงนี้ไม่มีใครมองข้ามได้ค่ะ']},
+  neg:{bright:['Coupling Center is nice, but I wanted to be in the title track with everyone...','เซ็นเตอร์เพลงรองก็ดีนะ แต่หนูอยากอยู่เพลงหลักกับทุกคนมากกว่า...'],calm:['Leading a coupling song while missing the title track. I expected more.','นำเพลงรองแต่พลาดเพลงหลัก ฉันคาดหวังไว้มากกว่านี้'],soft:['I\'m the Center... but being left out of the title track still makes me sad.','หนูเป็นเซ็นเตอร์... แต่การไม่ได้อยู่เพลงหลักก็ยังทำให้เศร้าค่ะ'],firm:['A coupling Center is not where I want to stay. The title track is my goal.','เซ็นเตอร์เพลงรองไม่ใช่ที่ที่ฉันอยากหยุดอยู่ เป้าหมายของฉันคือเพลงหลักค่ะ']}},
+ cpOnlyLetdown:{
+  neg:{bright:['Only the coupling song this time... I really thought I\'d be in the title track again.','ครั้งนี้ได้แค่เพลงรอง... หนูนึกว่าจะได้อยู่เพลงหลักอีกครั้งซะอีก'],calm:['Moved from the title track to a coupling song. I need to understand why.','จากเพลงหลักมาอยู่เพลงรอง ฉันต้องเข้าใจให้ได้ว่าทำไม'],soft:['I\'m not in the title track anymore... I\'m still in a song, but it feels like I lost something.','หนูไม่ได้อยู่เพลงหลักแล้ว... ยังมีเพลงให้ร้องก็จริง แต่รู้สึกเหมือนเสียอะไรไป'],firm:['Dropped to a coupling song. That is a setback I do not accept quietly.','ถูกลดลงมาอยู่เพลงรอง เป็นความถอยหลังที่ฉันจะไม่ยอมรับเงียบ ๆ ค่ะ']},
+  pos:{bright:['Coupling song this time — fine! I\'ll show them they need me back in the title track!','ครั้งนี้เพลงรอง — ได้เลย! หนูจะแสดงให้เห็นว่าเพลงหลักขาดหนูไม่ได้ค่ะ!'],calm:['A coupling song. I will use it to remind everyone what I can do.','เพลงรองก็ได้ ฉันจะใช้มันเตือนทุกคนว่าฉันทำอะไรได้บ้าง'],soft:['At least I\'m still singing with everyone... I\'ll keep trying.','อย่างน้อยหนูก็ยังได้ร้องกับทุกคน... จะพยายามต่อไปค่ะ'],firm:['A step down. I will take the title track back.','ถอยลงมาหนึ่งก้าว ฉันจะทวงเพลงหลักคืนค่ะ']},
+  neu:{bright:['Not the title track, but still part of the single... I guess that\'s okay?','ไม่ใช่เพลงหลัก แต่ก็ยังได้อยู่ในซิงเกิล... ก็โอเคมั้งคะ?'],calm:['A coupling song this time. I will not dwell on it.','ครั้งนี้เพลงรอง ฉันจะไม่จมอยู่กับมัน'],soft:['It\'s a little lonely outside the title track... but I\'m still in.','อยู่นอกเพลงหลักก็เหงานิดหน่อย... แต่หนูก็ยังได้อยู่ค่ะ'],firm:['Coupling only. Noted. Back to work.','ได้แค่เพลงรอง รับทราบค่ะ กลับไปทำงานต่อ']}},
+ cpOnlyChance:{
+  pos:{bright:['I\'m in a song?! I wasn\'t expecting to be chosen at all! I\'ll give it everything I\'ve got!','หนูได้อยู่ในเพลงด้วยเหรอ?! ไม่คิดเลยว่าจะถูกเลือก! หนูจะทุ่มสุดตัวค่ะ!'],calm:['A coupling song. A small door, but an open one. I will walk through it.','เพลงรองหนึ่งเพลง ประตูบานเล็กแต่เปิดอยู่ ฉันจะเดินผ่านมันไป'],soft:['I was chosen... for a real song. I\'m so happy I might cry.','หนูได้รับเลือก... ให้ร้องเพลงจริง ๆ ดีใจจนจะร้องไห้แล้วค่ะ'],firm:['Finally, a chance. I will make sure it is not my last.','ในที่สุดก็ได้โอกาส ฉันจะทำให้มันไม่ใช่ครั้งสุดท้ายค่ะ']},
+  neu:{bright:['Phew... I\'m not left out completely! A coupling song is a great start!','เฮ้อ... ไม่ได้ถูกทิ้งไว้ทั้งหมด! ได้เพลงรองก็เป็นจุดเริ่มต้นที่ดีมากค่ะ!'],calm:['Not overlooked after all. That is a relief.','ไม่ได้ถูกมองข้ามไปซะทีเดียว โล่งใจ'],soft:['I\'m relieved... I thought nobody would pick me again.','หนูโล่งใจ... นึกว่าจะไม่มีใครเลือกหนูอีกแล้ว'],firm:['I was not forgotten. Good. Now I build from here.','ฉันไม่ได้ถูกลืม ดีแล้ว ต่อจากนี้ฉันจะต่อยอดค่ะ']},
+  nrv:{bright:['I\'m in a coupling song! Wait, I have to learn it now?! I\'m so nervous!','ได้อยู่เพลงรอง! เดี๋ยวนะ ต้องเริ่มซ้อมแล้วเหรอ?! ตื่นเต้นมากค่ะ!'],calm:['My first time in a single\'s lineup in a while. I must not fall behind.','ไม่ได้อยู่ในไลน์อัปซิงเกิลมานาน ฉันจะตามไม่ทันไม่ได้'],soft:['A song with everyone... I hope I won\'t slow anyone down.','ได้ร้องเพลงกับทุกคน... หวังว่าหนูจะไม่ทำให้ใครช้าลงนะคะ'],firm:['I must prove I deserve this spot from the first rehearsal.','ฉันต้องพิสูจน์ตั้งแต่ซ้อมแรกว่าคู่ควรกับที่นี้ค่ะ']}},
+ cpOnly:{
+  neu:{bright:['Not the title track, but I\'m in the coupling song! Half happy, half "next time!"','ไม่ใช่เพลงหลัก แต่ได้อยู่เพลงรอง! ดีใจครึ่งหนึ่ง อีกครึ่ง "ครั้งหน้านะ!" ค่ะ'],calm:['A coupling song. Not what I hoped for, not nothing either.','เพลงรอง ไม่ใช่สิ่งที่หวังไว้ แต่ก็ไม่ใช่ว่าไม่มีอะไรเลย'],soft:['I\'m a little sad about the title track... but happy I can still sing.','หนูเสียใจนิดหน่อยเรื่องเพลงหลัก... แต่ก็ดีใจที่ยังได้ร้องเพลงค่ะ'],firm:['Coupling song. I will treat it like a title track.','เพลงรอง ฉันจะทำเหมือนมันเป็นเพลงหลักค่ะ']},
+  pos:{bright:['A coupling song! I\'ll make it so fun that everyone remembers it!','ได้เพลงรอง! หนูจะทำให้สนุกจนทุกคนจำได้เลยค่ะ!'],calm:['Every song is a stage. I will use this one well.','ทุกเพลงคือเวที ฉันจะใช้เพลงนี้ให้คุ้มค่า'],soft:['Being chosen for any song makes me happy.','ได้รับเลือกให้ร้องเพลงไหนก็ดีใจค่ะ'],firm:['A coupling song is still a chance to be seen. I will take it.','เพลงรองก็ยังเป็นโอกาสให้คนเห็น ฉันจะคว้าไว้ค่ะ']},
+  neg:{bright:['Just the coupling song... I wanted to be in the title track so badly.','แค่เพลงรอง... หนูอยากอยู่เพลงหลักมากเลยค่ะ'],calm:['I am in the single, but not where it matters most.','ได้อยู่ในซิงเกิล แต่ไม่ได้อยู่ตรงที่สำคัญที่สุด'],soft:['I\'m in a song... but the title track was my dream this time.','หนูได้อยู่ในเพลง... แต่ครั้งนี้เพลงหลักคือความฝันของหนูค่ะ'],firm:['Coupling only. That is not enough for me.','ได้แค่เพลงรอง แค่นี้ไม่พอสำหรับฉันค่ะ']}},
+ mainCpFirstCenter:{
+  pos:{bright:['Title track AND my first Center on the coupling song?! Is this a dream?!','ได้อยู่เพลงหลักแล้วยังได้เซ็นเตอร์ครั้งแรกในเพลงรองอีก?! นี่ฝันไปหรือเปล่าคะ?!'],calm:['The title track, and my first Center. I feel truly recognised.','ได้อยู่เพลงหลัก และได้เซ็นเตอร์ครั้งแรก ฉันรู้สึกว่าได้รับการยอมรับจริง ๆ'],soft:['I\'m in the title track... and the Center of a song for the first time. Thank you so much.','หนูได้อยู่เพลงหลัก... แล้วยังได้เป็นเซ็นเตอร์ครั้งแรกด้วย ขอบคุณมาก ๆ ค่ะ'],firm:['Title track and my first Center. I will repay that trust with results.','เพลงหลักและเซ็นเตอร์ครั้งแรก ฉันจะตอบแทนความไว้ใจด้วยผลงานค่ะ']},
+  nrv:{bright:['My first Center, plus the title track?! So much to rehearse — I\'m shaking!','เซ็นเตอร์ครั้งแรกแถมเพลงหลักอีก?! ต้องซ้อมเยอะมาก หนูมือสั่นแล้วค่ะ!'],calm:['Two songs, one of them mine to lead. I must manage it all.','สองเพลง หนึ่งในนั้นฉันต้องนำ ต้องจัดการให้ได้ทั้งหมด'],soft:['The Center... me? On top of the title track? I\'m so nervous...','เซ็นเตอร์... หนูเนี่ยนะ? แถมยังอยู่เพลงหลักด้วย? ตื่นเต้นมากเลยค่ะ...'],firm:['More responsibility than ever. I will not let either song down.','ความรับผิดชอบมากกว่าที่เคย ฉันจะไม่ทำให้เพลงไหนผิดหวังค่ะ']}},
+ mainCpCenter:{
+  pos:{bright:['Title track and a coupling Center! This single is going to be so much fun!','ได้เพลงหลักแล้วยังได้เซ็นเตอร์เพลงรอง! ซิงเกิลนี้ต้องสนุกมากแน่ ๆ ค่ะ!'],calm:['The title track, and a song to lead. This single matters to me.','เพลงหลัก และเพลงที่ต้องนำ ซิงเกิลนี้มีความหมายกับฉัน'],soft:['I get to be in the title track and lead a song... I\'m really happy.','หนูได้อยู่เพลงหลักแล้วยังได้นำเพลงด้วย... ดีใจมากเลยค่ะ'],firm:['Title track, plus a Center. Good. Next, the title track Center.','เพลงหลักบวกเซ็นเตอร์ ดีแล้ว ต่อไปคือเซ็นเตอร์เพลงหลักค่ะ']},
+  neu:{bright:['A coupling Center is great... but I still wanted to stand further forward in the title track!','เซ็นเตอร์เพลงรองก็ดีมาก... แต่หนูก็ยังอยากยืนข้างหน้ากว่านี้ในเพลงหลักค่ะ!'],calm:['Leading the coupling song, far back in the title track. A mixed result.','นำเพลงรอง แต่อยู่หลัง ๆ ในเพลงหลัก ผลลัพธ์ปน ๆ กัน'],soft:['I\'m happy about the Center... I just hoped for more in the title track.','หนูดีใจเรื่องเซ็นเตอร์... แค่หวังว่าเพลงหลักจะได้มากกว่านี้ค่ะ'],firm:['The coupling Center is mine. The title track position is not good enough yet.','เซ็นเตอร์เพลงรองเป็นของฉัน แต่ตำแหน่งในเพลงหลักยังไม่ดีพอค่ะ']}}};
+for(const sit in SR2_LINES){const D={};for(const g in SR2_LINES[sit]){D[g]={};for(const t in SR2_LINES[sit][g])D[g][t]=[SR2_LINES[sit][g][t][0]]}WLD[sit]=D}
+const SR2_TH=(()=>{const o={};for(const sit in SR2_LINES)for(const g in SR2_LINES[sit])for(const t in SR2_LINES[sit][g]){const[a,b]=SR2_LINES[sit][g][t];o[a]=b}return o})();
+// ---- the whole single, per member ---------------------------------------------------------------------------------------------
+const SR2_RK={center:4,front:3,mid:2,back:1};
+let SR2_CX=null;
+function sr2Songs(p){const ids=new Set([...(p.coup||[]),...(p.types||[]).flatMap(t=>t.songs||[])]);ids.delete(p.mainId);return[...ids].map(id=>S.songs[id]).filter(o=>o&&o.fm&&o.fm.sl)}
+function sr2Pos(o){const sl=o.fm.sl,nR=nRows(sl),M=new Map();sl.forEach(x=>{if(x.m)M.set(x.m,x.c?'center':x.r==0?'front':(nR>1&&x.r==nR-1)?'back':'mid')});return M}
+function sr2CenBefore(m,r){const cp=r.cp||{};return{main:r.cen>0||(m.hist||[]).some(h=>h.center&&h.cat=='main'),cp:(cp.cen|0)>0||(m.hist||[]).some(h=>h.center&&h.cat!='main')}}
+// expectations from real history, popularity, Passion and personality
+function sr2Exp(m,r){const n=r.sel+r.none,rate=n?r.sel/n:0,amb=(m.pers=='Serious'||m.pers=='Cool'?1:0)+(m.pas>=70?1:0)+(m.pop>=60?1:0),hum=m.pers=='Shy'||m.pers=='Airhead'||(m.traits||[]).includes('Natural');
+ if(m.status=='trainee'||r.sel==0||r.consNone>=2||(n>=3&&rate<.3))return hum||amb<2?'low':'mid';if((r.prev&&r.prev!='none'&&rate>=.6)||r.cen>0||(amb>=2&&m.pop>=55))return'high';return'mid'}
+function sr2Ctx(p){const C=new Map(),L=sr2Songs(p);L.forEach(o=>{sr2Pos(o).forEach((pos,id)=>{const X=C.get(id)||{cps:[]};X.cps.push({title:o.title,pos});C.set(id,X)})});
+ C.forEach((X,id)=>{const m=get(id);if(!m)return;const r=srOf(m),B=sr2CenBefore(m,r);X.best=X.cps.reduce((a,c)=>SR2_RK[c.pos]>SR2_RK[a]?c.pos:a,'back');X.cen=X.cps.filter(c=>c.pos=='center').map(c=>c.title);X.firstEver=!!X.cen.length&&!B.main&&!B.cp;X.exp=sr2Exp(m,r)});return C}
+// ---- the existing functions, extended ---------------------------------------------------------------------------------------------
+const SR2_NEW=['cpFirstCenterNoMain','cpCenterNoMain','cpOnlyLetdown','cpOnlyChance','cpOnly','mainCpFirstCenter','mainCpCenter'];
+{const f=wlSit;wlSit=function(m,pos,r){const base=f.apply(this,arguments),X=SR2_CX&&SR2_CX.get(m.id);if(!X||!X.cps.length)return base;
+ if(pos=='none'){if(X.cen.length)return X.firstEver?'cpFirstCenterNoMain':'cpCenterNoMain';return X.exp=='high'||base=='exCenterOut'?'cpOnlyLetdown':X.exp=='low'?'cpOnlyChance':'cpOnly'}
+ if(pos!='center'&&X.cen.length)return X.firstEver?'mainCpFirstCenter':'mainCpCenter';return base}}
+const SR2_T={cpFirstCenterNoMain:{Conflicted:3,Proud:3,Excited:2,Happy:1.5,Disappointed:1.2,Nervous:.8,Hurt:.6},cpCenterNoMain:{Conflicted:3,Motivated:2.5,Proud:1.5,Disappointed:1.8,Frustrated:.8,Jealous:.4},
+ cpOnlyLetdown:{Disappointed:3,Frustrated:1.8,Hurt:1.4,Motivated:1.6,Conflicted:1,Jealous:.6},cpOnlyChance:{Happy:3,Relieved:2.5,Excited:2,Motivated:2,Nervous:1},cpOnly:{Relieved:2.2,Motivated:2.5,Conflicted:1.8,Happy:1.5,Disappointed:1},
+ mainCpFirstCenter:{Excited:3,Proud:3,Happy:2,Nervous:1.4},mainCpCenter:{Proud:3,Happy:3,Motivated:2,Conflicted:.6}};
+{const f=wlPickMood;wlPickMood=function(m,sit){const X=SR2_CX&&SR2_CX.get(m.id);if(!SR2_T[sit]){let em=f.apply(this,arguments);
+  // a Title Track member who also sings Coupling Songs feels a little more recognised (and a double Center is a big moment)
+  if(X&&X.cps.length&&WL.mood[em][1]=='neg'&&Math.random()<.35)em=f.apply(this,arguments);if(X&&X.cen.length&&(sit=='center'||sit=='firstCenter')&&Math.random()<.4)em=Math.random()<.5?'Proud':'Excited';return em}
+ const w=wlOf(m),t=m.traits||[],P=m.pers,W={...SR2_T[sit]},add=(k,v)=>{W[k]=(W[k]||0)+v},neg=k=>WL.mood[k][1]=='neg',amb=(P=='Serious'||P=='Cool'?1:0)+(m.pas>=70?1:0)+(m.pop>=60?1:0);
+ if(amb>=2){for(const k of['Disappointed','Frustrated','Jealous','Conflicted'])if(W[k])W[k]*=1.5;if(sit.startsWith('cpOnly')||sit.includes('NoMain'))add('Motivated',1)}
+ if(P=='Shy'||t.includes('Shy')){add('Nervous',1.2);if(W.Happy)add('Happy',.8);if(W.Frustrated)W.Frustrated*=.5;if(W.Jealous)W.Jealous*=.3}
+ if(P=='Genki'||t.includes('Energetic')){if(W.Excited)add('Excited',1.2);add('Motivated',.8)}
+ if(P=='Airhead'||t.includes('Natural')){if(W.Happy)add('Happy',1.2);for(const k in W)if(neg(k))W[k]*=.6}
+ if(P=='Elegant'||t.includes('Elegant')){if(W.Proud)add('Proud',1);if(W.Frustrated)W.Frustrated*=.7}
+ // personality colours the mixed feelings (humble members are less torn, ambitious ones more)
+ const mixed=W.Conflicted||0;if(P=='Genki'){add('Motivated',1.6);add('Happy',1);if(mixed)W.Conflicted*=.6}if(P=='Airhead'){add('Happy',2);if(mixed)W.Conflicted*=.5}if(P=='Shy'){add('Nervous',1.4);if(W.Relieved)add('Relieved',1)}
+ if(P=='Serious'){add('Motivated',1.4);if(W.Frustrated)add('Frustrated',.6)}if(P=='Cool'){if(W.Proud)add('Proud',1.2);if(W.Frustrated)add('Frustrated',.6)}if(P=='Elegant'&&W.Proud)add('Proud',1.4);
+ if(m.loy>=75){if(W.Jealous)W.Jealous*=.4;add('Motivated',.5)}
+ if(w.mh<40)for(const k in W)if(neg(k))W[k]*=1.4;else if(w.mh>=80)for(const k in W)if(neg(k))W[k]*=.8;
+ const E=Object.entries(W).filter(([,v])=>v>0),tot=E.reduce((a,[,v])=>a+v,0);let x=Math.random()*tot;for(const[k,v]of E){x-=v;if(x<=0)return k}return E[0][0]}}
+{const f=wlMhDelta;wlMhDelta=function(m,sit,em,r){if(!SR2_T[sit])return f.apply(this,arguments);const g=WL.mood[em][1],loyF=m.loy>=75?.7:1;let d=0;
+ if(sit=='cpFirstCenterNoMain'||sit=='mainCpFirstCenter')d=g=='neg'?-1:rnd(2,4);else if(sit=='mainCpCenter')d=g=='neg'?0:rnd(1,3);else if(sit=='cpOnlyChance')d=g=='nrv'?0:rnd(1,3);
+ else if(sit=='cpOnlyLetdown')d=em=='Hurt'?-rnd(3,6):g=='neg'?-rnd(1,4):0;else if(sit=='cpCenterNoMain')d=g=='neg'?-rnd(1,2):rnd(0,2);else if(sit=='cpOnly')d=g=='neg'?-1:rnd(0,1);
+ if(d<0)d*=loyF;return Math.round(d*10)/10}}
+// ---- one reaction per member: context in, texts and the Coupling record out --------------------------------------------------------------
+function sr2Txt(X,sit,base){const tl=c=>`“${c.title}”`,cen=X.cps.filter(c=>c.pos=='center'),oth=X.cps.filter(c=>c.pos!='center');
+ const cpTxt=cen.length?`Center of ${cen.map(tl).join(', ')}`:`${X.cps.length} coupling song(s)`;
+ return{cpFirstCenterNoMain:`Not in the Title Track · First Center: ${cen.map(tl).join(', ')}`,cpCenterNoMain:`Not in the Title Track · ${cpTxt}`,cpOnlyLetdown:`Title Track → coupling only (${X.cps.map(tl).join(', ')})`,cpOnlyChance:`Chosen for ${X.cps.map(tl).join(', ')}`,cpOnly:`Not in the Title Track · in ${X.cps.map(tl).join(', ')}`,
+  mainCpFirstCenter:`${base} · First Center: ${cen.map(tl).join(', ')}`,mainCpCenter:`${base} · ${cpTxt}`}[sit]||(X.cps.length?`${base} · ${cen.length?cpTxt:`+ ${X.cps.length} coupling song(s)`}`:base)}
+function sr2Record(m,p,X){const r=srOf(m),cp=r.cp=r.cp||{sel:0,cen:0,firstCen:null,keys:[],log:[]};if(cp.keys.includes(p.id))return;cp.keys.push(p.id);if(cp.keys.length>80)cp.keys.shift();
+ X.cps.forEach(c=>{cp.sel++;if(c.pos=='center'){cp.cen++;if(!cp.firstCen)cp.firstCen={day:S.day,title:c.title}}cp.log.push({day:S.day,title:c.title,pos:c.pos,single:p.title});if(cp.log.length>40)cp.log.shift()})}
+{const f=wlReact;wlReact=function(p){const done=p&&p.id&&S.wlAnn&&S.wlAnn.includes(p.id);let C=null;try{if(p&&p.id&&!done)C=sr2Ctx(p)}catch(e){console.error(e)}SR2_CX=C;let out;const t0=toast;let held=null;if(C)toast=function(msg){if(typeof msg=='string'&&msg.startsWith('Senbatsu reactions — ')){held=1;return}return t0.apply(this,arguments)};
+ try{out=f.apply(this,arguments)}finally{SR2_CX=null;toast=t0}
+ try{if(C&&Array.isArray(out))out.forEach(x=>{const X=C.get(x.m.id);if(!X||!X.cps.length)return;const base=x.sitTxt||(WL.posN[x.pos]||'');x.sitTxt=sr2Txt(X,x.sit,base);x.cp=X;sr2Record(x.m,p,X);
+   if(X.firstEver&&(x.sit=='cpFirstCenterNoMain'||x.sit=='mainCpFirstCenter'))try{hev(x.m,{t:'first_center',title:X.cen[0]})}catch(e){}
+   const w=wlOf(x.m),L=w.emo[w.emo.length-1];if(L&&L.t=='sen'&&L.title==p.title.trim()){L.sit=x.sit;L.txt=`“${p.title.trim()}”: ${x.sitTxt} — felt ${x.em}.`}});
+  if(held&&Array.isArray(out)){const imp=out.filter(x=>!['notSel','trainee','mid','back','front'].includes(x.sit)).map(x=>x.m.name+': '+x.sitTxt);if(imp.length)toast('Senbatsu reactions — '+imp.slice(0,2).join(' · '))}
+  // members only in Coupling Songs and not in this group's list (e.g. from another team) get nothing extra: one reaction per member is kept
+ }catch(e){console.error(e)}return out}}
+// reaction window: members who sing in the single (Title Track or Coupling) are shown as selected
+wlReactHtml=function(L){if(!L||!L.length)return'';const ord={center:0,front:1,mid:2,back:3,cp:3.5,none:4},po=x=>x.pos=='none'&&x.cp?'cp':x.pos,S2=L.slice().sort((a,b)=>ord[po(a)]-ord[po(b)]||(a.sit=='notSel')-(b.sit=='notSel')),fmt=(v,l)=>v?`<span class="${v>0?'up':'dn'}">${l} ${v>0?'+':''}${v}</span>`:'';
+ const card=x=>`<div class="wlr ${WL.mood[x.em][1]}"><div class="wlrh">${ptc(x.m,40)}<div><b>${esc(x.m.name)}</b><div class="st">${esc(x.sitTxt)}</div></div><span class="wlmood">${WL.mood[x.em][0]} ${x.em}</span></div><q>${esc(x.line)}</q><div class="wlfx">${fmt(Math.round((x.e.mor||0)),'Morale')}${fmt(Math.round(x.e.pas||0),'Passion')}${fmt(Math.round(x.e.loy||0),'Loyalty')}${fmt(x.dmh,'Mental')}</div></div>`;
+ const sel=S2.filter(x=>x.pos!='none'),cpo=S2.filter(x=>x.pos=='none'&&x.cp),out=S2.filter(x=>x.pos=='none'&&!x.cp),quiet=out.filter(x=>(x.sit=='notSel'||x.sit=='trainee')&&WL.mood[x.em][1]=='neu'),loud=out.filter(x=>!quiet.includes(x));
+ return`<div class="c wlreact"><h3>Member reactions</h3>${sel.length?`<h4>Title Track (${sel.length})</h4><div class="wlrg">${sel.map(card).join('')}</div>`:''}${cpo.length?`<h4>Coupling songs only (${cpo.length})</h4><div class="wlrg">${cpo.map(card).join('')}</div>`:''}${loud.length?`<h4>Not selected</h4><div class="wlrg">${loud.map(card).join('')}</div>`:''}${quiet.length?`<p class="st">${quiet.map(x=>esc(x.m.name)).join(', ')} took the news calmly.</p>`:''}</div>`};
+// ---- more variety: a second line for the common situations, and no member repeats another's line in one announcement ----
+const SR2_MORE={
+ cpOnlyChance:{pos:{bright:['Wait, wait — I\'m actually in this single?! I\'m going to practise until my feet hurt!','เดี๋ยวนะ — หนูได้อยู่ในซิงเกิลนี้จริง ๆ เหรอ?! หนูจะซ้อมจนเท้าระบมเลยค่ะ!'],calm:['They chose me this time. I intend to be chosen again.','ครั้งนี้พวกเขาเลือกฉัน และฉันตั้งใจจะถูกเลือกอีก'],soft:['After so many times waiting... someone noticed me.','รอมาตั้งหลายครั้ง... ในที่สุดก็มีคนมองเห็นหนูค่ะ'],firm:['One song is enough to start. I will build everything from it.','เพลงเดียวก็พอให้เริ่มต้น ฉันจะต่อยอดทุกอย่างจากตรงนี้ค่ะ']},
+  neu:{bright:['Okay, deep breath... I\'m in! Not forgotten after all!','โอเค หายใจลึก ๆ... หนูได้อยู่! ไม่ได้ถูกลืมจริง ๆ ด้วย!'],calm:['Good. A place in the single, at last.','ดีแล้ว ในที่สุดก็มีที่ยืนในซิงเกิล'],soft:['I can finally tell my family I\'m on a CD...','ในที่สุดหนูก็บอกที่บ้านได้แล้วว่าได้อยู่ในซีดี...'],firm:['A foothold. That is all I needed.','ได้ที่ยืนแล้ว แค่นี้ที่ฉันต้องการค่ะ']}},
+ cpOnly:{neu:{bright:['Coupling song gang! Not the title track, but we\'ll make ours the fan favourite!','ทีมเพลงรอง! ไม่ใช่เพลงหลักก็จริง แต่เราจะทำให้เป็นเพลงโปรดของแฟน ๆ ค่ะ!'],calm:['Half of what I wanted. I will earn the other half.','ได้มาครึ่งหนึ่งของที่อยากได้ อีกครึ่งฉันจะไปเอามาเอง'],soft:['It\'s not the title track... but it\'s still my voice on the CD.','ไม่ใช่เพลงหลัก... แต่ในซีดีก็ยังมีเสียงของหนูค่ะ'],firm:['The title track will come. For now, this song gets everything.','เพลงหลักจะมาถึง ตอนนี้เพลงนี้ต้องได้ทุกอย่างของฉันค่ะ']},
+  pos:{bright:['Every song counts! I\'ll make this one sparkle!','ทุกเพลงมีความหมาย! หนูจะทำให้เพลงนี้เปล่งประกายค่ะ!'],calm:['I will make this coupling song worth listening to.','ฉันจะทำให้เพลงรองนี้น่าฟัง'],soft:['I\'ll sing it with all my heart.','หนูจะร้องด้วยหัวใจทั้งหมดเลยค่ะ'],firm:['No small songs, only small efforts. Not mine.','ไม่มีเพลงเล็ก มีแต่ความพยายามที่น้อย ซึ่งไม่ใช่ของฉันค่ะ']}},
+ cpOnlyLetdown:{neg:{bright:['I don\'t get it... I was in the title track last time...','หนูไม่เข้าใจ... ครั้งที่แล้วยังได้อยู่เพลงหลักอยู่เลย...'],calm:['The title track went on without me. That is a strange feeling.','เพลงหลักเดินหน้าไปโดยไม่มีฉัน เป็นความรู้สึกที่แปลก'],soft:['Maybe I\'m not needed in the title track anymore...','บางทีเพลงหลักอาจไม่ต้องการหนูแล้วก็ได้...'],firm:['I will find out what I lost, and get it back.','ฉันจะหาให้เจอว่าเสียอะไรไป แล้วเอามันคืนมาค่ะ']}}};
+for(const sit in SR2_MORE)for(const g in SR2_MORE[sit])for(const t in SR2_MORE[sit][g]){const[a,b]=SR2_MORE[sit][g][t];WLD[sit][g]=WLD[sit][g]||{};(WLD[sit][g][t]=WLD[sit][g][t]||[]).push(a);SR2_TH[a]=b}
+let SR2_USED=null;
+{const f=wlLine;wlLine=function(){let l=f.apply(this,arguments);if(SR2_USED){for(let i=0;i<6&&SR2_USED.has(l);i++)l=f.apply(this,arguments);SR2_USED.add(l)}return l}}
+{const f=wlReact;wlReact=function(){SR2_USED=new Set();try{return f.apply(this,arguments)}finally{SR2_USED=null}}}
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom! — Fanbase System v3 (unified fan identity)
 // -------------------------------------------------------------------------------------
 //  ONE fan database: S.fb.segs. Every segment ("cohort") is a block of individual fans who share
@@ -21776,6 +21902,12 @@ I18N_TH_TPL.unshift(["I watched a drama last night and couldn't stop thinking…
 ["{0} years","{0} ปี"],
 ["{0} year","{0} ปี"],
 ["{0} gave {1} a bouquet and a quiet \"thank you for everything\".","{0} มอบช่อดอกไม้ให้ {1} พร้อมกระซิบเบา ๆ ว่า “ขอบคุณสำหรับทุกอย่างนะ”"]);
+
+</script>
+<script>
+// Thai: Senbatsu reactions for the whole single (sen-react2.js)
+Object.assign(I18N_TH,SR2_TH,{"Relieved":"โล่งใจ","Conflicted":"ความรู้สึกปนกัน","Jealous":"อิจฉา","Hurt":"เจ็บปวด"});
+I18N_TH_TPL.unshift(["Title Track ({0})","เพลงหลัก ({0})"],["Coupling songs only ({0})","เฉพาะเพลงรอง ({0})"],["Not in the Title Track · First Center: {0}","ไม่ได้อยู่เพลงหลัก · เซ็นเตอร์ครั้งแรก: {0}"],["Not in the Title Track · Center of {0}","ไม่ได้อยู่เพลงหลัก · เซ็นเตอร์ของ {0}"],["Not in the Title Track · {0} coupling song(s)","ไม่ได้อยู่เพลงหลัก · เพลงรอง {0} เพลง"],["Title Track → coupling only ({0})","จากเพลงหลัก → เหลือแค่เพลงรอง ({0})"],["Chosen for {0}","ได้รับเลือกใน {0}"],["Not in the Title Track · in {0}","ไม่ได้อยู่เพลงหลัก · อยู่ใน {0}"],["{0} · First Center: {1}","{0} · เซ็นเตอร์ครั้งแรก: {1}"],["{0} · Center of {1}","{0} · เซ็นเตอร์ของ {1}"],["{0} · + {1} coupling song(s)","{0} · + เพลงรอง {1} เพลง"]);
 
 </script>
 <script>
