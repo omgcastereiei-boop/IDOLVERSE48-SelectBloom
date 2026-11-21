@@ -138,7 +138,7 @@ function stRowLay(n,back,RN,W,front,depth,maxFw){const sc=1-back*.1,avail=(W-150
 function stFig(m,x,feet,ww,inner){const k=ww/80,y=feet-(stFoot(m)+2)*k;return`<svg x="${(x-ww/2).toFixed(1)}" y="${y.toFixed(1)}" width="${ww.toFixed(1)}" height="${(ww*2.5).toFixed(1)}" viewBox="10 -2 80 200" overflow="visible">${inner}</svg>`}
 thStageSvg=function(o,ids,rows,nc,cdOf,poseOf,mic,hue,w,deco){const L=ids.map(get).filter(Boolean),W=900,H=360,cen=new Set(ids.slice(0,nc));let fg='';const R=[];{let a=0;rows.forEach(c=>{R.push(L.slice(a,a+c));a+=c})}
  const RN=R.length,FRONT=H-20,DEPTH=RN>1?Math.min(40*(RN-1),130):0,FB=FRONT-DEPTH-26;
- R.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,104),ord=thArr(row),x0=W/2-Y.step*(ord.length-1)/2+(back%2&&ord.length>1?0:0);
+ R.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,104),ord=thArr(row),x0=W/2-Y.step*(ord.length-1)/2+(Y.off||0);
   ord.forEach((m,i)=>{const a=ap(m),c=back==0&&cen.has(m.id),ww=c?Y.fw*1.1:Y.fw,cd=cdOf(m.id),ps=poseOf(m.id);
    fg+=`<ellipse cx="${(x0+Y.step*i).toFixed(1)}" cy="${(Y.feet+1).toFixed(1)}" rx="${(ww*.3).toFixed(1)}" ry="${(ww*.06).toFixed(1)}" fill="#000" opacity=".28"/>`+stFig(m,x0+Y.step*i,Y.feet+(c?4:0),ww,fig(m,{pose:ps!=null?ps:c?3:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,...(mic?{prop:1}:{}),...(cd?{cd}:{})})+(deco?deco(m)||'':''))})});
  const h=hue==null?320:hue,g='thbg'+(o||''),sp='thsp'+(o||''),fl='thfl'+(o||'');

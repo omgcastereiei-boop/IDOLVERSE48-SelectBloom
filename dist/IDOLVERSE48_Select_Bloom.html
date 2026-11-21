@@ -1383,6 +1383,27 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 /* profile: team history / election / senbatsu lists */
 .pfl{list-style:none;padding:0;margin:6px 0 12px}.pfl li{padding:5px 0;border-bottom:1px dashed var(--line)}.pfl li:last-child{border:0}
 .pfsen h4{margin:10px 0 2px}.pfsen h5{margin:6px 0 2px;font-size:13px;color:var(--mut)}
+/* concert results — big screen */
+.ccsh .ccshtt{font-family:'M PLUS Rounded 1c',serif;font-size:clamp(22px,5vw,44px);margin:4px 0 10px;color:#fff6d8;text-shadow:0 2px 16px #e9b94966}
+.ccsh .ccshsm{font-size:clamp(26px,6vw,56px)}
+.ccsh .ccshpic{width:min(1000px,100%);margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px #0008,0 0 0 2px #e9b94955}
+.ccsh .ccshpic svg{display:block;width:100%;height:auto}
+.ccshkg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;width:min(900px,100%);margin:14px auto}
+.ccshk{background:#ffffff14;border:1px solid #ffffff2e;border-radius:16px;padding:12px 10px;backdrop-filter:blur(4px)}
+.ccshk small{display:block;font-size:12px;opacity:.8;letter-spacing:.04em}.ccshk b{display:block;font-size:26px;color:#ffe9a8;line-height:1.25;word-break:break-word}.ccshk span{display:block;font-size:12px;opacity:.75}
+.ccshkg.big .ccshk b{font-size:clamp(26px,5vw,40px)}
+.ccshtab{width:min(640px,100%);margin:0 auto;display:grid;gap:6px}.ccshtab div{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;background:#ffffff12;border-radius:12px;padding:10px 14px;text-align:left}.ccshtab b{color:#ffe9a8}.ccshtab i{font-style:normal;opacity:.85;min-width:90px;text-align:right}
+.ccshmem{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:min(1000px,100%);margin:10px auto}.ccshmem>div{width:130px;display:flex;flex-direction:column;align-items:center;gap:3px;background:#ffffff10;border-radius:16px;padding:10px 6px}.ccshmem>div.top{width:180px;background:linear-gradient(180deg,#e9b94944,#ffffff10);box-shadow:0 0 0 2px #e9b94988}.ccshmem small{opacity:.8;font-size:11px}.ccshmem span{font-size:12px;color:#ffe9a8}
+.ccshneg{width:min(700px,100%);margin:6px auto;text-align:left;font-size:14px;opacity:.9}.ccshq{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff3}
+.ccshcard{width:min(800px,100%);margin:0 auto;background:#fff;color:#4a2b5a;border-radius:18px;padding:14px;text-align:left;max-height:62vh;overflow:auto}
+.ccsh .ccneg{color:#ffb3c7}
+/* events: setlist Center by tapping a face, event costume */
+.xep .xepf{position:relative;border:0;background:none;padding:0;cursor:pointer;border-radius:50%}
+.xep.cen .xepf{box-shadow:0 0 0 3px #e9b949;border-radius:50%}.xep .xepf i{position:absolute;right:-4px;top:-6px;font-style:normal;color:#e9b949;font-size:16px;text-shadow:0 1px 2px #0005}
+.xep.cen small{color:#b8860b;font-weight:700}
+.xeczl{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin-top:8px;max-height:340px;overflow:auto}
+.xeczi{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;cursor:pointer}.xeczi.on{box-shadow:0 0 0 3px var(--pk)}.xeczi small{font-size:11px;text-align:center;word-break:break-word}
+.spk{margin-top:8px}
 
 </style>
 </head><body>
@@ -3376,8 +3397,11 @@ const rsEvents=()=>(S.cal||[]).filter(e=>e.type=='road'&&e.v==2);
 const rsUsed=(rid,loc)=>rsEvents().some(e=>e.rid==rid&&e.loc==loc)||(S.rs.hist[loc]||[]).some(h=>h.rid==rid);
 function rsElig(x){const g=new Set(singleMembersX(x).map(id=>get(id)?.group).filter(v=>v!=null));return S.members.filter(m=>g.has(m.group)&&isAct(m)&&m.tid).map(m=>m.id)}
 const rsGBuzz=ids=>{const L=ids.map(get).filter(Boolean);return L.length?Math.round(avg(L.map(m=>m.buzz))):0};
+// a setlist entry may name a song of another group (sister / parent): {k:'s',id,gid}
+const rsXg=z=>!!(z&&z.gid!=null&&typeof gsAg=='function'&&z.gid!=gsAg());
+function rsSongOf(z){if(!z)return null;if(rsXg(z)){const L=typeof gsCtx=='function'?gsCtx(z.gid,'songs'):null;return(L&&L[z.id])||null}return S.songs[z.id]||null}
 function rsLib(x){const L=Object.values(S.songs).filter(o=>o.rel&&o.fm);if(x&&S.songs[x.mainId]&&!L.includes(S.songs[x.mainId]))L.unshift(S.songs[x.mainId]);return L}
-function rsSlErr(sl,x,d){const e=[];if(!sl||!sl.length)return[`Day ${d} setlist is empty.`];if(sl.length>CFG.rs.max)e.push(`Day ${d} has ${sl.length} entries; the maximum is ${CFG.rs.max} (songs and MC together).`);if(!sl.some(z=>z.k=='s'&&z.id==x.mainId))e.push(`Day ${d} must include the title track "${S.songs[x.mainId]?.title}".`);const lib=rsLib(x).map(o=>o.id);if(sl.some(z=>z.k=='s'&&!lib.includes(z.id)))e.push(`Day ${d} contains a song that is not in the released song library.`);return e}
+function rsSlErr(sl,x,d){const e=[];if(!sl||!sl.length)return[`Day ${d} setlist is empty.`];if(sl.length>CFG.rs.max)e.push(`Day ${d} has ${sl.length} entries; the maximum is ${CFG.rs.max} (songs and MC together).`);if(!sl.some(z=>z.k=='s'&&!rsXg(z)&&z.id==x.mainId))e.push(`Day ${d} must include the title track "${S.songs[x.mainId]?.title}".`);const lib=rsLib(x).map(o=>o.id);if(sl.some(z=>z.k=='s'&&!rsXg(z)&&!lib.includes(z.id)))e.push(`Day ${d} contains a song that is not in the released song library.`);return e}
 function rsRandSl(x){const lib=rsLib(x).filter(o=>o.id!=x.mainId);for(let i=lib.length-1;i>0;i--){const j=rnd(0,i);[lib[i],lib[j]]=[lib[j],lib[i]]}const ns=Math.min(lib.length,rnd(5,8)),songs=[{k:'s',id:x.mainId},...lib.slice(0,ns).map(o=>({k:'s',id:o.id}))];for(let i=songs.length-1;i>0;i--){const j=rnd(0,i);[songs[i],songs[j]]=[songs[j],songs[i]]}let mc=Math.min(CFG.rs.max-songs.length,rnd(1,3));const out=[];songs.forEach((s,i)=>{out.push(s);if(mc>0&&i>0&&i<songs.length-1&&Math.random()<.5){out.push({k:'mc'});mc--}});return out.slice(0,CFG.rs.max)}
 function rsDay(l,day,ids,x,q1,R){const m=ids.map(get).filter(Boolean),dw=dowOf(day)%6==0?1:CFG.rs.dayW,g=R?R.g:rsG(l.id),gb=rsGBuzz(ids),pop=m.length?avg(m.map(z=>z.pop)):0,jit=R&&R.det?1:rnd(90,110)/100,boost=q1==null?1:.9+.2*q1/100;
  const local=Math.round(CFG.rs.localBase[l.kind][l.tier]*Math.pow(Math.max(0,g)/100,.75)*dw*(.8+.4*gb/100)*jit*boost);let trav;
@@ -3388,8 +3412,8 @@ function rsEst(l,day,ids,x){const a=rsDay(l,day,ids,x,null,{g:rsG(l.id),det:1}),
 function rsCostL(l,ids,day,x){const n=ids.length,intl=l.kind=='as',d=rsDist(l),est=rsEst(l,day,ids,x),v=Math.round(CFG.rs.venue[l.tier]*(intl?CFG.rs.intl:1)),travel=Math.round(n*(intl?70000:6000+2000*Math.min(d,10))),stock=Math.round(est*.15*800);
  return{L:[['Venue Rental',v],['Event Staff',50000+5000*n],['Security',Math.round(30000*l.tier*(intl?1.3:1))],['Equipment',70000],['Other Event Expenses (travel & lodging, merchandise stock)',travel+stock]],est,travel,stock}}
 function rsRun(ev,part){const k='d'+part;if(ev[k])return;if(part==2&&!ev.d1)rsRun(ev,1);const l=RSL[ev.loc],x=S.singles.find(s=>s.rid==ev.rid),ids=ev.members.filter(id=>get(id)),sl=part==1?ev.sl1:(ev.sl2||ev.sl1);if(!x||!l)return;
- const fb=S.fans,gb0=rsGBuzz(ids),songs=sl.filter(z=>z.k=='s').map(z=>S.songs[z.id]).filter(Boolean),rows=[];
- ids.forEach(id=>{const m=get(id);let en=m.en,used=0,rec=0,qs=[],low=en;sl.forEach(z=>{if(z.k=='mc'){const r=Math.min(CFG.rs.mc,100-en);en+=r;rec+=r;return}const o=S.songs[z.id];if(!o)return;const sk=avg(GEN[o.genre].map(k=>m[k])),f=en>=40?1:.55+.45*en/40;qs.push(sk*f);const c=Math.round((CFG.rs.INT[o.genre]||6)*(1.25-m.dance/200));const u=Math.min(c,en);en-=u;used+=u;low=Math.min(low,en)});rows.push({mid:id,name:m.name,en0:m.en,used,rec,en,q:Math.round(avg(qs)),low,f0:m.fans,b0:m.buzz})});
+ const fb=S.fans,gb0=rsGBuzz(ids),songs=sl.filter(z=>z.k=='s').map(z=>rsSongOf(z)).filter(Boolean),rows=[];
+ ids.forEach(id=>{const m=get(id);let en=m.en,used=0,rec=0,qs=[],low=en;sl.forEach(z=>{if(z.k=='mc'){const r=Math.min(CFG.rs.mc,100-en);en+=r;rec+=r;return}const o=rsSongOf(z);if(!o)return;const sk=avg(GEN[o.genre].map(k=>m[k])),f=en>=40?1:.55+.45*en/40;qs.push(sk*f);const c=Math.round((CFG.rs.INT[o.genre]||6)*(1.25-m.dance/200));const u=Math.min(c,en);en-=u;used+=u;low=Math.min(low,en)});rows.push({mid:id,name:m.name,en0:m.en,used,rec,en,q:Math.round(avg(qs)),low,f0:m.fans,b0:m.buzz})});
  if(typeof rsPEApply=='function')rsPEApply(ev,part,ids,rows,sl); // Performance Efficiency (rs-planner.js): skills + readiness at event time
  const Q=Math.round(avg(rows.map(r=>r.q))),A=rsDay(l,ev.day+part-1,ids,x,part==2&&ev.d1?ev.d1.Q:null),pop=avg(ids.map(id=>get(id).pop)),g=rsG(l.id),gb=gb0;
  const buyers=Math.round(A.att*(.12+.1*pop/100+.05*Math.min(g/100,2)+.05*gb/100)),merch=Math.round(buyers*CFG.rs.merch*rnd(85,115)/100),ht=Math.round(A.att*(.03+.06*pop/100+.01*Math.min(g/100,3))),htRev=ht*CFG.rs.ht,htc=Math.min(25,4+Math.ceil(ht/150));
@@ -3405,7 +3429,7 @@ function rsFinish(ev,x,l){if(ev.done)return;const c=S.rs.loc[l.id],prev=c.visits
  const rec=JSON.parse(JSON.stringify(ev));S.rs.hist[l.id].push(rec);promoAdd(x,{id:ev.id,type:'road',v:2,loc:l.n,locId:l.id,day:ev.day,dur:2,members:ev.members.slice(),title:ev.title,res:{att,rev:ev.fin.rev,fans:d1.newG+d2.newG,net:ev.fin.net,gain}})}
 const rsGet=id=>Object.values(S.rs.hist).flat().find(h=>h.id==id)||rsEvents().find(e=>e.id==id);
 function rsSummary(r,top){const q=r.q;return`${q>=75?'Outstanding':q>=60?'Solid':q>=45?'Uneven':'Struggled'} performance${r.low<20?'; ran low on Stamina':''}${top?'; biggest fan gain':''}`}
-function rsResHtml(id,tab){const e=rsGet(id);if(!e)return'<p class="st">Record not found.</p>';const l=RSL[e.loc],T=tab||(e.done?'region':'d1'),days=[e.d1,e.d2].filter(Boolean),tb=(k,n)=>`<button class="b s ${T==k?'on':''}" onclick="ui.mod.tab='${k}';render()">${n}</button>`,st=(a,b)=>`<div class="c" style="padding:6px;text-align:center"><div class="st">${a}</div><b>${b}</b></div>`,slTxt=sl=>sl.map((z,i)=>`${i+1}. ${z.k=='mc'?'<i>MC</i>':esc(S.songs[z.id]?.title||'?')}${z.k=='s'&&z.id==S.singles.find(s=>s.rid==e.rid)?.mainId?' ★':''}`).join('<br>');
+function rsResHtml(id,tab){const e=rsGet(id);if(!e)return'<p class="st">Record not found.</p>';const l=RSL[e.loc],T=tab||(e.done?'region':'d1'),days=[e.d1,e.d2].filter(Boolean),tb=(k,n)=>`<button class="b s ${T==k?'on':''}" onclick="ui.mod.tab='${k}';render()">${n}</button>`,st=(a,b)=>`<div class="c" style="padding:6px;text-align:center"><div class="st">${a}</div><b>${b}</b></div>`,slTxt=sl=>sl.map((z,i)=>`${i+1}. ${z.k=='mc'?'<i>MC</i>':esc(rsSongOf(z)?.title||'?')}${z.k=='s'&&z.id==S.singles.find(s=>s.rid==e.rid)?.mainId?' ★':''}`).join('<br>');
  let body='';if(T=='d1'||T=='d2'){const d=e[T];if(!d)body='<p class="st">This day has not happened yet.</p>';else{const n=T=='d1'?1:2;body=`<div class="st">${esc(e.venue)} · ${wd(d.day)}${d.dw<1?' (weekday attendance ×'+d.dw+')':' (weekend)'} · ${e.members.length} members</div><div class="g" style="grid-template-columns:repeat(auto-fill,minmax(118px,1fr));margin:6px 0">${st('Performance quality',d.Q)}${st('Total attendance',d.att.toLocaleString())}${st('Local fans',d.local.toLocaleString())}${st('Traveling fans',d.trav.toLocaleString())}${st('Merchandise sold',d.buyers.toLocaleString()+' buyers')}${st('Merchandise revenue',yen(d.merch))}${st('Hi-Touch tickets',d.ht.toLocaleString())}${st('Hi-Touch revenue',yen(d.htRev))}${st('Total revenue',yen(d.rev))}${st('Event expenses (½ of booking)',yen(d.exp))}${st('Net profit / loss',`<span style="color:${d.rev-d.exp<0?'var(--err)':'#3c9a6c'}">${yen(d.rev-d.exp)}</span>`)}${st('New group fans','+'+d.newG.toLocaleString())}</div><p class="st">Admission is free; revenue comes only from merchandise and Hi-Touch Group tickets.</p>
  <details><summary class="st">Setlist (${d.sl.length} entries)</summary><div class="st">${slTxt(d.sl)}</div></details><h3>Members — Day ${n}</h3><div class="hsr">${d.rows.slice().sort((a,b)=>b.fans-a.fans).map(r=>`<div class="c" style="padding:6px"><div class="row" style="flex-wrap:nowrap;gap:8px">${get(r.mid)?ptc(get(r.mid),40):''}<div><b>${esc(r.name)}</b> <span class="st">quality ${r.q}</span><div class="st">Stamina ${r.en0} − ${r.used} songs + ${r.rec} MC − ${r.ht} Hi-Touch → ${r.en}</div><div class="st">+${r.fans} fans · +${r.buzz} Buzz</div></div></div></div>`).join('')}</div>`}}
  else if(T=='region'){const f=e.fin;if(!f)body='<p class="st">Regional results appear after Day 2.</p>';else{const mx=Math.max(f.g1,1),bw=v=>Math.max(2,Math.round(100*v/mx));body=`<h3>${esc(l.n)}</h3><div class="c"><div class="st">Regional Fanbase Growth (cumulative, no cap)</div><div class="row"><span style="width:60px">Before</span><div style="flex:1;background:var(--lv2);border-radius:6px"><div style="width:${bw(f.g0)}%;background:var(--lv);height:14px;border-radius:6px"></div></div><b>${pct(f.g0)}</b></div><div class="row"><span style="width:60px">After</span><div style="flex:1;background:var(--lv2);border-radius:6px"><div style="width:${bw(f.g1)}%;background:var(--pk);height:14px;border-radius:6px"></div></div><b>${pct(f.g1)}</b></div><div><b style="color:#3c9a6c">+${pct(f.gain)}</b> growth gained</div></div><div class="g" style="grid-template-columns:repeat(auto-fill,minmax(118px,1fr));margin:6px 0">${st('Local attendance',f.local.toLocaleString())}${st('Traveling attendance',f.trav.toLocaleString())}${st('Total attendance',f.att.toLocaleString())}${st('Roadshows here (total)',f.visits)}${st('Previous visits',f.prev)}${st('Revenue',yen(f.rev))}${st('Expenses',yen(f.exp))}${st('Net',yen(f.net))}${st('Group fans',`${f.fb.toLocaleString()} → ${f.fa.toLocaleString()}`)}${st('Group Buzz',`${f.gb0} → ${f.gb1}`)}</div>`}}
@@ -3423,7 +3447,7 @@ function rsErrs(P,x,l){const e=[];if(!x)return['Choose a released single to prom
  if(P.day==null)e.push('Pick the event date on the calendar.');else if(P.day<S.day+7)e.push('Roadshows must be booked at least 7 days ahead.');else ids.forEach(id=>{const b=busy(id,[P.day,P.day+1]);if(b.length)e.push(`${get(id).name} is busy then: ${b[0].title}.`)});
  const s1=P.smode=='same'?P.sl1:P.sl1,s2=P.smode=='same'?P.sl1:P.sl2;e.push(...rsSlErr(s1,x,1));if(P.smode!='same')e.push(...rsSlErr(s2,x,2));if(P.day!=null&&ids.length){const c=rsCostL(l,ids,P.day,x);if(c.L.reduce((a,y)=>a+y[1],0)>S.money)e.push(`Not enough money for the expenses (${yen(c.L.reduce((a,y)=>a+y[1],0))}).`)}return e}
 function rsSlEdit(d,op,a){const P=ui.rsp,k=d==2?'sl2':'sl1',sl=P[k];if(P.smode=='random')return toast('Switch to Custom or Same to edit by hand, or regenerate.','err');
- if(op=='add'){if(sl.length>=CFG.rs.max)return toast(`A day can have at most ${CFG.rs.max} entries (songs and MC together).`,'err');sl.push(a=='mc'?{k:'mc'}:{k:'s',id:a})}else if(op=='rm'){const x=S.singles.find(s=>s.rid==P.rid);if(sl[a].k=='s'&&sl[a].id==x.mainId&&sl.filter(z=>z.k=='s'&&z.id==x.mainId).length==1)return toast('The title track must stay in the setlist.','err');sl.splice(a,1)}else if(op=='mv'){const [i,dd]=a,j=i+dd;if(j<0||j>=sl.length)return;[sl[i],sl[j]]=[sl[j],sl[i]]}render()}
+ if(op=='add'){if(sl.length>=CFG.rs.max)return toast(`A day can have at most ${CFG.rs.max} entries (songs and MC together).`,'err');sl.push(a=='mc'?{k:'mc'}:{k:'s',id:a})}else if(op=='rm'){const x=S.singles.find(s=>s.rid==P.rid);if(sl[a].k=='s'&&sl[a].id==x.mainId&&sl.filter(z=>z.k=='s'&&!rsXg(z)&&z.id==x.mainId).length==1)return toast('The title track must stay in the setlist.','err');sl.splice(a,1)}else if(op=='mv'){const [i,dd]=a,j=i+dd;if(j<0||j>=sl.length)return;[sl[i],sl[j]]=[sl[j],sl[i]]}render()}
 function rsSMode(m){const P=ui.rsp,x=S.singles.find(s=>s.rid==P.rid);P.smode=m;if(m=='random'){P.sl1=rsRandSl(x);P.sl2=rsRandSl(x)}else if(m=='same'){}else if(m=='custom'&&P.sl2.length==0)P.sl2=P.sl1.map(z=>({...z}));render()}
 function rsRegen(){const P=ui.rsp,x=S.singles.find(s=>s.rid==P.rid);P.sl1=rsRandSl(x);P.sl2=rsRandSl(x);toast('New random setlists generated.');render()}
 function rsTogM(id){const P=ui.rsp,i=P.sel.indexOf(id);if(i>=0)P.sel.splice(i,1);else{if(P.day!=null&&busy(id,[P.day,P.day+1]).length)return toast(`${get(id).name} is busy on those dates.`,'err');P.sel.push(id)}render()}
@@ -3432,7 +3456,7 @@ function rsBook(){if(!ui.rsp||!ui.rsp.plan)return toast('Open the planner for a 
 function rsCal(P){const o=P.cm|0,b=dt(),first=new Date(b.getFullYear(),b.getMonth()+o,1),y=first.getFullYear(),mo=first.getMonth(),n=new Date(y,mo+1,0).getDate(),idx=dd=>Math.round((new Date(y,mo,dd)-new Date(2026,3,1))/86400000);let c='';for(let i=0;i<first.getDay();i++)c+='<div></div>';
  for(let dd=1;dd<=n;dd++){const k=idx(dd),ok=k>=S.day+7,ev=(S.cal||[]).filter(e=>evDays(e).includes(k)),selD=P.day!=null&&(k==P.day||k==P.day+1);c+=`<button class="b s" style="padding:4px 0;min-width:0;${selD?'background:var(--pk);color:#fff':ok?'':'opacity:.35'}" ${ok?`onclick="ui.rsp.day=${k};render()"`:'disabled'} title="${esc(ev.map(e=>e.title).join('; '))}">${dd}${ev.length?'•':''}${[0,6].includes(new Date(y,mo,dd).getDay())?'':''}</button>`}
  return`<div class="row"><button class="b s" onclick="ui.rsp.cm=(ui.rsp.cm|0)-1;render()">◀</button><b>${first.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</b><button class="b s" onclick="ui.rsp.cm=(ui.rsp.cm|0)+1;render()">▶</button></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${['S','M','T','W','T','F','S'].map(x=>`<b class="st" style="text-align:center">${x}</b>`).join('')}${c}</div><div class="st">Days earlier than ${wd(S.day+7)} can't be booked (7 days' notice). • = something already scheduled.</div>`}
-function rsSlUI(P,x,d,dis){const k=d==2?'sl2':'sl1',sl=P[k],lib=rsLib(x),ro=P.smode=='random',ints=o=>o?(CFG.rs.INT[o.genre]||6):0;return`<div class="c" style="padding:8px"><b>${P.smode=='same'?'Setlist (both days)':'Day '+d}</b> <span class="st">${sl.length}/${CFG.rs.max} entries · ${sl.filter(z=>z.k=='s').length} songs · ${sl.filter(z=>z.k=='mc').length} MC</span>${sl.some(z=>z.k=='s'&&z.id==x.mainId)?'':' <span class="tag" style="background:#ffd6dc">needs title track</span>'}<ol class="ms" style="margin:4px 0">${sl.map((z,i)=>{const o=z.k=='s'?S.songs[z.id]:null;return`<li>${z.k=='mc'?'<i>MC</i> <span class="st">(+'+CFG.rs.mc+' Stamina)</span>':`${esc(o?.title||'?')}${z.id==x.mainId?' <span class="tag rrUR">Title track</span>':''} <span class="st">${o?`${o.genre} · −${ints(o)} Stamina`:'missing song — remove it'}</span>`}${ro?'':` <button class="b s" onclick="rsSlEdit(${d},'mv',[${i},-1])">▲</button><button class="b s" onclick="rsSlEdit(${d},'mv',[${i},1])">▼</button><button class="b s" onclick="rsSlEdit(${d},'rm',${i})">✕</button>`}</li>`}).join('')}</ol>${ro?'':`<div class="row"><select onchange="if(this.value)rsSlEdit(${d},'add',this.value);this.value=''"><option value="">+ Add song…</option>${lib.map(o=>`<option value="${o.id}">${esc(o.title)} (${o.genre})</option>`).join('')}</select><button class="b s" onclick="rsSlEdit(${d},'add','mc')">+ MC</button></div>`}</div>`}
+function rsSlUI(P,x,d,dis){const k=d==2?'sl2':'sl1',sl=P[k],lib=rsLib(x),ro=P.smode=='random',ints=o=>o?(CFG.rs.INT[o.genre]||6):0;return`<div class="c" style="padding:8px"><b>${P.smode=='same'?'Setlist (both days)':'Day '+d}</b> <span class="st">${sl.length}/${CFG.rs.max} entries · ${sl.filter(z=>z.k=='s').length} songs · ${sl.filter(z=>z.k=='mc').length} MC</span>${sl.some(z=>z.k=='s'&&!rsXg(z)&&z.id==x.mainId)?'':' <span class="tag" style="background:#ffd6dc">needs title track</span>'}<ol class="ms" style="margin:4px 0">${sl.map((z,i)=>{const o=z.k=='s'?rsSongOf(z):null;return`<li>${z.k=='mc'?'<i>MC</i> <span class="st">(+'+CFG.rs.mc+' Stamina)</span>':`${esc(o?.title||'?')}${!rsXg(z)&&z.id==x.mainId?' <span class="tag rrUR">Title track</span>':''}${rsXg(z)?` <span class="tag">${esc((grp(z.gid)||{}).name||'')}</span>`:''} <span class="st">${o?`${o.genre} · −${ints(o)} Stamina`:'missing song — remove it'}</span>`}${ro?'':` <button class="b s" onclick="rsSlEdit(${d},'mv',[${i},-1])">▲</button><button class="b s" onclick="rsSlEdit(${d},'mv',[${i},1])">▼</button><button class="b s" onclick="rsSlEdit(${d},'rm',${i})">✕</button>`}</li>`}).join('')}</ol>${ro?'':`<div class="row"><select onchange="if(this.value)rsSlEdit(${d},'add',this.value);this.value=''"><option value="">+ Add song…</option>${lib.map(o=>`<option value="${o.id}">${esc(o.title)} (${o.genre})</option>`).join('')}</select><button class="b s" onclick="rsSlEdit(${d},'add','mc')">+ MC</button>${typeof spkBtn=='function'?spkBtn('rs:'+d):''}</div>${typeof spkPanel=='function'?spkPanel('rs:'+d):''}`}</div>`}
 function rsPlanHtml(P,x,l){const E=rsElig(x),ids=rsPlanIds(P,x),errs=rsErrs(P,x,l),c=P.day!=null&&ids.length?rsCostL(l,ids,P.day,x):null,tot=c?c.L.reduce((a,y)=>a+y[1],0):0;
  return`<div class="c" style="margin-top:10px"><h3>Plan Roadshow — ${esc(l.n)}</h3><ol class="ms" style="list-style:none;padding:0">
 <li><b>1 · Destination</b>: ${esc(l.n)} <span class="st">(Regional growth ${pct(rsG(l.id))})</span></li>
@@ -5891,6 +5915,14 @@ function geSupHtml(e){const live=geLive(e),PS=new Set(live),T=Math.max(1,e.vEnd-
   const gn=S.groups.length>1?((grp(gsAg())||{}).name||''):'';ui.gePopQ=ui.gePopQ||[];ui.gePopQ.push(`<h2 class="ht">${esc(e.name)}${gn?` · ${esc(gn)}`:''}</h2>${h}<div class="row"><button class="b p" onclick="ui.mod=null;ui.modNext=null;${S.groups.length>1?`gsSelect(${gsAg()});`:''}goView('ge')">Open General Election</button></div>`)}}catch(err){console.error(err)}return p}}
 {const f=adv;adv=function(){const r=f.apply(this,arguments);try{const Q=ui.gePopQ;if(Q&&Q.length){ui.gePopQ=[];if(ui.mod&&!ui.mod.gePop)ui.modNext=ui.mod;ui.mod={t:'html',gePop:1,h:Q.join('<hr>')};render()}}catch(e){console.error(e)}return r}}
 {const f=render;render=function(){try{if(S&&!ui.t&&!ui.mod&&ui.modNext){ui.mod=ui.modNext;ui.modNext=null}}catch(e){}return f.apply(this,arguments)}}
+// ---- Fan support list: like the preliminary results — rank · name · score (♥ supporters) · rank change -------------------
+geSupHtml=function(e){const live=geLive(e),A={};live.forEach(id=>A[id]=0);
+ geSegs().forEach(s=>{if(!(s.n>0))return;if(s.k!=null&&A[s.k]!=null)A[s.k]+=s.n;for(const j in s.o)if(A[j]!=null&&+j!=s.k)A[j]+=Math.min(s.o[j],s.n)});
+ const PL=gePre2(e).length?gePre2(e):(e.prelim||[]),last=PL.at(-1),prev=PL.length>1?PL.at(-2):null,RK=new Map(last?last.rows.filter(r=>r.rank).map(r=>[r.id,r.rank]):[]),R0=new Map(prev?prev.rows.filter(r=>r.rank).map(r=>[r.id,r.rank]):[]),VT=new Map(last?last.rows.filter(r=>r.v!=null).map(r=>[r.id,r.v]):[]);
+ const rows=live.map(id=>({id,m:get(id),v:A[id]})).filter(r=>r.m).sort((a,b)=>(RK.get(a.id)||999)-(RK.get(b.id)||999)||b.v-a.v);
+ const row=(r,i)=>{const m=r.m,rk=RK.get(r.id),o=R0.get(r.id),d=prev&&rk&&o?o-rk:null,chg=!prev?'':d==null?(rk&&!o?'NEW':''):d>0?'▲'+d:d<0?'▼'+(-d):'—',g0=(S.groups||[]).find(x=>x.id==m.group),t0=teamOf(m),aff=[g0&&g0.name,m.status=='trainee'?TL():t0&&t0.name].filter(Boolean).join(' · ');
+  return`<div class="gepr gepr2"><span class="geprk">${rk?ordN(rk):'—'}</span>${ptc(m,36)}<span class="geprn"><b>${esc(m.stage||m.name)}</b>${aff?`<small>${esc(aff)}</small>`:''}</span>${last&&last.hidden?'<span class="gepv hid">？？？</span>':`<span class="gepv">${VT.has(r.id)?VT.get(r.id).toLocaleString():'—'}</span>`}<span class="gechg ${d>0?'up':d<0?'dn':chg=='NEW'?'new':''}">${chg}</span></div>`};
+ return`<div class="c gesup geprel"><div class="row"><span class="geprb big">FAN SUPPORT RANKING</span><span class="st">${last?`${esc(last.label)} · ${last.hidden?'scores hidden':'votes'} · arrows compare with the previous result`:'Ranking appears with Preliminary Result 01'}</span></div>${rows.slice(0,32).map(row).join('')}${rows.length>32?`<details><summary class="st">More members (${rows.length-32})</summary>${rows.slice(32).map(row).join('')}</details>`:''}</div>`};
 
 </script>
 <script>
@@ -7846,7 +7878,7 @@ const ML_RAR={UR:4,SR:3,R:2,N:1};
 const ML_KEYS=()=>[['','Default order'],['name','Name'],['age','Age'],...STATS.map(x=>[x[0],x[1]]),...(S&&S.groups&&S.groups.length>1?[['grp','Group']]:[]),['gen','Generation'],['team','Team'],['trend','Trend (Buzz)']];
 function mlVal(m,k){if(k=='name')return String(m.name||'');if(k=='age')return+m.age||0;if(k=='rar')return ML_RAR[rar(m)]||0;if(k=='grp'){const g=S.groups.find(x=>x.id==m.group);return g?g.name:'~'}if(k=='gen')return m.gen||1;if(k=='team'){const t=teamOf(m);return m.status=='trainee'?'~':t?t.name:'~~'}if(k=='trend')return m.buzz||0;const v=sv(m,k);return typeof v=='number'?v:+v||0}
 function mlSet(key,f,v){const st=ui.mls=ui.mls||{},c=st[key]=st[key]||{k:'',d:'d',team:'all',gen:'all',rar:'all',grp:'all'};if(f=='d')c.d=c.d=='a'?'d':'a';else c[f]=v;render()}
-const ML_SKIP='.apcr,.ccfstage,.ccczg,.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.trg2,.trsf,.trsl,.czlineup';
+const ML_SKIP='.apcr,.ccfstage,.ccczg,.rtpm,.plczs,.hsxt,.throw,.thstagef,.geprg,.gecer,.gearch .gear,.stage,.mvsen,.pov,.mlbar,.trg,.trg2,.trsf,.trsl,.czlineup,.xepos,.xeczl,.ccshmem,.gesup';
 function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t)return;const P=[...app.querySelectorAll('svg[data-mid]')];
  // member faces open the profile
  const HS=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;if(sv0.closest('.ccm3,.pov,.mc,.mpi,.mod.t-prof,.thart,.gephbig,.thpic'))return;const host=sv0.parentElement;if(!host||HS.some(x=>x[0]===host))return;HS.push([host,sv0])});
@@ -11669,7 +11701,7 @@ function ccStageSvg(C,p,set,idx,W=1200,H=560){const it=set.items[idx],V=ccV(C.vi
  let upY=null,upH='';if(UP&&RN>=3){upY=FB-(BIG?64:44);const ux=W*.22,uw=W*.56;upH=`<rect x="${ux}" y="${upY}" width="${uw}" height="${FB-upY+6}" fill="${struct}"/><rect x="${ux}" y="${upY+8}" width="${uw}" height="${FB-upY-6}" fill="url(#lg${id})" opacity=".55"/><rect x="${ux}" y="${upY-4}" width="${uw}" height="6" fill="${P.a}" opacity=".9"/>`+[0,1].map(k=>{const sx=k?ux+uw:ux-60;return[...Array(5)].map((_,i)=>`<rect x="${(k?sx+i*12:sx+60-i*12-12).toFixed(0)}" y="${(upY+i*((FB-upY)/5)).toFixed(0)}" width="${(12+(4-i)*0).toFixed(0)}" height="${((FB-upY)/5*(5-i)+6).toFixed(0)}" fill="${struct}" opacity=".9"/>`).join('')}).join('')}
  else if(UP){upY=null;floor+=`<rect x="${W*.26}" y="${FB-22}" width="${W*.48}" height="22" fill="${struct}"/><rect x="${W*.26}" y="${FB-25}" width="${W*.48}" height="5" fill="${P.a}" opacity=".85"/>`}
  // members (back rows first) — every row stands on the stage floor
- let fg=upH;rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,{lh:120,hall:106,lhall:96,arena:84,stad:78,dome:78}[cat]||100);if(upY!=null&&back==RN-1&&back>0){Y.feet=upY;Y.fw*=.86;Y.step=Math.min(Y.step,W*.56/Math.max(1,row.length))}const x0=W/2-Y.step*(row.length-1)/2;
+ let fg=upH;rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,{lh:120,hall:106,lhall:96,arena:84,stad:78,dome:78}[cat]||100);if(upY!=null&&back==RN-1&&back>0){Y.feet=Math.min(Y.feet,upY);Y.step=Math.min(Y.step,W*.56/Math.max(1,row.length))}const x0=W/2-Y.step*(row.length-1)/2+(Y.off||0);
   row.forEach((z,i)=>{const m=ccMem(z.m);if(!m)return;const a=ap(m),c=z.c,ww=c?Y.fw*1.08:Y.fw,ps=TH_MICP[Math.floor(r()*TH_MICP.length)],x=x0+Y.step*i;fg+=`<ellipse cx="${x.toFixed(1)}" cy="${(Y.feet+1).toFixed(1)}" rx="${(ww*.3).toFixed(1)}" ry="${(ww*.06).toFixed(1)}" fill="#000" opacity=".35"/>`+stFig(m,x,Y.feet+(c?4:0),ww,fig(m,{pose:c?3:ps,of:a.of,oh:a.oh,ac:a.ac,ex:2,prop:1,...(cdm[m.id]?{cd:cdm[m.id]}:{})}))})});
  // audience
  let aud='';const ay=H-30;if(G.crowd=='stand'){for(let i=0;i<34;i++){const x=10+i*(W-20)/33+(r()-.5)*8;aud+=`<circle cx="${x.toFixed(0)}" cy="${(ay+6+r()*8).toFixed(0)}" r="13" fill="#0a0810"/>`;if(r()<.35)aud+=`<line x1="${x.toFixed(0)}" y1="${ay-4}" x2="${(x+(r()-.5)*14).toFixed(0)}" y2="${ay-22}" stroke="#0a0810" stroke-width="6" stroke-linecap="round"/>`}}
@@ -12206,7 +12238,7 @@ function stRowLay(n,back,RN,W,front,depth,maxFw){const sc=1-back*.1,avail=(W-150
 function stFig(m,x,feet,ww,inner){const k=ww/80,y=feet-(stFoot(m)+2)*k;return`<svg x="${(x-ww/2).toFixed(1)}" y="${y.toFixed(1)}" width="${ww.toFixed(1)}" height="${(ww*2.5).toFixed(1)}" viewBox="10 -2 80 200" overflow="visible">${inner}</svg>`}
 thStageSvg=function(o,ids,rows,nc,cdOf,poseOf,mic,hue,w,deco){const L=ids.map(get).filter(Boolean),W=900,H=360,cen=new Set(ids.slice(0,nc));let fg='';const R=[];{let a=0;rows.forEach(c=>{R.push(L.slice(a,a+c));a+=c})}
  const RN=R.length,FRONT=H-20,DEPTH=RN>1?Math.min(40*(RN-1),130):0,FB=FRONT-DEPTH-26;
- R.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,104),ord=thArr(row),x0=W/2-Y.step*(ord.length-1)/2+(back%2&&ord.length>1?0:0);
+ R.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,Y=stRowLay(row.length,back,RN,W,FRONT,DEPTH,104),ord=thArr(row),x0=W/2-Y.step*(ord.length-1)/2+(Y.off||0);
   ord.forEach((m,i)=>{const a=ap(m),c=back==0&&cen.has(m.id),ww=c?Y.fw*1.1:Y.fw,cd=cdOf(m.id),ps=poseOf(m.id);
    fg+=`<ellipse cx="${(x0+Y.step*i).toFixed(1)}" cy="${(Y.feet+1).toFixed(1)}" rx="${(ww*.3).toFixed(1)}" ry="${(ww*.06).toFixed(1)}" fill="#000" opacity=".28"/>`+stFig(m,x0+Y.step*i,Y.feet+(c?4:0),ww,fig(m,{pose:ps!=null?ps:c?3:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,...(mic?{prop:1}:{}),...(cd?{cd}:{})})+(deco?deco(m)||'':''))})});
  const h=hue==null?320:hue,g='thbg'+(o||''),sp='thsp'+(o||''),fl='thfl'+(o||'');
@@ -14320,6 +14352,166 @@ function fanCapRepair(){try{const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)||fb
  S.fans=T;fb.lastS=T;fb.carry={};fb.ver=(fb.ver||0)+1;fb.blowFix={day:S.day,from:now,to:T};console.log('[fan-cap] runaway fanbase repaired',now,'→',T);return 1}catch(e){console.error(e);return 0}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);if(fanCapRepair())try{toast(`Fan count repaired: ${S.fb.blowFix.from.toLocaleString()} → ${S.fb.blowFix.to.toLocaleString()} (a bug had inflated it).`)}catch(e){}return r}}
 try{I18N_TH_RX.push([/^Fan count repaired: ([\d,]+) → ([\d,]+) \(a bug had inflated it\)\.$/,'แก้ไขจำนวนแฟนคลับแล้ว: $1 → $2 (บั๊กทำให้ตัวเลขพุ่งผิดปกติ)'])}catch(e){}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — stage pictures: one layout for Concerts, Theater and events
+// -------------------------------------------------------------------------------------
+//  · every member on stage is drawn at the same size (the size that fits the longest row)
+//  · a very long row (e.g. 50 members) is split into several rows automatically
+//  · when two neighbouring rows hold the same number of members, the back row stands
+//    half a place to the side so every face stays visible
+// =====================================================================================
+let ST_ROWS=null; // member count per row, front row first (set while a stage picture is drawn)
+const ST_MAX={th:12,cc:14};
+// split a row length into near-equal parts of at most `max`
+function stSplitN(n,max){if(n<=max)return[n];const k=Math.ceil(n/max),b=Math.floor(n/k),x=n%k;return Array.from({length:k},(_,i)=>b+(i<x?1:0))}
+function stSplitCounts(c,max){return c.flatMap(n=>stSplitN(n,max))}
+// stagger: rows with the same count as the row in front alternate half a place left/right
+function stOff(C,back,step){let par=0;for(let i=1;i<=back;i++)par=C[i]==C[i-1]?par^1:0;return par?step/2:0}
+stRowLay=function(n,back,RN,W,front,depth,maxFw){const C=ST_ROWS&&ST_ROWS.length==RN?ST_ROWS:null,avail=W-150;
+ if(!C){const sc=1-back*.1,av=avail*(1-back*.05),fw=Math.min(maxFw*sc,av/Math.max(1,n)*1.12),step=Math.min(av/Math.max(1,n),fw*1.32),dy=RN>1?Math.min(40,depth/(RN-1)):0;return{fw,step,feet:front-back*dy}}
+ let fw=Math.min(maxFw,...C.map(k=>avail/Math.max(1,k)*1.12));
+ if(RN>1)fw=Math.min(fw,(front-24)/(2.3+.4*(RN-1)));
+ const dy=RN>1?Math.max(Math.min(fw*.5,depth/(RN-1)),Math.min(fw*.4,(front-fw*2.3-24)/(RN-1))):0,step=Math.min(avail/Math.max(1,n),fw*1.32);
+ return{fw,step,feet:front-back*dy,off:stOff(C,back,step)}};
+// Theater-style pictures (Theater, Studio Recording, debut pictures…)
+{const f=thStageSvg;thStageSvg=function(o,ids,rows,nc,cdOf,poseOf,mic,hue,w,deco){const L=(ids||[]).map(get).filter(Boolean);let R=(rows||[]).slice();const tot=R.reduce((a,b)=>a+b,0);if(tot!=L.length)R=L.length?[L.length]:[];
+ R=stSplitCounts(R,ST_MAX.th);const prev=ST_ROWS;ST_ROWS=R.filter(x=>x>0);try{return f.call(this,o,ids,R,nc,cdOf,poseOf,mic,hue,w,deco)}finally{ST_ROWS=prev}}}
+// Concert pictures
+{const f=ccStageSvg;ccStageSvg=function(C,p,set,idx,W,H){try{const it=set&&set.items[idx];if(!it||!Array.isArray(it.pos))return f.apply(this,arguments);const out=((p&&p.res)||{}).out||{};
+  const pos=it.pos.filter(z=>z.m!=null&&ccMem(z.m)&&!out[z.m]),Rk=[...new Set(pos.map(z=>z.r))].sort((a,b)=>a-b);const np=[];let r=0;const C2=[];
+  Rk.forEach(rr=>{const row=pos.filter(z=>z.r==rr),parts=stSplitN(row.length,ST_MAX.cc);let a=0;const chunks=parts.map(k=>{const c=row.slice(a,a+k);a+=k;return c});const ci=chunks.findIndex(c=>c.some(z=>z.c));if(ci>0)chunks.unshift(...chunks.splice(ci,1));chunks.forEach(c=>{c.forEach(z=>np.push({...z,r}));C2.push(c.length);r++})});
+  const set2={...set,items:set.items.map((x,i)=>i==idx?{...x,pos:np}:x)},prev=ST_ROWS;ST_ROWS=C2;try{return f.call(this,C,p,set2,idx,W,H)}finally{ST_ROWS=prev}}catch(e){console.error(e);return f.apply(this,arguments)}}}
+// External events / roadshow pictures: same size for everyone, rows of at most 9, staggered
+evStageRows=function(sp,G,seed){const ord=evOrder(sp),N=ord.length;if(!N)return'';const r=mulb(seed);
+ const nr=N<=G.single?1:Math.max(2,Math.ceil(N/9)),cnt=stSplitN(N,Math.ceil(N/nr));const rows=[];let a=0;cnt.forEach(k=>{rows.push(ord.slice(a,a+k));a+=k});
+ const g0=nr==1?G.one:G.front,gb=G.back,w=g0.x1-g0.x0,maxN=Math.max(...cnt),s=Math.min(g0.smax,w/maxN/66);
+ const dyv=nr==1?0:Math.min(Math.max((g0.y-gb.y)/(nr-1),s*36),(g0.y-s*175-8)/(nr-1)),ys=rows.map((_,i)=>g0.y-dyv*i);
+ let out='';rows.map((L,ri)=>[L,ri]).reverse().forEach(([L,ri])=>{const n=L.length,step=Math.min(w/n,66*s*1.25),off=stOff(cnt,ri,step),x0=400-step*(n-1)/2+off,sl=evSlots(n),xs=[];
+  L.forEach((z,i)=>xs.push([z,x0+step*sl[i],i]));
+  out+=xs.sort((p,q)=>Math.abs(q[1]-400)-Math.abs(p[1]-400)).map(([z,cx,i])=>{const pose=ri==0&&i==0?13:EV_POSES[(i*3+Math.floor(r()*5))%EV_POSES.length];return evFigOne(sp,z,pose,[1,3,11,2][(i+Math.floor(r()*4))%4],cx,ys[ri],s)}).join('')});
+ return out};
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Concert results on the big screen
+// -------------------------------------------------------------------------------------
+//  After a concert performance the results are presented like the General Election
+//  ceremony: a full-screen show, one step at a time (NEXT / BACK):
+//   opening → every song of the setlist (stage picture, Center, members) and the MC/VTR
+//   corners → ticket results → performance evaluation → fan response → member highlights
+//   → fan growth → finish. "Full report" opens the detailed report (same as before).
+//  The show can be replayed from any performance report (▶ Big screen).
+// =====================================================================================
+function ccShSteps(q){const St=[];(q||[]).forEach((x,qi)=>{const C=ccGet(x.c);if(!C)return;
+ if(x.fin){if(C.fin&&C.fin.rev)St.push({k:'fin',qi,C});return}
+ const p=C.pf.find(z=>z.id==x.p);if(!p||!p.res||p.res.err)return;const R=p.res,set=C.sets[R.sid]||R.set||{items:[]};
+ St.push({k:'open',qi,C,p});let n=0;(set.items||[]).forEach((it,idx)=>{if(it.k=='song')St.push({k:'song',qi,C,p,set,it,idx,no:++n});else St.push({k:'corner',qi,C,p,it})});
+ ['tix','eval','resp','mem','grow'].forEach(k=>St.push({k,qi,C,p}))});
+ St.push({k:'end'});return St}
+function ccShOpen(q,mod){const St=ccShSteps(q);if(St.length<2){if(mod){ui.mod=mod;render()}return}ui.ccsh={q,i:0,mod:mod||{t:'html',h:ccQHtml(q),cc:1,ccq:q}};ui.mod=null;render()}
+function ccShGo(d){const s=ui.ccsh;if(!s)return;const n=ccShSteps(s.q).length;s.i=Math.max(0,Math.min(n-1,s.i+d));render()}
+function ccShEnd(full){const s=ui.ccsh;ui.ccsh=null;if(full&&s&&s.mod)ui.mod=s.mod;render()}
+function ccShReplay(cid,pid){const C=ccGet(cid),p=C&&C.pf.find(z=>z.id==pid);if(!p||!p.res)return;const keep=ui.mod;ccShOpen([{c:cid,p:pid}],keep&&keep.t=='html'?keep:null)}
+const ccShK=(a,b,c)=>`<div class="ccshk"><small>${a}</small><b>${b}</b>${c?`<span>${c}</span>`:''}</div>`;
+function ccShPor(C,id,sz){const m=ccMem(id);return m?ptc(m,sz):`<span class="ccshq">?</span>`}
+function ccShHtml(){const s=ui.ccsh,St=ccShSteps(s.q),i=Math.min(s.i,St.length-1),z=St[i];s.i=i;const btn=(t,f,c='p')=>`<button class="geb ${c}" onclick="${f}">${t}</button>`;let body='',kick='';
+ const C=z.C,p=z.p,R=p&&p.res,V=C&&ccV(C.vid);
+ if(z.k=='open'){const ids=Object.keys(R.mem||{}).map(Number);body=`<div class="gestage op"><div class="gekicker">LIVE CONCERT · ${esc(S.co)}</div><h1 class="getitle">${esc(C.name)}</h1><div class="gesub">Performance ${p.no}</div><div class="geven">${V?esc(V.n):''} · ${jd(R.day)} · ${CC_SL[p.sl]||''}</div><div class="ccshkg">${ccShK('In the venue',R.phys.toLocaleString(),ccPct(R.cap?R.phys/R.cap:0))}${ccShK('Online',R.onl.toLocaleString())}${ccShK('Setlist',esc(R.setName||''),`${ccSongIt(C.sets[R.sid]||R.set||{items:[]}).length} songs`)}</div><div class="gecrowd">${ids.slice(0,60).map(id=>`<span>${ccShPor(C,id,44)}</span>`).join('')}</div></div>`}
+ else if(z.k=='song'){const it=z.it,pos=(it.pos||[]).filter(x=>x.m!=null),cen=pos.filter(x=>x.c).map(x=>ccNm(C,x.m));let pic='';try{pic=ccStageSvg(C,p,z.set,z.idx)}catch(e){console.error(e)}
+  body=`<div class="gestage"><div class="gekicker">M${z.no}</div><h2 class="ccshtt">${esc(it.title)}</h2><div class="ccshpic">${pic}</div><p class="gecap">${cen.length?`<span>Center</span> <b>${cen.map(esc).join(' &amp; ')}</b> · `:''}${pos.length} member(s)${R.out&&pos.some(x=>R.out[x.m])?` · <span class="ccneg">absent: ${pos.filter(x=>R.out[x.m]).map(x=>esc(ccNm(C,x.m))).join(', ')}</span>`:''}</p></div>`}
+ else if(z.k=='corner'){const it=z.it;body=`<div class="gestage op"><div class="gekicker">${it.k=='mc'?'MC CORNER':esc(String(it.k).toUpperCase())}</div><h1 class="getitle ccshsm">${esc(it.name||'')}</h1>${it.about?`<p class="gemc">${esc(it.about)}</p>`:''}${(it.mem||it.members||[]).length?`<div class="gecrowd">${(it.mem||it.members).map(id=>`<span>${ccShPor(C,id,52)}</span>`).join('')}</div>`:''}</div>`}
+ else if(z.k=='tix'){const tk=[...Object.keys(CC_TIX).filter(k=>p.tix[k]&&p.tix[k].on).map(k=>[CC_TIX[k],R.sold[k]|0,p.tix[k].qty,(R.sold[k]|0)*p.tix[k].price]),...Object.keys(CC_OTIX).filter(k=>p.on&&p.on[k]&&p.on[k].on).map(k=>[CC_OTIX[k],R.sold[k]|0,null,(R.sold[k]|0)*p.on[k].price])];
+  body=`<div class="gestage"><div class="gekicker">Ticket results</div><h2 class="ccshtt">${yen(R.revP+R.revO)}</h2><div class="ccshtab">${tk.map(([n,a,b,r])=>`<div><span>${n}</span><b>${a.toLocaleString()}${b!=null?' / '+b.toLocaleString():''}</b><i>${yen(r)}</i></div>`).join('')}</div></div>`}
+ else if(z.k=='eval')body=`<div class="gestage"><div class="gekicker">Performance evaluation</div><div class="ccshkg big">${ccShK('Vocal Performance',R.vocal)}${ccShK('Dance Performance',R.dance)}${ccShK('Passion & Stage Presence',R.pas)}${ccShK('Performance Efficiency',R.eff)}${ccShK('Mistakes',R.mistakes)}</div></div>`;
+ else if(z.k=='resp'){const A=(R.resp||{}).all||{};body=`<div class="gestage"><div class="gekicker">Fan response</div><h2 class="ccshtt">Overall satisfaction ${A.all??'—'}</h2><div class="ccshkg big">${ccShK('Song Satisfaction',A.song??'—')}${ccShK('Member Satisfaction',A.mem??'—')}${ccShK('Position Satisfaction',A.pos??'—')}${ccShK('Physical audience',A.ph??'—')}${ccShK('Online audience',A.on??'—')}</div>${(R.neg||[]).length?`<div class="ccshneg">${R.neg.slice(0,4).map(n=>`<p>💬 ${esc(n)}</p>`).join('')}</div>`:''}</div>`}
+ else if(z.k=='mem'){const G=(R.growth||{}).mem||{},L=Object.entries(R.mem||{}).filter(([,r])=>r.songs||r.mc).map(([id,r])=>{const g=G[id]||{};return{id:+id,r,g,score:(g.kg||0)*3+(g.og||0)+(g.cas||0)}}).sort((a,b)=>b.score-a.score||(b.r.center-a.r.center)||(b.r.songs-a.r.songs)).slice(0,8);
+  body=`<div class="gestage"><div class="gekicker">Member highlights</div><div class="ccshmem">${L.map((x,k)=>`<div class="${k==0?'top':''}">${ccShPor(C,x.id,k==0?92:64)}<b>${esc(ccNm(C,x.id))}</b><small>${x.r.songs} song(s)${x.r.center?` · Center ×${x.r.center}`:''}</small><span>${x.g.kg?`+${x.g.kg} Kami Oshi `:''}${x.g.og?`+${x.g.og} Oshi `:''}${x.g.cas?`+${x.g.cas} <span>new fans</span>`:''}${!x.g.kg&&!x.g.og&&!x.g.cas?'—':''}</span></div>`).join('')}</div></div>`}
+ else if(z.k=='grow'){const G=R.growth||{};body=`<div class="gestage"><div class="gekicker">Fan growth</div><div class="ccshkg big">${ccShK('New Casual Fans',(G.newCas||0).toLocaleString())}${ccShK('New Regular Fans',(G.newReg||0).toLocaleString())}${ccShK('New Oshi',(G.newOshi||0).toLocaleString())}${ccShK('New Kami Oshi',(G.newKami||0).toLocaleString())}${ccShK('Kami Oshi changes',(G.kch||0).toLocaleString())}${ccShK('Fans lost',(G.lost||0).toLocaleString())}</div></div>`}
+ else if(z.k=='fin')body=`<div class="gestage"><div class="gekicker">Concert complete</div><div class="ccshcard">${ccFinHtml(C,true)}</div></div>`;
+ else body=`<div class="gestage op"><div class="gekicker">Thank you!</div><h1 class="getitle">END</h1><p class="gemc">Open the full report for every number, table and the setlist picture viewer.</p></div>`;
+ const last=i==St.length-1,prog=Math.round(100*i/Math.max(1,St.length-1)),title=C?`${C.name}${p?' · Performance '+p.no:''}`:'Concert';
+ const act=(i>0?btn('BACK','ccShGo(-1)','s'):'')+(last?btn('FULL REPORT','ccShEnd(1)','p gold')+btn('CLOSE','ccShEnd(0)','s'):btn('NEXT','ccShGo(1)'));
+ return`<div class="gecer ccsh" role="dialog" aria-label="${esc(title)}"><div class="gebg"><i></i><i></i><i></i><i></i></div><div class="getop"><div><b>${esc(title)}</b><span>${V?esc(V.n):''}</span></div><div class="geprog"><i style="width:${prog}%"></i></div><div class="getopb">${last?'':btn('SKIP','ccShEnd(1)','s')}</div></div><div class="gebody" data-step="${i}">${body}</div><div class="geact">${act}</div></div>`}
+// the pop-up after performances becomes the big-screen show
+{const f=ccDaily;ccDaily=function(){const before=ui.mod;const r=f.apply(this,arguments);try{if(ui.mod&&ui.mod!==before&&ui.mod.ccq)ccShOpen(ui.mod.ccq,ui.mod)}catch(e){console.error(e)}return r}}
+// replay from a performance report
+{const f=ccRepHtml;ccRepHtml=function(C,p){const h=f.apply(this,arguments);try{if(p&&p.res&&!p.res.err)return h.replace(/(<h2 class="ht">🎤[^<]*<\/h2>)/,`$1<div class="row"><button class="b s p" onclick="ccShReplay('${C.id}','${p.id}')">▶ Big screen</button></div>`)}catch(e){}return h}}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{const old=document.getElementById('ccshw');if(S&&!ui.t&&ui.ccsh){const a=document.getElementById('app'),d=old||document.createElement('div');d.id='ccshw';d.innerHTML=ccShHtml();if(!old&&a)a.appendChild(d);document.body.classList.add('gecer-on')}else if(old){old.remove();if(!document.getElementById('gecerw'))document.body.classList.remove('gecer-on')}}catch(x){console.error(x)}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — songs, Center and costume for External Events & Roadshows
+// -------------------------------------------------------------------------------------
+//  · One song picker (like the Concert setlist picker): Group · Single · Stage · Team tabs and
+//    a search. Songs of every group are offered — a sister group can sing the main group's
+//    songs and the main group can sing a sister group's songs. Used by External Events and by
+//    the Roadshow setlists (Day 1 / Day 2).
+//  · External Events: each song has its own Center (tap a face to make her the Center, or use
+//    the Center menu). The setlist, Centers and the event costume can still be changed after
+//    accepting, until the day before the event — also for offers where the organizer chose
+//    the members.
+//  · Event costume: one costume for everyone (from the Costume library), or the members' own
+//    outfits. It is shown on the event pictures.
+// =====================================================================================
+// ---- 1. shared song picker -----------------------------------------------------------------------------------------------
+function spkOn(t){return!!(ui.spk&&ui.spk.t==t)}
+function spkBtn(t){return`<button class="b s ${spkOn(t)?'on':'p'}" onclick="spkTog('${t}')">🎵 ${spkOn(t)?'Close song list':'Add songs (all groups)'}</button>`}
+function spkTog(t){ui.spk=spkOn(t)?null:{t,tab:(ui.spk&&ui.spk.tab)||'single',q:''};render()}
+function spkHave(t){if(t=='xe'){const r=xeGet(ui.xe);return(r?xeL(r):[]).map(z=>z.gid+':'+z.song)}if(t.startsWith('rs:')){const P=ui.rsp,sl=P&&P[t=='rs:2'?'sl2':'sl1']||[],ag=gsAg();return sl.filter(z=>z.k=='s').map(z=>(z.gid??ag)+':'+z.id)}return[]}
+function spkPanel(t){if(!spkOn(t))return'';const P=ui.spk;let D;try{D=ccPickData()}catch(e){console.error(e);return''}
+ const q=(P.q||'').toLowerCase(),have=new Set(spkHave(t)),T=[['grp','Group'],['single','Single'],['stage','Stage'],['team','Team']],blocks=(D[P.tab]||[]).map(b=>({...b,L:b.L.filter(x=>!q||String(x.o.title).toLowerCase().includes(q))})).filter(b=>b.L.length);
+ return`<div class="c spk"><div class="row cctabs">${T.map(([k,n])=>`<button class="b s ${P.tab==k?'p':''}" onclick="ui.spk.tab='${k}';render()">${n}</button>`).join('')}</div><input class="ccpkq" placeholder="Search songs" value="${esc(P.q||'')}" onchange="ui.spk.q=this.value;render()">
+ <div class="ccpk">${blocks.map(b=>`<details open class="ccpkb"><summary><b>${esc(b.h)}</b> <small class="st">${esc(b.sub||'')}</small></summary>${b.L.map(x=>{const k=x.gid+':'+x.o.id,on=have.has(k);return`<div class="row ccpki"><div style="flex:1;min-width:0"><b>${esc(x.o.title)}</b><small class="st">${esc((grp(x.gid)||{}).name||'')}${x.o.role?' · '+esc(x.o.role):''}${x.o.genre?' · '+esc(x.o.genre):''}</small></div>${on?'<span class="tag">In setlist</span>':`<button class="b s p" onclick="spkAdd('${t}','${k}')">+ Add</button>`}</div>`}).join('')}</details>`).join('')||`<p class="st">${P.tab=='stage'||P.tab=='team'?'No Theater Stage songs yet.':'No songs match.'}</p>`}</div></div>`}
+function spkAdd(t,k){const i=k.indexOf(':'),gid=+k.slice(0,i),id=k.slice(i+1);
+ if(t=='xe')return xeSongAdd2(gid,id);
+ if(t.startsWith('rs:')){const P=ui.rsp;if(!P)return;const d=t=='rs:2'?2:1,key=d==2?'sl2':'sl1',sl=P[key];if(P.smode=='random')return toast('Switch to Custom or Same to edit by hand, or regenerate.','err');if(sl.length>=CFG.rs.max)return toast(`A day can have at most ${CFG.rs.max} entries (songs and MC together).`,'err');
+  sl.push(gid==gsAg()?{k:'s',id}:{k:'s',id,gid});const o=gsCtx(gid,'songs')||{};toast(`Added “${(o[id]||{}).title||''}”.`);render()}}
+// ---- 2. External Events: the setlist being edited (offer draft, or the accepted event) ---------------------------------------
+const xeEditable=r=>!!r&&((r.status=='open'&&r.mode=='player')||(r.status=='accepted'&&S.day<r.day));
+function xeL(r){if(r.status=='open')return xeSelOf(r).songs;r.set=r.set||[];return r.set}
+function xeM(r){return r.status=='open'?xeSelOf(r).sel:(r.sel||[])}
+function xeR0(){const r=xeGet(ui.xe);return xeEditable(r)?r:null}
+function xeSongAdd2(gid,song){const r=xeR0();if(!r)return;const L=xeL(r),max=r.songs||8;if(L.length>=max)return toast(`This event asks for ${max} song(s).`,'err');if(L.some(z=>z.song==song&&z.gid==gid))return;
+ const t=((gsCtx(gid,'songs')||{})[song]||{}).title||'?',o=xeM(r).slice().sort((a,b)=>((get(b)||{}).pop||0)-((get(a)||{}).pop||0));L.push({gid,song,title:t,center:o[0]??null,o});xeTouch(r);toast(`Added “${t}”.`);render()}
+xeSongAdd=function(v){if(!v)return;const[gid,song]=String(v).split('|');xeSongAdd2(+gid,song)};
+xeSongMv=function(i,d){const r=xeR0();if(!r)return;const L=xeL(r),j=i+d;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];xeTouch(r);render()};
+xeSongRm=function(i){const r=xeR0();if(!r)return;xeL(r).splice(i,1);xeTouch(r);render()};
+xeSongCen=function(i,v){const r=xeR0();if(!r)return;const z=xeL(r)[i];if(z){z.center=v===''||v==null?null:+v;if(z.center!=null)z.o=[z.center,...z.o.filter(x=>x!=z.center)]}xeTouch(r);render()};
+xePosMv=function(i,mid,d){const r=xeR0();if(!r)return;const z=xeL(r)[i];if(!z)return;const k=z.o.indexOf(mid),j=k+d;if(k<0||j<0||j>=z.o.length)return;[z.o[k],z.o[j]]=[z.o[j],z.o[k]];xeTouch(r);render()};
+// accepted events: keep every song's members in step with the booked members, refresh the pictures
+function xeTouch(r){if(r.status!='accepted')return;const sel=r.sel||[];(r.set||[]).forEach(z=>{z.o=z.o.filter(id=>sel.includes(id));sel.forEach(id=>{if(!z.o.includes(id))z.o.push(id)});if(z.center!=null&&!sel.includes(z.center))z.center=z.o[0]??null});xeArtFix(r)}
+function xeArtFix(r){try{if(!r.art||r.status=='done')return;const ids=r.sel&&r.sel.length?r.sel:(r.req||[]).map(q=>q.mid),z0=(r.set||[])[0],a=xeArtMake(r,z0&&z0.center!=null?[z0.center,...ids.filter(x=>x!=z0.center)]:ids,z0&&z0.gid==gsAg()?z0.song:null);
+ const d=r.cz&&czD(r.cz);if(d&&d.p){a.cd=[JSON.parse(JSON.stringify(d.p))];a.m.forEach(x=>{x.c=0})}if(z0&&z0.center!=null)a.center=z0.center;r.art={...a,seed:r.art.seed,hue:r.art.hue}}catch(e){console.error(e)}}
+// ---- 3. the setlist editor (offer selection page and accepted event page) --------------------------------------------------
+function xeSetEdHtml(r){const L=xeL(r),max=r.songs||0,acc=r.status=='accepted';
+ return`<div class="c xeset"><h3>Setlist (${L.length}/${max} song(s))</h3><p class="st">Songs of every group can be used (sister and main groups). Tap a face to make her the Center of that song; ◀ ▶ change the positions. Saved for this event only — the songs' original Senbatsu, Center and formation never change.${acc?` You can change it until ${jd(r.day-1)}.`:''}</p>
+ ${L.map((z,i)=>`<div class="c xesong"><div class="row"><b>${i+1}. ${esc(z.title)}</b><span class="st">${esc((grp(z.gid)||{}).name||'')}</span><button class="b s" onclick="xeSongMv(${i},-1)">▲</button><button class="b s" onclick="xeSongMv(${i},1)">▼</button><button class="b s" onclick="xeSongRm(${i})">✕</button><label class="st">Center <select onchange="xeSongCen(${i},this.value)"><option value="">No Center</option>${z.o.map(id=>`<option value="${id}" ${z.center==id?'selected':''}>${esc((get(id)||{}).name||'')}</option>`).join('')}</select></label></div>
+  <div class="xepos">${z.o.map((id,k)=>{const m=get(id);return m?`<span class="xep ${z.center==id?'cen':''}"><button class="xepf" title="Make ${esc(m.name)} the Center" onclick="xeSongCen(${i},${id})">${ptc(m,34)}${z.center==id?'<i>★</i>':''}</button><small>${z.center==id?'Center':'#'+(k+1)}</small><span><button class="b s" onclick="xePosMv(${i},${id},-1)">◀</button><button class="b s" onclick="xePosMv(${i},${id},1)">▶</button></span></span>`:''}).join('')}</div></div>`).join('')}
+ ${L.length<max?`<div class="row">${spkBtn('xe')}</div>${spkPanel('xe')}`:''}</div>`}
+// ---- 4. event costume (one for everyone) ----------------------------------------------------------------------------------
+function xeCzOf(r){return r.status=='open'?xeSelOf(r).cz||null:r.cz||null}
+function xeCzSet(did){const r=xeR0();if(!r)return;if(r.status=='open')xeSelOf(r).cz=did||null;else{r.cz=did||null;xeArtFix(r)}ui.xecz=0;render()}
+function xeCzHtml(r){const cur=xeCzOf(r),d=cur&&czD(cur),ids=xeM(r),m=get(ids[0])||S.members.find(x=>x.status!='graduated');const L=czLib().ds.filter(x=>x&&x.p);
+ return`<div class="c xecz"><h3>Event costume</h3><div class="row">${d&&m?czDesignThumb(d,m,40):''}<b>${d?esc(d.name||'Costume'):"Members' own outfits"}</b><span class="st">one costume for every member at this event</span><button class="b s ${ui.xecz?'on':'p'}" onclick="ui.xecz=ui.xecz?0:1;render()">${ui.xecz?'Close':'Choose costume'}</button>${d?'<button class="b s" onclick="xeCzSet(null)">Own outfits</button>':''}</div>
+ ${ui.xecz?`<div class="xeczl">${L.length?L.slice().reverse().map(x=>`<button class="c xeczi ${x.id==cur?'on':''}" onclick="xeCzSet('${x.id}')">${m?czDesignThumb(x,m,46):''}<small>${esc(x.name||'Costume')}</small></button>`).join(''):'<p class="st">No costumes in the Costume library yet.</p>'}</div>`:''}</div>`}
+// ---- 5. pages -------------------------------------------------------------------------------------------------------------
+{const f=V.xesel;V.xesel=function(){let h=f.apply(this,arguments);try{const r=xeGet(ui.xe);if(!r||r.mode!='player'||r.status!='open')return h;
+  const a=h.indexOf('<div class="c"><h3>Setlist ('),E=h.indexOf('<div class="c geerr">')>=0?h.indexOf('<div class="c geerr">'):h.indexOf('<div class="row"><button class="b p"',a<0?0:a);
+  if(a>=0&&E>a)h=h.slice(0,a)+xeSetEdHtml(r)+h.slice(E);
+  const k=h.indexOf('<div class="c geerr">')>=0?h.indexOf('<div class="c geerr">'):h.lastIndexOf('<div class="row"><button class="b p"');if(k>=0)h=h.slice(0,k)+xeCzHtml(r)+h.slice(k)}catch(e){console.error(e)}return h}}
+{const f=V.xedet;V.xedet=function(){let h=f.apply(this,arguments);try{const r=xeGet(ui.xe);if(!r)return h;const live=(r.acts||[]).includes('live')&&r.ch!='mp';
+  const s0=h.indexOf('<div class="c"><h3>Setlist</h3>');let s1=s0>=0?h.indexOf('</ol></div>',s0):-1;if(s1>=0)s1+=11;
+  if(r.status=='accepted'&&S.day<r.day&&live){const blk=(r.songs?xeSetEdHtml(r):'')+xeCzHtml(r);if(s0>=0)h=h.slice(0,s0)+blk+h.slice(s1);else{const i=h.lastIndexOf('<div class="row">');h=i>=0?h.slice(0,i)+blk+h.slice(i):h+blk}}
+  else if(r.cz&&czD(r.cz)){const d=czD(r.cz),m=get((r.sel||[])[0]);h=h.replace('<div class="c"><h3>Setlist</h3>',`<div class="c"><h3>Event costume</h3><div class="row">${m?czDesignThumb(d,m,44):''}<b>${esc(d.name||'Costume')}</b></div></div><div class="c"><h3>Setlist</h3>`)}}catch(e){console.error(e)}return h}}
+// accepting an offer keeps the chosen costume
+{const f=xeDoAccept;xeDoAccept=function(r,ids,set){const cz=r&&r.draft&&r.draft.cz;const ok=f.apply(this,arguments);try{if(ok&&r){if(cz)r.cz=cz;if(r.cz||(r.set&&r.set.length))xeArtFix(r)}}catch(e){console.error(e)}return ok}}
+// changing pages closes the picker
+{const f=goView;goView=function(){ui.spk=null;ui.xecz=0;return f.apply(this,arguments)}}
 
 </script>
 <script>
@@ -19562,6 +19754,28 @@ I18N_TH_RX.push([/(\d+)(?:st|nd|rd|th) Anniversary/g,'ครบรอบ $1 ป�
 I18N_TH_RX.push([/ \(disbanded\)$/,' (ยุบแล้ว)'],[/ \(today\)$/,' (วันนี้)'],[/ \(Stage\)$/,' (สเตจ)'],[/ \(former\)$/,' (อดีตเมมเบอร์)'],[/ Revival$/,' รีไววัล'],[/^(.+) ranking$/,'อันดับ $1']);
 I18N_TH_RX.push([/\bStaff \/ Crew\b/g,'ทีมงาน']);
 I18N_TH_RX.push([/^(\d+)(?:st|nd|rd|th) Place$/,'อันดับ $1'],[/^(\d+)(?:st|nd|rd|th) General Election$/,'เลือกตั้งทั่วไปครั้งที่ $1']);
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Thai: concert big screen, fan support ranking,
+//  event / roadshow song picker, event Center & costume, stage layout
+// =====================================================================================
+Object.assign(I18N_TH,{"LIVE CONCERT":"คอนเสิร์ตสด","In the venue":"ในสถานที่","Online":"ออนไลน์","MC CORNER":"ช่วง MC","VTR":"VTR","Member highlights":"เมมเบอร์โดดเด่น","Concert complete":"คอนเสิร์ตจบแล้ว","END":"จบการแสดง",
+ "Open the full report for every number, table and the setlist picture viewer.":"เปิดรายงานฉบับเต็มเพื่อดูตัวเลข ตาราง และภาพแต่ละเพลงทั้งหมด","BACK":"ย้อนกลับ","NEXT":"ถัดไป","FULL REPORT":"รายงานฉบับเต็ม","CLOSE":"ปิด","SKIP":"ข้าม","▶ Big screen":"▶ ดูแบบจอใหญ่",
+ "Vocal Performance":"การร้อง","Dance Performance":"การเต้น","Passion & Stage Presence":"ความตั้งใจและเสน่ห์บนเวที","Performance Efficiency":"ประสิทธิภาพการแสดง","Mistakes":"ความผิดพลาด","Song Satisfaction":"ความพอใจต่อเพลง","Member Satisfaction":"ความพอใจต่อเมมเบอร์","Position Satisfaction":"ความพอใจต่อตำแหน่ง","Physical audience":"ผู้ชมในสถานที่","Online audience":"ผู้ชมออนไลน์",
+ "New Casual Fans":"แฟนทั่วไปใหม่","New Regular Fans":"แฟนประจำใหม่","New Oshi":"โอชิใหม่","New Kami Oshi":"คามิโอชิใหม่","Kami Oshi changes":"เปลี่ยนคามิโอชิ","Fans lost":"แฟนที่เสียไป",
+ "FAN SUPPORT RANKING":"อันดับแรงสนับสนุนจากแฟน","Ranking appears with Preliminary Result 01":"อันดับจะแสดงเมื่อประกาศผลเบื้องต้นครั้งที่ 01",
+ "Add songs (all groups)":"เพิ่มเพลง (ทุกวง)","Close song list":"ปิดรายการเพลง","In setlist":"อยู่ในเซ็ตลิสต์","+ Add":"+ เพิ่ม","No Theater Stage songs yet.":"ยังไม่มีเพลงจากสเตจเธียเตอร์","No songs match.":"ไม่มีเพลงที่ตรงกัน",
+ "Event costume":"ชุดออกงาน","Members' own outfits":"ชุดส่วนตัวของเมมเบอร์","one costume for every member at this event":"ชุดเดียวสำหรับเมมเบอร์ทุกคนในงานนี้","Choose costume":"เลือกชุด","Own outfits":"ใช้ชุดส่วนตัว","No costumes in the Costume library yet.":"ยังไม่มีชุดในคลังชุด","No Center":"ไม่มีเซ็นเตอร์",
+ "Former member":"อดีตเมมเบอร์","new fans":"แฟนใหม่"});
+I18N_TH_TPL.unshift(
+ ["Performance {0}","การแสดงรอบที่ {0}"],["{0} songs","{0} เพลง"],["{0} member(s)","{0} คน"],[" · {0} member(s)"," · {0} คน"],["absent: {0}","ขาด: {0}"],["Overall satisfaction {0}","ความพอใจโดยรวม {0}"],
+ ["{0} song(s) · Center ×{1}","{0} เพลง · เซ็นเตอร์ ×{1}"],["{0} song(s)","{0} เพลง"],
+ ["{0} · scores hidden · arrows compare with the previous result","{0} · ซ่อนคะแนน · ลูกศรเทียบกับผลครั้งก่อน"],["{0} · votes · arrows compare with the previous result","{0} · คะแนนโหวต · ลูกศรเทียบกับผลครั้งก่อน"],
+ ["Setlist ({0}/{1} song(s))","เซ็ตลิสต์ ({0}/{1} เพลง)"],
+ ["Songs of every group can be used (sister and main groups). Tap a face to make her the Center of that song; ◀ ▶ change the positions. Saved for this event only — the songs' original Senbatsu, Center and formation never change.{0}","ใช้เพลงของทุกวงได้ (ทั้งวงพี่และวงน้อง) แตะที่หน้าเมมเบอร์เพื่อให้เป็นเซ็นเตอร์ของเพลงนั้น กด ◀ ▶ เพื่อเปลี่ยนตำแหน่ง บันทึกเฉพาะงานนี้เท่านั้น — เซ็มบัตสึ เซ็นเตอร์ และฟอร์เมชันเดิมของเพลงจะไม่เปลี่ยน{0}"],
+ [" You can change it until {0}."," แก้ไขได้ถึง {0}"],["Added “{0}”.","เพิ่ม “{0}” แล้ว"],["Make {0} the Center","ให้ {0} เป็นเซ็นเตอร์"]);
 
 </script>
 <script>

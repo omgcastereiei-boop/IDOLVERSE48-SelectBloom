@@ -1301,3 +1301,24 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 /* profile: team history / election / senbatsu lists */
 .pfl{list-style:none;padding:0;margin:6px 0 12px}.pfl li{padding:5px 0;border-bottom:1px dashed var(--line)}.pfl li:last-child{border:0}
 .pfsen h4{margin:10px 0 2px}.pfsen h5{margin:6px 0 2px;font-size:13px;color:var(--mut)}
+/* concert results — big screen */
+.ccsh .ccshtt{font-family:'M PLUS Rounded 1c',serif;font-size:clamp(22px,5vw,44px);margin:4px 0 10px;color:#fff6d8;text-shadow:0 2px 16px #e9b94966}
+.ccsh .ccshsm{font-size:clamp(26px,6vw,56px)}
+.ccsh .ccshpic{width:min(1000px,100%);margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px #0008,0 0 0 2px #e9b94955}
+.ccsh .ccshpic svg{display:block;width:100%;height:auto}
+.ccshkg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;width:min(900px,100%);margin:14px auto}
+.ccshk{background:#ffffff14;border:1px solid #ffffff2e;border-radius:16px;padding:12px 10px;backdrop-filter:blur(4px)}
+.ccshk small{display:block;font-size:12px;opacity:.8;letter-spacing:.04em}.ccshk b{display:block;font-size:26px;color:#ffe9a8;line-height:1.25;word-break:break-word}.ccshk span{display:block;font-size:12px;opacity:.75}
+.ccshkg.big .ccshk b{font-size:clamp(26px,5vw,40px)}
+.ccshtab{width:min(640px,100%);margin:0 auto;display:grid;gap:6px}.ccshtab div{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;background:#ffffff12;border-radius:12px;padding:10px 14px;text-align:left}.ccshtab b{color:#ffe9a8}.ccshtab i{font-style:normal;opacity:.85;min-width:90px;text-align:right}
+.ccshmem{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:min(1000px,100%);margin:10px auto}.ccshmem>div{width:130px;display:flex;flex-direction:column;align-items:center;gap:3px;background:#ffffff10;border-radius:16px;padding:10px 6px}.ccshmem>div.top{width:180px;background:linear-gradient(180deg,#e9b94944,#ffffff10);box-shadow:0 0 0 2px #e9b94988}.ccshmem small{opacity:.8;font-size:11px}.ccshmem span{font-size:12px;color:#ffe9a8}
+.ccshneg{width:min(700px,100%);margin:6px auto;text-align:left;font-size:14px;opacity:.9}.ccshq{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff3}
+.ccshcard{width:min(800px,100%);margin:0 auto;background:#fff;color:#4a2b5a;border-radius:18px;padding:14px;text-align:left;max-height:62vh;overflow:auto}
+.ccsh .ccneg{color:#ffb3c7}
+/* events: setlist Center by tapping a face, event costume */
+.xep .xepf{position:relative;border:0;background:none;padding:0;cursor:pointer;border-radius:50%}
+.xep.cen .xepf{box-shadow:0 0 0 3px #e9b949;border-radius:50%}.xep .xepf i{position:absolute;right:-4px;top:-6px;font-style:normal;color:#e9b949;font-size:16px;text-shadow:0 1px 2px #0005}
+.xep.cen small{color:#b8860b;font-weight:700}
+.xeczl{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin-top:8px;max-height:340px;overflow:auto}
+.xeczi{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;cursor:pointer}.xeczi.on{box-shadow:0 0 0 3px var(--pk)}.xeczi small{font-size:11px;text-align:center;word-break:break-word}
+.spk{margin-top:8px}
