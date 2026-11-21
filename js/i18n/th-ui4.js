@@ -34,3 +34,8 @@ Object.assign(I18N_TH,{"Rounded bob":"บ็อบทรงกลม","Layered b
  "Chosen independently of the bangs and side locks. Combine several back hair layers for your own hairstyle.":"เลือกแยกจากหน้าม้าและจงอยผม ซ้อนผมด้านหลังได้หลายเลเยอร์เพื่อสร้างทรงของตัวเอง"});
 I18N_TH_TPL.unshift(["Layer {0}","เลเยอร์ {0}"],["Editing: {0} — pick a style below.","กำลังแก้: {0} — เลือกทรงด้านล่าง"],["At most {0} extra layers.","เพิ่มเลเยอร์ได้สูงสุด {0} ชั้น"]);
 Object.assign(I18N_TH,{"Slim twin tails":"ทวินเทลเรียว","Medium twin tails":"ทวินเทลขนาดกลาง","High twin tails":"ทวินเทลสูง","Long slim twin tails":"ทวินเทลยาวเรียว","Soft wavy twin tails":"ทวินเทลลอนนุ่ม"});
+// song-specific hairstyles
+Object.assign(I18N_TH,{"Use default hairstyle":"ใช้ทรงผมปกติ","✂ Customize hairstyle":"✂ ปรับทรงผมเฉพาะเพลงนี้","↺ Reset to default":"↺ กลับเป็นทรงผมปกติ","💾 Save hairstyle for this song":"💾 บันทึกทรงผมสำหรับเพลงนี้","Default hairstyle (her profile hairstyle)":"ทรงผมปกติ (ทรงผมในโปรไฟล์)","Locked while the release is in production.":"ล็อกระหว่างที่ผลงานอยู่ในการผลิต",
+ "For this song only. Her profile hairstyle, her other songs and the other members are not changed. Costume and hairstyle are saved separately.":"ใช้เฉพาะเพลงนี้เท่านั้น ทรงผมในโปรไฟล์ เพลงอื่นของเธอ และเมมเบอร์คนอื่นจะไม่เปลี่ยน ชุดและทรงผมบันทึกแยกกัน",
+ "The release is in production: costumes and hairstyles are locked.":"ผลงานอยู่ระหว่างการผลิต: ชุดและทรงผมถูกล็อก"});
+I18N_TH_TPL.unshift(["💇 Hairstyle — {0}","💇 ทรงผม — {0}"],["Custom: {0}","เฉพาะเพลง: {0}"],["Hairstyle for {0} in \"{1}\" saved.","บันทึกทรงผมของ {0} ในเพลง \"{1}\" แล้ว"],["{0} uses her default hairstyle in \"{1}\".","{0} ใช้ทรงผมปกติในเพลง \"{1}\""],[" + {0} layer(s)"," + {0} เลเยอร์"]);

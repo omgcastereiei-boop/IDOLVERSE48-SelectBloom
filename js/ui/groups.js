@@ -248,7 +248,7 @@ const gsRidGid=rid=>{for(const g of S.groups){if((gsCtx(g.id,'singles')||[]).som
  const pre=new Map(own.map(m=>[m.id,m.profCz]));S.members=own;try{n=f.apply(this,arguments)}finally{S.members=all}own.forEach(m=>{if(m.profCz&&m.profCz!==pre.get(m.id))m.profCz.gid=gid});
  try{const mn=S.songs[x.mainId]||(gsCtx(gid,'songs')||{})[x.mainId];if(!mn)return n;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean)),sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},any=Object.values(sc).find(v=>v&&v.own&&v.own.p&&v.ok),gn=(grp(gid)||{}).name||'';
   all.forEach(m=>{if(gsGid(m)==gid||!(tt.has(m.id)||(m.kn&&m.kn.gid==gid)))return;m.czHist=m.czHist||[];if(m.czHist.some(h=>h.rid==x.rid))return;let p,kind;
-   if(tt.has(m.id)){p=czFor(mn,m.id);kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
+   if(tt.has(m.id)){p=(typeof hzStrip=='function'?hzStrip(czFor(mn,m.id)):czFor(mn,m.id));kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
    m.czHist.push({p:czClone(p),title:x.title,rid:x.rid,pk:x.pkey||null,day:x.relDay??x.day??S.day,kind,gid,gname:gn});if(m.czHist.length>30)m.czHist.shift()})}catch(e){console.error(e)}return n}}
 const gsPkGid=pk=>{if(!pk)return null;for(const g of S.groups){const pj=gsCtx(g.id,'pj');if((pj&&pj.key==pk)||(gsCtx(g.id,'singles')||[]).some(x=>x.pkey==pk))return g.id}return null};
 // repair saves: a profile outfit from another group's single goes back to the costume history

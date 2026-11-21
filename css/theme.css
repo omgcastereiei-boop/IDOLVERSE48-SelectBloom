@@ -1327,3 +1327,5 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .bhlp{border:0;background:none;padding:0;cursor:pointer;flex:none;border-radius:10px;overflow:hidden}.bhlb{flex:1;min-width:0}.bhlb small{display:block;opacity:.75;font-size:11px}
 .bhls{display:flex;flex-wrap:wrap;gap:4px 10px}.bhls label{font-size:11px;display:flex;align-items:center;gap:4px}.bhls input[type=range]{width:90px}
 .bhlc{display:flex;flex-direction:column;gap:3px}.bhg{margin:10px 0 4px;font-size:14px}
+/* song-specific hairstyle */
+.shz{margin-top:10px}.hzrow{align-items:center;gap:12px;flex-wrap:wrap}.hzpv .approw{max-width:260px}.hzed{margin-top:8px}

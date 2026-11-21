@@ -29,7 +29,7 @@ const _mxCover=V.cover;V.cover=function(){const h=_mxCover.call(V),i=h.indexOf('
 
 // ---- 3. profile outfit follows the latest released single ------------------------------------------
 function profSync(x){if(!x||!x.mainId)return 0;const mn=S.songs[x.mainId];if(!mn)return 0;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean)),sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},any=Object.values(sc).find(v=>v&&v.own&&v.own.p&&v.ok);let n=0;
- S.members.forEach(m=>{if(m.profCz&&m.profCz.rid==x.rid)return;let p=null,kind;if(tt.has(m.id)){p=czFor(mn,m.id);kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
+ S.members.forEach(m=>{if(m.profCz&&m.profCz.rid==x.rid)return;let p=null,kind;if(tt.has(m.id)){p=(typeof hzStrip=='function'?hzStrip(czFor(mn,m.id)):czFor(mn,m.id));kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
   m.czHist=m.czHist||[];if(m.profCz)m.czHist.push(m.profCz);if(m.czHist.length>30)m.czHist.shift();m.profCz={p:czClone(p),title:x.title,rid:x.rid,pk:x.pkey||null,day:x.relDay??x.day??S.day,kind};n++});return n}
 const _mxRelease=doRelease;doRelease=function(){const n=S.singles.length;const r=_mxRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)try{profSync(x)}catch(e){console.error(e)}return r};
 const _mxMig=migrate;migrate=function(){const r=_mxMig.apply(this,arguments);try{auDefaults();if(S.uiPref&&S.uiPref.gcol){UIP.gcol={...S.uiPref.gcol,...(UIP.gcol||{})}}const x=typeof latestSingle=='function'?latestSingle():null;if(x)profSync(x)}catch(e){console.error(e)}return r};
