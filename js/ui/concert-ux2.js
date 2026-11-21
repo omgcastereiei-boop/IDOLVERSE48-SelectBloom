@@ -66,3 +66,11 @@ const ccDrCopyGo=ccOK(function(){const X=ccDrCtx(),D=ui.ccdc;if(!X||!D||!ccEdit(
 // ---- 7. setlist costume panel: Edit Costume, no per-member copy buttons ---------------------------------------------------------------------
 {const f=ccCzHtml;ccCzHtml=function(){let h=f.apply(this,arguments);try{h=h.replace(/<button[^>]*onclick="ccCzMem(?:No|All)\([^"]*\)"[^>]*>[\s\S]*?<\/button>/g,'').replace('👗 Dress members one by one','✏️ Edit Costume')}catch(e){}return h}}
 ['ccAddAt','ccDrCopyOpen'].forEach(n=>{const f=window[n];window[n]=ccOK(f)});
+// ---- 8. "Each member's latest costume": every member wears the costume of the last earlier song SHE performed ----------
+//  A member who has not performed yet in this setlist wears the original song costume (same rule as "Original song costume").
+{const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items&&set.items[idx];if(!it||it.k!='song'||!it.cz||it.cz.mode!='last'||depth>40)return f.apply(this,arguments);
+  try{for(let j=idx-1;j>=0;j--){const x=set.items[j];if(x&&x.k=='song'&&ccPerf(x).some(id=>id==mid))return ccCzFor(C,set,j,mid,depth+1)}}catch(e){console.error(e)}
+  const z=it.cz;it.cz={mode:'orig'};try{return ccCzFor(C,set,idx,mid,depth+1)}finally{it.cz=z}}}
+{const f=ccCzHtml;ccCzHtml=function(C,s,it,i){let h=f.apply(this,arguments);try{const first=s.items.findIndex(x=>x.k=='song')==i,on=(it.cz||{}).mode=='last';
+  if(!first)h=h.replace('<option value="one"',`<option value="last" ${on?'selected':''}>Each member's latest costume</option><option value="one"`);
+  if(on)h=h.replace(/(<\/select><\/label>)/,`$1<p class="st">Each member wears the costume from the last earlier song she performed in this setlist. Members performing for the first time wear the original song costume.</p>`)}catch(e){console.error(e)}return h}}

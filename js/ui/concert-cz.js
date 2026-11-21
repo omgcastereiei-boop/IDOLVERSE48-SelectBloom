@@ -34,7 +34,7 @@ function ccCzFill(C,set,idx,mid,depth){const it=set&&set.items[idx];if(!it||it.k
 function ccDzOpen(iid){ui.ccdz={iid,ty:'single',g:'all',q:''};ui.mod={t:'html',h:ccDzHtml()};render()}
 function ccDzHtml(){const C=ccCur(),P=ui.ccdz,r=C&&P&&ccItem(C,P.iid);if(!r)return'';const m=get(ccPerf(r.it)[0])||S.members[0],a=ap(m),z=r.it.cz||{};
  const CM=typeof tf7CzMap=='function'?tf7CzMap():null,inf=d=>CM?tf7CzInfo(d,CM):{r:2,g:0,hd:''},q=(P.q||'').toLowerCase();
- const L=czLib().ds.filter(d=>d&&d.p).filter(d=>{const f=inf(d);return(P.ty=='all'||(P.ty=='single'&&f.r==0)||(P.ty=='stage'&&f.r==1)||(P.ty=='other'&&f.r==2))&&(P.g=='all'||f.g==+P.g)&&(!q||String(d.name).toLowerCase().includes(q))});
+ const L=czLib().ds.filter(d=>d&&d.p).filter(d=>{const f=inf(d);return(P.ty=='all'||(P.ty=='single'&&f.r==0)||(P.ty=='stage'&&f.r==1)||(P.ty=='other'&&f.r==2))&&(P.g=='all'||f.g==S.groups.findIndex(g=>String(g.id)==String(P.g)))&&(!q||String(d.name).toLowerCase().includes(q))});
  const chip=(k,v,n)=>`<button class="b s ${String(P[k])==String(v)?'p':''}" onclick="ui.ccdz.${k}='${v}';ui.mod.h=ccDzHtml();render()">${esc(n)}</button>`;
  return`<h2 class="ht">👗 Design · ${esc(r.it.title)}</h2><div class="row cctabs">${chip('ty','single','Single')}${chip('ty','stage','Stage')}${chip('ty','other','Other')}${chip('ty','all','All')}</div>${S.groups.length>1?`<div class="row">${chip('g','all','All groups')}${S.groups.map(g=>chip('g',g.id,g.name)).join('')}</div>`:''}
  <input class="ccpkq" placeholder="Search costume name" value="${esc(P.q||'')}" onchange="ui.ccdz.q=this.value;ui.mod.h=ccDzHtml();render()">
@@ -76,7 +76,7 @@ try{const ev=SECS.find(s=>s.v.some(x=>x[0]=='concert'));if(ev){ev.hid=[...(ev.hi
 // ---- 4. dressing page: choose from the Costume Library with pictures (Single / Stage / Other, by group) -----------------------
 function ccDrLibOpen(){if(!ui.czE)return;ui.ccdl={ty:'single',g:'all',q:''};ui.mod={t:'html',h:ccDrLibHtml()};render()}
 function ccDrLibHtml(){const X=ccDrCtx(),P=ui.ccdl;if(!X||!P)return'';const m=get(X.D.mid),a=ap(m),CM=typeof tf7CzMap=='function'?tf7CzMap():null,inf=d=>CM?tf7CzInfo(d,CM):{r:2,g:0,hd:''},q=(P.q||'').toLowerCase();
- const L=czLib().ds.filter(d=>d&&d.p).filter(d=>{const f=inf(d);return(P.ty=='all'||(P.ty=='single'&&f.r==0)||(P.ty=='stage'&&f.r==1)||(P.ty=='other'&&f.r==2))&&(P.g=='all'||f.g==+P.g)&&(!q||String(d.name).toLowerCase().includes(q))});
+ const L=czLib().ds.filter(d=>d&&d.p).filter(d=>{const f=inf(d);return(P.ty=='all'||(P.ty=='single'&&f.r==0)||(P.ty=='stage'&&f.r==1)||(P.ty=='other'&&f.r==2))&&(P.g=='all'||f.g==S.groups.findIndex(g=>String(g.id)==String(P.g)))&&(!q||String(d.name).toLowerCase().includes(q))});
  const chip=(k,v,n)=>`<button class="b s ${String(P[k])==String(v)?'p':''}" onclick="ui.ccdl.${k}='${v}';ui.mod.h=ccDrLibHtml();render()">${esc(n)}</button>`;
  return`<h2 class="ht">🖼 Costume Library · ${esc(m.name)}</h2><p class="st">Tap a design: ${esc(m.name)} wears it in the Costume Designer. Edit it if you like, then press Save.</p><div class="row cctabs">${chip('ty','single','Single')}${chip('ty','stage','Stage')}${chip('ty','other','Other')}${chip('ty','all','All')}</div>${S.groups.length>1?`<div class="row">${chip('g','all','All groups')}${S.groups.map(g=>chip('g',g.id,g.name)).join('')}</div>`:''}
  <input class="ccpkq" placeholder="Search costume name" value="${esc(P.q||'')}" onchange="ui.ccdl.q=this.value;ui.mod.h=ccDrLibHtml();render()">
