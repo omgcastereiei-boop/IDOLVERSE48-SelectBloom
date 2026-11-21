@@ -81,3 +81,7 @@ xeSelTog=function(){toast('Members are chosen automatically (Media Senbatsu → 
 let XM_RUN=0;
 {const f=xeRun;xeRun=function(){XM_RUN=1;try{return f.apply(this,arguments)}finally{XM_RUN=0}}}
 {const f=gainPop;gainPop=function(m,d){if(!XM_RUN||!m)return f.apply(this,arguments);const f0=Number.isFinite(+m.fans)?+m.fans:0;m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}}
+// ---- music programs are always accepted automatically (locked) -----------------------------------------------------------------------
+function xmAutoMp(){const X=xeS();if(!X)return;X.list.filter(r=>r.status=='open'&&r.ch=='mp').forEach(r=>{try{const ids=(r.req||[]).map(q=>q.mid);if(!ids.length||xeCheck(r,ids).length)return;if(xeDoAccept(r,ids))xeNote(`📺 Music program accepted automatically: <b>${esc(r.name)}</b> · ${jd(r.day)} · ${yen(r.pay)}.`,r.id)}catch(e){console.error(e)}})}
+{const f=tick;tick=function(){const out=f.apply(this,arguments);try{xmAutoMp()}catch(e){console.error(e)}return out}}
+{const f=V.xemp;if(typeof f=='function')V.xemp=function(){try{xmAutoMp()}catch(e){}const h=f.apply(this,arguments);const bar=`<div class="c xmauto"><label class="row"><input type="checkbox" checked disabled> <b>🔒 Music programs: accepted automatically</b></label><small class="st">Offers for the latest single's music programs are accepted as soon as every performer is free.</small></div>`;const i=h.indexOf('</h2>');return i>=0?h.slice(0,i+5)+bar+h.slice(i+5):bar+h}}
