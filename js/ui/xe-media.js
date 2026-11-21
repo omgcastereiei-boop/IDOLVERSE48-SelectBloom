@@ -9,8 +9,8 @@
 //    A member who is busy (Theater performances do not count — the event has priority) is
 //    replaced by the best-ranked member of the latest General Election, or, without an election,
 //    by the member with the largest fanbase.
-//  · Each group receives 1–2 offers a month (board or direct), solo or group events.
-//    Music programs (single promotion) are not counted.
+//  · Performance events (festivals / live events with songs): 1–2 a month per group. Other offers
+//    (corporate, media, talk, photo …) keep their usual frequency. Music programs are not counted.
 //  · Auto-accept (optional): offers are accepted automatically when every check passes; live
 //    events get the latest single's songs with their original Centers.
 //  · Fans: an event reaches many people but converts few of them into fans.
@@ -48,16 +48,16 @@ function xmApply(r,size){if(!r||r.status!='open'||r.ch=='mp')return true;const g
  try{r.pay=xePay(r);r.expE=xeExp(r).t;r.cond=xeCond(r).map(c=>/chooses the members|named the members/.test(c)?'Members: the Media Senbatsu (or the latest Title Track Senbatsu); busy members are replaced by election rank or fanbase.':c)}catch(e){}return true}
 // ---- 1–2 offers per group a month (solo or group) -------------------------------------------------------------------------------------
 let XM_IN=0,XM_GEN=0;
-{const f=xeMake;xeMake=function(ch,o={}){if(XM_IN&&!XM_GEN)return null;const r=f.apply(this,arguments);if(!r||ch=='mp')return r;try{
+{const f=xeMake;xeMake=function(ch,o={}){const r=f.apply(this,arguments);if(!r||ch=='mp')return r;if(XM_IN&&!XM_GEN&&(r.acts||[]).includes('live')){const X=xeS(),i=X.list.indexOf(r);if(i>=0)X.list.splice(i,1);return null}try{
   const gid=o.gid!=null?o.gid:xmGid(r);r.gr=[{gid,gn:(grp(gid)||{}).name||''}];const size=r.mode=='org'?(o.size||(Math.random()<.55?1:xeR(3,6))):Math.max(3,r.n||3);
   if(!xmApply(r,size)){const X=xeS(),i=X.list.indexOf(r);if(i>=0)X.list.splice(i,1);return null}}catch(e){console.error(e)}return r}}
 const xmMonth=d=>{const t=dayDate(d);return t.getFullYear()*12+t.getMonth()};
 function xmGenerate(){const X=xeS();if(!X)return;X.mq=X.mq||{};const mo=xmMonth(S.day),t=dayDate(S.day),dim=new Date(t.getFullYear(),t.getMonth()+1,0).getDate(),left=dim-t.getDate()+1;
  for(const k in X.mq)if(+k.split('|')[1]<mo-2)delete X.mq[k];
  S.groups.filter(g=>!g.dis&&gsMem(g.id).some(isAct)).forEach(g=>{const key=g.id+'|'+mo,Q=X.mq[key]=X.mq[key]||{q:Math.random()<.5?1:2,n:0};if(Q.n>=Q.q)return;
-  if(Math.random()>=(Q.q-Q.n)/left)return;const ch=Math.random()<.4?'direct':'board',good=Object.values(X.orgs||{}).filter(o=>o.sat>=62),org=ch=='direct'&&good.length&&Math.random()<.6?xePick(good):null;
-  XM_GEN=1;let r=null;try{r=xeMake(ch,{gid:g.id,size:Math.random()<.5?1:xeR(3,6),...(org?{org,cat:org.cat}:{})})}finally{XM_GEN=0}
-  if(r){Q.n++;if(ch=='direct')xeNote(`📨 Direct offer for <b>${esc(g.name)}</b> from <b>${esc(r.orgNm)}</b>: ${esc(r.name)} · ${yen(r.pay)}.`,r.id)}})}
+  if(Math.random()>=(Q.q-Q.n)/left)return;const ch=Math.random()<.4?'direct':'board',good=Object.values(X.orgs||{}).filter(o=>o.sat>=62&&o.cat=='music'),org=ch=='direct'&&good.length&&Math.random()<.6?xePick(good):null;
+  XM_GEN=1;let r=null;try{r=xeMake(ch,{gid:g.id,cat:'music',...(org&&org.cat=='music'?{org}:{})})}finally{XM_GEN=0}
+  if(r){Q.n++;if(ch=='direct')xeNote(`📨 Festival / live offer for <b>${esc(g.name)}</b> from <b>${esc(r.orgNm)}</b>: ${esc(r.name)} · ${yen(r.pay)}.`,r.id)}})}
 {const f=xeDaily;xeDaily=function(){XM_IN=1;let out;try{out=f.apply(this,arguments)}finally{XM_IN=0}try{xmGenerate();xeS().list.filter(r=>r.status=='open'&&r.ch!='mp').forEach(r=>{if(!xmApply(r)){r.status='expired';r.end=S.day}});xmAuto()}catch(e){console.error(e)}return out}}
 // ---- auto-accept ----------------------------------------------------------------------------------------------------------------------
 function xmAutoSongs(r){const gid=xmGid(r),ids=xeSelOf(r).sel,out=[];try{gsWith(gid,()=>{const x=(S.singles||[]).slice(-1)[0];if(!x)return;const L=[x.mainId,...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))].filter((v,i,a)=>v&&a.indexOf(v)==i);
@@ -65,9 +65,9 @@ function xmAutoSongs(r){const gid=xmGid(r),ids=xeSelOf(r).sel,out=[];try{gsWith(
  return out.map(z=>{const X=xeOrigOrder(z.gid,z.song,ids);return{...z,center:X.cen[0]??null,c2:X.cen[1]??null,o:X.O}})}
 function xmAuto(){const X=xeS();if(!X||!X.auto)return;X.list.filter(r=>r.status=='open'&&r.ch!='mp').forEach(r=>{try{if(!xmApply(r))return;let ids,set;
   if(r.mode=='org')ids=r.req.map(q=>q.mid);else{const D=xeSelOf(r);ids=D.sel.slice();if(r.songs&&!(D.songs&&D.songs.length))D.songs=xmAutoSongs(r);set=(D.songs||[]).map(z=>({gid:z.gid,song:z.song,title:z.title,center:z.center,c2:z.c2,o:z.o.filter(id=>ids.includes(id))}))}
-  if(xeCheck(r,ids).length)return;if(xeDoAccept(r,ids,set)){xeNote(`🤝 Auto-accepted: <b>${esc(r.name)}</b> · ${jd(r.day)} · ${ids.length} member(s) · ${yen(r.pay)}.`,r.id)}}catch(e){console.error(e)}})}
+  if(xeCheck(r,ids).length)return;if(ids.some(id=>((get(id)||{}).en|0)<40))return;if(xeDoAccept(r,ids,set)){xeNote(`🤝 Auto-accepted: <b>${esc(r.name)}</b> · ${jd(r.day)} · ${ids.length} member(s) · ${yen(r.pay)}.`,r.id)}}catch(e){console.error(e)}})}
 function xmAutoTog(){const X=xeS();X.auto=!X.auto;toast(X.auto?'Auto-accept on: offers are accepted automatically when everything is ready.':'Auto-accept off.');if(X.auto)xmAuto();render()}
-const xmAutoBar=()=>{const X=xeS();return`<div class="c xmauto"><label class="row"><input type="checkbox" ${X.auto?'checked':''} onchange="xmAutoTog()"> <b>Auto-accept offers</b></label><small class="st">Each group receives 1–2 offers a month. Members are the Media Senbatsu (or the latest Title Track Senbatsu); busy members are replaced by General Election rank, or fanbase.</small></div>`};
+const xmAutoBar=()=>{const X=xeS();return`<div class="c xmauto"><label class="row"><input type="checkbox" ${X.auto?'checked':''} onchange="xmAutoTog()"> <b>Auto-accept offers</b></label><small class="st">Performance events (festivals / live events): 1–2 a month per group; other events (corporate, media, talk …) as before. Members are the Media Senbatsu (or the latest Title Track Senbatsu); busy members are replaced by General Election rank, or fanbase.</small></div>`};
 ['xeboard','xedirect','xeov'].forEach(v=>{const f=V[v];if(typeof f!='function')return;V[v]=function(){const h=f.apply(this,arguments);try{const i=h.indexOf('</h2>');return i>=0?h.slice(0,i+5)+xmAutoBar()+h.slice(i+5):xmAutoBar()+h}catch(e){return h}}});
 // ---- accepting by hand: the lineup is automatic ----------------------------------------------------------------------------------------
 {const f=xeAccept;xeAccept=function(id){const r=xeGet(id);if(r&&r.status=='open'&&!xmApply(r))return toast('Nobody in the group is free that day.','err');return f.apply(this,arguments)}}
