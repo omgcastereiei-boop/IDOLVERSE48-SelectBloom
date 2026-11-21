@@ -33,3 +33,4 @@ Object.assign(I18N_TH,{"Rounded bob":"บ็อบทรงกลม","Layered b
  "Tied":"ผมมัด","Buns, braids & half-up":"มวย เปีย และครึ่งหัว","Layers":"เลเยอร์","Main back hair":"ผมด้านหลังหลัก","＋ Add layer":"＋ เพิ่มเลเยอร์","top of the list = furthest back":"บนสุดของรายการ = อยู่หลังสุด","Size":"ขนาด","Move backward":"ย้ายไปด้านหลัง","Move forward":"ย้ายมาด้านหน้า","Remove layer":"ลบเลเยอร์",
  "Chosen independently of the bangs and side locks. Combine several back hair layers for your own hairstyle.":"เลือกแยกจากหน้าม้าและจงอยผม ซ้อนผมด้านหลังได้หลายเลเยอร์เพื่อสร้างทรงของตัวเอง"});
 I18N_TH_TPL.unshift(["Layer {0}","เลเยอร์ {0}"],["Editing: {0} — pick a style below.","กำลังแก้: {0} — เลือกทรงด้านล่าง"],["At most {0} extra layers.","เพิ่มเลเยอร์ได้สูงสุด {0} ชั้น"]);
+Object.assign(I18N_TH,{"Slim twin tails":"ทวินเทลเรียว","Medium twin tails":"ทวินเทลขนาดกลาง","High twin tails":"ทวินเทลสูง","Long slim twin tails":"ทวินเทลยาวเรียว","Soft wavy twin tails":"ทวินเทลลอนนุ่ม"});
