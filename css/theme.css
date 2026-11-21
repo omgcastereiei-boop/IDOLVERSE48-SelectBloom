@@ -1369,3 +1369,9 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .ccfmctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}.ccfmctl select{width:auto;min-width:64px}
 .ccfsl{flex-wrap:nowrap!important;overflow-x:auto;overflow-y:visible;justify-content:safe center!important;padding:8px 2px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
 .ccfsl>.ccfslot{flex:0 0 auto}
+/* copy-costume pickers: the costume label wraps inside the member card */
+.m .rsb,.ccm3 .rsb,.msel .rsb{white-space:normal;max-width:100%;overflow-wrap:anywhere;line-height:1.25;text-align:center}
+.msel .c.m{min-width:0;overflow:hidden}
+/* events: Centers row, latest-costume preview */
+.xecen{gap:6px;align-items:center;flex-wrap:wrap}.xecen select{width:auto;max-width:46%}
+.xeczrow{gap:6px;flex-wrap:wrap}.xeczm{display:flex;flex-direction:column;align-items:center;width:44px}.xeczm small{font-size:10px;max-width:44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
