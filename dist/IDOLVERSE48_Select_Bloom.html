@@ -1411,6 +1411,9 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .bhlc{display:flex;flex-direction:column;gap:3px}.bhg{margin:10px 0 4px;font-size:14px}
 /* song-specific hairstyle */
 .shz{margin-top:10px}.hzrow{align-items:center;gap:12px;flex-wrap:wrap}.hzpv .approw{max-width:260px}.hzed{margin-top:8px}
+/* concert: design picker with pictures, 3 per row */
+.czps.ccdz3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ccdz3 .czpsi{min-width:0}.ccdz3 .czpsi svg{width:100%;height:auto;max-height:170px}.ccdz3 .czpsi b{font-size:11px;word-break:break-word}.ccdz3 .czpsi.on{box-shadow:0 0 0 3px var(--pk)}
+.t-html .czps{grid-template-columns:repeat(3,minmax(0,1fr))}
 
 </style>
 </head><body>
@@ -13588,7 +13591,7 @@ function ccFormPage(C){const r=ccItem(C,ui.ccfp);if(!r){ui.ccfp=null;return ccEd
 
 // ---- 8. setlist like the Theater setlist ---------------------------------------------------------------------------------------------
 ccSongRow=function(C,s,it,i,k){const o=ccSong(it.gid,it.song),P=ccPerf(it),cen=it.pos.filter(z=>z.c&&z.m!=null).map(z=>ccNm(C,z.m)),vac=it.pos.filter(z=>z.m==null),oc=ui.ccz==it.id,ed=ccEdit(C);const origC=(it.orig||[]).filter(z=>z.c).map(z=>z.m),ctrMiss=origC.length&&!it.pos.some(z=>z.c&&z.m!=null);
- return`<li class="thsg ccsg ${oc?'on':''} ${o?'':'bad'}"><span class="thnum ${it.enc?'en':''}">${typeof k=='string'?k:'M'+String(k).padStart(2,'0')}</span><button class="thsgm" onclick="ccFormGo('${it.id}')"><b>${it.unit?'<span class="thptb unit">UNIT</span> ':''}${esc(it.title)}</b><small>${P.length} performer(s) · Center ${cen.length?cen.map(esc).join(', '):'<span class="thwarn">none</span>'}${vac.length?` · ${vac.length} empty`:''} · 👗 ${esc(ccCzTxt(C,s,i))}${o?'':' · <span class="thwarn">original song missing</span>'}${ctrMiss?' · <span class="thwarn">original center not performing</span>':''}</small></button><span class="thmcm">${P.slice(0,6).map(id=>thMini(id,22)).join('')}${P.length>6?`<i>+${P.length-6}</i>`:''}</span>
+ return`<li class="thsg ccsg ${oc?'on':''} ${o?'':'bad'}"><span class="thnum ${it.enc?'en':''}">${typeof k=='string'?k:'M'+String(k).padStart(2,'0')}</span><button class="thsgm" onclick="ccFormGo('${it.id}')"><b>${it.unit?'<span class="thptb unit">UNIT</span> ':''}${esc(it.title)}</b><small>${P.length==1?'Solo':P.length==2?'Duet':P.length+' performer(s)'}${P.length>2&&cen.length?' · Center '+cen.map(esc).join(', '):''}${vac.length?` · ${vac.length} empty`:''}${o?'':' · <span class="thwarn">original song missing</span>'}${ctrMiss&&P.length>2?' · <span class="thwarn">original center not performing</span>':''}</small></button><span class="thmcm">${P.slice(0,6).map(id=>thMini(id,22)).join('')}${P.length>6?`<i>+${P.length-6}</i>`:''}</span>
  <button class="b s" onclick="ccFormGo('${it.id}')">Formation</button><button class="b s ${oc?'p':''}" onclick="ui.ccz=${oc?'null':`'${it.id}'`};render()">Costume</button>${ed?`<button class="b s ${it.unit?'p':''}" title="Mark as a Unit song" onclick="ccUnitTog('${it.id}')">Unit</button>`:''}${ed?`<button class="b s" title="Insert an MC break after" onclick="ccMcAfter('${it.id}')">+MC</button><button class="b s ${it.enc?'p':''}" title="Move to / out of the Encore" onclick="ccEncTog('${it.id}')">EN</button><button class="b s" onclick="ccItemMove('${it.id}',-1)">▲</button><button class="b s" onclick="ccItemMove('${it.id}',1)">▼</button><button class="b s" onclick="ccItemDel('${it.id}')">✕</button>`:''}${oc?`<div class="ccczw">${ccCzHtml(C,s,it,i)}</div>`:''}</li>`};
 ccMcRow=function(C,s,it,i){const M=ccMcMem(C,it),ed=ccEdit(C);return`<li class="thmc ccmc"><span class="thnum">MC</span><input value="${esc(it.name)}" ${ed?'':'disabled'} maxlength="40" aria-label="MC name" onchange="ccMcSet('${it.id}','name',this.value)"><button type="button" class="ccmcb" ${ed?`onclick="ccMcOpen('${it.id}')"`:''}><span class="thmcm">${M.slice(0,7).map(id=>thMini(id,22)).join('')}${M.length>7?`<i>+${M.length-7}</i>`:''}</span><small>${it.all?'All participants':M.length?M.length+' speaker(s)':'Choose speakers'} ✎</small></button>${ed?`<button class="b s" onclick="ccItemMove('${it.id}',-1)">▲</button><button class="b s" onclick="ccItemMove('${it.id}',1)">▼</button><button class="b s" onclick="ccItemDel('${it.id}')">✕</button>`:''}</li>`};
 function ccMcAfter(iid){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;const L=r.s.items,i=L.indexOf(r.it);L.splice(i+1,0,{id:ccIid(),k:'mc',name:`MC ${L.filter(x=>x.k=='mc').length+1}`,all:true,mem:[],...(r.it.enc?{enc:1}:{})});render()}
@@ -15091,6 +15094,95 @@ function hzHtml(){const C=hzCur();if(!C)return'';const m=get(C.mid),o=C.o,H=hzOf
 {const f=V.songcz;V.songcz=function(){const h=f.apply(this,arguments);try{const x=hzHtml();if(!x)return h;return h+x}catch(e){console.error(e);return h}}}
 // leaving the page (or switching member) closes an open hairstyle edit without saving
 {const f=render;render=function(){try{const z=ui.shz;if(z&&z.edit&&(view!='songcz'||!ui.scz||ui.scz.mid!=z.mid))hzEnd()}catch(e){}return f.apply(this,arguments)}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Concert costumes: original positions, picture picker,
+//                               member-by-member dressing (like the Theater)
+// -------------------------------------------------------------------------------------
+//  · "Original song costume": a member who takes a position of the original formation wears
+//    the costume of that original position (position 1 → the costume of the original member in
+//    position 1 …). Members of the original lineup keep their own costume.
+//  · "One design for everyone": the design is chosen from a picture picker, sorted into
+//    Single / Stage / Other designs and by group, three pictures per row.
+//  · Dressing page for a concert song (like Stage Costumes): member strip, the Costume Designer
+//    for the selected member, Save, Randomize, random for every member (same / different),
+//    copy to the members without a costume, choose one of her existing costumes. Every member
+//    can wear a different costume; it is saved for this concert song only.
+// =====================================================================================
+// ---- 1. original costumes follow the original positions ----------------------------------------------------------------
+{const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx];const r=f.apply(this,arguments);try{if(!it||it.k!='song')return r;const z=it.cz||{mode:'orig'};
+  const useOrig=z.mode=='orig'||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]));if(!useOrig)return r;
+  const o=ccSong(it.gid,it.song);if(!o)return r;let own=false;try{gsWith(it.gid,()=>{own=czMembers(o).some(m=>m.id==mid)})}catch(e){}if(own)return r;
+  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k>=0&&it.orig&&it.orig[k]?it.orig[k].m:null;if(om==null)return r;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
+// ---- 2. picture picker for "one design for everyone" ------------------------------------------------------------------------
+function ccDzOpen(iid){ui.ccdz={iid,ty:'single',g:'all',q:''};ui.mod={t:'html',h:ccDzHtml()};render()}
+function ccDzHtml(){const C=ccCur(),P=ui.ccdz,r=C&&P&&ccItem(C,P.iid);if(!r)return'';const m=get(ccPerf(r.it)[0])||S.members[0],a=ap(m),z=r.it.cz||{};
+ const CM=typeof tf7CzMap=='function'?tf7CzMap():null,inf=d=>CM?tf7CzInfo(d,CM):{r:2,g:0,hd:''},q=(P.q||'').toLowerCase();
+ const L=czLib().ds.filter(d=>d&&d.p).filter(d=>{const f=inf(d);return(P.ty=='all'||(P.ty=='single'&&f.r==0)||(P.ty=='stage'&&f.r==1)||(P.ty=='other'&&f.r==2))&&(P.g=='all'||f.g==+P.g)&&(!q||String(d.name).toLowerCase().includes(q))});
+ const chip=(k,v,n)=>`<button class="b s ${String(P[k])==String(v)?'p':''}" onclick="ui.ccdz.${k}='${v}';ui.mod.h=ccDzHtml();render()">${esc(n)}</button>`;
+ return`<h2 class="ht">👗 Design · ${esc(r.it.title)}</h2><div class="row cctabs">${chip('ty','single','Single')}${chip('ty','stage','Stage')}${chip('ty','other','Other')}${chip('ty','all','All')}</div>${S.groups.length>1?`<div class="row">${chip('g','all','All groups')}${S.groups.map(g=>chip('g',g.id,g.name)).join('')}</div>`:''}
+ <input class="ccpkq" placeholder="Search costume name" value="${esc(P.q||'')}" onchange="ui.ccdz.q=this.value;ui.mod.h=ccDzHtml();render()">
+ <div class="czps ccdz3">${L.map(d=>`<button class="czpsi ${z.mode=='one'&&z.d==d.id?'on':''}" onclick="ccDzPick('${d.id}')"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:d.p})}</svg><b>${esc(d.name)}</b><small class="st">${esc(inf(d).hd||'')}</small></button>`).join('')||'<p class="st">No design in this category.</p>'}</div>`}
+function ccDzPick(did){const C=ccCur(),P=ui.ccdz,r=C&&P&&ccItem(C,P.iid);if(!ccEdit(C)||!r)return;r.it.cz={mode:'one',d:did};ui.mod=null;toast(`Design: ${(czD(did)||{}).name||''}`);render()}
+{const f=ccCzHtml;ccCzHtml=function(C,s,it,i){let h=f.apply(this,arguments);try{const z=it.cz||{};
+  // the design dropdown becomes a picture picker
+  h=h.replace(/<label class="st">Design <select[\s\S]*?<\/select><\/label>/,`<button class="b s p" onclick="ccDzOpen('${it.id}')">🖼 ${z.d&&czD(z.d)?esc(czD(z.d).name):'Choose a design…'}</button>`);
+  // member tiles open the dressing page; the old list picker stays as "Her costumes…"
+  h=h.replace(/onclick="ccCzOpen\('([^']+)',(\d+)\)"/g,`onclick="ccDrOpen('$1',$2)"`).replace(/<p class="st">Tap a member to choose <b>her<\/b> costume[^<]*<\/p>/,`<p class="st">Tap a member to dress her (Costume Designer). Every member can wear her own costume.</p><div class="row"><button class="b s p" onclick="ccDrOpen('${it.id}')">👗 Dress members one by one</button></div>`)}catch(e){console.error(e)}return h}}
+// ---- 3. dressing page --------------------------------------------------------------------------------------------------------------
+function ccDrCtx(){const C=ccCur(),D=ui.ccdr,r=C&&D&&ccItem(C,D.iid);if(!r)return null;const s=r.s,it=r.it,idx=s.items.indexOf(it),M=ccPerf(it);return{C,s,it,idx,M,D}}
+function ccDrOpen(iid,mid){const C=ccCur(),r=C&&ccItem(C,iid);if(!r)return;const M=ccPerf(r.it);if(!M.length)return toast('Nobody performs this song yet — set the formation first.','err');
+ const go=()=>{ui.ccSetY=ui.ccSetY??window.scrollY;ui.ccdr={iid,mid:M.includes(+mid)?+mid:M[0]};ccDrLoad();view='cccz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='cccz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
+function ccDrMem(mid){if(ui.ccdr)ccDrOpen(ui.ccdr.iid,mid)}
+function ccDrLoad(){const X=ccDrCtx();if(!X)return;const p=ccCzFor(X.C,X.s,X.idx,X.D.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.D.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,ccz:1}}
+// switch the song to member-by-member costumes, keeping what everyone wears now
+function ccDrMemMode(X){const z=X.it.cz=X.it.cz||{mode:'orig'};if(z.mode!='mem'){const cur={};X.M.forEach(id=>{const p=ccCzFor(X.C,X.s,X.idx,id);if(p)cur[id]=czClone(p)});X.it.cz={mode:'mem',mem:{},memP:cur}}return X.it.cz}
+function ccDrSet(X,id,p){const z=ccDrMemMode(X);z.memP=z.memP||{};z.memP[id]=czClone(p);if(z.mem)delete z.mem[id];z.done=z.done||{};z.done[id]=1}
+function ccDrSave(){const X=ccDrCtx();if(!X||!ccEdit(X.C))return;const m=get(X.D.mid);ccDrSet(X,m.id,ui.czE.p);ui.czE.dirty=0;toast(`Costume for ${m.name} in “${X.it.title}” saved.`);render()}
+function ccDrRevert(){ccDrLoad();render()}
+function ccDrRandom(){if(!ui.czE)return;ui.czE.p=czRandom();ui.czE.dirty=1;toast('Random costume generated. Edit any piece, then save (nothing is saved until you press Save).');render()}
+function ccDrRandAll(diff){const X=ccDrCtx();if(!X||!ccEdit(X.C))return;const one=czRandom();X.M.forEach(id=>ccDrSet(X,id,diff?czRandom():one));ccDrLoad();toast(diff?`Every member (${X.M.length}) got her own random costume.`:`One random costume for all ${X.M.length} member(s).`);render()}
+function ccDrCopyRest(){const X=ccDrCtx();if(!X||!ccEdit(X.C))return;const z=ccDrMemMode(X),D=X.M.filter(id=>id!=X.D.mid&&!(z.done&&z.done[id]));if(!D.length)return toast('Every member already has her own costume.','err');D.forEach(id=>ccDrSet(X,id,ui.czE.p));toast(`Current design copied to ${D.length} member(s).`);render()}
+function ccDrLib(did){const d=czD(did);if(!d||!ui.czE)return;ui.czE.p=czClone(d.p);ui.czE.dirty=1;render()}
+function ccDrBack(){czConfirmLeave(()=>{ui.czE=null;view='concert';render();const y=ui.ccSetY;ui.ccSetY=null;if(y!=null)requestAnimationFrame(()=>{try{window.scrollTo(0,y)}catch(e){}})})}
+{const f=ccCzMemSet;ccCzMemSet=function(){const r=f.apply(this,arguments);try{if(view=='cccz'){const X=ccDrCtx();if(X){const z=X.it.cz;if(z){z.done=z.done||{};z.done[X.D.mid]=1}}ccDrLoad();render()}}catch(e){console.error(e)}return r}}
+V.cccz=function(){const X=ccDrCtx();if(!X)return`<p class="st">No concert song selected. <button class="b" onclick="view='concert';render()">◀ Back</button></p>`;
+ if(!X.M.includes(X.D.mid)){X.D.mid=X.M[0];ccDrLoad()}if(!ui.czE||!ui.czE.ccz||ui.czE.mid!=X.D.mid)ccDrLoad();
+ const z=X.it.cz||{},E=ui.czE,m=get(X.D.mid),ed=ccEdit(X.C),L=czLib().ds.filter(d=>d.p),doneOf=id=>!!(z.mode=='mem'&&z.done&&z.done[id]),done=X.M.filter(doneOf).length;
+ const strip=`<div class="plczs">${X.M.map(id=>{const x=get(id);if(!x)return'';const ok=doneOf(id);return`<button class="plczm ${id==m.id?'on':''} ${ok?'ok':''}" onclick="ccDrMem(${id})" title="${esc(x.name)}">${ptc(x,46)}<b>${esc(x.name.split(' ')[0])}</b><small>${ok?'✔ Own costume':'Original costume'}</small></button>`}).join('')}</div>`;
+ const songs=X.s.items.filter(i=>i.k=='song');
+ const tools=ed?`<button class="b s p" onclick="ccDrRandom()">🎲 Randomize Costume</button><button class="b s" onclick="ccDrRandAll(0)">🎲 Random for every member (same)</button><button class="b s" onclick="ccDrRandAll(1)">🎲 Random for every member (each different)</button><select onchange="if(this.value)ccDrLib(this.value);this.value=''"><option value="">Start from a library design…</option>${L.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('')}</select><button class="b s" onclick="ccCzOpen('${X.it.id}',${m.id})">Her costumes…</button><button class="b s" onclick="ccDrCopyRest()">Copy to members without their own costume</button>`:'<span class="tag warn">🔒 This concert can no longer be edited</span>';
+ let body=czGridHtml(E,null,null,m).replace(/<label class="st">Model <select[\s\S]*?<\/select><\/label>/,'').replace('onclick="czSave()"','onclick="ccDrSave()"').replace('onclick="czRevert()"','onclick="ccDrRevert()"').replace('💾 Save design','💾 Save costume');
+ if(!doneOf(m.id)&&!E.dirty)body=body.replace('<span class="tag">Saved</span>','<span class="tag warn">Not saved yet</span>');
+ return`<h2 class="ht">Concert Costumes · ${esc(X.it.title)}</h2><div class="c plczh"><div class="row"><b>${done} / ${X.M.length} members in their own costume</b><span class="st">${esc(X.C.name)} · ${esc(X.s.name)}. Each member can wear her own costume — saved for this concert song only.</span><span style="flex:1"></span><select aria-label="Song" onchange="ccDrOpen(this.value)">${songs.map(x=>`<option value="${x.id}" ${x.id==X.it.id?'selected':''}>${esc(x.title)}</option>`).join('')}</select><button class="b" onclick="ccDrBack()">◀ Back to Setlist</button></div>${strip}<div class="row">${tools}</div></div>${body}`};
+try{const ev=SECS.find(s=>s.v.some(x=>x[0]=='concert'));if(ev){ev.hid=[...(ev.hid||[]),'cccz']}SUBLOC.cccz='Concert · Costumes';if(typeof SC_VIEW!='undefined')SC_VIEW.cccz='dressing'}catch(e){}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — pages stay where you left them
+// -------------------------------------------------------------------------------------
+//  · Every section of the bottom / side navigation remembers the page you had open in it and
+//    how far you had scrolled. Going to another section and back returns to that page and spot
+//    (sub-pages such as a concert's Formation page are kept as well, they live in ui state).
+//    Tapping the section you are already in still goes to its first page, as before.
+//  · Concert setlist: coming back from a song's Formation page returns to the same place in
+//    the setlist.
+//  · Pop-ups that refresh their own content (e.g. "Add songs" after + Add) keep their scroll
+//    position instead of jumping back to the top.
+// =====================================================================================
+const NAVM={last:{},sc:{}};
+const navKey=()=>view+(ui.ccfp?'|fp:'+ui.ccfp:'')+(ui.cc?'|cc:'+ui.cc+':'+(ui.cct||''):'');
+if(typeof window!='undefined')window.addEventListener('scroll',()=>{try{if(S&&!ui.t)NAVM.sc[navKey()]=window.scrollY}catch(e){}},{passive:true});
+{const f=goSec;goSec=function(k){try{const cur=secOf(view).k,last=NAVM.last[k];if(k!=cur&&last&&secOf(last).k==k){view=last;render();const y=NAVM.sc[navKey()]||0;requestAnimationFrame(()=>{try{window.scrollTo(0,y)}catch(e){}});return}}catch(e){console.error(e)}return f.apply(this,arguments)}}
+{const f=ccFormGo;ccFormGo=function(iid){ui.ccSetY=window.scrollY;return f.apply(this,arguments)}}
+{const f=ccFormBack;ccFormBack=function(){const y=ui.ccSetY;const r=f.apply(this,arguments);if(y!=null)requestAnimationFrame(()=>{try{window.scrollTo(0,y)}catch(e){}});return r}}
+{const f=render;render=function(){let keep=null;try{const d=document.querySelector('.mod [role=dialog]');if(d&&ui.mod){const h=(d.querySelector('h2')||{}).textContent||'';const inner=[...d.querySelectorAll('.ccpk,.xeczl,.thlib,.czlist')].map(e=>e.scrollTop);keep={h,top:d.scrollTop,inner}}}catch(e){}
+ const r=f.apply(this,arguments);
+ try{if(S&&!ui.t)NAVM.last[secOf(view).k]=view;if(keep&&ui.mod){const d=document.querySelector('.mod [role=dialog]');if(d&&((d.querySelector('h2')||{}).textContent||'')==keep.h){d.scrollTop=keep.top;[...d.querySelectorAll('.ccpk,.xeczl,.thlib,.czlist')].forEach((e,i)=>{if(keep.inner[i]!=null)e.scrollTop=keep.inner[i]})}}}catch(e){}
+ return r}}
 
 </script>
 <script>
@@ -20238,6 +20330,10 @@ Object.assign(I18N_TH,{"Use default hairstyle":"ใช้ทรงผมปก�
  "For this song only. Her profile hairstyle, her other songs and the other members are not changed. Costume and hairstyle are saved separately.":"ใช้เฉพาะเพลงนี้เท่านั้น ทรงผมในโปรไฟล์ เพลงอื่นของเธอ และเมมเบอร์คนอื่นจะไม่เปลี่ยน ชุดและทรงผมบันทึกแยกกัน",
  "The release is in production: costumes and hairstyles are locked.":"ผลงานอยู่ระหว่างการผลิต: ชุดและทรงผมถูกล็อก"});
 I18N_TH_TPL.unshift(["💇 Hairstyle — {0}","💇 ทรงผม — {0}"],["Custom: {0}","เฉพาะเพลง: {0}"],["Hairstyle for {0} in \"{1}\" saved.","บันทึกทรงผมของ {0} ในเพลง \"{1}\" แล้ว"],["{0} uses her default hairstyle in \"{1}\".","{0} ใช้ทรงผมปกติในเพลง \"{1}\""],[" + {0} layer(s)"," + {0} เลเยอร์"]);
+// concert costumes & dressing page
+Object.assign(I18N_TH,{"Solo":"โซโล่","Duet":"ดูเอ็ท","Choose a design…":"เลือกดีไซน์…","Single":"ซิงเกิ้ล","Stage":"สเตจ","Other":"อื่น ๆ","All":"ทั้งหมด","All groups":"ทุกวง","No design in this category.":"ไม่มีดีไซน์ในหมวดนี้","👗 Dress members one by one":"👗 แต่งชุดทีละคน","Tap a member to dress her (Costume Designer). Every member can wear her own costume.":"แตะเมมเบอร์เพื่อแต่งชุด (Costume Designer) เมมแต่ละคนใส่ชุดต่างกันได้",
+ "✔ Own costume":"✔ ชุดของตัวเอง","Original costume":"ชุดต้นฉบับ","🎲 Randomize Costume":"🎲 สุ่มชุด","🎲 Random for every member (same)":"🎲 สุ่มให้ทุกคน (ชุดเดียวกัน)","🎲 Random for every member (each different)":"🎲 สุ่มให้ทุกคน (คนละชุด)","Start from a library design…":"เริ่มจากดีไซน์ในคลัง…","Her costumes…":"ชุดของเธอ…","Copy to members without their own costume":"คัดลอกให้เมมที่ยังไม่มีชุดของตัวเอง","◀ Back to Setlist":"◀ กลับไปเซ็ตลิสต์","💾 Save costume":"💾 บันทึกชุด","Not saved yet":"ยังไม่ได้บันทึก","🔒 This concert can no longer be edited":"🔒 คอนเสิร์ตนี้แก้ไขไม่ได้แล้ว"});
+I18N_TH_TPL.unshift(["Concert Costumes · {0}","ชุดคอนเสิร์ต · {0}"],["{0} / {1} members in their own costume","{0} / {1} คนใส่ชุดของตัวเอง"],["👗 Design · {0}","👗 ดีไซน์ · {0}"],["Design: {0}","ดีไซน์: {0}"],["Costume for {0} in “{1}” saved.","บันทึกชุดของ {0} ในเพลง “{1}” แล้ว"],["{0} · {1}. Each member can wear her own costume — saved for this concert song only.","{0} · {1} เมมแต่ละคนใส่ชุดของตัวเองได้ — บันทึกเฉพาะเพลงนี้ในคอนเสิร์ตนี้"]);
 
 </script>
 <script>

@@ -1329,3 +1329,6 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .bhlc{display:flex;flex-direction:column;gap:3px}.bhg{margin:10px 0 4px;font-size:14px}
 /* song-specific hairstyle */
 .shz{margin-top:10px}.hzrow{align-items:center;gap:12px;flex-wrap:wrap}.hzpv .approw{max-width:260px}.hzed{margin-top:8px}
+/* concert: design picker with pictures, 3 per row */
+.czps.ccdz3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ccdz3 .czpsi{min-width:0}.ccdz3 .czpsi svg{width:100%;height:auto;max-height:170px}.ccdz3 .czpsi b{font-size:11px;word-break:break-word}.ccdz3 .czpsi.on{box-shadow:0 0 0 3px var(--pk)}
+.t-html .czps{grid-template-columns:repeat(3,minmax(0,1fr))}
