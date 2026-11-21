@@ -38,9 +38,9 @@ function bgFringe(n,o={}){const x0=o.x0??24,x1=o.x1??76,out=[];
   out.push(bgL(p,((x1-x0)/n)*1.9*(o.w?o.w(t,i):1),o.layer?o.layer(t,i):i%2,{cap:o.cap,split:o.split}))}return out}
 const bgJ=(i,s)=>{const x=Math.sin((i+1)*12.9898*(s||1)+78.233)*43758.5453;return x-Math.floor(x)};
 // side locks framing the face (hang in front of the temples)
-const bgSide=(len,o={})=>[bgL([[25,30],[21.6,42],[19.6,52],[18.8,len]],o.w||6.4,1,{cap:o.cap}),bgL([[75,30],[78.4,42],[80.4,52],[81.2,len]],o.w||6.4,1,{cap:o.cap})];
-const bgHime=len=>[bgL([[24,30],[22,46],[21.4,58],[21.4,len]],8.6,1,{cap:.15}),bgL([[76,30],[78,46],[78.6,58],[78.6,len]],8.6,1,{cap:.15})];
-const bgCurl=len=>[bgL([[25,30],[21,46],[19.4,60],[20.6,len],[24.4,len+1.6],[25,len-2.4]],6.6,1),bgL([[75,30],[79,46],[80.6,60],[79.4,len],[75.6,len+1.6],[75,len-2.4]],6.6,1)];
+const bgSide=(len,o={})=>[bgL([[25,30],[21.6,42],[19.6,52],[18.8,len]],o.w||6.4,1,{cap:o.cap,side:1}),bgL([[75,30],[78.4,42],[80.4,52],[81.2,len]],o.w||6.4,1,{cap:o.cap,side:1})];
+const bgHime=len=>[bgL([[24,30],[22,46],[21.4,58],[21.4,len]],8.6,1,{cap:.15,side:1}),bgL([[76,30],[78,46],[78.6,58],[78.6,len]],8.6,1,{cap:.15,side:1})];
+const bgCurl=len=>[bgL([[25,30],[21,46],[19.4,60],[20.6,len],[24.4,len+1.6],[25,len-2.4]],6.6,1,{side:1}),bgL([[75,30],[79,46],[80.6,60],[79.4,len],[75.6,len+1.6],[75,len-2.4]],6.6,1,{side:1})];
 // ---- the styles (index = m.ap.ft) ----------------------------------------------------------------
 const BG=[];const BGN=[];const bgAdd=(name,L,o={})=>{BGN.push(name);BG.push({L,ax:o.ax??50,part:o.part?1:0,flip:o.flip?1:0})};
 bgAdd('No bangs',[bgL([[49,21],[40,24],[30,32],[24,44]],9,0),bgL([[51,21],[60,24],[70,32],[76,44]],9,0),bgL([[46,21],[34,27],[26,38],[21.6,52]],7),bgL([[54,21],[66,27],[74,38],[78.4,52]],7)],{part:1,ax:50});
@@ -95,7 +95,7 @@ AP_AHN.length=0;['None',...BG_AH.slice(1).map(x=>x.n)].forEach(n=>AP_AHN.push(n)
 // ---- drawing --------------------------------------------------------------------------------------------------
 // stays full most of the way, then narrows to a pointed tip (clump-like, not comb-like)
 const bgProf=(w,cap)=>t=>{const u=Math.max(0,(t-.08)/.92);return w*(1-Math.pow(u,1.7))*(1+.12*Math.sin(Math.PI*Math.min(1,t*1.6)))+(cap!=null?cap:.25)};
-function bgLockD(L){const S=limbPts(L.p,bgProf(L.w,L.cap),12);return limbPath(S,0,1,0,.95)}
+function bgLockD(L){const S=limbPts(L.p,L.blunt?(t=>L.w*(1-.18*t)):bgProf(L.w,L.cap),12);return limbPath(S,0,1,0,.95)}
 function bgLockSvg(L,C){const d=bgLockD(L),fill=L.f?C.HU:C.HD,P=L.p,last=P[P.length-1],first=P[0];
  let s=`<path d="${d}" fill="${fill}" stroke="${C.hl}" stroke-width=".55" stroke-linejoin="round"/>`;
  // inner shadow line along the lock, highlight on the upper part (front locks)
@@ -112,7 +112,7 @@ function bgAhogeSvg(k,F,C,id){const A=BG_AH[k];if(!A)return'';const ax=F.ax??50,
  const root=`<path d="M${N2(ax)} ${N2(ay+2)}Q${N2(ax+(ax<50?-2:2))} ${N2(ay+8)} ${N2(ax+(ax-50)*.4+(ax<50?-3:3))} ${N2(ay+14)}" fill="none" stroke="${C.hl}" stroke-width=".5" opacity=".45" stroke-linecap="round"/>`;
  return`<mask id="${id}am" maskUnits="userSpaceOnUse" x="-20" y="-40" width="140" height="120"><rect x="-20" y="-40" width="140" height="120" fill="#fff"/><path d="${BG_CAPD}" fill="#000"/></mask>${fill}<g mask="url(#${id}am)">${line}</g>${root}`}
 function bgBangs(F,a,D,id,hb,ex){const hl=mixc(hb[2],'#22121e',.4),hlite=mixc(hb[1],'#ffffff',.6),C={HU:`url(#${id}hu)`,HD:`url(#${id}hd)`,hl,hlite};
- const L=F.L,back=L.filter(z=>!z.f),front=L.filter(z=>z.f);
+ const L=bgLocksOf(F,a),back=L.filter(z=>!z.f),front=L.filter(z=>z.f);
  let s=`<path d="${BG_BASE}" fill="${C.HD}" stroke="${hl}" stroke-width=".7" stroke-linejoin="round"/>`;
  s+=back.map(z=>bgLockSvg(z,C)).join('')+front.map(z=>bgLockSvg(z,C)).join('');
  // crown cap over the lock roots (no edge line on its lower side) + outer outline + parting / flow lines
@@ -121,9 +121,43 @@ function bgBangs(F,a,D,id,hb,ex){const hl=mixc(hb[2],'#22121e',.4),hlite=mixc(hb
  s+=`<path d="M25 25Q37.4 13.6 50 13.4Q62.6 13.6 75 25L73.4 27.4L70.6 24.4L68 27L65 23.4L61.6 25.8L59 22.2L55.6 24.4L52.4 21.4L50 23.4L47.6 21.4L44.4 24.4L41 22.2L38.4 25.8L35 23.4L32 27L29.4 24.4L26.6 27.4Z" fill="${hlite}" opacity="${N2((D.ring||.6)*.5)}"/>`;
  const ahk=a.ah!=null?a.ah:D.ahoge;if(ahk)s+=bgAhogeSvg(ahk,F,C,id);
  return F.flip?mir(s):s}
-function bgShadow(F,id,sk,faceD){const d=F.L.map(bgLockD).join('');return`<clipPath id="${id}fc"><path d="${faceD}"/></clipPath><g clip-path="url(#${id}fc)"><g transform="translate(0 2.2)${F.flip?' translate(100 0) scale(-1 1)':''}" fill="${sk[1]}" opacity=".85"><path d="${d}"/><path d="${BG_CAPD}"/></g></g>`}
+function bgShadow(F,id,sk,faceD,a){const d=bgLocksOf(F,a||{}).map(bgLockD).join('');return`<clipPath id="${id}fc"><path d="${faceD}"/></clipPath><g clip-path="url(#${id}fc)"><g transform="translate(0 2.2)${F.flip?' translate(100 0) scale(-1 1)':''}" fill="${sk[1]}" opacity=".85"><path d="${d}"/><path d="${BG_CAPD}"/></g></g>`}
 // ---- hook into the head renderer: replace the bangs layer and the forehead shadow ---------------------------------
 {const f=headParts;headParts=function(m,ex,id,opt={}){const r=f.apply(this,arguments);try{const cd=r.a&&r.a.cd;r.acc=cd&&((typeof czHasHead=='function'&&czHasHead(cd))||(cd.a&&cd.a.earrings))?czHeadAcc(cd):''}catch(e){}try{const a=r.a,F=BANGS[a.ft]||BANGS[0];if(!F||!F.L)return r;const D=r.D,hb=apHairC(a);
   r.defs+=`<linearGradient id="${id}hu" gradientUnits="userSpaceOnUse" x1="0" y1="2" x2="0" y2="66"><stop offset="0" stop-color="${mixc(hb[1],'#fff',.22)}"/><stop offset=".3" stop-color="${hb[1]}"/><stop offset="1" stop-color="${mixc(hb[1],hb[2],.6)}"/></linearGradient><linearGradient id="${id}hd" gradientUnits="userSpaceOnUse" x1="0" y1="2" x2="0" y2="66"><stop offset="0" stop-color="${mixc(hb[1],hb[2],.25)}"/><stop offset=".45" stop-color="${mixc(hb[1],hb[2],.5)}"/><stop offset="1" stop-color="${mixc(hb[1],hb[2],.78)}"/></linearGradient>`;
-  let nb=bgBangs(F,a,D,id,hb,ex);const B=backHair(a.bk,D,((m.id|0)+1)*131);if(B&&B.cbraid)nb+=apCrownBraid(`url(#${id}hf)`,`stroke="${mixc(hb[2],'#22121e',.4)}" stroke-width=".7" stroke-linejoin="round"`);r.bangs=nb;
-  const i=r.face.indexOf(`<clipPath id="${id}fc">`);if(i>=0)r.face=r.face.slice(0,i)+bgShadow(F,id,r.sk,apFaceD(a,D))}catch(e){console.error(e)}return r}}
+  let nb=bgBangs(F,a,D,id,hb,ex);const B=backHair(a.bk,D,((m.id|0)+1)*131);if(B&&B.cbraid)nb+=apCrownBraid(`url(#${id}hf)`,`stroke="${mixc(hb[2],'#22121e',.4)}" stroke-width=".7" stroke-linejoin="round"`);r.bangs=nb;if(a.sx>0&&SX[a.sx])r.sl='';
+  const i=r.face.indexOf(`<clipPath id="${id}fc">`);if(i>=0)r.face=r.face.slice(0,i)+bgShadow(F,id,r.sk,apFaceD(a,D),a)}catch(e){console.error(e)}return r}}
+
+// =====================================================================================
+//  Side Locks (จงอยผม) — face-framing hair beside the cheeks, part of the front hair
+// -------------------------------------------------------------------------------------
+//  m.ap.sx: 0 = as before (the side locks that come with the back hair), 1.. = a side-lock
+//  style. They are real hair locks rooted under the crown at the temples (so they join every
+//  bangs style without a gap), drawn with the same colour, gradient, shading and highlight as
+//  the bangs. When a style is chosen, the back hair's own side locks and the bangs' built-in
+//  side locks give way to it. Back hair stays a separate choice.
+// =====================================================================================
+const SXN=['From back hair'],SX=[null];
+// left-side locks (root → tip); the right side is the mirror image unless given
+const sxAdd=(n,L,R)=>{SXN.push(n);SX.push({L,R})};
+const sxl=(p,w,o={})=>({p,w,f:o.f??1,cap:o.cap,blunt:o.blunt});
+sxAdd('Long straight side locks',[sxl([[22.6,30],[20.4,46],[19.4,64],[19.2,84]],7.2)]);
+sxAdd('Short side locks',[sxl([[22.6,30],[20.6,42],[19.8,53]],7.4)]);
+sxAdd('Curved side locks',[sxl([[22.6,30],[19,46],[18.6,60],[22.4,73]],6.8)]);
+sxAdd('Pointed side locks',[sxl([[23,30],[20.6,44],[20.2,58],[21.6,72]],8.8,{cap:.05})]);
+sxAdd('Layered side locks',[sxl([[23.4,30],[20,48],[18.6,64],[18.4,80]],6.4,{f:0}),sxl([[21.6,30],[19.4,42],[18.8,56]],6)]);
+sxAdd('Fluffy side locks',[sxl([[22.6,30],[16.6,44],[15.6,58],[18.4,70]],10.6,{cap:.9})]);
+sxAdd('Wispy side locks',[sxl([[23,30],[21,46],[20.2,62],[20.6,74]],2.8),sxl([[21.6,30],[19.4,44],[18.4,58],[18,68]],2.4),sxl([[24,31],[22.6,44],[22.2,54]],2.2)]);
+sxAdd('Thick side locks',[sxl([[23.4,30],[19.6,48],[18.4,64],[18.8,78]],11.4)]);
+sxAdd('Thin side locks',[sxl([[22.6,30],[21,48],[20.4,62],[20.8,76]],3.6)]);
+sxAdd('Face-framing locks',[sxl([[23,30],[20,48],[20.6,64],[26.6,79]],6.4)]);
+sxAdd('Outward-curved side locks',[sxl([[22.6,30],[20,46],[17,60],[11.6,69]],6.8)]);
+sxAdd('Inward-curved side locks',[sxl([[22.6,30],[18,48],[18.6,62],[24.4,70],[27,66.4]],6.4)]);
+sxAdd('Asymmetrical side locks',[sxl([[22.6,30],[20.4,46],[19.4,64],[19.4,82]],7.4)],[sxl([[77.4,30],[79.4,42],[80.2,51]],7)]);
+sxAdd('Multi-strand side locks',[sxl([[23.6,30],[21.2,46],[20.4,60],[21,70]],4.6,{f:0}),sxl([[22,30],[19.4,46],[18.4,62],[18.6,78]],4.8),sxl([[21,31],[18,44],[16.6,54]],4)]);
+sxAdd('Hime-style side locks',[sxl([[24.4,30],[22.6,46],[22,60],[22,71]],9.4,{blunt:1})]);
+sxAdd('Long tapered side locks',[sxl([[22.6,30],[19.8,50],[18.6,72],[18.2,96]],7.6)]);
+sxAdd('Short rounded side locks',[sxl([[22.6,30],[18.8,40],[18.4,49],[21.6,54.6]],8,{cap:1.4})]);
+const sxMir=L=>L.map(z=>({...z,p:z.p.map(([x,y])=>[100-x,y])}));
+function sxLocks(k){const X=SX[k];if(!X)return[];return[...X.L,...(X.R||sxMir(X.L))]}
+function bgLocksOf(F,a){const k=a&&a.sx|0;if(!(k>0&&SX[k]))return F.L;return[...F.L.filter(z=>!z.side),...sxLocks(k)]}
