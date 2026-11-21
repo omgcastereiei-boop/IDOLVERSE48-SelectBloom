@@ -1332,3 +1332,16 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 /* concert: design picker with pictures, 3 per row */
 .czps.ccdz3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ccdz3 .czpsi{min-width:0}.ccdz3 .czpsi svg{width:100%;height:auto;max-height:170px}.ccdz3 .czpsi b{font-size:11px;word-break:break-word}.ccdz3 .czpsi.on{box-shadow:0 0 0 3px var(--pk)}
 .t-html .czps{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* ---- Music Awards & Red & White festival ---- */
+.awcnt,.awmem{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.awm{display:flex;align-items:center;gap:6px;background:var(--card2,#fff6fa);border-radius:12px;padding:4px 8px}.awm small{display:block;opacity:.75}
+.awatt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}@media(max-width:560px){.awatt{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.awa{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;min-width:0;cursor:pointer;border:0}.awa b{font-size:12px;text-align:center;word-break:break-word}.awa small{font-size:10px;opacity:.75;text-align:center}.awa.on{box-shadow:0 0 0 2px var(--pk,#e5568a)}.awa.off{opacity:.45}.awa svg{max-width:100%;height:auto}
+.awnl{margin:6px 0 0 18px;padding:0}.awnl li{margin:3px 0}.awnl li.win{font-weight:600;color:#b8860b}.awnl li.pl b{color:var(--pk,#d6336c)}
+.awcarpet{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:10px 0;background:linear-gradient(#0000 70%,#a0102a 70%);padding:8px;border-radius:12px}.awcarpet span{display:flex;flex-direction:column;align-items:center;color:#fff}
+.awnoms{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;width:min(900px,100%);margin:10px auto}.awnom{background:#ffffff14;border:1px solid #e9b94955;border-radius:14px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff}.awnom.pl{border-color:#ff8fb8}.awnom small{opacity:.75;font-size:11px}
+.awini{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#e9b94944;font-size:24px;font-weight:700}.awwin svg{filter:drop-shadow(0 0 18px #ffe08a)}
+.rwteams{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:560px){.rwteams{grid-template-columns:1fr}}.rwred{border-top:4px solid #d8203f}.rwwhite{border-top:4px solid #9aa4b4}.rwteams ol{margin:4px 0 0 18px;padding:0}.rwteams li.pl b,.rword li.pl b{color:var(--pk,#d6336c)}
+.rwscore{display:flex;align-items:center;justify-content:center;gap:14px;font-size:20px;margin:8px 0}.rwr{color:#e0284a;font-weight:700}.rww{color:#7b8596;font-weight:700}.gecer .rww{color:#f3f5f8}
+.rwstage svg{width:100%;height:auto;display:block;border-radius:12px}.gecer .rwstage{width:min(1000px,100%);margin:0 auto}
+.rwacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:min(900px,100%);margin:10px auto}.rwact{border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:4px;color:#fff;background:#ffffff12}.rwact.red{border-left:5px solid #e0284a}.rwact.white{border-left:5px solid #f3f5f8}.rwact span{opacity:.8;font-size:13px}
+.rwvote{display:grid;gap:12px;font-size:22px;color:#fff}.rwvote b{display:block;font-size:14px;opacity:.75}.rwvs{font-size:28px;color:#fff;margin:8px 0}
