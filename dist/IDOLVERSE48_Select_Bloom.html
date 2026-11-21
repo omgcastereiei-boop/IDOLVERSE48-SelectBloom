@@ -2381,6 +2381,8 @@ function bhLayerXf(L){const x=+L.x||0,y=+L.y||0,s=Math.max(.5,Math.min(1.6,+L.s|
    stack.forEach(L=>{if(L.m){back+=r.back;over+=r.over;return}
     const r2=headParts(m,ex,id,{...opt,_bhLayer:1,_bhDefs:1,a:{...a,bk:L.k,bkx:null}});const t=bhLayerXf(L);back+=`<g transform="${t}">${r2.back}</g>`;if(r2.over)over+=`<g transform="${t}">${r2.over}</g>`;if(r2.ties)ties+=`<g transform="${t}">${r2.ties}</g>`});
    r.back=back;r.over=over;r.ties=ties}}catch(e){console.error(e)}return r}}
+// ---- no hair ribbons: hairstyles are drawn without bows (tails keep their gathered root) --------------------------------
+{const f=headParts;headParts=function(){const r=f.apply(this,arguments);try{if(r)r.ties=''}catch(e){}return r}}
 
 </script>
 <script>
