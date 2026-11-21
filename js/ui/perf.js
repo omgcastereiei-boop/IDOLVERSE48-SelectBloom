@@ -13,10 +13,11 @@
 const SVP={lsOff:false,tm:null,dirty:false,n:0};
 try{SVP.lsOff=localStorage.getItem('iv48_lsoff')=='1'}catch(e){}
 save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
- let ok=false;if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
+ let ok=false;const skip=!SVP.lsOff&&SV.dbOk&&!SVP.now&&SVP.n%10!=9;if(skip)ok=true;else if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
  SV.idbMain=j;SVP.n++;clearTimeout(SV.t);const put=()=>svPut('main',j).then(r=>{
+  SV.dbOk=!!r;if(!r&&skip){try{localStorage.setItem(KEY,j)}catch(e){}}
   if(r){if(!ok&&!SVP.lsOff){SVP.lsOff=true;try{localStorage.removeItem(KEY)}catch(e){}try{localStorage.setItem('iv48_lsoff','1')}catch(e){}}if(SV.warn){SV.warn=null;if(S&&!ui.t)render()}}
-  else if(!ok){SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.';if(S&&!ui.t)render()}});if(SVP.lsOff||!ok||SVP.now)put();else SV.t=setTimeout(put,250);
+  else if(!ok){SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.';if(S&&!ui.t)render()}});if(SVP.lsOff||!ok||SVP.now||skip)put();else SV.t=setTimeout(put,250);
  if(ok)SV.warn=null;else if(!SV.db)SV.warn='Browser storage is full and the game could not be saved. Export a save file from Management › Save & Load now.'};
 // autosave from a screen update: once, shortly after the last action
 function svAuto(){if(!S)return;SVP.dirty=true;clearTimeout(SVP.tm);SVP.tm=setTimeout(()=>{if(SVP.dirty)save()},800)}

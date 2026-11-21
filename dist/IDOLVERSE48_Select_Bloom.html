@@ -8234,10 +8234,11 @@ const _svChrome=chrome;chrome=function(h){const w=SV.warn||SV.lastErr;return _sv
 const SVP={lsOff:false,tm:null,dirty:false,n:0};
 try{SVP.lsOff=localStorage.getItem('iv48_lsoff')=='1'}catch(e){}
 save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
- let ok=false;if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
+ let ok=false;const skip=!SVP.lsOff&&SV.dbOk&&!SVP.now&&SVP.n%10!=9;if(skip)ok=true;else if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
  SV.idbMain=j;SVP.n++;clearTimeout(SV.t);const put=()=>svPut('main',j).then(r=>{
+  SV.dbOk=!!r;if(!r&&skip){try{localStorage.setItem(KEY,j)}catch(e){}}
   if(r){if(!ok&&!SVP.lsOff){SVP.lsOff=true;try{localStorage.removeItem(KEY)}catch(e){}try{localStorage.setItem('iv48_lsoff','1')}catch(e){}}if(SV.warn){SV.warn=null;if(S&&!ui.t)render()}}
-  else if(!ok){SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.';if(S&&!ui.t)render()}});if(SVP.lsOff||!ok||SVP.now)put();else SV.t=setTimeout(put,250);
+  else if(!ok){SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.';if(S&&!ui.t)render()}});if(SVP.lsOff||!ok||SVP.now||skip)put();else SV.t=setTimeout(put,250);
  if(ok)SV.warn=null;else if(!SV.db)SV.warn='Browser storage is full and the game could not be saved. Export a save file from Management › Save & Load now.'};
 // autosave from a screen update: once, shortly after the last action
 function svAuto(){if(!S)return;SVP.dirty=true;clearTimeout(SVP.tm);SVP.tm=setTimeout(()=>{if(SVP.dirty)save()},800)}
@@ -15340,6 +15341,22 @@ function thSubCap(){const M=S&&S.thM;if(!M||!M.subs)return;let F=0;try{F=(S.grou
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.thM)thSubCap()}catch(e){console.error(e)}return r}}
 // performances counted with the new online numbers are never touched by the one-time repair
 {const f=thAud;thAud=function(){const A=f.apply(this,arguments);try{if(A)A.on8=1}catch(e){}return A}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — keep the portrait sprite small
+// -------------------------------------------------------------------------------------
+//  Portraits are drawn once into a hidden sprite (characters.js: ptUse) and reused. The sprite was
+//  only cleared after 4000 faces, so in a long game it held thousands of SVG elements and every
+//  screen update re-styled all of them ("Next day" and "+7" became slow). After each screen update,
+//  while the browser is idle, faces that are no longer on screen are removed from the sprite
+//  (they are simply drawn again when needed).
+// =====================================================================================
+let PT_PRUNE=0;
+function ptPrune(){PT_PRUNE=0;try{const el=document.getElementById('ptspr');if(!el||PT_SPR.size<=40)return;const used=new Set();document.querySelectorAll('use[href^="#ps"]').forEach(u=>used.add(u.getAttribute('href').slice(1)));
+ for(const [k,y]of PT_SPR){const id=(y.u.match(/href="#([^"]+)"/)||[])[1];if(id&&!used.has(id)){PT_SPR.delete(k);const s=document.getElementById(id);if(s&&s.parentNode==el)s.remove()}}}catch(e){console.error(e)}}
+{const f=render;render=function(){const r=f.apply(this,arguments);if(!PT_PRUNE){PT_PRUNE=1;(window.requestIdleCallback||(c=>setTimeout(c,200)))(ptPrune,{timeout:1500})}return r}}
 
 </script>
 <script>
