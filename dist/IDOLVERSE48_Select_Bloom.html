@@ -16197,7 +16197,7 @@ function xmApply(r,size){if(!r||r.status!='open'||r.ch=='mp')return true;const g
  try{r.pay=xePay(r);r.expE=xeExp(r).t;r.cond=xeCond(r).map(c=>/chooses the members|named the members/.test(c)?'Members: the Media Senbatsu (or the latest Title Track Senbatsu); busy members are replaced by election rank or fanbase.':c)}catch(e){}return true}
 // ---- 1–2 offers per group a month (solo or group) -------------------------------------------------------------------------------------
 let XM_IN=0,XM_GEN=0;
-{const f=xeMake;xeMake=function(ch,o={}){const r=f.apply(this,arguments);if(!r||ch=='mp')return r;if(XM_IN&&!XM_GEN&&(r.acts||[]).includes('live')){const X=xeS(),i=X.list.indexOf(r);if(i>=0)X.list.splice(i,1);return null}try{
+{const f=xeMake;xeMake=function(ch,o={}){const r=f.apply(this,arguments);if(!r||ch=='mp')return r;if(!XM_GEN&&(r.acts||[]).includes('live')){const X=xeS(),i=X.list.indexOf(r);if(i>=0)X.list.splice(i,1);return null}try{
   const gid=o.gid!=null?o.gid:xmGid(r);r.gr=[{gid,gn:(grp(gid)||{}).name||''}];const size=r.mode=='org'?(o.size||(Math.random()<.55?1:xeR(3,6))):Math.max(3,r.n||3);
   if(!xmApply(r,size)){const X=xeS(),i=X.list.indexOf(r);if(i>=0)X.list.splice(i,1);return null}}catch(e){console.error(e)}return r}}
 const xmMonth=d=>{const t=dayDate(d);return t.getFullYear()*12+t.getMonth()};
@@ -16226,10 +16226,10 @@ xeSelTog=function(){toast('Members are chosen automatically (Media Senbatsu → 
   const ids=xeSelOf(r).sel,base=new Set(xmBase(xmGid(r)));
   const blk=`<div class="c xmline"><h3>Members (${ids.length})</h3><p class="st">Chosen automatically: Media Senbatsu (or the latest Title Track Senbatsu); busy members are replaced by General Election rank, or fanbase. Theater performances that day are covered by the Theater.</p><div class="xmfaces">${ids.map(id=>{const m=get(id);return m?`<span class="xmface">${ptc(m,40)}<small>${esc(m.name.split(' ')[0])}</small>${base.has(id)?'':'<small class="xmsub">replacement</small>'}</span>`:''}).join('')}</div></div>`;
   h=h.slice(0,a)+blk+h.slice(b)}catch(e){console.error(e)}return h}}
-// ---- member recognition from an event: a few hundred, not a share of her whole fanbase ---------------------------------------------------
+// ---- member recognition from an event = her share of the event's new fans (never more than the new fans); popularity still rises ---------------------------------------------------
 let XM_RUN=0;
 {const f=xeRun;xeRun=function(){XM_RUN=1;try{return f.apply(this,arguments)}finally{XM_RUN=0}}}
-{const f=gainPop;gainPop=function(m,d){if(!XM_RUN||!m)return f.apply(this,arguments);const f0=Number.isFinite(+m.fans)?+m.fans:0;m.fans=Math.max(0,Math.round(f0+d*40+f0*Math.min(.01,.001*d)));m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}}
+{const f=gainPop;gainPop=function(m,d){if(!XM_RUN||!m)return f.apply(this,arguments);const f0=Number.isFinite(+m.fans)?+m.fans:0;m.buzz=cl(Math.round(m.buzz+d*2));m.pop=popOf(m)}}
 
 </script>
 <script>
