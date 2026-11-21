@@ -49,7 +49,7 @@ function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.
  const ids=new Set(here);let G=Math.max(0,Math.round(reach*RC[1]*Math.max(0,q+.25)*(.8+Math.random()*.4)));
  if(G>0){try{fbWith('xe',()=>{S.fans+=G},{org:(r.ch=='mp'?'Music program · ':'External event · ')+r.name})}catch(e){S.fans+=G}}
  const wsum=mem.reduce((a,z)=>a+z.vis*Math.max(1,z.sc),0)||1;
- mem.forEach(z=>{const m=get(z.id);if(!m)return;const p0=m.pop,f0=m.fans,ps0=m.pas;const share=Math.round(G*.4*z.vis*Math.max(1,z.sc)/wsum);if(share>0){m.fans+=share}
+ mem.forEach(z=>{const m=get(z.id);if(!m)return;const p0=m.pop,f0=m.fans,ps0=m.pas;const share=Math.round(G*.25*z.vis*Math.max(1,z.sc)/wsum);if(share>0){m.fans+=share}
   const d=fbRound(Math.max(0,Math.log10(1+reach)/2.2*z.vis*Math.max(0,q)*(z.sc/70)));if(d>0)gainPop(m,d);else{m.buzz=cl(m.buzz+(q>0?1:0));m.pop=popOf(m)}
   if(z.sc>=70&&(m.en|0)>=30&&Math.random()<.5)m.pas=cl(m.pas+1);if(z.note||(m.en|0)<20)m.pas=cl(m.pas-1);if((r.cat=='media'||r.cat=='special')&&q>.5&&Math.random()<.25&&m.variety<100)m.variety++;
   const en=r.acts.reduce((a,k)=>a+(XE_EN[k]?XE_EN[k](r):6),0)+((r.et-r.st)>=480?10:0);const e0=m.en|0;m.en=Math.max(0,e0-en);try{wlWork([m.id],{load:Math.round(en/2),str:q<0?3:1,mh:q>.6?1:0},'external event')}catch(e){}

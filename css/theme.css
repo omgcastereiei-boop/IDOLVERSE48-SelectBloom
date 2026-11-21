@@ -1375,3 +1375,6 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 /* events: Centers row, latest-costume preview */
 .xecen{gap:6px;align-items:center;flex-wrap:wrap}.xecen select{width:auto;max-width:46%}
 .xeczrow{gap:6px;flex-wrap:wrap}.xeczm{display:flex;flex-direction:column;align-items:center;width:44px}.xeczm small{font-size:10px;max-width:44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xmauto label{gap:8px;align-items:center;cursor:pointer}.xmauto input{width:auto}
+.xmfaces{display:flex;flex-wrap:wrap;gap:6px}.xmface{display:flex;flex-direction:column;align-items:center;width:52px}.xmface small{font-size:10px;max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.xmface .xmsub{color:#b06a00}
+.xmrow{gap:8px;align-items:center;flex-wrap:wrap}
