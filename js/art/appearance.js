@@ -42,8 +42,10 @@ const AP_FACES=[
  ['Youthful proportions',{t:21.2,sb:1.4,cy:63,jx:13,jy:5,cw:13,ch:83.6,cr:1.4}]];
 function apFacePath(P){const{t,sb,cy,jx,jy,cw,ch,cr}=P,r=100-t;
  return`M${t} 46C${N2(t-sb)} ${cy} ${N2(50-cw-jx)} ${N2(ch-jy)} ${N2(50-cw*.4)} ${N2(ch-1)}Q50 ${N2(ch+cr)} ${N2(50+cw*.4)} ${N2(ch-1)}C${N2(50+cw+jx)} ${N2(ch-jy)} ${N2(r+sb)} ${cy} ${r} 46C${r} 27 66 18 50 18C34 18 ${t} 27 ${t} 46Z`}
-// face shapes were removed from the editor: every character uses her own face again (a saved 'fs' is ignored)
-function apFaceD(a,D){return facePath(D.face)}
+// face shape: the game's original shapes only (ap.fc 0..3; none = the character's own face).
+// The 16 shapes added later were removed; a saved 'fs' from them is ignored.
+const AP_FCN=['Soft oval face','Oval face','Slim face','Round face'];
+function apFaceD(a,D){const k=a&&a.fc!=null&&FACES[a.fc]?a.fc:D.face;return facePath(k)}
 
 // ---- bangs: more hand-tuned edges (right temple -> left temple, 't' = strand tip) --------------
 function apBangGen(n,tip,root,side=66,xs=x=>x){const e=[[85,side,'t'],[81,44]];for(let i=0;i<n;i++){const t=(i+.5)/n,x=78-56*t,tr=(i+1)/n;e.push([N2(xs(x)),N2(tip(t,i)),'t']);if(i<n-1)e.push([N2(78-56*tr),N2(root(tr,i))])}e.push([19,44],[15,side,'t']);return{e}}

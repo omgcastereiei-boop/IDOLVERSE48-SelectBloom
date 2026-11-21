@@ -46,7 +46,8 @@ function geSvgDeco(m,svg,s){if(GEDX_OFF||!svg||(s&&s<30))return svg;const P=geRa
 const GEDX_TOP_RAW={crown:'<path d="M3 22L6 7L14 15L20 2L26 15L34 7L37 22Z" fill="currentColor" stroke="rgba(0,0,0,.3)" stroke-width="1"/><rect x="3" y="21" width="34" height="4" rx="1.5" fill="currentColor" stroke="rgba(0,0,0,.3)" stroke-width="1"/><circle cx="20" cy="3" r="2.3" fill="#fff"/><circle cx="20" cy="18" r="2" fill="#e8213b"/>',
  star:'<path d="M12 1.5l3.1 6.7 7.3.8-5.5 4.9 1.6 7.2L12 17.4 5.5 21.1l1.6-7.2L1.6 9l7.3-.8z" fill="currentColor" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>',
  bow:'<path d="M16 10C11 3 3 1 2 6S8 17 16 10ZM16 10C21 3 29 1 30 6S24 17 16 10Z" fill="currentColor" stroke="rgba(0,0,0,.2)" stroke-width=".8"/><circle cx="16" cy="10" r="3" fill="currentColor" stroke="#fff" stroke-width="1"/>'};
-{const f=pt;pt=function(m,s){const r=f.apply(this,arguments);try{return m&&m.id!=null?geSvgDeco(m,r,s):r}catch(e){return r}}}
+// no election frame in the Appearance (Character Creator) screen
+{const f=pt;pt=function(m,s){const r=f.apply(this,arguments);try{if(typeof view!='undefined'&&view=='creator')return r;return m&&m.id!=null?geSvgDeco(m,r,s):r}catch(e){return r}}}
 // cards that already frame the portrait
 [['mcard'],['mcardT'],['profHtml']].forEach(([n])=>{const f=window[n];if(typeof f!='function')return;window[n]=function(){GEDX_OFF++;try{return f.apply(this,arguments)}finally{GEDX_OFF--}}});
 // ---- sort: Election Rank (TOP 1 first under "Highest to Lowest"; shows "TOP n") ------------------------------------------

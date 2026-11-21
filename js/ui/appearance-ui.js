@@ -8,7 +8,7 @@
 //  HEX, RGB, presets, saved custom colours, reset). Changes show at once in the preview and are
 //  stored in the member's appearance record only when "Confirm & Save" is pressed.
 // =====================================================================================
-const AP_CATS=[['bangs','Bangs'],['side','Side Locks'],['back','Back Hair'],['ahoge','Ahoge'],['hair','Hair Color'],['skin','Skin Color'],['brows','Eyebrows'],['eyes','Eyes'],['mouth','Mouth'],['outfit','Outfits']];
+const AP_CATS=[['face','Face Shape'],['bangs','Bangs'],['side','Side Locks'],['back','Back Hair'],['ahoge','Ahoge'],['hair','Hair Color'],['skin','Skin Color'],['brows','Eyebrows'],['eyes','Eyes'],['mouth','Mouth'],['outfit','Outfits']];
 const AP_SKIN_PRE=['#fff4ee','#ffefe6','#fde6d6','#f5d7bd','#e6c0a0','#d2a07a','#b07a55','#8a5a3c','#6b4330','#4a2e22','#dfe8ff','#d8f5e4','#efe0ff','#bfe6ff'];
 const AP_HAIR_PRE=()=>HC.map(x=>x[1]).concat(['#ffe9a8','#f2f0ec','#ff9f6b','#9fe0d0','#c7a4ff','#ffb3c7']);
 const AP_EYE_PRE=()=>EC.map(x=>x[1]).concat(['#e0a020','#30c0a0','#ff6fa0','#9a7bff']);
@@ -54,7 +54,7 @@ function apPick(k,v){if(!ui.draft)return;if(v==null)delete ui.draft[k];else ui.d
 function apPrevHtml(){const m=get(ui.cm);if(!m||!ui.draft)return'';const pm=apPM({});return`<div class="approw">${pt(pm,0)}<div class="apfull">${CHAR_ASSETS.full(pm)}</div></div>`}
 function apBody(cat){const d=ui.draft,m=get(ui.cm),D=dz(m);
  switch(cat){
-  case'face':return`<div class="c"><b>Face Shape</b><p class="st">Each shape changes the cheeks, jaw and chin; eyes, nose, mouth and hair stay aligned.</p>${apGrid('fs',AP_FACES.map(x=>x[0]),'12 22 76 74',{bk:0},'Original')}</div>`;
+  case'face':return`<div class="c"><b>Face Shape</b><p class="st">The face outline; eyes, nose, mouth and hair stay where they are.</p>${apGrid('fc',AP_FCN,'12 22 76 74',{bk:0,sx:0},'Original')}</div>`;
   case'skin':return apPicker('skx');
   case'bangs':return`<div class="c"><b>Bangs / Front Hair</b><p class="st">Chosen independently of the back hair. Every style is built from separate hair locks.</p>${apGrid('ft',FTN,'8 -4 84 78')}</div>`;
   case'side':return`<div class="c"><b>Side Locks</b><p class="st">Face-framing hair beside the cheeks — part of the front hair, joined to the bangs, in the same hair colour. “From back hair” keeps the side locks that come with the back hair style.</p>${apGrid('sx',SXN,'4 14 92 88',{ah:0})}</div>`;
@@ -68,10 +68,10 @@ function apBody(cat){const d=ui.draft,m=get(ui.cm),D=dz(m);
   case'acc':return`<div class="c"><b>Accessory</b>${apGrid('ac',ACN,'10 0 80 66')}</div>`}return''}
 V.creator=function(){if(!S.members.length)return`<h2 class="ht">Character Creator</h2><div class="c"><p class="st">No idols yet. Recruit members through an audition first.</p><button class="b p" onclick="view='audition';render()">Go to Audition</button></div>`;
  if(!get(ui.cm)||!ui.draft){ui.cm=get(ui.cm)?ui.cm:S.members[0].id;ui.draft={...ap(get(ui.cm))}}
- const m=get(ui.cm),cat=AP_CATS.some(c=>c[0]==ui.apCat)?ui.apCat:'bangs',dirty=JSON.stringify(ui.draft)!=JSON.stringify(ap(m));
+ const m=get(ui.cm),cat=AP_CATS.some(c=>c[0]==ui.apCat)?ui.apCat:'face',dirty=JSON.stringify(ui.draft)!=JSON.stringify(ap(m));
  return`<h2 class="ht">Character Creator</h2><div class="cr apcr"><div class="c cprev stage apside"><select onchange="cmSel(this.value)">${S.members.map(x=>`<option value="${x.id}" ${x.id==m.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><div id="apprev">${apPrevHtml()}</div><div class="st">${(m.traits||[]).join(' / ')} · ${m.age}y ${dirty?'· <b>unsaved changes</b>':''}</div><div class="row" style="justify-content:center"><button class="b" onclick="rndAp()">Randomize</button><button class="b" onclick="resetAp()">Reset</button><button class="b p" onclick="saveAp()">Confirm &amp; Save</button></div></div>
  <div><div class="apnav" role="tablist">${AP_CATS.map(([k,n])=>`<button class="b s ${k==cat?'on p':''}" role="tab" onclick="ui.apCat='${k}';render()">${n}</button>`).join('')}</div>${apBody(cat)}</div></div>`};
 // random appearance uses the whole new range (Randomize button only)
-{const f=rapp;rapp=function(){const a=f.apply(this,arguments);a.ft=rnd(0,FTN.length-1);a.bk=rnd(0,BKN.length-1);a.ey=rnd(0,EYN.length-1);a.br=rnd(0,BRN.length-1);delete a.fs;a.sx=rnd(0,SXN.length-1);a.ah=rnd(0,AP_AHN.length-1);a.mt=rnd(0,APMT.length-1);return a}}
+{const f=rapp;rapp=function(){const a=f.apply(this,arguments);a.ft=rnd(0,FTN.length-1);a.bk=rnd(0,BKN.length-1);a.ey=rnd(0,EYN.length-1);a.br=rnd(0,BRN.length-1);delete a.fs;a.fc=rnd(0,AP_FCN.length-1);a.sx=rnd(0,SXN.length-1);a.ah=rnd(0,AP_AHN.length-1);a.mt=rnd(0,APMT.length-1);return a}}
 // a pointer released outside the colour square still ends the drag
 if(typeof window!='undefined')window.addEventListener('pointerup',()=>{if(AP_DRAG)apSvUp()});
