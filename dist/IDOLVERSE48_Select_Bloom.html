@@ -15836,6 +15836,8 @@ function fdFixAll(){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return;cons
  // fans without a (valid) Kami Oshi: a big cohort is spread over the members (its Oshi first, then appeal), never given to one member
  fb.segs.filter(s=>s.n>=8&&(s.k==null||!ids.has(s.k))).forEach(s=>{s.k=null;const L=s.gs!=null&&act.some(m=>fdGrpOf(m.id)==s.gs)?act.filter(m=>fdGrpOf(m.id)==s.gs):act;fdSpreadKami(s,L,FD_KW)});fb.segs.forEach(s=>fdFixSeg(s,act,ids));fb.segs=fb.segs.filter(s=>s.n>0&&s.k!=null);fb.ver=(fb.ver||0)+1}
 // ---- derived numbers ---------------------------------------------------------------------------------------------------------
+// same answer as fdSegGroups(s).has(g), without building a Set (it runs for every cohort on every fan change)
+function fdSegHas(s,g){s.o=s.o||{};s.u=s.u||{};let any=false;if(s.k!=null){const x=fdGrpOf(s.k);if(x!=null){any=true;if(x==g)return true}}for(const j in s.o){const x=fdGrpOf(j);if(x!=null){any=true;if(x==g)return true}}for(const j in s.u){const x=fdGrpOf(j);if(x!=null){any=true;if(x==g)return true}}return!any&&s.gs!=null&&s.gs==g}
 function fdSegGroups(s){s.o=s.o||{};s.u=s.u||{};const G=new Set(),add=j=>{const g=fdGrpOf(+j);if(g!=null)G.add(g)};if(s.k!=null)add(s.k);for(const j in s.o)add(j);for(const j in s.u)add(j);if(!G.size&&s.gs!=null)G.add(s.gs);return G}
 // how many fans of a cohort support a group: all of them if their Kami Oshi is in it, else the union of the Oshi / other-supporter
 // intervals of its members in that group (the same layout as fdFanOf, so it matches the individual fans exactly)
@@ -15872,7 +15874,7 @@ function fdPurpose(kind,raw,F,o){if(!F||!(raw>0))return;const fb=S.fb,x=Math.min
 // a member's recognition grew (older formulas raise m.fans): existing fans of her group start to like / follow her,
 // a few people become new fans because of her — never more supporters than her group has fans
 function fdInterest(m,d,org){const fb=S.fb,act=fdAct(),ids=new Set(act.map(x=>x.id)),g=fdGrpOf(m.id),F=fb.segs.reduce((a,s)=>a+s.n,0);if(!(d>0))return;
- const pool=fb.segs.filter(s=>s.k!=m.id&&fdSegGroups(s).has(g)),free=s=>Math.max(0,s.n-(s.o[m.id]||0)-(s.u[m.id]||0)),FR=pool.reduce((a,s)=>a+free(s)*(.3+s.eng/100),0);
+ const pool=fb.segs.filter(s=>s.k!=m.id&&fdSegHas(s,g)),free=s=>Math.max(0,s.n-(s.o[m.id]||0)-(s.u[m.id]||0)),FR=pool.reduce((a,s)=>a+free(s)*(.3+s.eng/100),0);
  const conv=Math.min(d*.35,FR*.04)*fdDim(F);let left=fbRound(conv);if(left>0&&FR>0)pool.forEach(s=>{const c=Math.min(free(s),fbRound(conv*free(s)*(.3+s.eng/100)/FR));if(c>0&&left>0){const cc=Math.min(c,left);s.u[m.id]=(s.u[m.id]||0)+cc;left-=cc}});
  const nw=fbRound(d*.012*fdDim(F));if(nw>0)fbAcquire(nw,{via:'member',mid:m.id,org:org||'Member buzz'})}
 function fdDisinterest(m,d){const fb=S.fb,L=fb.segs.filter(s=>s.u[m.id]>0),T=L.reduce((a,s)=>a+s.u[m.id],0);if(!T)return;const cut=Math.min(T,Math.round(d*.5));L.forEach(s=>{const c=Math.round(cut*s.u[m.id]/T);s.u[m.id]=Math.max(0,s.u[m.id]-c)})}
@@ -15889,8 +15891,8 @@ function fdLose(n,why){const fb=S.fb,F=fb.segs.reduce((a,s)=>a+s.n,0);n=Math.min
 // ---- split / merge keep IDs, supporters and history --------------------------------------------------------------------------------
 {const f=fbSplit;fbSplit=function(s,n){const n0=s.n,ids=fdTake(s,Math.min(s.n,Math.max(0,Math.round(n))));const u0={...(s.u||{})},h0={...(s.h||{})};const t=f.apply(this,arguments);try{t.fr=ids;const r=n0?t.n/n0:0;t.u={};for(const j in u0){const c=Math.min(t.n,Math.round(u0[j]*r));if(c>0){t.u[j]=c;s.u[j]-=c}}t.h={};for(const k in h0){const c=Math.round(h0[k]*r);t.h[k]=c;s.h[k]=(s.h[k]||0)-c}t.born=s.born;t.last=s.last;t.src=s.src}catch(e){console.error(e)}return t}}
 {const f=fbNew;fbNew=function(o){const s=f.apply(this,arguments);try{s.u=o&&o.u?{...o.u}:{};s.h=o&&o.h?{...o.h}:{};s.fr=o&&o.fr?o.fr.map(r=>r.slice()):[];if(!o||!o.fr)fdFrFix(s)}catch(e){console.error(e)}return s}}
-fbMerge=function(){const fb=S.fb,M=new Map(),wavg=(t,s,f,N)=>{if(Number.isFinite(t[f])&&Number.isFinite(s[f]))t[f]=(t[f]*t.n+s[f]*s.n)/N};
- fb.segs.forEach(s=>{const key=s.n<6?`${s.k}|${s.ft}|${s.fk||'n'}|${s.gs}`:`${s.k}|${s.ft}|${s.pat}|${s.reg}|${s.ng}|${Math.floor(s.loy/20)}|${s.fk||'n'}|${s.gs}`;const t=M.get(key);if(!t){M.set(key,s);return}
+fbMerge=function(coarse){const fb=S.fb,M=new Map(),wavg=(t,s,f,N)=>{if(Number.isFinite(t[f])&&Number.isFinite(s[f]))t[f]=(t[f]*t.n+s[f]*s.n)/N};
+ fb.segs.forEach(s=>{const key=coarse?`${s.k}|${s.ft}|${s.fk||'n'}|${s.gs}`:s.n<6?`${s.k}|${s.ft}|${s.fk||'n'}|${s.gs}`:`${s.k}|${s.ft}|${s.pat}|${s.reg}|${s.ng}|${Math.floor(s.loy/20)}|${s.fk||'n'}|${s.gs}`;const t=M.get(key);if(!t){M.set(key,s);return}
   const N=t.n+s.n;['loy','eng','sp','gi','ws','pq','et','so','bl'].forEach(f=>wavg(t,s,f,N));for(const j in s.o)t.o[j]=(t.o[j]||0)+s.o[j];t.u=t.u||{};for(const j in s.u||{})t.u[j]=(t.u[j]||0)+s.u[j];t.h=t.h||{};for(const k in s.h||{})t.h[k]=(t.h[k]||0)+s.h[k];
   if(s.af){t.af=t.af||{};for(const j in s.af)t.af[j]=t.af[j]==null?s.af[j]:(t.af[j]*t.n+s.af[j]*s.n)/N}if(s.bx){t.bx=t.bx||{};for(const k in s.bx)t.bx[k]=(t.bx[k]||0)+s.bx[k]}
   t.fr=[...(t.fr||[]),...(s.fr||[])];if(t.fr.length>40){t.fr.sort((a,b)=>a[0]-b[0]);const R=[];t.fr.forEach(r=>{const l=R[R.length-1];if(l&&l[0]+l[1]==r[0])l[1]+=r[1];else R.push(r.slice())});t.fr=R}
@@ -15938,7 +15940,7 @@ function fdMigrate(){const fb=S&&S.fb;if(!fb||fb.v3)return null;const act=fdAct(
  try{const X=fxS();if(X.fmr&&X.fmr.n>0&&!X.fmr.ids)X.fmr.ids=[fdSeq(X.fmr.n)]}catch(e){}
  // other supporters, reconciled from the old member recognition (capped by her group's fanbase): spread over the fans of her group by free capacity
  const M0=fdSup();act.forEach(m=>{const g=fdGrpOf(m.id),GF=fdGroupFans(g),X=M0[m.id],target=Math.min(old.mf[m.id]||0,Math.round(GF*.85)),need=Math.max(0,target-X.k-X.o);if(need<=0)return;
-  const pool=fb.segs.filter(s=>s.k!=m.id&&fdSegGroups(s).has(g)),free=s=>Math.max(0,s.n-(s.o[m.id]||0)-(s.u[m.id]||0)),FR=pool.reduce((a,s)=>a+free(s)*(.3+s.eng/100),0);if(!FR)return;
+  const pool=fb.segs.filter(s=>s.k!=m.id&&fdSegHas(s,g)),free=s=>Math.max(0,s.n-(s.o[m.id]||0)-(s.u[m.id]||0)),FR=pool.reduce((a,s)=>a+free(s)*(.3+s.eng/100),0);if(!FR)return;
   let left=need;pool.forEach(s=>{const c=Math.min(free(s),left,Math.round(need*free(s)*(.3+s.eng/100)/FR));if(c>0){s.u[m.id]=(s.u[m.id]||0)+c;left-=c}})});
  fdFixAll();fdWrite();const v=fdVerify(),M=fdSup();
  fb.v3={v:FD_V,day:S.day,from:old,to:{fans:S.fans,mf:Object.fromEntries(act.map(m=>[m.id,M[m.id].t]))},ok:v.ok,issues:v.issues};fdTrend();return fb.v3}
@@ -15976,6 +15978,25 @@ function fdMoveKami(s,n,to,keepOld){const ids=fdIds();if(!s||!ids.has(to)||to==s
 // n fans of segment s add / drop a member as Oshi (blocked for her Kami Oshi and above 5 Oshi per fan)
 function fdOshi(s,mid,n,add){if(!s||!fdIds().has(mid)||mid==s.k)return 0;const cur=s.o[mid]||0;if(add){const room=FD_OMAX*s.n-Object.values(s.o).reduce((a,b)=>a+b,0),c=Math.max(0,Math.min(n,s.n-cur,room));if(!c)return 0;s.o[mid]=cur+c;if(s.u[mid])s.u[mid]=Math.max(0,Math.min(s.u[mid],s.n-s.o[mid]));fdFixAll();fdWrite();return c}
  const c=Math.min(cur,n);s.o[mid]=cur-c;s.u[mid]=(s.u[mid]||0)+c;fdFixAll();fdWrite();return c}
+// ---- performance: keep the number of fan cohorts small ---------------------------------------------------------------------------------
+//  Every new batch of fans is split over several Kami Oshi, so cohorts pile up (thousands after a few months) and every fan
+//  update walks all of them — days became very slow. When there are too many, cohorts with the same Kami Oshi, fan type and
+//  group are merged (fans, Fan IDs, Oshi / other supporters and history are kept; loyalty etc. become weighted averages).
+const FD_SEGCAP=900;
+function fdCompact(force){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return;if(!force&&fb.segs.length<=FD_SEGCAP)return;try{const n0=fb.segs.length;fbMerge(n0>FD_SEGCAP*1.0);if(fb.segs.length>FD_SEGCAP)fbMerge(1);fdWrite()}catch(e){console.error('fdCompact',e)}}
+{const f=fbAcquire;fbAcquire=function(){const r=f.apply(this,arguments);try{if(S&&S.fb&&S.fb.segs.length>FD_SEGCAP&&!FBW&&!FD_IN)fdCompact()}catch(e){console.error(e)}return r}}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{fdCompact()}catch(e){console.error(e)}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{fdCompact()}catch(e){console.error(e)}return r}}
+// group fan totals are read many times a day: cache them until the fanbase changes (fb.ver / the cohort list)
+{const f=fdGroupFans;let C={v:-1,a:null,n:-1,m:new Map()};fdGroupFans=function(gid){const fb=S&&S.fb;if(!fb)return f.apply(this,arguments);if(C.v!==fb.ver||C.a!==fb.segs||C.n!==fb.segs.length||C.s!==S){C={v:fb.ver,a:fb.segs,n:fb.segs.length,s:S,m:new Map()}}const k=String(gid);if(!C.m.has(k))C.m.set(k,f.apply(this,arguments));return C.m.get(k)};
+ if(typeof gsFans=='function')gsFans=function(gid){return fdGroupFans(gid)}}
+// member → group lookups happen thousands of times per fan update (get() scans every member): use a lookup table that is
+// rebuilt at every fan pass, every day and after any group change (never stale across a transfer)
+let FD_GM=null;const fdGmReset=()=>{FD_GM=null};
+fdGrpOf=function(id){if(!S)return null;if(!FD_GM||FD_GM.s!==S||FD_GM.n!==S.members.length){const M=new Map();S.members.forEach(m=>M.set(m.id,typeof gsGid=='function'?gsGid(m):m.group));FD_GM={s:S,n:S.members.length,M};Promise.resolve().then(fdGmReset)}const g=FD_GM.M.get(+id);return g===undefined?null:g};
+{const f=fdFixAll;fdFixAll=function(){FD_GM=null;return f.apply(this,arguments)}}
+{const f=tick;tick=function(){FD_GM=null;try{return f.apply(this,arguments)}finally{FD_GM=null}}}
+['transferGroup','gsTransfer','moveTeam','debutGroup','gsCreate'].forEach(n=>{if(typeof window[n]=='function'){const f=window[n];window[n]=function(){FD_GM=null;try{return f.apply(this,arguments)}finally{FD_GM=null}}}});
 
 </script>
 <script>
