@@ -44,6 +44,8 @@ const TH_MF={
  MCQ:[['Quiet',.5],['Good',1],['Fun',1.4],['Memorable',1.9]],
  bt:{p:.006,favorite:.018,spotlight:.018,viral:.035,gem:.024}   // chance per member per show; extra gain per eligible viewer
 };
+// online viewers count with diminishing weight (a stream audience is not a theater hall)
+const thOnEff=x=>2500*Math.log1p(Math.max(0,x)/2500);
 const thMfExp=n=>{for(const[k,v]of TH_MF.exp)if(n<=k)return v;return 1};
 const thMfR={u:()=>Math.random(),gamma(k){let s=0;for(let i=0;i<k;i++)s-=Math.log(1-Math.random());return s/k},
  pois(l){if(!(l>0))return 0;if(l>30)return Math.max(0,Math.round(l+Math.sqrt(l)*(Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random()))));const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return k-1},
@@ -61,7 +63,7 @@ function thMfMcQ(m){const r=.6*Math.random()+.4*(m.variety||0)/100,i=r<.3?0:r<.5
 // one performance: random member fan gains by song, MC segment and Breakthrough (no group fans)
 function thMfCalc(x,s,L,res,A,sat,opt){opt=opt||{};const pf=new Set(L.map(m=>m.id)),gf=Math.max(1,S.fans|0),perfs=s.perfs|0,st=TH_MF.stFloor+(1-TH_MF.stFloor)*Math.exp(-perfs/TH_MF.stScale),dim=A.dim||1,satF=st*Math.sqrt(dim);
  const Q=opt.q||thMfQuality(L,sat),M={},U={},items=[],encS=new Set(thEnc(s).map(i=>i.id));
- const pool=m=>{if(!M[m.id]){const p=Math.min(.9,(m.fans||0)/Math.max(gf,TH_MF.fanBase,1.2*(m.fans||0),1)),elig=Math.max(0,A.live-A.liveFan*p)+TH_MF.online*Math.max(0,A.online-A.onFan*p);
+ const pool=m=>{if(!M[m.id]){const p=Math.min(.9,(m.fans||0)/Math.max(gf,TH_MF.fanBase,1.2*(m.fans||0),1)),elig=Math.max(0,A.live-A.liveFan*p)+TH_MF.online*thOnEff(Math.max(0,A.online-A.onFan*p));
    M[m.id]={elig,big:1/Math.sqrt(1+(m.fans||0)/TH_MF.big),sk:thMfSkill(m),ab:thMfAbil(m),pop:thMfPop(m),mc:thMfMc(m),k:0,j:0,lam:{},pos:{}}}return M[m.id]};
  // songs
  thAll(s).forEach(it=>{const R=res&&res[it.id];if(!R||!(R.ids||[]).length)return;const ids=R.ids.filter(id=>pf.has(id)&&get(id));if(!ids.length)return;const P=thMfPos(s,it,R),ex=thMfExp(ids.length),enc=encS.has(it.id);

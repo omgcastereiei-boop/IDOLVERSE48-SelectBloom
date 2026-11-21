@@ -6463,7 +6463,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const promo=(S.singles.some(z=>(z.relDay??z.day)>=x.day-14)?1.15:1)*((S.cal||[]).some(e=>e.type=='road'&&evDays(e).some(d=>d>=x.day-7&&d<=x.day))?1.05:1)*(x.sl=='a'?1.06:1)*(dowOf(x.day)==0||dowOf(x.day)==6?1.1:1)*(thTr(x.k)?.8:1);
  const dem=(25+pop*1.6+((cen&&cen.pop)||0)*.7+songPop*.6+Math.sqrt(Math.max(0,S.fans))*.9+(s.hype||0)*.5)*(.8+rs/250)*(1/(1+.07*Math.max(0,week-3)))*promo*Math.pow(3000/Math.max(500,T.price),.85)*(.85+Math.random()*.3);
  const sold=Math.max(0,Math.min(TH_CAP,Math.round(dem))),att=Math.max(0,sold-Math.round(sold*Math.random()*.03)),rev=sold*T.price,cost=60000+L.length*3000;
- const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
+ const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=typeof thOnlineN=='function'?thOnlineN(subs,sat):Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
  earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);S.money-=cost;S.exp+=cost;S.led.unshift({d:S.day,l:`Theater operating cost: ${thLabel(x.k)}`,a:-cost});S.led.length=Math.min(S.led.length,80);
  const AUD=thAud(x,s,T,L,res,att,online,sat),nf=AUD.nf; // audience: existing fans vs newcomers (Theater update)
  const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(0,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
@@ -7542,6 +7542,8 @@ const TH_MF={
  MCQ:[['Quiet',.5],['Good',1],['Fun',1.4],['Memorable',1.9]],
  bt:{p:.006,favorite:.018,spotlight:.018,viral:.035,gem:.024}   // chance per member per show; extra gain per eligible viewer
 };
+// online viewers count with diminishing weight (a stream audience is not a theater hall)
+const thOnEff=x=>2500*Math.log1p(Math.max(0,x)/2500);
 const thMfExp=n=>{for(const[k,v]of TH_MF.exp)if(n<=k)return v;return 1};
 const thMfR={u:()=>Math.random(),gamma(k){let s=0;for(let i=0;i<k;i++)s-=Math.log(1-Math.random());return s/k},
  pois(l){if(!(l>0))return 0;if(l>30)return Math.max(0,Math.round(l+Math.sqrt(l)*(Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random()))));const L=Math.exp(-l);let k=0,p=1;do{k++;p*=Math.random()}while(p>L);return k-1},
@@ -7559,7 +7561,7 @@ function thMfMcQ(m){const r=.6*Math.random()+.4*(m.variety||0)/100,i=r<.3?0:r<.5
 // one performance: random member fan gains by song, MC segment and Breakthrough (no group fans)
 function thMfCalc(x,s,L,res,A,sat,opt){opt=opt||{};const pf=new Set(L.map(m=>m.id)),gf=Math.max(1,S.fans|0),perfs=s.perfs|0,st=TH_MF.stFloor+(1-TH_MF.stFloor)*Math.exp(-perfs/TH_MF.stScale),dim=A.dim||1,satF=st*Math.sqrt(dim);
  const Q=opt.q||thMfQuality(L,sat),M={},U={},items=[],encS=new Set(thEnc(s).map(i=>i.id));
- const pool=m=>{if(!M[m.id]){const p=Math.min(.9,(m.fans||0)/Math.max(gf,TH_MF.fanBase,1.2*(m.fans||0),1)),elig=Math.max(0,A.live-A.liveFan*p)+TH_MF.online*Math.max(0,A.online-A.onFan*p);
+ const pool=m=>{if(!M[m.id]){const p=Math.min(.9,(m.fans||0)/Math.max(gf,TH_MF.fanBase,1.2*(m.fans||0),1)),elig=Math.max(0,A.live-A.liveFan*p)+TH_MF.online*thOnEff(Math.max(0,A.online-A.onFan*p));
    M[m.id]={elig,big:1/Math.sqrt(1+(m.fans||0)/TH_MF.big),sk:thMfSkill(m),ab:thMfAbil(m),pop:thMfPop(m),mc:thMfMc(m),k:0,j:0,lam:{},pos:{}}}return M[m.id]};
  // songs
  thAll(s).forEach(it=>{const R=res&&res[it.id];if(!R||!(R.ids||[]).length)return;const ids=R.ids.filter(id=>pf.has(id)&&get(id));if(!ids.length)return;const P=thMfPos(s,it,R),ex=thMfExp(ids.length),enc=encS.has(it.id);
@@ -15307,6 +15309,37 @@ function pfBdHtml(m){const L=(m.bdh||[]).slice().reverse();if(!L.length)return''
  const cut=(start)=>{const i=h.indexOf(start);if(i<0)return;const j=h.indexOf('</ul></div>',i);if(j<0)return;h=h.slice(0,i)+h.slice(j+11)};
  cut('<div class="c"><h3>Birthday Stage history</h3>');cut('<div class="c"><h3>History</h3>');
  h+=`<div class="c pfdisc"><h2 class="ht">Discography &amp; Achievements</h2>${histHtml(m)}${pfBdHtml(m)}</div>`;ui.mod.h=h;render()}catch(e){console.error(e)}}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Theater online viewers & member fans: realistic numbers
+// -------------------------------------------------------------------------------------
+//  · The Online Theater Membership is one company-wide membership, so its subscribers spread over
+//    every Stage of every group: the online viewers of ONE performance are the subscribers who
+//    watch live (35–60%) divided by the stages that perform in the month, and never more than 8%
+//    of the group's fans.
+//  · Online viewers count with a diminishing weight for member fans (theater-fans.js: thOnEff).
+//  · Existing saves: member fans that past Theater shows gave above the new limit are removed once
+//    (the performance records are corrected too, so the history shows the corrected numbers).
+// =====================================================================================
+function thOnlineN(subs,sat){const H=thS(),d0=S.day-31,keys=new Set((H.pf||[]).filter(p=>p.day>d0).map(p=>p.k));const nG=(S.groups||[]).filter(g=>!g.dis).length||1;
+ const nT=Math.max(1,keys.size)+Math.max(0,nG-1),base=subs*(.35+Math.random()*.25)*(.8+sat/250)/nT,cap=Math.max(300,(S.fans|0)*.08);return Math.max(0,Math.round(Math.min(base,cap)))}
+function thFix8(){if(!S||S.thFix8)return;const ex={};
+ const run=()=>{const H=thS();(H.pf||[]).forEach(rec=>{const A=rec.aud;if(!A||!A.mem||A.on8)return;const live=A.live!=null?A.live:(rec.att|0),on=Math.min(A.online|0,Math.max(300,(S.fans|0)*.08)),elig=live+TH_MF.online*thOnEff(on),allow=Math.max(20,elig*TH_MF.cap*3),bt=new Map((A.mfBt||[]).map(b=>[String(b.mid),b]));
+  let tot=0;Object.keys(A.mem).forEach(id=>{const g=A.mem[id]|0,lim=allow+(bt.has(id)?elig*.08:0);if(g>lim){const k=lim/g,cut=g-Math.round(lim);ex[id]=(ex[id]||0)+cut;A.mem[id]=Math.round(lim);const sc=(A.mfSrc||{})[id];if(sc)Object.keys(sc).forEach(q=>sc[q]=Math.round((sc[q]|0)*k));const fs=(A.mfs||{})[id];if(fs)Object.keys(fs).forEach(q=>fs[q]=Math.round((fs[q]|0)*k))}tot+=A.mem[id]|0});
+  if(A.online>on){A.online=on;if(A.onFan>on)A.onFan=on}A.mfTot=tot;A.nf=tot;rec.nf=tot})};
+ try{(S.groups||[]).length>1?S.groups.forEach(g=>{try{gsWith(g.id,run)}catch(e){console.error(e)}}):run()}catch(e){console.error(e)}
+ Object.entries(ex).forEach(([id,n])=>{const m=get(+id)||(S.alumni||[]).find(x=>x.id==+id);if(!m)return;m.fans=Math.max(0,Math.round((m.fans||0)-n));try{if(S.fb&&S.fb.mf&&S.fb.mf[id]!=null)S.fb.mf[id]=m.fans}catch(e){}try{m.pop=popOf(m)}catch(e){}});
+ S.thFix8={day:S.day,n:Object.keys(ex).length,cut:Object.values(ex).reduce((a,b)=>a+b,0)}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{thFix8()}catch(e){console.error(e)}return r}}
+// subscribers can never outnumber the fans: Basic ≤ 25%, Premium ≤ 10% of the company's fans (all groups)
+function thSubCap(){const M=S&&S.thM;if(!M||!M.subs)return;let F=0;try{F=(S.groups||[]).length>1&&typeof gsFans=='function'?S.groups.reduce((a,g)=>a+(gsFans(g.id)|0),0):(S.fans|0)}catch(e){F=S.fans|0}
+ Object.keys(M.subs).forEach(k=>{const c=Math.round(Math.max(200,F)*(k=='pkp'?.1:.25));if((M.subs[k]|0)>c)M.subs[k]=c})}
+{const f=thMonthly;thMonthly=function(){try{thSubCap()}catch(e){}const r=f.apply(this,arguments);try{thSubCap()}catch(e){}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.thM)thSubCap()}catch(e){console.error(e)}return r}}
+// performances counted with the new online numbers are never touched by the one-time repair
+{const f=thAud;thAud=function(){const A=f.apply(this,arguments);try{if(A)A.on8=1}catch(e){}return A}}
 
 </script>
 <script>
