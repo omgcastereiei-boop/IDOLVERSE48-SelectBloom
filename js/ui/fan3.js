@@ -77,7 +77,7 @@ fbAcquire=function(n,o={}){const fb=fbState();n=Math.round(n);if(!fb||!Number.is
  fb.segs.filter(s=>!before.has(s)).forEach(s=>{if(s.k==null){if(o.mid!=null&&ids.has(o.mid)&&Math.random()<.5){s.k=o.mid;delete s.o[o.mid]}else fdSpreadKami(s,cand.length?cand:act)}});
  fb.segs.filter(s=>!before.has(s)).forEach(s=>{s.org=org;
   fdFixSeg(s,act,ids);s.born=S.day;s.last=S.day;s.src=org;const gl=act.filter(m=>m.id!=s.k&&fdGrpOf(m.id)==fdGrpOf(s.k));
-  const likes=gl.sort((a,b)=>fdAppealW(b)-fdAppealW(a)).slice(0,3);likes.forEach((m,i)=>{const c=fbRound((s.n-(s.o[m.id]||0))*(.25-.07*i)*Math.random());if(c>0)s.u[m.id]=(s.u[m.id]||0)+c});fdFixSeg(s,act,ids)});fb.ver++;if(!FBW&&!FD_IN){fdFixAll();fdWrite()}};let FD_IN=0;
+  const likes=gl.sort((a,b)=>fdAppealW(b)-fdAppealW(a)).slice(0,3);likes.forEach((m,i)=>{const c=fbRound((s.n-(s.o[m.id]||0))*(.25-.07*i)*Math.random());if(c>0)s.u[m.id]=(s.u[m.id]||0)+c});fdFixSeg(s,act,ids)});fb.ver++;if(!FBW&&!FD_IN){if(FD_DEFER)FD_DIRTY=1;else{fdFixAll();fdWrite()}}};let FD_IN=0,FD_DEFER=0,FD_DIRTY=0;
 // new fans without a Kami Oshi choose one: a big batch is split over the members by appeal (and their Oshi choice), so a batch never follows one member
 function fdSpreadKami(s,L,wf){if(!L.length)return;s.o=s.o||{};s.u=s.u||{};const W=L.map(m=>[m,(wf?wf(m):fdAppealW(m))*(1+3*(s.o[m.id]||0)/Math.max(1,s.n))*(.6+Math.random()*.8)]).sort((a,b)=>b[1]-a[1]);if(s.n<8){let r=Math.random()*W.reduce((a,b)=>a+b[1],0);for(const[m,w]of W){r-=w;if(r<0){s.k=m.id;break}}if(s.k==null)s.k=W[0][0].id;delete s.o[s.k];return}
  const T=W.slice(0,10),Tw=T.reduce((a,b)=>a+b[1],0),n0=s.n;T.slice(1).forEach(([m,w])=>{const c=fbRound(n0*w/Tw);if(c>0&&c<s.n){const t=fbSplit(s,c);t.k=m.id;delete t.o[m.id];delete t.u[m.id]}});s.k=T[0][0].id;delete s.o[s.k];delete s.u[s.k]}
@@ -96,7 +96,7 @@ function fdInterest(m,d,org){const fb=S.fb,act=fdAct(),ids=new Set(act.map(x=>x.
  const nw=fbRound(d*.012*fdDim(F));if(nw>0)fbAcquire(nw,{via:'member',mid:m.id,org:org||'Member buzz'})}
 function fdDisinterest(m,d){const fb=S.fb,L=fb.segs.filter(s=>s.u[m.id]>0),T=L.reduce((a,s)=>a+s.u[m.id],0);if(!T)return;const cut=Math.min(T,Math.round(d*.5));L.forEach(s=>{const c=Math.round(cut*s.u[m.id]/T);s.u[m.id]=Math.max(0,s.u[m.id]-c)})}
 // ---- sync: older formulas' signals → the new rules → derived numbers ---------------------------------------------------------------
-fbSync=function(ctx){if(!S||FBW)return;const fb=fbState();if(!fb)return;FD_IN=1;try{fdSync0(ctx)}finally{FD_IN=0}fdFixAll();fdWrite()};
+fbSync=function(ctx){if(!S||FBW)return;const fb=fbState();if(!fb)return;FD_IN=1;try{fdSync0(ctx)}finally{FD_IN=0}if(FD_DEFER){FD_DIRTY=1;fdAct().forEach(m=>{if(fb.mf[m.id]!=null&&Number.isFinite(+m.fans))fb.mf[m.id]=m.fans});fb.lastS=S.fans;fb.ver++}else{fdFixAll();fdWrite()}};
 function fdSync0(ctx){const fb=S.fb;const org=(ctx&&ctx.org)||FBORG||'Group activity',reg=ctx&&ctx.reg;
  if(!Number.isFinite(S.fans))S.fans=fb.lastS;const dG=Math.round((S.fans||0)-fb.lastS),sig=[];
  fdAct().forEach(m=>{const b=fb.mf[m.id];if(b==null||!Number.isFinite(+m.fans))return;const d=Math.round(m.fans-b);if(d)sig.push([m,d])});
@@ -163,7 +163,7 @@ function fdMigrate(){const fb=S&&S.fb;if(!fb||fb.v3)return null;const act=fdAct(
  fb.v3={v:FD_V,day:S.day,from:old,to:{fans:S.fans,mf:Object.fromEntries(act.map(m=>[m.id,M[m.id].t]))},ok:v.ok,issues:v.issues};fdTrend();return fb.v3}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.fb){fbState();fdMigrate();fdFixAll();fdWrite()}}catch(e){console.error('fan v3 migration',e)}return r}}
 // ---- statistics: supporters = Kami Oshi + Oshi + other supporters; active / dormant / former ------------------------------------------------
-{const f=fbStats;fbStats=function(){const st=f.apply(this,arguments);try{if(!st)return st;const M=fdSup();Object.values(st.M).forEach(X=>{const Y=M[X.id];if(!Y)return;X.u=Y.u;X.k=Y.k;X.o=Y.o;X.sup=Y.t;X.dorm=Y.dorm;X.active=Y.active});
+{const f=fbStats;let SC=null;fbStats=function(){const fb=S&&S.fb;if(SC&&fb&&SC.s===S&&SC.v===fb.ver&&SC.d===S.day&&SC.n===fb.segs.length)return SC.st;const st=f.apply(this,arguments);try{if(!st)return st;SC=fb?{s:S,v:fb.ver,d:S.day,n:fb.segs.length,st}:null;const M=fdSup();Object.values(st.M).forEach(X=>{const Y=M[X.id];if(!Y)return;X.u=Y.u;X.k=Y.k;X.o=Y.o;X.sup=Y.t;X.dorm=Y.dorm;X.active=Y.active});
  const G=st.G;G.dorm=S.fb.segs.filter(s=>s.ft=='dormant').reduce((a,s)=>a+s.n,0);G.act=G.total-G.dorm;try{G.former=fxS().fmr.n|0}catch(e){G.former=0}}catch(e){console.error(e)}return st}}
 // ---- UI: member profile ----------------------------------------------------------------------------------------------------------------------
 function fdSupHtml(m){const M=fdSup(),X=M[m.id];if(!X)return'';const g=fdGrpOf(m.id),GF=fdGroupFans(g),T=(S.fb.trend||{})[m.id]||[],prev=T.length>1?T[T.length-2][1]:null,tr=prev==null?null:X.t-prev,pc=n=>X.t?Math.round(100*n/X.t)+'%':'0%';
@@ -214,3 +214,14 @@ fdGrpOf=function(id){if(!S)return null;if(!FD_GM||FD_GM.s!==S||FD_GM.n!==S.membe
 {const f=fdFixAll;fdFixAll=function(){FD_GM=null;return f.apply(this,arguments)}}
 {const f=tick;tick=function(){FD_GM=null;try{return f.apply(this,arguments)}finally{FD_GM=null}}}
 ['transferGroup','gsTransfer','moveTeam','debutGroup','gsCreate'].forEach(n=>{if(typeof window[n]=='function'){const f=window[n];window[n]=function(){FD_GM=null;try{return f.apply(this,arguments)}finally{FD_GM=null}}}});
+// fbSync runs around every fan-related activity (each MV, every day, every group): when nothing changed since the last
+// full pass (no new / lost fans, no member signal, fanbase version unchanged), the full pass is skipped
+{const f=fbSync;fbSync=function(ctx){try{const fb=S&&S.fb;if(fb&&!FBW&&fb.okVer===fb.ver&&Number.isFinite(S.fans)&&Math.round(S.fans-fb.lastS)==0&&!fdAct().some(m=>{const b=fb.mf[m.id];return b!=null&&Number.isFinite(+m.fans)&&Math.round(m.fans-b)!=0}))return}catch(e){}
+  const r=f.apply(this,arguments);try{if(S&&S.fb)S.fb.okVer=S.fb.ver}catch(e){}return r}}
+// during a day, fan updates from many activities (every MV, theater show, event …) are collected and the full pass
+// (rules on every cohort + derived numbers) runs once at the end of the day instead of after each activity.
+// The signal bookkeeping (fb.lastS / fb.mf) only moves in that pass, so nothing is counted twice or lost.
+function fdFlush(){if(!FD_DIRTY||!S||!S.fb)return;FD_DIRTY=0;fdFixAll();fdWrite();S.fb.okVer=S.fb.ver}
+{const f=tick;tick=function(){const o=FD_DEFER;FD_DEFER=1;try{return f.apply(this,arguments)}finally{FD_DEFER=o;if(!o)try{fdFlush()}catch(e){console.error(e)}}}}
+// fan-type shares for the older formulas: the same all day long
+{const f=fbFactor0;const C={};fbFactor0=function(kind){if(!FD_DEFER)return f.apply(this,arguments);const k=S.day+'|'+kind;if(C.s!==S||C.d!==S.day){for(const x in C)delete C[x];C.s=S;C.d=S.day}if(!(k in C))C[k]=f.apply(this,arguments);return C[k]}}
