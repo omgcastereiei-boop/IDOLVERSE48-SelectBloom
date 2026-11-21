@@ -1351,3 +1351,8 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .aupt{position:relative;cursor:pointer;border-radius:10px;overflow:hidden;aspect-ratio:5/6}.aupt svg{width:100%;height:100%;display:block}.aupt .tag{position:absolute;top:4px;left:4px;margin:0}
 .aunm{font-size:13px;line-height:1.2;word-break:break-word}.aucard small{font-size:11px;line-height:1.25;word-break:break-word}.aubt{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}.aubt .b{padding:4px 7px;font-size:11px;min-height:0}
 .aucg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}.aucg .b{justify-content:flex-start;text-align:left}.auflag{font-size:18px;line-height:1}
+/* ---- fanbase v3 ---- */
+.fdkv{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin:6px 0}.fdkv span{background:var(--card2,#fff6fa);border-radius:10px;padding:6px 8px;display:flex;flex-direction:column}.fdkv small{font-size:11px;opacity:.75}.fdkv b{font-size:17px}.fdkv em{font-size:10px;opacity:.6;font-style:normal}.fdkv .up,.fdt .up{color:#2f8f62}.fdkv .dn,.fdt .dn{color:#c4513a}
+.fdbar{display:flex;height:10px;border-radius:6px;overflow:hidden;background:#eee;margin:6px 0}.fdbar i{display:block;height:100%}.fdleg{display:flex;flex-wrap:wrap;gap:8px;font-size:12px}.fdleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:3px}
+.fdtw{overflow-x:auto}.fdt{width:100%;border-collapse:collapse;font-size:13px}.fdt td,.fdt th{padding:4px 6px;border-bottom:1px solid #f0e4ec;text-align:right;white-space:nowrap}.fdt .fdmn{text-align:left;display:flex;align-items:center;gap:6px}.fdt th .b{padding:3px 6px;font-size:11px}
+.fdfan{background:var(--card2,#fff6fa);border-radius:10px;padding:8px;line-height:1.6}
