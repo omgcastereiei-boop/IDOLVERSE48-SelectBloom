@@ -1345,3 +1345,9 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .rwstage svg{width:100%;height:auto;display:block;border-radius:12px}.gecer .rwstage{width:min(1000px,100%);margin:0 auto}
 .rwacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:min(900px,100%);margin:10px auto}.rwact{border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:4px;color:#fff;background:#ffffff12}.rwact.red{border-left:5px solid #e0284a}.rwact.white{border-left:5px solid #f3f5f8}.rwact span{opacity:.8;font-size:13px}
 .rwvote{display:grid;gap:12px;font-size:22px;color:#fff}.rwvote b{display:block;font-size:14px;opacity:.75}.rwvs{font-size:28px;color:#fff;margin:8px 0}
+/* ---- audition results grid & country picker ---- */
+.aug{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}@media(max-width:1100px){.aug{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:760px){.aug{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}}@media(max-width:330px){.aug{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.aucard{display:flex;flex-direction:column;gap:2px;padding:6px;min-width:0;margin:0}.aucard.sel{outline:3px solid var(--pk);background:var(--pk2)}.aucard.off{opacity:.65}
+.aupt{position:relative;cursor:pointer;border-radius:10px;overflow:hidden;aspect-ratio:5/6}.aupt svg{width:100%;height:100%;display:block}.aupt .tag{position:absolute;top:4px;left:4px;margin:0}
+.aunm{font-size:13px;line-height:1.2;word-break:break-word}.aucard small{font-size:11px;line-height:1.25;word-break:break-word}.aubt{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}.aubt .b{padding:4px 7px;font-size:11px;min-height:0}
+.aucg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}.aucg .b{justify-content:flex-start;text-align:left}.auflag{font-size:18px;line-height:1}
