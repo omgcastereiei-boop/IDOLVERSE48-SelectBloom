@@ -69,7 +69,7 @@ function rwRun(y){const Y=rwS().years[y];if(!Y||!Y.line||Y.res)return;const I=S.
  Y.res={acts:ord,R:+R.toFixed(2),W:+W.toFixed(2),jr,jw:11-jr,aud,ar,aw:aud-ar,hall,hr:hall*2>3000,pts,win:pts.red>pts.white?'red':'white',day:S.day};rwEffects(Y);rwResNews(Y)}
 function rwEffects(Y){const I=S.ind,me=Y.res.acts.find(a=>a.gid!=null);
  Y.res.acts.filter(a=>a.gid==null).forEach(a=>{const x=I.A[a.id];if(x){x.fans=Math.round(x.fans*(1.01+a.sc/5000));x.mom=Math.min(15,(x.mom||0)+.8)}});
- if(me){const win=Y.res.win=='red',d=me.sc>=75?3:me.sc>=60?2:1.2;const en=15+(RW_STY[me.sty]||RW_STY.std)[3];me.mem.forEach(id=>{const m=get(id);if(!m)return;gainPop(m,d+(id==me.cen?1:0));m.en=Math.max(0,(m.en|0)-en);hev(m,{t:'rw',yr:Y.y,song:me.song,cen:id==me.cen?1:0,win:win?1:0})});
+ if(me){const win=Y.res.win=='red',d=me.sc>=75?3:me.sc>=60?2:1.2;const en=15+(RW_STY[me.sty]||RW_STY.std)[3];me.mem.forEach(id=>{const m=get(id);if(!m)return;gainPop(m,d+(id==me.cen?1:0));m.en=Math.max(-100,(m.en|0)-en);hev(m,{t:'rw',yr:Y.y,song:me.song,cen:id==me.cen?1:0,win:win?1:0})});
   const n=Math.round(Math.min(90000,4000+(S.fans|0)*.01*(me.sc/60)));try{gsWith(me.gid,()=>fbAcquire(n,{via:'group',org:`${RW_NAME} ${Y.y}`}))}catch(e){}Y.res.fans=n;
   try{gsWith(me.gid,()=>{const e=(S.cal||[]).find(x=>x.id==Y.inv.ev);if(e){e.done=true;e.result={sc:me.sc}}})}catch(e){}
   // the song gets more chart interest

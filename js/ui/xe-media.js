@@ -37,8 +37,8 @@ function xmBase(gid){let L=[];try{gsWith(gid,()=>{const x=(S.singles||[]).slice(
 function xmRankList(gid){const M=gsMem(gid).filter(m=>isAct(m));let ed=-1;M.forEach(m=>(m.geRec||[]).forEach(h=>{if(h.rank&&(h.ed||0)>ed)ed=h.ed||0}));
  const rk=m=>{if(ed<0)return null;const h=(m.geRec||[]).find(z=>(z.ed||0)==ed&&z.rank);return h?h.rank:null};
  return M.map(m=>({m,r:rk(m)})).sort((a,b)=>(a.r==null?1e9:a.r)-(b.r==null?1e9:b.r)||(b.m.fans||0)-(a.m.fans||0)).map(z=>z.m.id)}
-function xmIds(gid,n,day,except){const out=[],ok=id=>{const m=get(id);return m&&isAct(m)&&(typeof gsGid!='function'||gsGid(m)==gid||(m.kn&&m.kn.gid==gid))&&xeFree(id,day,except)};
- for(const id of xmBase(gid)){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}
+function xmIds(gid,n,day,except){const out=[],ok=id=>{const m=get(id);return m&&isAct(m)&&(+m.en||0)>=0&&(typeof gsGid!='function'||gsGid(m)==gid||(m.kn&&m.kn.gid==gid))&&xeFree(id,day,except)};
+ const B=xmBase(gid),L=n<B.length?xmSpread(B,day,except):B;for(const id of L){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}
  if(out.length<n)for(const id of xmRankList(gid)){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}return out}
 const xmGid=r=>{const g=(r.gr||[])[0];if(g&&g.gid!=null)return g.gid;const q=(r.req||[])[0];return q?q.gid:gsAg()};
 // put the automatic lineup on an open offer
@@ -85,3 +85,9 @@ let XM_RUN=0;
 function xmAutoMp(){const X=xeS();if(!X)return;X.list.filter(r=>r.status=='open'&&r.ch=='mp').forEach(r=>{try{const ids=(r.req||[]).map(q=>q.mid);if(!ids.length||xeCheck(r,ids).length)return;if(xeDoAccept(r,ids))xeNote(`📺 Music program accepted automatically: <b>${esc(r.name)}</b> · ${jd(r.day)} · ${yen(r.pay)}.`,r.id)}catch(e){console.error(e)}})}
 {const f=tick;tick=function(){const out=f.apply(this,arguments);try{xmAutoMp()}catch(e){console.error(e)}return out}}
 {const f=V.xemp;if(typeof f=='function')V.xemp=function(){try{xmAutoMp()}catch(e){}const h=f.apply(this,arguments);const bar=`<div class="c xmauto"><label class="row"><input type="checkbox" checked disabled> <b>🔒 Music programs: accepted automatically</b></label><small class="st">Offers for the latest single's music programs are accepted as soon as every performer is free.</small></div>`;const i=h.indexOf('</h2>');return i>=0?h.slice(0,i+5)+bar+h.slice(i+5):bar+h}}
+
+// ---- spread the work: when an event needs fewer members than the list, members with fewer recent jobs go first ----------------------
+function xmLoad(day,except){const C={};try{xeS().list.forEach(r=>{if(r.id==except||!['accepted','done'].includes(r.status)||Math.abs((r.day|0)-day)>30)return;(r.sel||[]).forEach(id=>{C[id]=(C[id]||0)+1})})}catch(e){}return C}
+function xmSpread(B,day,except){const C=xmLoad(day,except);return B.map((id,i)=>({id,i,c:C[id]||0})).sort((a,b)=>a.c-b.c||a.i-b.i).map(z=>z.id)}
+// ---- negative Energy: no new jobs until it is back to 0 or more (jobs already accepted still happen) ----------------------------------
+{const f=xeCheck;xeCheck=function(r,sel){const E=f.apply(this,arguments);try{if(r&&r.status=='open'){const ids=r.mode=='org'?(r.req||[]).map(q=>q.mid):(sel||[]);ids.forEach(id=>{const m=get(id);if(m&&(+m.en||0)<0)E.push(`${m.name} has negative Energy (${m.en|0}): no new jobs until she has rested.`)})}}catch(e){}return E}}

@@ -1505,7 +1505,7 @@ function cont(){const s=load();if(!s)return toast('No valid save found. Start a 
 function moneyOk(){if(!S)return;if(typeof S.money!='number'||!isFinite(S.money)){console.error('Company funds were invalid ('+S.money+'); restored to the last valid balance.');S.money=typeof S.mOk=='number'&&isFinite(S.mOk)?S.mOk:0}S.mOk=S.money;['inc','exp'].forEach(k=>{if(typeof S[k]!='number'||!isFinite(S[k]))S[k]=0})}
 function earn(a,l){a=+a;if(!isFinite(a)){console.error('earn: invalid amount for "'+l+'":',a);return}moneyOk();S.money+=a;S.inc+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a});S.led.length=Math.min(S.led.length,80)}
 function spend(a,l){a=+a;if(!isFinite(a)||a<0){console.error('spend: invalid amount for "'+l+'":',a);toast('That cost could not be calculated, so nothing was charged or bought.','err');return false}moneyOk();if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
-function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.en=cl(m.en+15);m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
+function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.en=Math.max(-100,Math.min(100,(+m.en||0)+15));m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
  earn(Math.round(S.fans*3),'Merch & streaming');
  if(dt().getDate()==1){const s=S.members.length*25000,p=Math.min(s,S.money);S.money-=p;S.exp+=p;S.led.unshift({d:S.day,l:'Monthly salaries',a:-p});
   if(p<s){S.members.forEach(m=>m.mor=cl(m.mor-10));toast('Salaries not fully paid! Morale dropped.','err')}}
@@ -3656,12 +3656,12 @@ function evOut(e,L,focus,mul){const cap=Math.round(e.cap*(mul||1)),q=(avg(L.map(
 const promoAdd=(x,rec)=>{if(!x)return;x.promo=x.promo||[];if(!x.promo.some(r=>r.id==rec.id))x.promo.push(rec)},resNote=h=>{if(ui.newRes)ui.newRes.push(h)};
 function hsRun(ev,part){const k='r'+part;if(ev[k])return;const all=ev.members.filter(id=>get(id)),L=all.map(get).filter(m=>m.en>=20),x=S.singles.find(s=>s.rid==ev.rid);let r;
  if(!L.length)r={day:S.day,att:0,cap:0,rev:0,cost:0,fans:0,gr:'—',present:[],absent:all,note:'No member had enough Stamina, so the day was cancelled.'};
- else{const o=evOut(EV.handshake,L,'variety',Math.max(1,all.length/EV.handshake.max));earn(o.rev,`Handshake Event day ${part}: ${ev.st}`);const pay=Math.min(EV.handshake.cost,S.money);S.money-=pay;S.exp+=pay;S.led.unshift({d:S.day,l:`Handshake Event day ${part} cost: ${ev.st}`,a:-pay});S.led.length=Math.min(S.led.length,80);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(0,m.en-20)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,cost:pay,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
+ else{const o=evOut(EV.handshake,L,'variety',Math.max(1,all.length/EV.handshake.max));earn(o.rev,`Handshake Event day ${part}: ${ev.st}`);const pay=Math.min(EV.handshake.cost,S.money);S.money-=pay;S.exp+=pay;S.led.unshift({d:S.day,l:`Handshake Event day ${part} cost: ${ev.st}`,a:-pay});S.led.length=Math.min(S.led.length,80);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(-100,m.en-20)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,cost:pay,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
  ev[k]=r;resNote(`<div class="c"><b>${esc(ev.title)} — Day ${part} (${part==1?'Sat':'Sun'})</b><div class="st">${r.note||`Grade ${r.gr} · ${r.att.toLocaleString()} fans attended · revenue ${yen(r.rev)} (cost ${yen(r.cost)}) · +${r.fans} fans`} · ${r.present.length} member(s) present${r.absent.length?`, ${r.absent.length} resting`:''}</div></div>`);
  if(part==2){ev.done=true;promoAdd(x,{id:ev.id,type:'handshake',title:ev.title,day:ev.day,day2:ev.day2,members:ev.members.slice(),r1:ev.r1,r2:ev.r2})}}
 function roadRun(ev){if(ev.res)return;const all=ev.members.filter(id=>get(id)),need=20*(ev.dur||1),L=all.map(get).filter(m=>m.en>=need),x=S.singles.find(s=>s.rid==ev.rid);let r;
  if(!L.length)r={day:S.day,cancelled:true,att:0,rev:0,fans:0,present:[],absent:all,note:'Cancelled: no participating member had enough Stamina.'};
- else{const o=evOut(EV.concert,L,'cha',1);earn(o.rev,`Road Show: ${ev.loc} (${ev.st})`);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(0,m.en-need)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
+ else{const o=evOut(EV.concert,L,'cha',1);earn(o.rev,`Road Show: ${ev.loc} (${ev.st})`);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(-100,m.en-need)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
  ev.res=r;promoAdd(x,{id:ev.id,type:'road',title:ev.title,loc:ev.loc,day:ev.day,dur:ev.dur,members:ev.members.slice(),cost:ev.cost,res:r});resNote(`<div class="c"><b>${esc(ev.title)}</b><div class="st">${r.note||`Grade ${r.gr} · ${r.att.toLocaleString()} / ${r.cap.toLocaleString()} attended · revenue ${yen(r.rev)} (paid ${yen(ev.cost)} when booked) · +${r.fans} fans`} · ${r.present.length} performed${r.absent.length?`, ${r.absent.length} too tired`:''}</div></div>`)}
 function promoDay(){(S.cal||[]).forEach(ev=>{if(ev.done)return;if(ev.type=='handshake'){if(!ev.rid)return;const fn=ev.v==2?hsRun2:hsRun;if(S.day>=ev.day&&!ev.r1)fn(ev,1);if(S.day>=ev.day2&&!ev.r2)fn(ev,2)}else if(ev.type=='road'){if(ev.v==2){if(S.day>=ev.day&&!ev.d1)rsRun(ev,1);if(S.day>=ev.day+1&&!ev.d2)rsRun(ev,2);return}if(S.day>=ev.day&&!ev.res)roadRun(ev);if(S.day>=ev.day+(ev.dur||1)-1&&ev.res)ev.done=true}});calTrim()}
 const rdDays=d=>Array.from({length:EV.concert.dur},(_,i)=>d+i);
@@ -3801,8 +3801,8 @@ function hsGo(ev,x){const h=x.hs,F=HSF[h.fmt],mem=ev.members.map(get).filter(Boo
  const att=Math.round(red/F.per),buzz=Math.max(5,Math.min(100,Math.round(10+25*Math.log10(1+att/100)*F.bz)));
  return{fmt:h.fmt,tickets:T,want,red,cap,lost:Math.max(0,want-red),att,buzz,rows,orders:x.cd?x.cd.orders:0,cds:x.cd?x.cd.units:0,cost:(h.est||[]).reduce((a,y)=>a+y[1],0),est:h.est||[]}}
 function hsRun2(ev,part){const k='r'+part;if(ev[k])return;const x=S.singles.find(s=>s.rid==ev.rid);if(!x||!x.hs)return;
- if(part==1){ev.plan=ev.plan||hsGo(ev,x);ev.plan.rows.forEach(r=>{const m=get(r.mid);if(m){r.before=m.fans;m.fans+=r.g1;m.pop=popOf(m);m.en=Math.max(0,m.en-15);m.mor=cl(m.mor+2)}});ev.r1={day:S.day,redeemed:Math.round(ev.plan.red/2)};resNote(`<div class="c"><b>${esc(ev.title)} — Day 1 (Sat)</b><div class="st">${HSF[ev.plan.fmt].n} · about ${Math.round(ev.plan.att/2).toLocaleString()} fans attended</div></div>`);return}
- if(!ev.r1)hsRun2(ev,1);const P=ev.plan,bz=Math.max(1,Math.round(P.buzz/15*(P.fmt=='hf'?1.5:1)));P.rows.forEach(r=>{const m=get(r.mid);if(m){m.fans+=r.g2;m.buzz=cl(m.buzz+bz);m.pop=popOf(m);m.en=Math.max(0,m.en-15);m.mor=cl(m.mor+2);r.after=m.fans}else r.after=r.before+r.g1});
+ if(part==1){ev.plan=ev.plan||hsGo(ev,x);ev.plan.rows.forEach(r=>{const m=get(r.mid);if(m){r.before=m.fans;m.fans+=r.g1;m.pop=popOf(m);m.en=Math.max(-100,m.en-15);m.mor=cl(m.mor+2)}});ev.r1={day:S.day,redeemed:Math.round(ev.plan.red/2)};resNote(`<div class="c"><b>${esc(ev.title)} — Day 1 (Sat)</b><div class="st">${HSF[ev.plan.fmt].n} · about ${Math.round(ev.plan.att/2).toLocaleString()} fans attended</div></div>`);return}
+ if(!ev.r1)hsRun2(ev,1);const P=ev.plan,bz=Math.max(1,Math.round(P.buzz/15*(P.fmt=='hf'?1.5:1)));P.rows.forEach(r=>{const m=get(r.mid);if(m){m.fans+=r.g2;m.buzz=cl(m.buzz+bz);m.pop=popOf(m);m.en=Math.max(-100,m.en-15);m.mor=cl(m.mor+2);r.after=m.fans}else r.after=r.before+r.g1});
  P.newFans=P.rows.reduce((a,r)=>a+r.gain,0);S.fans+=Math.round(P.newFans*.6);ev.r2={day:S.day,redeemed:P.red-ev.r1.redeemed};ev.done=true;P.day=ev.day;P.day2=ev.day2;P.title=x.title;P.groups=(ev.groups||[]).map(g=>({name:g.name,m:g.m.slice()}));
  promoAdd(x,{id:ev.id,type:'handshake',v:2,title:ev.title,day:ev.day,day2:ev.day2,members:ev.members.slice(),res:P});ui.hsDone=ev.id}
 function hsSummary(P){const s=[],rows=P.rows.slice().sort((a,b)=>b.gain-a.gain),med=rows.length?rows[Math.floor(rows.length/2)].gain:0,top=rows[0],rate=P.tickets?Math.round(100*P.red/P.tickets):0,big=rows.filter(r=>r.gain>=Math.max(1,med*1.8));
@@ -5715,8 +5715,8 @@ function wlCdLeft(m,k){const w=wlOf(m),a=WLA[k];if(k=='bond'){const t=teamOf(m);
 function wlCan(m,k){const w=wlOf(m),a=WLA[k];if(w.leave&&!a.leave&&k!='check')return'Not available during leave.';if(k=='rest'&&w.rest==S.day)return'Already rested today.';if(k=='rday'&&w.off==S.day)return'Already off today.';if(k=='bond'&&!(isAct(m)&&teamOf(m)))return'Only for members in a team.';const c=wlCdLeft(m,k);if(c)return`Available again in ${c} day${c>1?'s':''}.`;return''}
 function wlDo(id,k){const m=get(id),a=WLA[k];if(!m||!a)return;const no=wlCan(m,k);if(no)return toast(no,'err');const w=wlOf(m);if(a.c&&!spend(a.c,`${a.n}: ${m.name}`))return;
  if(a.cd&&k!='bond')w.cd[k]=S.day;
- if(k=='rest'){m.en=cl(m.en+40);w.rest=S.day;w.off=S.day;wlAdj(m,{load:-10,str:-5});wlLog(m,{t:'care',txt:'Took a rest (+40 Energy).'});toast(`${m.name} rests: Energy ${m.en}/100. No more lessons or events for her today.`)}
- else if(k=='rday'){m.en=cl(m.en+40);w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3});wlLog(m,{t:'care',txt:'Recovery Day: full rest and massage.'});toast(`${m.name} enjoys a Recovery Day.`)}
+ if(k=='rest'){m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.rest=S.day;w.off=S.day;wlAdj(m,{load:-10,str:-5});wlLog(m,{t:'care',txt:'Took a rest (+40 Energy).'});toast(`${m.name} rests: Energy ${m.en}/100. No more lessons or events for her today.`)}
+ else if(k=='rday'){m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3});wlLog(m,{t:'care',txt:'Recovery Day: full rest and massage.'});toast(`${m.name} enjoys a Recovery Day.`)}
  else if(k=='check'){wlAdj(m,{str:-2});w.cd.check=S.day;wlLog(m,{t:'care',txt:`Medical Checkup: Physical ${WL.lv(w.ph)}, Mental ${WL.lv(w.mh)}.`});ui.mod={t:'html',h:wlReport(m)};render();return}
  else if(k=='treat'){wlAdj(m,{ph:12,load:-15});wlLog(m,{t:'care',txt:'Medical Treatment (Physical Health +12).'});toast(`${m.name} received Medical Treatment: Physical Health ${Math.round(w.ph)}.`)}
  else if(k=='mental'){wlAdj(m,{mh:10,str:-30});wlLog(m,{t:'care',txt:'Mental Recovery session (Mental Health +10).'});toast(`${m.name} attended a Mental Recovery session: Mental Health ${Math.round(w.mh)}.`)}
@@ -6489,7 +6489,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const L=[...used].map(get).filter(Boolean);if(!L.length){x.st='cancel';x.why='No available performers';thN(`<li>🎭 ${esc(thLabel(x.k))} — no member could perform on ${jd(x.day)}; the performance was cancelled.</li>`);return}
  // energy & quality: existing setlist rules (per-song intensity, MC recovery, low-energy performance factor)
  const rows=new Map(L.map(m=>[m.id,{m,en0:m.en,en:m.en,q:[]}]));thSeq(s).forEach(it=>{if(it.k=='mc'){rows.forEach(r=>{const g=Math.min(CFG.rs.mc,100-r.en);r.en+=g});return}if(it.k!='song')return;const o=S.songs[it.song],R=res[it.id];if(!o||!R)return;const sk=GEN[plG(o.genre)]||['sing','dance'],conc=CONC[plC(o.concept)]||[];
-  R.ids.forEach((id,pi)=>{const r=rows.get(id);if(!r)return;const m=r.m,w=wlOf(m),ef=r.en>=40?1:.55+.45*r.en/40,hf=(w.ph<40?.9:1)*(w.mh<40?.9:1)*(WL.mood[w.mood][1]=='pos'?1.04:WL.mood[w.mood][1]=='neg'?.95:1),suit=conc.includes(m.pers)?1.05:1;r.q.push(avg(sk.map(k=>m[k]))*ef*hf*suit*(pi==0?1.08:1));const c=Math.round((CFG.rs.INT[plG(o.genre)]||6)*(1.25-m.dance/200)*.55);r.en=Math.max(0,r.en-c)})});
+  R.ids.forEach((id,pi)=>{const r=rows.get(id);if(!r)return;const m=r.m,w=wlOf(m),ef=r.en>=40?1:.55+.45*r.en/40,hf=(w.ph<40?.9:1)*(w.mh<40?.9:1)*(WL.mood[w.mood][1]=='pos'?1.04:WL.mood[w.mood][1]=='neg'?.95:1),suit=conc.includes(m.pers)?1.05:1;r.q.push(avg(sk.map(k=>m[k]))*ef*hf*suit*(pi==0?1.08:1));const c=Math.round((CFG.rs.INT[plG(o.genre)]||6)*(1.25-m.dance/200)*.55);r.en=Math.max(-100,r.en-c)})});
  const RW=[...rows.values()],Q=avg(RW.map(r=>r.q.length?avg(r.q):0)),cen=get(res[thSongs(s)[0].id]&&res[thSongs(s)[0].id].c),coord=Math.min(1,.8+.2*Math.min(1,L.length/10))*(notes.some(t=>/replaced/.test(t))?.97:1),sat=cl(Math.round((Q*.85+((cen&&cen.pop)||0)*.15)*coord*1.08+rnd(-4,4)));
  // audience
  const pop=avg(L.map(m=>m.pop)),songPop=avg(thAll(s).map(it=>thSongPop(S.songs[it.song]))),recent=H.pf.filter(p=>p.k==x.k&&p.day>=x.day-28),rs=recent.length?avg(recent.map(p=>p.sat)):55,week=H.pf.filter(p=>p.k==x.k&&p.day>x.day-7).length;
@@ -6499,7 +6499,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=typeof thOnlineN=='function'?thOnlineN(subs,sat):Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
  earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);S.money-=cost;S.exp+=cost;S.led.unshift({d:S.day,l:`Theater operating cost: ${thLabel(x.k)}`,a:-cost});S.led.length=Math.min(S.led.length,80);
  const AUD=thAud(x,s,T,L,res,att,online,sat),nf=AUD.nf; // audience: existing fans vs newcomers (Theater update)
- const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(0,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
+ const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(-100,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
   if(Math.random()<.12){const k=pick(['sing','dance','cha','variety']);if(m[k]<100)m[k]++}wlAdj(m,{load:6+Math.round(r.q.length/3),str:sat<40?4:1},'theater performance');if(sat>=80&&Math.random()<.25&&WL.mood[wlOf(m).mood][1]!='neg')wlMood(m,'Happy',3);
   fx.push([m.id,m.pop-p0,m.fans-f0,m.buzz-b0,r.en0-m.en,m.status=='trainee'&&out.size&&Object.values(sub).includes(m.id)?1:0])});
  thAudApply(x,AUD);
@@ -11828,8 +11828,8 @@ function ccQHtml(q){return q.map(x=>{const C=ccGet(x.c);if(!C)return'';if(x.fin)
 const ccSongIt=set=>set.items.filter(i=>i.k=='song');
 function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(!set)return p.res={err:1};const items=set.items,songs=ccSongIt(set);
  // performers: members of at least one song of this setlist; Energy 20 each, never below the limit
- const need=new Set();songs.forEach(it=>ccPerf(it).forEach(id=>need.add(id)));const out={},ok=new Set();need.forEach(id=>{const m=get(id);if(!m||m.status=='graduated')out[id]='Left the group';else if(wlAway(m))out[id]='On leave';else if((m.en|0)<20)out[id]=`Not enough Energy (${m.en|0}/20)`;else ok.add(id)});
- const en={};ok.forEach(id=>{const m=get(id);en[id]=m.en;m.en=Math.max(0,m.en-20)});
+ const need=new Set();songs.forEach(it=>ccPerf(it).forEach(id=>need.add(id)));const out={},ok=new Set();need.forEach(id=>{const m=get(id);if(!m||m.status=='graduated')out[id]='Left the group';else if(wlAway(m))out[id]='On leave';else ok.add(id)});
+ const en={};ok.forEach(id=>{const m=get(id);en[id]=m.en;m.en=Math.max(-100,m.en-20)});
  try{wlWork([...ok],{load:6,str:1},'concert performance')}catch(e){}
  // per-member counts and efficiency
  const MR={};const mr=id=>MR[id]=MR[id]||{songs:0,center:0,front:0,middle:0,back:0,mc:0,en:ok.has(id)?20:0,eff:[],sc:0};C.parts.forEach(id=>mr(id));
@@ -13175,7 +13175,7 @@ function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.
  mem.forEach(z=>{const m=get(z.id);if(!m)return;const p0=m.pop,f0=m.fans,ps0=m.pas;const share=Math.round(G*z.vis*Math.pow(Math.max(1,z.sc),2)/wsum);if(share>0){m.fans+=share}
   const d=fbRound(Math.max(0,Math.log10(1+reach)/2.2*z.vis*Math.max(0,q)*(z.sc/70)));if(d>0)gainPop(m,d);else{m.buzz=cl(m.buzz+(q>0?1:0));m.pop=popOf(m)}
   if(z.sc>=70&&(m.en|0)>=30&&Math.random()<.5)m.pas=cl(m.pas+1);if(z.note||(m.en|0)<20)m.pas=cl(m.pas-1);if((r.cat=='media'||r.cat=='special')&&q>.5&&Math.random()<.25&&m.variety<100)m.variety++;
-  const en=r.acts.reduce((a,k)=>a+(XE_EN[k]?XE_EN[k](r):6),0)+((r.et-r.st)>=480?10:0);const e0=m.en|0;m.en=Math.max(0,e0-en);try{wlWork([m.id],{load:Math.round(en/2),str:q<0?3:1,mh:q>.6?1:0},'external event')}catch(e){}
+  const en=r.acts.reduce((a,k)=>a+(XE_EN[k]?XE_EN[k](r):6),0)+((r.et-r.st)>=480?10:0);const e0=m.en|0;m.en=Math.max(-100,e0-en);try{wlWork([m.id],{load:Math.round(en/2),str:q<0?3:1,mh:q>.6?1:0},'external event')}catch(e){}
   try{fbExp(m.id,+(z.vis*Math.max(0,q)*.6).toFixed(2))}catch(e){}Object.assign(z,{dPop:m.pop-p0,fans:m.fans-f0,en:e0-m.en,pas:m.pas-ps0})});
  if(g=='Excellent'||g=='Great'){try{fbBoost(s=>ids.has(s.k),1,1);fbApply()}catch(e){}}
  // finance (once)
@@ -16186,8 +16186,8 @@ function xmBase(gid){let L=[];try{gsWith(gid,()=>{const x=(S.singles||[]).slice(
 function xmRankList(gid){const M=gsMem(gid).filter(m=>isAct(m));let ed=-1;M.forEach(m=>(m.geRec||[]).forEach(h=>{if(h.rank&&(h.ed||0)>ed)ed=h.ed||0}));
  const rk=m=>{if(ed<0)return null;const h=(m.geRec||[]).find(z=>(z.ed||0)==ed&&z.rank);return h?h.rank:null};
  return M.map(m=>({m,r:rk(m)})).sort((a,b)=>(a.r==null?1e9:a.r)-(b.r==null?1e9:b.r)||(b.m.fans||0)-(a.m.fans||0)).map(z=>z.m.id)}
-function xmIds(gid,n,day,except){const out=[],ok=id=>{const m=get(id);return m&&isAct(m)&&(typeof gsGid!='function'||gsGid(m)==gid||(m.kn&&m.kn.gid==gid))&&xeFree(id,day,except)};
- for(const id of xmBase(gid)){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}
+function xmIds(gid,n,day,except){const out=[],ok=id=>{const m=get(id);return m&&isAct(m)&&(+m.en||0)>=0&&(typeof gsGid!='function'||gsGid(m)==gid||(m.kn&&m.kn.gid==gid))&&xeFree(id,day,except)};
+ const B=xmBase(gid),L=n<B.length?xmSpread(B,day,except):B;for(const id of L){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}
  if(out.length<n)for(const id of xmRankList(gid)){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}return out}
 const xmGid=r=>{const g=(r.gr||[])[0];if(g&&g.gid!=null)return g.gid;const q=(r.req||[])[0];return q?q.gid:gsAg()};
 // put the automatic lineup on an open offer
@@ -16235,6 +16235,12 @@ function xmAutoMp(){const X=xeS();if(!X)return;X.list.filter(r=>r.status=='open'
 {const f=tick;tick=function(){const out=f.apply(this,arguments);try{xmAutoMp()}catch(e){console.error(e)}return out}}
 {const f=V.xemp;if(typeof f=='function')V.xemp=function(){try{xmAutoMp()}catch(e){}const h=f.apply(this,arguments);const bar=`<div class="c xmauto"><label class="row"><input type="checkbox" checked disabled> <b>🔒 Music programs: accepted automatically</b></label><small class="st">Offers for the latest single's music programs are accepted as soon as every performer is free.</small></div>`;const i=h.indexOf('</h2>');return i>=0?h.slice(0,i+5)+bar+h.slice(i+5):bar+h}}
 
+// ---- spread the work: when an event needs fewer members than the list, members with fewer recent jobs go first ----------------------
+function xmLoad(day,except){const C={};try{xeS().list.forEach(r=>{if(r.id==except||!['accepted','done'].includes(r.status)||Math.abs((r.day|0)-day)>30)return;(r.sel||[]).forEach(id=>{C[id]=(C[id]||0)+1})})}catch(e){}return C}
+function xmSpread(B,day,except){const C=xmLoad(day,except);return B.map((id,i)=>({id,i,c:C[id]||0})).sort((a,b)=>a.c-b.c||a.i-b.i).map(z=>z.id)}
+// ---- negative Energy: no new jobs until it is back to 0 or more (jobs already accepted still happen) ----------------------------------
+{const f=xeCheck;xeCheck=function(r,sel){const E=f.apply(this,arguments);try{if(r&&r.status=='open'){const ids=r.mode=='org'?(r.req||[]).map(q=>q.mid):(sel||[]);ids.forEach(id=>{const m=get(id);if(m&&(+m.en||0)<0)E.push(`${m.name} has negative Energy (${m.en|0}): no new jobs until she has rested.`)})}}catch(e){}return E}}
+
 </script>
 <script>
 // =====================================================================================
@@ -16275,6 +16281,20 @@ function evdScreen(sp){const c=evdColors(sp),seed=(sp.day|0)*7+(sp.m||[]).length
 // ---- Music programs -------------------------------------------------------------------------------------------------------------
 {const f=xeScene;xeScene=function(sp){if(!sp||sp.scene!='mp'||!(sp.m||[]).length)return f.apply(this,arguments);let s=f.call(this,{...sp,m:[]});
  try{const fig=evdDraw(sp,{fy:350,dy:46,maxRise:90,x0:110,x1:690,smax:.98,shrink:.11},sp.seed|0),k=s.indexOf('<rect y="380" width="800" height="70" fill="#05060f"/>');s=k>=0?s.slice(0,k)+fig+s.slice(k):s+fig}catch(e){console.error(e)}return s}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Concert big screen: the Encore is announced
+// -------------------------------------------------------------------------------------
+//  · Before the first Encore song an "ENCORE" step is shown; Encore songs are numbered EN1, EN2 …
+//    (main songs keep M01, M02 …).
+// =====================================================================================
+{const f=ccShSteps;ccShSteps=function(){const St=f.apply(this,arguments),out=[];let cur=null,k=0,e=0,seen=false;
+ St.forEach(z=>{const key=z.C&&z.p?z.C.id+'|'+z.p.id:null;if(key!==cur){cur=key;k=0;e=0;seen=false}
+  if(z.it&&z.it.enc&&!seen&&z.k!='open'){seen=true;out.push({k:'corner',qi:z.qi,C:z.C,p:z.p,it:{k:'encore',name:'🎉 ENCORE',about:'The audience calls the members back to the stage!'}})}
+  if(z.k=='song'){z.lb=z.it.enc?'EN'+(++e):'M'+String(++k).padStart(2,'0')}out.push(z)});return out}}
+{const f=ccShHtml;ccShHtml=function(){let h=f.apply(this,arguments);try{const s=ui.ccsh,St=ccShSteps(s.q),z=St[Math.min(s.i,St.length-1)];if(z&&z.k=='song'&&z.lb)h=h.replace(`<div class="gekicker">M${z.no}</div>`,`<div class="gekicker">${z.lb}${z.it.enc?' · ENCORE':''}</div>`)}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -16597,7 +16617,7 @@ function rwRun(y){const Y=rwS().years[y];if(!Y||!Y.line||Y.res)return;const I=S.
  Y.res={acts:ord,R:+R.toFixed(2),W:+W.toFixed(2),jr,jw:11-jr,aud,ar,aw:aud-ar,hall,hr:hall*2>3000,pts,win:pts.red>pts.white?'red':'white',day:S.day};rwEffects(Y);rwResNews(Y)}
 function rwEffects(Y){const I=S.ind,me=Y.res.acts.find(a=>a.gid!=null);
  Y.res.acts.filter(a=>a.gid==null).forEach(a=>{const x=I.A[a.id];if(x){x.fans=Math.round(x.fans*(1.01+a.sc/5000));x.mom=Math.min(15,(x.mom||0)+.8)}});
- if(me){const win=Y.res.win=='red',d=me.sc>=75?3:me.sc>=60?2:1.2;const en=15+(RW_STY[me.sty]||RW_STY.std)[3];me.mem.forEach(id=>{const m=get(id);if(!m)return;gainPop(m,d+(id==me.cen?1:0));m.en=Math.max(0,(m.en|0)-en);hev(m,{t:'rw',yr:Y.y,song:me.song,cen:id==me.cen?1:0,win:win?1:0})});
+ if(me){const win=Y.res.win=='red',d=me.sc>=75?3:me.sc>=60?2:1.2;const en=15+(RW_STY[me.sty]||RW_STY.std)[3];me.mem.forEach(id=>{const m=get(id);if(!m)return;gainPop(m,d+(id==me.cen?1:0));m.en=Math.max(-100,(m.en|0)-en);hev(m,{t:'rw',yr:Y.y,song:me.song,cen:id==me.cen?1:0,win:win?1:0})});
   const n=Math.round(Math.min(90000,4000+(S.fans|0)*.01*(me.sc/60)));try{gsWith(me.gid,()=>fbAcquire(n,{via:'group',org:`${RW_NAME} ${Y.y}`}))}catch(e){}Y.res.fans=n;
   try{gsWith(me.gid,()=>{const e=(S.cal||[]).find(x=>x.id==Y.inv.ev);if(e){e.done=true;e.result={sc:me.sc}}})}catch(e){}
   // the song gets more chart interest
@@ -17332,6 +17352,8 @@ Object.assign(I18N_TH,{"📣 Media Senbatsu":"📣 มีเดียเซ็�
 I18N_TH_TPL.unshift(["Members ({0})","เมมเบอร์ ({0})"],["Media Senbatsu: {0} member(s).","มีเดียเซ็มบัตสึ: {0} คน"],["📣 Media Senbatsu ({0})","📣 มีเดียเซ็มบัตสึ ({0})"]);
 Object.assign(I18N_TH,{"Performance events (festivals / live events): 1–2 a month per group; other events (corporate, media, talk …) as before. Members are the Media Senbatsu (or the latest Title Track Senbatsu); busy members are replaced by General Election rank, or fanbase.":"งานแสดง (เฟสติวัล / ไลฟ์): วงละ 1–2 งานต่อเดือน งานอื่น (องค์กร สื่อ ทอล์ก …) มาตามปกติ เมมเบอร์ที่ไปคือมีเดียเซ็มบัตสึ (หรือเซ็มบัตสึเพลงหลักซิงเกิลล่าสุด) ถ้าใครไม่ว่างใช้อันดับเลือกตั้งหรือฐานแฟนแทน"});
 Object.assign(I18N_TH,{"🔒 Music programs: accepted automatically":"🔒 รายการเพลง: รับงานอัตโนมัติ","Offers for the latest single's music programs are accepted as soon as every performer is free.":"ข้อเสนอรายการเพลงของซิงเกิลล่าสุดจะถูกรับทันทีเมื่อผู้แสดงทุกคนว่าง"});
+Object.assign(I18N_TH,{"🎉 ENCORE":"🎉 อังกอร์","The audience calls the members back to the stage!":"ผู้ชมเรียกเมมเบอร์กลับขึ้นเวทีอีกครั้ง!"});
+I18N_TH_TPL.unshift(["{0} has negative Energy ({1}): no new jobs until she has rested.","{0} มีพลังติดลบ ({1}): รับงานใหม่ไม่ได้จนกว่าจะพักฟื้น"]);
 
 </script>
 <script>
