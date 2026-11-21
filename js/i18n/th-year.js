@@ -32,3 +32,5 @@ I18N_TH_TPL.unshift(
  ["No answer was sent: the {0} invitation expired.","ไม่ได้ตอบกลับ: คำเชิญ {0} หมดอายุแล้ว"],["{0}: {1} team wins! Open the festival page to watch.","{0}: ทีม{1}ชนะ! เปิดหน้าเทศกาลเพื่อชม"],
  ["Sister group of {0}","วงน้องสาวของ {0}"],["Sister groups: {0}","วงน้องสาว: {0}"],
  ["Won {0} · {1} {2}","ได้รับรางวัล {0} · {1} {2}"],["Nominated for {0} · {1} {2}","เข้าชิง {0} · {1} {2}"],["Performed “{0}” at the {1} {2}","แสดงเพลง “{0}” ที่ {1} {2}"],["Performed “{0}” at the {1} {2} as Center","แสดงเพลง “{0}” ที่ {1} {2} ในฐานะเซ็นเตอร์"]);
+Object.assign(I18N_TH,{"🖼 Costume Library":"🖼 คลังชุด","Design applied — press 💾 Save costume to keep it.":"ใส่ดีไซน์แล้ว — กด 💾 บันทึกชุด เพื่อเก็บไว้"});
+I18N_TH_TPL.unshift(["🖼 Costume Library · {0}","🖼 คลังชุด · {0}"],["Tap a design: {0} wears it in the Costume Designer. Edit it if you like, then press Save.","แตะดีไซน์เพื่อให้ {0} ใส่ในหน้าออกแบบชุด แก้ไขต่อได้ แล้วกดบันทึก"]);

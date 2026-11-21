@@ -16,7 +16,20 @@
 {const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx];const r=f.apply(this,arguments);try{if(!it||it.k!='song')return r;const z=it.cz||{mode:'orig'};
   const useOrig=z.mode=='orig'||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]));if(!useOrig)return r;
   const o=ccSong(it.gid,it.song);if(!o)return r;let own=false;try{gsWith(it.gid,()=>{own=czMembers(o).some(m=>m.id==mid)})}catch(e){}if(own)return r;
-  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k>=0&&it.orig&&it.orig[k]?it.orig[k].m:null;if(om==null)return r;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
+  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k<0?null:it.orig&&it.orig[k]&&it.orig[k].m!=null?it.orig[k].m:it.pos[k].o??null;if(om==null)return r;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
+// ---- 1b. nobody stays in her everyday clothes ---------------------------------------------------------------------------------
+//  When a performer has no costume of her own for the song (e.g. a concert song set up before positions were saved, or a
+//  Theater Stage song she never performed), she wears the costume of the original position she takes; failing that, the
+//  costume of an original performer of the song (Center first), or of another performer of this song who has one.
+//  "Same as the previous / another song" follows the source song member by member, so it uses the same rule.
+function ccCzFill(C,set,idx,mid,depth){const it=set&&set.items[idx];if(!it||it.k!='song')return null;const z=it.cz||{mode:'orig'};
+ if(!(z.mode=='orig'||!z.mode||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]))))return null;
+ const o=ccSong(it.gid,it.song);if(!o)return null;let orig=(it.orig||[]).map(x=>x.m);if(!orig.some(x=>x!=null)){try{orig=ccOrigPos(o).map(x=>x.m)}catch(e){orig=[]}}
+ const k=(it.pos||[]).findIndex(p=>p.m==mid),ids=[];if(k>=0&&it.pos[k].o!=null)ids.push(it.pos[k].o);if(k>=0&&orig[k]!=null&&!ids.includes(orig[k]))ids.push(orig[k]);
+ const cen=new Set(o.centers||[]);[...orig.filter(x=>x!=null&&cen.has(x)),...orig,...(o.centers||[]),...((o.slots||[]).filter(Boolean))].forEach(x=>{if(x!=null&&x!=mid&&!ids.includes(x))ids.push(x)});
+ for(const id of ids){const p=ccCzOrig(C,it,id);if(p)return p}
+ if(depth<1)for(const id of ccPerf(it)){if(id==mid)continue;const p=ccCzOrig(C,it,id);if(p)return p}return null}
+{const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const r=f.apply(this,arguments);if(r)return r;try{return ccCzFill(C,set,idx,mid,depth)}catch(e){console.error(e);return r}}}
 // ---- 2. picture picker for "one design for everyone" ------------------------------------------------------------------------
 function ccDzOpen(iid){ui.ccdz={iid,ty:'single',g:'all',q:''};ui.mod={t:'html',h:ccDzHtml()};render()}
 function ccDzHtml(){const C=ccCur(),P=ui.ccdz,r=C&&P&&ccItem(C,P.iid);if(!r)return'';const m=get(ccPerf(r.it)[0])||S.members[0],a=ap(m),z=r.it.cz||{};
@@ -54,8 +67,18 @@ V.cccz=function(){const X=ccDrCtx();if(!X)return`<p class="st">No concert song s
  const z=X.it.cz||{},E=ui.czE,m=get(X.D.mid),ed=ccEdit(X.C),L=czLib().ds.filter(d=>d.p),doneOf=id=>!!(z.mode=='mem'&&z.done&&z.done[id]),done=X.M.filter(doneOf).length;
  const strip=`<div class="plczs">${X.M.map(id=>{const x=get(id);if(!x)return'';const ok=doneOf(id);return`<button class="plczm ${id==m.id?'on':''} ${ok?'ok':''}" onclick="ccDrMem(${id})" title="${esc(x.name)}">${ptc(x,46)}<b>${esc(x.name.split(' ')[0])}</b><small>${ok?'✔ Own costume':'Original costume'}</small></button>`}).join('')}</div>`;
  const songs=X.s.items.filter(i=>i.k=='song');
- const tools=ed?`<button class="b s p" onclick="ccDrRandom()">🎲 Randomize Costume</button><button class="b s" onclick="ccDrRandAll(0)">🎲 Random for every member (same)</button><button class="b s" onclick="ccDrRandAll(1)">🎲 Random for every member (each different)</button><select onchange="if(this.value)ccDrLib(this.value);this.value=''"><option value="">Start from a library design…</option>${L.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('')}</select><button class="b s" onclick="ccCzOpen('${X.it.id}',${m.id})">Her costumes…</button><button class="b s" onclick="ccDrCopyRest()">Copy to members without their own costume</button>`:'<span class="tag warn">🔒 This concert can no longer be edited</span>';
+ const tools=ed?`<button class="b s p" onclick="ccDrRandom()">🎲 Randomize Costume</button><button class="b s" onclick="ccDrRandAll(0)">🎲 Random for every member (same)</button><button class="b s" onclick="ccDrRandAll(1)">🎲 Random for every member (each different)</button><button class="b s p" onclick="ccDrLibOpen()">🖼 Costume Library</button><button class="b s" onclick="ccCzOpen('${X.it.id}',${m.id})">Her costumes…</button><button class="b s" onclick="ccDrCopyRest()">Copy to members without their own costume</button>`:'<span class="tag warn">🔒 This concert can no longer be edited</span>';
  let body=czGridHtml(E,null,null,m).replace(/<label class="st">Model <select[\s\S]*?<\/select><\/label>/,'').replace('onclick="czSave()"','onclick="ccDrSave()"').replace('onclick="czRevert()"','onclick="ccDrRevert()"').replace('💾 Save design','💾 Save costume');
  if(!doneOf(m.id)&&!E.dirty)body=body.replace('<span class="tag">Saved</span>','<span class="tag warn">Not saved yet</span>');
  return`<h2 class="ht">Concert Costumes · ${esc(X.it.title)}</h2><div class="c plczh"><div class="row"><b>${done} / ${X.M.length} members in their own costume</b><span class="st">${esc(X.C.name)} · ${esc(X.s.name)}. Each member can wear her own costume — saved for this concert song only.</span><span style="flex:1"></span><select aria-label="Song" onchange="ccDrOpen(this.value)">${songs.map(x=>`<option value="${x.id}" ${x.id==X.it.id?'selected':''}>${esc(x.title)}</option>`).join('')}</select><button class="b" onclick="ccDrBack()">◀ Back to Setlist</button></div>${strip}<div class="row">${tools}</div></div>${body}`};
 try{const ev=SECS.find(s=>s.v.some(x=>x[0]=='concert'));if(ev){ev.hid=[...(ev.hid||[]),'cccz']}SUBLOC.cccz='Concert · Costumes';if(typeof SC_VIEW!='undefined')SC_VIEW.cccz='dressing'}catch(e){}
+
+// ---- 4. dressing page: choose from the Costume Library with pictures (Single / Stage / Other, by group) -----------------------
+function ccDrLibOpen(){if(!ui.czE)return;ui.ccdl={ty:'single',g:'all',q:''};ui.mod={t:'html',h:ccDrLibHtml()};render()}
+function ccDrLibHtml(){const X=ccDrCtx(),P=ui.ccdl;if(!X||!P)return'';const m=get(X.D.mid),a=ap(m),CM=typeof tf7CzMap=='function'?tf7CzMap():null,inf=d=>CM?tf7CzInfo(d,CM):{r:2,g:0,hd:''},q=(P.q||'').toLowerCase();
+ const L=czLib().ds.filter(d=>d&&d.p).filter(d=>{const f=inf(d);return(P.ty=='all'||(P.ty=='single'&&f.r==0)||(P.ty=='stage'&&f.r==1)||(P.ty=='other'&&f.r==2))&&(P.g=='all'||f.g==+P.g)&&(!q||String(d.name).toLowerCase().includes(q))});
+ const chip=(k,v,n)=>`<button class="b s ${String(P[k])==String(v)?'p':''}" onclick="ui.ccdl.${k}='${v}';ui.mod.h=ccDrLibHtml();render()">${esc(n)}</button>`;
+ return`<h2 class="ht">🖼 Costume Library · ${esc(m.name)}</h2><p class="st">Tap a design: ${esc(m.name)} wears it in the Costume Designer. Edit it if you like, then press Save.</p><div class="row cctabs">${chip('ty','single','Single')}${chip('ty','stage','Stage')}${chip('ty','other','Other')}${chip('ty','all','All')}</div>${S.groups.length>1?`<div class="row">${chip('g','all','All groups')}${S.groups.map(g=>chip('g',g.id,g.name)).join('')}</div>`:''}
+ <input class="ccpkq" placeholder="Search costume name" value="${esc(P.q||'')}" onchange="ui.ccdl.q=this.value;ui.mod.h=ccDrLibHtml();render()">
+ <div class="czps ccdz3">${L.map(d=>`<button class="czpsi" onclick="ccDrLibPick('${d.id}')"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:d.p})}</svg><b>${esc(d.name)}</b><small class="st">${esc(inf(d).hd||'')}</small></button>`).join('')||'<p class="st">No design in this category.</p>'}</div>`}
+function ccDrLibPick(did){ui.mod=null;ui.ccdl=null;ccDrLib(did);toast('Design applied — press 💾 Save costume to keep it.')}
