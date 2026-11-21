@@ -1357,3 +1357,11 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .fdtw{overflow-x:auto}.fdt{width:100%;border-collapse:collapse;font-size:13px}.fdt td,.fdt th{padding:4px 6px;border-bottom:1px solid #f0e4ec;text-align:right;white-space:nowrap}.fdt .fdmn{text-align:left;display:flex;align-items:center;gap:6px}.fdt th .b{padding:3px 6px;font-size:11px}
 .fdfan{background:var(--card2,#fff6fa);border-radius:10px;padding:8px;line-height:1.6}
 .ccto{max-width:150px;font-size:12px;padding:4px}.ccfcp{margin-top:6px}.ccfcp select{max-width:100%}.ccins{background:#fff3f8;margin-bottom:6px}.ccpks>summary{font-size:15px;padding:6px 0}.ccpks{margin-bottom:6px}
+/* ---- iPhone / iPad / Safari (html.wk): lighter rendering so screens with many members stay within iOS memory ----
+   masks, drop-shadow filters, infinite animations and backdrop blur each need their own offscreen layers in WebKit;
+   cards outside the screen are not rendered until they scroll into view */
+.wk .gedc::before{-webkit-mask:none!important;mask:none!important;background:none!important;animation:none!important;border:3px solid var(--g2);padding:0!important}
+.wk .gedc-c,.wk .gedc-ic,.wk .hero .fp svg,.wk .tcast svg.chf,.wk .vnart svg.chf,.wk .pd svg.chf,.wk .awwin svg{filter:none!important}
+.wk *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.wk .mod{background:rgba(60,40,84,.72)}
+.wk .g>.c,.wk .g>.mc,.wk .ccmg3>*,.wk .aug>*,.wk .awatt>*,.wk .czps>*{content-visibility:auto;contain-intrinsic-size:auto 230px}

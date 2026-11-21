@@ -1439,6 +1439,14 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .fdtw{overflow-x:auto}.fdt{width:100%;border-collapse:collapse;font-size:13px}.fdt td,.fdt th{padding:4px 6px;border-bottom:1px solid #f0e4ec;text-align:right;white-space:nowrap}.fdt .fdmn{text-align:left;display:flex;align-items:center;gap:6px}.fdt th .b{padding:3px 6px;font-size:11px}
 .fdfan{background:var(--card2,#fff6fa);border-radius:10px;padding:8px;line-height:1.6}
 .ccto{max-width:150px;font-size:12px;padding:4px}.ccfcp{margin-top:6px}.ccfcp select{max-width:100%}.ccins{background:#fff3f8;margin-bottom:6px}.ccpks>summary{font-size:15px;padding:6px 0}.ccpks{margin-bottom:6px}
+/* ---- iPhone / iPad / Safari (html.wk): lighter rendering so screens with many members stay within iOS memory ----
+   masks, drop-shadow filters, infinite animations and backdrop blur each need their own offscreen layers in WebKit;
+   cards outside the screen are not rendered until they scroll into view */
+.wk .gedc::before{-webkit-mask:none!important;mask:none!important;background:none!important;animation:none!important;border:3px solid var(--g2);padding:0!important}
+.wk .gedc-c,.wk .gedc-ic,.wk .hero .fp svg,.wk .tcast svg.chf,.wk .vnart svg.chf,.wk .pd svg.chf,.wk .awwin svg{filter:none!important}
+.wk *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.wk .mod{background:rgba(60,40,84,.72)}
+.wk .g>.c,.wk .g>.mc,.wk .ccmg3>*,.wk .aug>*,.wk .awatt>*,.wk .czps>*{content-visibility:auto;contain-intrinsic-size:auto 230px}
 
 </style>
 </head><body>
@@ -15376,10 +15384,16 @@ function ptPrune(){PT_PRUNE=0;try{const el=document.getElementById('ptspr');if(!
 //  stays tiny and the browser keeps a cached bitmap instead of thousands of SVG elements. Looks the same.
 const PT_WK=(()=>{try{const u=navigator.userAgent||'',ios=/iPad|iPhone|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),saf=/^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(u);return ios||saf||/[?&]ptimg=1/.test(location.search)}catch(e){return false}})();
 const PT_IMG=new Map();
+// then the SVG image is turned into a PNG once (in the background): the page keeps one small bitmap per member
+// instead of a live SVG document per portrait; every portrait on screen switches to the PNG
+function ptPng(y,vb){try{const im=new Image();im.onload=()=>{try{const sc=3,c=document.createElement('canvas');c.width=Math.round(vb[2]*sc);c.height=Math.round(vb[3]*sc);const x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);
+ c.toBlob(b=>{if(!b)return;const png=URL.createObjectURL(b),old=y.url;y.u=y.u.replace(old,png);y.url=png;document.querySelectorAll('image[href="'+old+'"]').forEach(e=>e.setAttribute('href',png));setTimeout(()=>{try{URL.revokeObjectURL(old)}catch(e){}},3000)},'image/png')}catch(e){}};im.src=y.url}catch(e){}}
 if(PT_WK){const f0=ptUse;ptUse=function(k,t){let y=PT_IMG.get(k);if(!y){try{if(PT_IMG.size>600){PT_IMG.forEach(z=>{try{URL.revokeObjectURL(z.url)}catch(e){}});PT_IMG.clear()}const body=t.split('§').join('pi_'),mm=body.match(/^<svg([^>]*)>/);if(!mm)return f0.apply(this,arguments);
    const at=mm[1].replace(/\s(width|height)="[^"]*"/g,''),vbm=at.match(/viewBox="([^"]+)"/),vb=(vbm?vbm[1]:'0 0 100 120').split(/\s+/).map(Number),doc=body.replace(/^<svg([^>]*)>/,(x,a)=>`<svg${/xmlns=/.test(a)?a:a+' xmlns="http://www.w3.org/2000/svg"'}>`);
-   const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={at:mm[1],url,u:`<image href="${url}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" preserveAspectRatio="xMidYMid meet"/>`};PT_IMG.set(k,y)}catch(e){return f0.apply(this,arguments)}}
+   const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={at:mm[1],url,u:`<image href="${url}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" preserveAspectRatio="xMidYMid meet"/>`};PT_IMG.set(k,y);ptPng(y,vb)}catch(e){return f0.apply(this,arguments)}}
   return`<svg${y.at}>${y.u}</svg>`}}
+// WebKit (iPhone / iPad / Safari): lighter rendering — the html element gets the class "wk" (see theme.css)
+try{if(PT_WK)document.documentElement.classList.add('wk')}catch(e){}
 
 </script>
 <script>
