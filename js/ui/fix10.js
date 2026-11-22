@@ -102,3 +102,20 @@ function f10MemTeamSongs(m){const L=[];(m.hist||[]).forEach(h=>{try{const o=gsWi
 {const f=histHtml;histHtml=function(m){let h=f.apply(this,arguments);try{const L=f10MemTeamSongs(m);if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
  const blk=`<h4>${th?'เพลงทีม':'Team Songs'}</h4><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(z.tm)} · ${esc(String(z.rel))}${z.day!=null?' · '+jd(z.day):''}${z.tag?` (${z.tag})`:''}</span></li>`).join('')}</ul>`;
  const a=h.indexOf('<h3>Team History');if(a<0)return h+blk;const b=h.indexOf('<h3>',a+5);return b<0?h+blk:h.slice(0,b)+blk+h.slice(b)}catch(e){return h}}}
+
+// ---- 10. health protection ---------------------------------------------------------------------------------------------------
+//  A. A member whose Physical Health is below 25 is not sent on stage: Theater uses a substitute, external events /
+//     music programs / Media Senbatsu lineups skip her until she recovers.
+//  B. Automatic care: Physical Health below 35 → Reduced Schedule (faster recovery) and, below 25, a Recovery Day
+//     (at most every 3 days). The automatic Reduced Schedule ends by itself at Physical Health 60.
+const F10_HP=25,F10_RED=35,F10_OK=60;
+const f10Weak=m=>{try{const w=wlOf(m);return!!m&&!w.leave&&w.ph<F10_HP}catch(e){return false}};
+{const f=thWhy;thWhy=function(m,x){const r=f.apply(this,arguments);if(r||!m||!x)return r;try{if(x.day<=S.day+1&&f10Weak(m))return`Health too low (Physical Health ${Math.round(wlOf(m).ph)})`}catch(e){}return r}}
+{const f=xmIds;xmIds=function(){const L=f.apply(this,arguments)||[];return L.filter(id=>!f10Weak(get(id)))}}
+{const f=xeCheck;xeCheck=function(r,ids){const E=f.apply(this,arguments)||[];try{if(r&&r.day<=S.day+3){const L=(ids||r.sel||(r.req||[]).map(q=>q.mid)||[]).map(get).filter(f10Weak);L.forEach(m=>E.push(`${m.name}: health too low (Physical Health ${Math.round(wlOf(m).ph)}). Let her recover first.`))}}catch(e){}return E}}
+function f10Care(){const N=[];S.members.forEach(m=>{if(m.status=='graduated')return;let w;try{w=wlOf(m)}catch(e){return}if(w.leave)return;
+ if(w.ph<F10_RED&&!w.red){w.red=true;w.redAuto=1;wlLog(m,{t:'care',txt:'Reduced Schedule started automatically (low Physical Health).'});N.push(`🩺 <b>${esc(m.name)}</b> — Physical Health ${Math.round(w.ph)}: automatic Reduced Schedule.`)}
+ if(w.ph<F10_HP&&w.off!=S.day&&S.day-(w.autoRd||-99)>=3){w.autoRd=S.day;m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3},'automatic care');wlLog(m,{t:'care',txt:'Automatic Recovery Day (Physical Health below 25).'});N.push(`🛌 <b>${esc(m.name)}</b> takes an automatic Recovery Day and stays off stage until she recovers.`)}
+ if(w.redAuto&&w.red&&w.ph>=F10_OK){w.red=false;w.redAuto=0;wlLog(m,{t:'care',txt:'Automatic Reduced Schedule ended (recovered).'})}});
+ N.forEach(t=>{try{wlN(`<li>${t}</li>`)}catch(e){}})}
+{const f=tick;tick=function(){const o=f.apply(this,arguments);try{f10Care()}catch(e){console.error(e)}return o}}
