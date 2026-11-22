@@ -70,3 +70,7 @@ function f10HistFix(){(S.members||[]).forEach(m=>(m.hist||[]).forEach(h=>{if(h.p
 {const f=migrate;migrate=function(){const o=f.apply(this,arguments);try{f10HistFix()}catch(e){console.error(e)}return o}}
 {const f=doRelease;doRelease=function(){const o=f.apply(this,arguments);try{f10HistFix()}catch(e){}return o}}
 try{if(typeof plAlbumRelease=='function'){const f=plAlbumRelease;plAlbumRelease=function(){const o=f.apply(this,arguments);try{f10HistFix()}catch(e){}return o}}}catch(e){}
+
+// ---- 7. Fanbase sort = the supporters shown in the profile (always computed from the fan database) ------------------------
+let F10SUP={v:null,M:null,s:null};
+function fdSupFresh(m){try{const fb=S&&S.fb;if(!fb||typeof fdSup!='function')return+m.fans||0;const key=fb.ver+'|'+S.day+'|'+(fb.segs||[]).length;if(F10SUP.v!==key||F10SUP.s!==S){F10SUP={v:key,s:S,M:fdSup()}}const X=F10SUP.M[m.id];return X?X.t:(+m.fans||0)}catch(e){return+m.fans||0}}
