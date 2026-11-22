@@ -9335,6 +9335,15 @@ function geCancel(){const e=geActive();if(!geCanCancel(e))return toast('An elect
   toast(`${e.name} was cancelled.`);render()})}
 {const f=geSetupHtml;geSetupHtml=function(e){let h=f.apply(this,arguments);try{if(geCanCancel(e))h+=`<div class="c gecx"><p class="st">Created this election by mistake? It can be cancelled until voting starts.</p><button class="b s warn" onclick="geCancel()">✕ Cancel this General Election</button></div>`}catch(x){console.error(x)}return h}}
 try{Object.assign(I18N_TH,{'✕ Cancel this General Election':'✕ ยกเลิกการเลือกตั้งนี้','Created this election by mistake? It can be cancelled until voting starts.':'สร้างการเลือกตั้งนี้โดยไม่ได้ตั้งใจ? ยกเลิกได้จนกว่าจะเริ่มโหวต','An election can only be cancelled before voting starts.':'ยกเลิกการเลือกตั้งได้เฉพาะก่อนเริ่มโหวต'})}catch(x){}
+// ---- members who announced their graduation cannot register for a General Election --------------------------------------------
+//  (an election confirmed BEFORE her announcement keeps her — contract rules; this only blocks new registrations and
+//   removes her while the election is still being set up)
+const geGradOut=m=>!!(m&&m.grad&&m.status!='graduated');
+{const f=geTog;geTog=function(id){const m=get(id),e=geActive();if(geGradOut(m)&&e&&!e.parts.includes(id))return toast(`${m.name} has announced her graduation and cannot run in a General Election.`,'err');return f.apply(this,arguments)}}
+{const f=geAll;geAll=function(on){const r=f.apply(this,arguments);try{const e=geActive();if(on&&e&&e.st=='setup')e.parts=e.parts.filter(id=>!geGradOut(get(id)))}catch(x){}render();return r}}
+{const f=geSetupHtml;geSetupHtml=function(e){try{if(e&&e.st=='setup')e.parts=e.parts.filter(id=>!geGradOut(get(id)))}catch(x){}let h=f.apply(this,arguments);
+ try{S.members.filter(geGradOut).forEach(m=>{if(e&&e.parts.includes(m.id))return;h=h.replace(new RegExp(`(<button class="gepm[^"]*")([^>]*onclick="geTog\\(${m.id}\\)">[\\s\\S]*?)<i>[^<]*</i></button>`),`$1 disabled title="Graduation announced"$2<i>🎓 Graduating</i></button>`)})}catch(x){console.error(x)}return h}}
+try{Object.assign(I18N_TH,{'🎓 Graduating':'🎓 ประกาศจบการศึกษาแล้ว'})}catch(x){}
 
 </script>
 <script>
