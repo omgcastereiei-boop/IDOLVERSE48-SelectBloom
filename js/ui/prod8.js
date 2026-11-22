@@ -17,7 +17,7 @@ function plSaleDone(p){if(plAlb(p)||p.ge)return true;try{return!seErrs(p).length
 function plSaleStepHtml(p){if(plAlb(p))return`<div data-step="5"><h3 class="sth">5 · Sales &amp; Editions</h3><p class="st">Albums are sold as one edition per track type — nothing to set here.</p></div>`;
  if(p.ge)return`<div data-step="5"><h3 class="sth">5 · Sales &amp; Editions</h3><p class="st">The General Election single follows the election schedule.</p></div>`;
  let h='';try{h=(p.status=='draft'?seRelCard(p):'')+seCardHtml(p)}catch(e){console.error(e)}return`<div data-step="5"><h3 class="sth">5 · Sales &amp; Editions</h3>${h}</div>`}
-const plLimEds=p=>{try{const SL=!plAlb(p)&&!p.ge&&seSale(p);return SL?SL.eds.filter(e=>e.kind=='lim'):[]}catch(e){return[]}};
+const plLimEds=p=>{try{const SL=!plAlb(p)&&seSale(p);return SL?SL.eds.filter(e=>e.kind=='lim'):[]}catch(e){return[]}};
 function plLimCovDone(p){return plLimEds(p).every(e=>{const c=S.cov[seEdKey(p,e)];return c&&c.status=='confirmed'})}
 function plLimCovHtml(p){return plLimEds(p).map(e=>{const key=seEdKey(p,e),cc=S.cov[key];return`<div class="c covc"><b>${esc(seEdName(p,e))}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(key)}')">🎨 Design cover</button><button class="b s" onclick="plCoverRand('${esc(key)}')">🎲 Randomize CD Cover</button></div></div>`}).join('')}
 // ---- editions: Regular = Pre-order, Limited = Limited Quantity ------------------------------------------------------------
