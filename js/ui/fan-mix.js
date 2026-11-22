@@ -22,7 +22,7 @@ const fmScore=s=>(s.loy||0)+(s.eng||0)*.5+(s.sp||0)*.3+(s.cdl!=null&&S.day-s.cdl
 function fmCounts(L){const T={casual:0,oshi:0,dedicated:0,hardcore:0};L.forEach(s=>{if(T[s.ft]!=null)T[s.ft]+=s.n});return T}
 function fmConvert(t,to,gid,act,w){const from=t.ft;t.ft=to;const b=FB_BASE[to];if(b){t.loy=fbCl(t.loy+(b[0]-t.loy)*w);t.eng=fbCl(t.eng+(b[1]-t.eng)*w);t.sp=fbCl(t.sp+(b[2]-t.sp)*w)}
  if(to=='casual'){fcCasualize(t);if(gid!=null)t.gs=gid;return}
- if(from=='casual'){t.u=t.u||{};const L=act.filter(m=>fdGrpOf(m.id)==gid);if(t.ck!=null&&L.some(m=>m.id==t.ck)){t.k=t.ck;delete t.u[t.k]}else if(L.length){t.k=null;fdSpreadKami(t,L.length?L:act,FD_KW);if(t.k!=null)delete t.u[t.k]}}
+ if(from=='casual'){t.u=t.u||{};const L=act.filter(m=>fdGrpOf(m.id)==gid);if(t.k!=null&&L.some(m=>m.id==t.k)){delete t.u[t.k]}else if(t.ck!=null&&L.some(m=>m.id==t.ck)){t.k=t.ck;delete t.u[t.k]}else if(L.length){t.k=null;fdSpreadKami(t,L.length?L:act,FD_KW);if(t.k!=null)delete t.u[t.k]}}
  if(w>=.5&&(to=='dedicated'||to=='hardcore')&&!(t.cdl!=null&&S.day-t.cdl<=200))t.cdl=S.day-45}
 // move `amt` fans of group `gid` from one type to the next one (up: best cohorts first; down: weakest first)
 function fmMove(gid,from,to,amt,act,w){let left=Math.round(amt);if(left<=0)return 0;const up=FD_LADDER.indexOf(to)>FD_LADDER.indexOf(from);

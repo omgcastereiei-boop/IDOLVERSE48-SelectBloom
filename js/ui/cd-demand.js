@@ -2,7 +2,7 @@
 //  IDOLVERSE48: Select Bloom! — Fan purchase behaviour & CD sales (one model for every group)
 // -------------------------------------------------------------------------------------
 //  CD sales come from fans who really buy, never from the total fanbase:
-//   · Casual fans rarely buy (CDM_P0.casual, well below Regular), one copy each, never for a Kami Oshi / Oshi.
+//   · Casual fans rarely buy (CDM_P0.casual, well below Regular), one copy each; only their Kami Oshi affects interest.
 //   · Regular, Dedicated and Hardcore fans each have a purchase PROBABILITY and a number of COPIES
 //     per buyer. Probability = base by type × (1 + interest); interest is ONE additive score
 //     (song quality, concept fit, Center appeal, Kami Oshi / Oshi in the Title Track, loyalty,
@@ -18,7 +18,7 @@
 //  Rival groups (rival3.js) use the same cdModel with their own fanbase size, mix and spending power.
 // =====================================================================================
 // base purchase probability per single (calibrated for the standard fan mix Casual 20 · Regular 40 · Dedicated 25 · Hardcore 15)
-// Casual fans rarely buy (well below Regular), always a single copy, and never because of a Kami Oshi / Oshi
+// Casual fans rarely buy (well below Regular), always a single copy; their Kami Oshi counts like anyone's, Oshi links don't
 const CDM_P0={casual:.006,oshi:.02,dedicated:.065,hardcore:.18};
 const CDM_TYPES=['casual','oshi','dedicated','hardcore'];
 const cdmCl=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -38,7 +38,7 @@ function cddDemand(gid,sen,ctx){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)
  const q=cdmCl(ctx.q??.55,0,1.3),base=(q-.55)*.6+((ctx.comp??1)-1)*.6+(ctx.cpop!=null?(ctx.cpop-50)/400:0)+(ctx.promo||0)+(ctx.prevQ!=null?(ctx.prevQ-.55)*.3:0),fat=ctx.fat||0;
  let buyers=0,copies=0,casual=0,fans=0;const by={casual:{buyers:0,copies:0,fans:0},oshi:{buyers:0,copies:0,fans:0},dedicated:{buyers:0,copies:0,fans:0},hardcore:{buyers:0,copies:0,fans:0}},R=ctx.rnd||Math.random;
  fb.segs.forEach(s=>{const N=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):s.n;if(!N)return;fans+=N;if(s.ft=='casual')casual+=N;if(s.ft=='dormant'||!CDM_P0[s.ft])return;
-  let I=base;if(s.ft!='casual'){if(s.k!=null){I+=senS.has(s.k)?.2:-.15;if(cen!=null&&s.k==cen)I+=.15}let on=0;for(const j in s.o)if(senS.has(+j))on++;I+=Math.min(.12,on*.04)}
+  let I=base;if(s.k!=null){I+=senS.has(s.k)?.2:-.15;if(cen!=null&&s.k==cen)I+=.15}if(s.ft!='casual'){let on=0;for(const j in s.o)if(senS.has(+j))on++;I+=Math.min(.12,on*.04)}
   const p=cdmProb(s.ft,I-fat*.6,s.loy),b=N*p,c=b*cdmCopies(s.ft,I,{types:ctx.types,hs:ctx.hs,sp:s.sp,fat});buyers+=b;copies+=c;const z=by[s.ft];z.buyers+=b;z.copies+=c;z.fans+=N;
   if(ctx.commit&&b>=.5){s.h=s.h||{};s.h.cdb=Math.round((s.h.cdb||0)+b);s.h.cdc=Math.round((s.h.cdc||0)+c);s.cdl=S.day}});
  const pub=cdmPublic(fans*.5+(ctx.buzz||0)*400,q,1+(ctx.promo||0)),noise=cdmCl(1+((R()+R()+R())/3-.5)*.16,.88,1.12);
