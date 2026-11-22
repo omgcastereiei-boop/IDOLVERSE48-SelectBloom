@@ -1516,6 +1516,20 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .cpcode{display:flex;flex-direction:column;flex:1}.cpcode small{font-size:11px;opacity:.75}.cphex{font:inherit;font-weight:700;letter-spacing:1px;padding:8px 10px;border-radius:12px;border:2px solid #f0c6dc;background:#fff;color:#4b3a5e;text-transform:uppercase;width:100%;box-sizing:border-box}
 .cplab{font-size:12px;font-weight:700;margin:10px 0 4px;opacity:.8}.cpgrid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}
 .cpsw{aspect-ratio:1;border-radius:9px;border:2px solid #fff;box-shadow:0 0 0 1px #d9c2d6;cursor:pointer;padding:0}.cpsw.on{box-shadow:0 0 0 3px #e85d9c}
+/* profile › Discography & Achievements: readable cards */
+.pfh2 h3{margin:18px 0 8px}.pfh2 h4{margin:12px 0 6px;font-size:14px;opacity:.85}
+.pfh2 .pfl{margin:4px 0 10px}
+.pfh2 .pfl>li{display:flex;flex-wrap:wrap;align-items:center;gap:3px 8px;padding:9px 12px;margin:6px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);line-height:1.35}
+.pfh2 .pfl>li>b{flex:1 1 100%;font-size:15px}
+.pfh2 .pfl>li>.st{font-size:12.5px}
+.pfh2 .pfl>li>.tag{font-size:11px;padding:2px 8px}
+.pfh2 .pfl ul{flex:1 1 100%;margin:4px 0 0;padding:0}.pfh2 .pfl ul li{list-style:none;padding:3px 0 3px 10px;border-left:3px solid #f3b7d3;margin:3px 0;font-size:14px}
+.pfh2 .pfl ul li .st{font-size:12px}
+.pfh2 ul:not(.pfl){list-style:none;padding:0;margin:4px 0 10px}
+.pfh2 ul:not(.pfl)>li{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;padding:8px 12px;margin:5px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);line-height:1.35}
+.pfh2 ul:not(.pfl)>li>b{flex:1 1 100%;font-size:15px}.pfh2 ul:not(.pfl)>li>.st{font-size:12.5px}.pfh2 ul:not(.pfl)>li>.tag{font-size:11px;padding:2px 8px}
+.pfh2 .pfl ul li{border-bottom:0!important}
+.pfh2 .pfl ul>li{display:block!important;border:0!important;border-left:3px solid #f3b7d3!important;border-radius:0!important;background:none!important;padding:3px 0 3px 10px!important;margin:3px 0!important}
 
 </style>
 </head><body>
@@ -17831,12 +17845,6 @@ function f10TeamSongs(key){const K=thK(key);if(!K||K.kind!='team')return[];let L
   return{t:o.title,rel:o.rel,day:o.relDay,n:ids.length,lab:ids.length==1?`Solo · ${(get(ids[0])||{}).name||''}`:ids.length==2?`Duet · ${ids.map(id=>(get(id)||{}).name||'').join(' & ')}`:cen.length?`Center ${cen.map(m=>m.name).join(' & ')}`:''}}).sort((a,b)=>(a.day??0)-(b.day??0))})}catch(e){console.error(e)}return L}
 {const f=V.thov;V.thov=function(){const h=f.apply(this,arguments);try{const L=f10TeamSongs(thCur());if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
  return h+`<div class="c"><h3>${th?'เพลงทีม':'Team Songs'} <small class="st">${L.length}</small></h3><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(String(z.rel).replace(/^Album: /,'Album '))}${z.day!=null?' · '+jd(z.day):''} · ${z.n} ${th?'คน':'member(s)'}${z.lab?' · '+esc(z.lab):''}</span></li>`).join('')}</ul></div>`}catch(e){console.error(e);return h}}}
-// profile › Team History: the Team Songs she sang
-function f10MemTeamSongs(m){const L=[];(m.hist||[]).forEach(h=>{try{const o=gsWith(h.gid??(typeof gsGid=='function'?gsGid(m):m.group),()=>S.songs[h.song]);if(o&&o.tm&&!L.some(z=>z.t==o.title))L.push({t:o.title,tm:o.tm,rel:h.rel||o.rel||'',day:h.day,tag:h.pt=='solo'?'Solo':h.pt=='duet'?'Duet':h.center?'Center':''})}catch(e){}});return L.sort((a,b)=>(a.day??0)-(b.day??0))}
-{const f=histHtml;histHtml=function(m){let h=f.apply(this,arguments);try{const L=f10MemTeamSongs(m);if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
- const blk=`<h4>${th?'เพลงทีม':'Team Songs'}</h4><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(z.tm)} · ${esc(String(z.rel))}${z.day!=null?' · '+jd(z.day):''}${z.tag?` (${z.tag})`:''}</span></li>`).join('')}</ul>`;
- const a=h.indexOf('<h3>Team History');if(a<0)return h+blk;const b=h.indexOf('<h3>',a+5);return b<0?h+blk:h.slice(0,b)+blk+h.slice(b)}catch(e){return h}}}
-
 // ---- 10. health protection ---------------------------------------------------------------------------------------------------
 //  A. A member whose Physical Health is below 25 is not sent on stage: Theater uses a substitute, external events /
 //     music programs / Media Senbatsu lineups skip her until she recovers.
@@ -17875,6 +17883,9 @@ function f10TeamNote(o){const n=elig(o).length,th=typeof UIP!='undefined'&&UIP.l
 // ---- 13. Concurrent-position (kennin) members count as members of their concurrent team: team filters show them and
 //          they can be chosen for that team's Team Songs (they were already eligible, but the filter and the checks hid them)
 function knTeamName(m){try{if(!m||!m.kn||m.status=='graduated')return null;const T=typeof gsTeam=='function'?gsTeam(m.kn.tid):null;return T&&T.t?T.t.name:null}catch(e){return null}}
+
+// ---- 14. profile › Discography & Achievements: clearer lists (same data): no leading "·", dates and details on their own line
+{const f=histHtml;histHtml=function(m){const h=f.apply(this,arguments);try{return`<div class="pfh2">${h.replace(/<span class="st">\s*·\s*/g,'<span class="st">')}</div>`}catch(e){return h}}}
 
 </script>
 <script>

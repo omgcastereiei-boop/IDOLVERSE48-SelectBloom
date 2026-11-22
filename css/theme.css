@@ -1434,3 +1434,17 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .cpcode{display:flex;flex-direction:column;flex:1}.cpcode small{font-size:11px;opacity:.75}.cphex{font:inherit;font-weight:700;letter-spacing:1px;padding:8px 10px;border-radius:12px;border:2px solid #f0c6dc;background:#fff;color:#4b3a5e;text-transform:uppercase;width:100%;box-sizing:border-box}
 .cplab{font-size:12px;font-weight:700;margin:10px 0 4px;opacity:.8}.cpgrid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}
 .cpsw{aspect-ratio:1;border-radius:9px;border:2px solid #fff;box-shadow:0 0 0 1px #d9c2d6;cursor:pointer;padding:0}.cpsw.on{box-shadow:0 0 0 3px #e85d9c}
+/* profile › Discography & Achievements: readable cards */
+.pfh2 h3{margin:18px 0 8px}.pfh2 h4{margin:12px 0 6px;font-size:14px;opacity:.85}
+.pfh2 .pfl{margin:4px 0 10px}
+.pfh2 .pfl>li{display:flex;flex-wrap:wrap;align-items:center;gap:3px 8px;padding:9px 12px;margin:6px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);line-height:1.35}
+.pfh2 .pfl>li>b{flex:1 1 100%;font-size:15px}
+.pfh2 .pfl>li>.st{font-size:12.5px}
+.pfh2 .pfl>li>.tag{font-size:11px;padding:2px 8px}
+.pfh2 .pfl ul{flex:1 1 100%;margin:4px 0 0;padding:0}.pfh2 .pfl ul li{list-style:none;padding:3px 0 3px 10px;border-left:3px solid #f3b7d3;margin:3px 0;font-size:14px}
+.pfh2 .pfl ul li .st{font-size:12px}
+.pfh2 ul:not(.pfl){list-style:none;padding:0;margin:4px 0 10px}
+.pfh2 ul:not(.pfl)>li{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;padding:8px 12px;margin:5px 0;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.55);line-height:1.35}
+.pfh2 ul:not(.pfl)>li>b{flex:1 1 100%;font-size:15px}.pfh2 ul:not(.pfl)>li>.st{font-size:12.5px}.pfh2 ul:not(.pfl)>li>.tag{font-size:11px;padding:2px 8px}
+.pfh2 .pfl ul li{border-bottom:0!important}
+.pfh2 .pfl ul>li{display:block!important;border:0!important;border-left:3px solid #f3b7d3!important;border-radius:0!important;background:none!important;padding:3px 0 3px 10px!important;margin:3px 0!important}

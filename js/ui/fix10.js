@@ -97,12 +97,6 @@ function f10TeamSongs(key){const K=thK(key);if(!K||K.kind!='team')return[];let L
   return{t:o.title,rel:o.rel,day:o.relDay,n:ids.length,lab:ids.length==1?`Solo · ${(get(ids[0])||{}).name||''}`:ids.length==2?`Duet · ${ids.map(id=>(get(id)||{}).name||'').join(' & ')}`:cen.length?`Center ${cen.map(m=>m.name).join(' & ')}`:''}}).sort((a,b)=>(a.day??0)-(b.day??0))})}catch(e){console.error(e)}return L}
 {const f=V.thov;V.thov=function(){const h=f.apply(this,arguments);try{const L=f10TeamSongs(thCur());if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
  return h+`<div class="c"><h3>${th?'เพลงทีม':'Team Songs'} <small class="st">${L.length}</small></h3><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(String(z.rel).replace(/^Album: /,'Album '))}${z.day!=null?' · '+jd(z.day):''} · ${z.n} ${th?'คน':'member(s)'}${z.lab?' · '+esc(z.lab):''}</span></li>`).join('')}</ul></div>`}catch(e){console.error(e);return h}}}
-// profile › Team History: the Team Songs she sang
-function f10MemTeamSongs(m){const L=[];(m.hist||[]).forEach(h=>{try{const o=gsWith(h.gid??(typeof gsGid=='function'?gsGid(m):m.group),()=>S.songs[h.song]);if(o&&o.tm&&!L.some(z=>z.t==o.title))L.push({t:o.title,tm:o.tm,rel:h.rel||o.rel||'',day:h.day,tag:h.pt=='solo'?'Solo':h.pt=='duet'?'Duet':h.center?'Center':''})}catch(e){}});return L.sort((a,b)=>(a.day??0)-(b.day??0))}
-{const f=histHtml;histHtml=function(m){let h=f.apply(this,arguments);try{const L=f10MemTeamSongs(m);if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
- const blk=`<h4>${th?'เพลงทีม':'Team Songs'}</h4><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(z.tm)} · ${esc(String(z.rel))}${z.day!=null?' · '+jd(z.day):''}${z.tag?` (${z.tag})`:''}</span></li>`).join('')}</ul>`;
- const a=h.indexOf('<h3>Team History');if(a<0)return h+blk;const b=h.indexOf('<h3>',a+5);return b<0?h+blk:h.slice(0,b)+blk+h.slice(b)}catch(e){return h}}}
-
 // ---- 10. health protection ---------------------------------------------------------------------------------------------------
 //  A. A member whose Physical Health is below 25 is not sent on stage: Theater uses a substitute, external events /
 //     music programs / Media Senbatsu lineups skip her until she recovers.
@@ -141,3 +135,6 @@ function f10TeamNote(o){const n=elig(o).length,th=typeof UIP!='undefined'&&UIP.l
 // ---- 13. Concurrent-position (kennin) members count as members of their concurrent team: team filters show them and
 //          they can be chosen for that team's Team Songs (they were already eligible, but the filter and the checks hid them)
 function knTeamName(m){try{if(!m||!m.kn||m.status=='graduated')return null;const T=typeof gsTeam=='function'?gsTeam(m.kn.tid):null;return T&&T.t?T.t.name:null}catch(e){return null}}
+
+// ---- 14. profile › Discography & Achievements: clearer lists (same data): no leading "·", dates and details on their own line
+{const f=histHtml;histHtml=function(m){const h=f.apply(this,arguments);try{return`<div class="pfh2">${h.replace(/<span class="st">\s*·\s*/g,'<span class="st">')}</div>`}catch(e){return h}}}
