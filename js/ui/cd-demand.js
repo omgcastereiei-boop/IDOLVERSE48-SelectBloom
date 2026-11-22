@@ -2,7 +2,7 @@
 //  IDOLVERSE48: Select Bloom! — Fan purchase behaviour & CD sales (one model for every group)
 // -------------------------------------------------------------------------------------
 //  CD sales come from fans who really buy, never from the total fanbase:
-//   · Casual fans never buy (they are reach / popularity only).
+//   · Casual fans rarely buy (CDM_P0.casual, well below Regular), one copy each, never for a Kami Oshi / Oshi.
 //   · Regular, Dedicated and Hardcore fans each have a purchase PROBABILITY and a number of COPIES
 //     per buyer. Probability = base by type × (1 + interest); interest is ONE additive score
 //     (song quality, concept fit, Center appeal, Kami Oshi / Oshi in the Title Track, loyalty,
@@ -18,11 +18,12 @@
 //  Rival groups (rival3.js) use the same cdModel with their own fanbase size, mix and spending power.
 // =====================================================================================
 // base purchase probability per single (calibrated for the standard fan mix Casual 20 · Regular 40 · Dedicated 25 · Hardcore 15)
-const CDM_P0={oshi:.02,dedicated:.065,hardcore:.18};
-const CDM_TYPES=['oshi','dedicated','hardcore'];
+// Casual fans rarely buy (well below Regular), always a single copy, and never because of a Kami Oshi / Oshi
+const CDM_P0={casual:.006,oshi:.02,dedicated:.065,hardcore:.18};
+const CDM_TYPES=['casual','oshi','dedicated','hardcore'];
 const cdmCl=(v,a,b)=>Math.max(a,Math.min(b,v));
 // copies per buyer for one cohort (mean), limited by spending power (sp 0–100) and dampened by fatigue
-function cdmCopies(t,I,o){const types=Math.max(1,o.types||1),inc=Math.max(0,I);let c;
+function cdmCopies(t,I,o){const types=Math.max(1,o.types||1),inc=Math.max(0,I);let c;if(t=='casual')return 1;
  if(t=='oshi')c=1+.05*inc;else if(t=='dedicated')c=1.1+.3*inc+.08*(types-1);else c=1.55+.6*inc+.3*(types-1)+(o.hs?.7:0);
  const cap=t=='oshi'?1.2:t=='dedicated'?1+(o.sp??50)/100*2:1+(o.sp??55)/100*4.2;c=Math.min(c,cap);return 1+(c-1)*(1-cdmCl(o.fat||0,0,.8))}
 function cdmProb(t,I,loy){const p=CDM_P0[t]*(1+cdmCl(I+((loy??50)-50)/250,-.85,1.2));return cdmCl(p,0,.95)}
@@ -35,9 +36,9 @@ function cdmFatigue(gid,concept,hsNow){let gap=999,same=0,hsRun=0;try{gsWith(gid
  return cdmCl((gap<45?.35:gap<70?.2:gap<95?.08:0)+same*.07+(hsNow&&hsRun>=3?.06:0),0,.6)}
 function cddDemand(gid,sen,ctx){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)||!fb.segs.length)return null;ctx=ctx||{};const senS=new Set(sen||[]),cen=ctx.center;
  const q=cdmCl(ctx.q??.55,0,1.3),base=(q-.55)*.6+((ctx.comp??1)-1)*.6+(ctx.cpop!=null?(ctx.cpop-50)/400:0)+(ctx.promo||0)+(ctx.prevQ!=null?(ctx.prevQ-.55)*.3:0),fat=ctx.fat||0;
- let buyers=0,copies=0,casual=0,fans=0;const by={oshi:{buyers:0,copies:0,fans:0},dedicated:{buyers:0,copies:0,fans:0},hardcore:{buyers:0,copies:0,fans:0}},R=ctx.rnd||Math.random;
- fb.segs.forEach(s=>{const N=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):s.n;if(!N)return;fans+=N;if(s.ft=='casual'||s.ft=='dormant'||!CDM_P0[s.ft]){if(s.ft=='casual')casual+=N;return}
-  let I=base;if(s.k!=null){I+=senS.has(s.k)?.2:-.15;if(cen!=null&&s.k==cen)I+=.15}let on=0;for(const j in s.o)if(senS.has(+j))on++;I+=Math.min(.12,on*.04);
+ let buyers=0,copies=0,casual=0,fans=0;const by={casual:{buyers:0,copies:0,fans:0},oshi:{buyers:0,copies:0,fans:0},dedicated:{buyers:0,copies:0,fans:0},hardcore:{buyers:0,copies:0,fans:0}},R=ctx.rnd||Math.random;
+ fb.segs.forEach(s=>{const N=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):s.n;if(!N)return;fans+=N;if(s.ft=='casual')casual+=N;if(s.ft=='dormant'||!CDM_P0[s.ft])return;
+  let I=base;if(s.ft!='casual'){if(s.k!=null){I+=senS.has(s.k)?.2:-.15;if(cen!=null&&s.k==cen)I+=.15}let on=0;for(const j in s.o)if(senS.has(+j))on++;I+=Math.min(.12,on*.04)}
   const p=cdmProb(s.ft,I-fat*.6,s.loy),b=N*p,c=b*cdmCopies(s.ft,I,{types:ctx.types,hs:ctx.hs,sp:s.sp,fat});buyers+=b;copies+=c;const z=by[s.ft];z.buyers+=b;z.copies+=c;z.fans+=N;
   if(ctx.commit&&b>=.5){s.h=s.h||{};s.h.cdb=Math.round((s.h.cdb||0)+b);s.h.cdc=Math.round((s.h.cdc||0)+c);s.cdl=S.day}});
  const pub=cdmPublic(fans*.5+(ctx.buzz||0)*400,q,1+(ctx.promo||0)),noise=cdmCl(1+((R()+R()+R())/3-.5)*.16,.88,1.12);

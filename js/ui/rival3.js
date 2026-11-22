@@ -97,7 +97,7 @@ function rvCenter(a,r){const M=rvAct(a);if(!M.length)return null;const W=M.map(s
 // rival CD sales: the same fan purchase model as the player's singles (cd-demand.js) with the act's own fanbase,
 // fan mix, spending power, Types and incentives; release quality, momentum and the Center are the interest
 function rvCds(a,q,hype,cen,gap){const X=a.mix||RV_MIX[a.cat]||RV_MIX.fidol,N=a.fans||0,I=(q-1)*.8+(hype-1)*.5+(cen-1)*.5,fat=gap<45?.35:gap<70?.2:gap<95?.08:0,idol=['fidol','midol'].includes(a.cat);
- const M=cdModel({oshi:N*X.r,dedicated:N*X.d,hardcore:N*X.h},I,{types:a.types||(idol?3:a.cat=='kpop'?2:1),hs:a.hsk!=null?!!a.hsk:idol,sp:a.sp||(idol?55:45),loy:a.loy||55,fat});a.cpb=M.buyers?M.copies/M.buyers:1.5;
+ const M=cdModel({casual:N*Math.max(0,1-X.r-X.d-X.h),oshi:N*X.r,dedicated:N*X.d,hardcore:N*X.h},I,{types:a.types||(idol?3:a.cat=='kpop'?2:1),hs:a.hsk!=null?!!a.hsk:idol,sp:a.sp||(idol?55:45),loy:a.loy||55,fat});a.cpb=M.buyers?M.copies/M.buyers:1.5;
  return M.copies+cdmPublic(N*.5,.55+(q-1)*.6,hype)}
 indFansAfter=function(w,rows){const I=S.ind,G={};rows.forEach(x=>{const a=I.A[x.r.aid];if(!a||a.cat=='player')return;G[a.id]=(G[a.id]||0)+((x.cd/Math.max(1,a.cpb||1.5))*.06+x.st*.0004)*(x.r.q||1)});
  Object.values(I.A).forEach(a=>{if(a.cat=='player'||a.st=='disbanded')return;const sat=Math.max(.04,1-a.fans/RV_CEIL),g=(G[a.id]||0)*sat*(a.st=='hiatus'?.3:1);a.fans=Math.max(200,Math.round(a.fans*(1-(a.st=='hiatus'?.003:.0009))+g))});
