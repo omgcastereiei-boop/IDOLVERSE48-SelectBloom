@@ -27,7 +27,7 @@ function thOf(key){const H=thS();let T=H.T[key];const K=thK(key);if(!T){const g=
  T.pk=Array.isArray(T.pk)?T.pk:[];T.subs=T.subs||{};T.subH=Array.isArray(T.subH)?T.subH:[];T.sched=T.sched||{mode:'fixed',fixed:[],n:3,rw:{}};T.sched.rw=T.sched.rw||{};return T}
 const thLabel=key=>{const K=thK(key)||(typeof thKeysAll=='function'?thKeysAll().find(x=>x.key==key):null);if(K)return K.label;const T=S.th&&S.th.T[key];if(T&&T.lbl)return T.lbl;const t=(S.groups||[]).flatMap(g=>g.teams||[]).find(t=>'t'+t.id==key)||(S.disT||[]).find(t=>'t'+t.id==key);return t?t.name:key};
 const thStage=id=>(S.th&&S.th.st[id])||null;
-const thStages=key=>Object.values(thS().st).filter(s=>s.k==key);
+const thStages=key=>Object.values(thS().st).filter(s=>s.k==key&&!s.gst); // Graduation Stages (grad4.js) are not part of the Stage rotation
 const thNoTxt=s=>s&&s.no?`${thLabel(s.k)} ${ordN(s.no)} Stage`:`${thLabel(s?s.k:'')} · new Stage (no number yet)`;
 // pool of performers for a theater (current members only)
 function thPool(key){const K=thK(key);if(!K)return[];return S.members.filter(m=>m.status!='graduated'&&(K.kind=='team'?isAct(m)&&m.tid==K.tid:m.status=='trainee'&&m.group==K.gid))}
@@ -263,7 +263,7 @@ function thRmode(v){thOf(thCur()).rmode=v=='manual'?'manual':'auto';render()}
 
 // ---- presentation helpers -----------------------------------------------------------------------------------
 const thMini=(id,sz=30)=>{const m=get(id);return m?`<span class="thmi" title="${esc(m.name)}">${ptc(m,sz)}</span>`:''};
-const thStBadge=s=>{const k=s.status=='active'?'act':s.status=='upcoming'?'up':s.status=='retired'?'ret':s.status=='archived'?'arc':'dr';const t={act:'ACTIVE',up:'UPCOMING',ret:'RETIRED',arc:'ARCHIVED',dr:'DRAFT'}[k];return`<span class="thsb ${k}">${t}</span>${s.reuse?'<span class="thsb reu">REUSED</span>':''}${s.adopted?'<span class="thsb ado">ADOPTED</span>':''}`};
+const thStBadge=s=>{if(s&&s.gst)return`<span class="tag g4tag">🎓 ${s.status=='gradone'?'Graduation Stage · performed':'Graduation Stage'}</span>`;const k=s.status=='active'?'act':s.status=='upcoming'?'up':s.status=='retired'?'ret':s.status=='archived'?'arc':'dr';const t={act:'ACTIVE',up:'UPCOMING',ret:'RETIRED',arc:'ARCHIVED',dr:'DRAFT'}[k];return`<span class="thsb ${k}">${t}</span>${s.reuse?'<span class="thsb reu">REUSED</span>':''}${s.adopted?'<span class="thsb ado">ADOPTED</span>':''}`};
 function thArt(s,it,w){const F=s&&it?thForm(s,it):{o:[],rows:[]};const L=F.o.map(get).filter(Boolean);const p=it?thCzP(thStageCz(s)||it.cz):null,W=900,H=360;let fg='';const rows=[];{let a=0;F.rows.forEach(c=>{rows.push(L.slice(a,a+c));a+=c})}
  const RN=rows.length;rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,sc=1-back*.12,fw=Math.min(110,(W-60)/Math.max(1,row.length)/.86)*sc,y=95-back*38,ord=thArr(row);const x0=W/2-fw*.86*(ord.length-1)/2;
   ord.forEach((m,i)=>{const a=ap(m),c=back==0&&m.id==(row[0]&&row[0].id),ww=c?fw*1.12:fw;fg+=`<svg x="${(x0+fw*.86*i-ww/2).toFixed(1)}" y="${c?y-12:y}" width="${ww.toFixed(1)}" height="${(ww*2.5).toFixed(1)}" viewBox="10 -2 80 200">${fig(m,{pose:c?3:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,...(p?{cd:p}:{})})}</svg>`})});

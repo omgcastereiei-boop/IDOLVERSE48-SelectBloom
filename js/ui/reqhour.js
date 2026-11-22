@@ -78,7 +78,7 @@ function rhPool(E){const sig=[E.id,E.gid,E.cats.join(),E.sis,S.day,(S.groups||[]
 // ---- song facts: original lineup, revival lineups, history ---------------------------------------------------------------------
 const rhSong=(gid,id)=>(gsCtx(gid,'songs')||{})[id]||null;
 function rhTeamOfStage(gid,st){let t=null;try{gsWith(gid,()=>{const K=typeof thK=='function'?thK(st.k):null;t=K&&(K.tid||K.team)||null;if(!t){const m=/^t[tr](\d+)$/.exec(String(st.k||''));if(m)t='t'+m[1]}})}catch(e){}return t}
-function rhOrigTh(gid,id){let out=null;try{gsWith(gid,()=>{const L=Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&!s.adopted&&s.debut!=null&&thAll(s).some(it=>it.song==id)).sort((a,b)=>a.debut-b.debut),s=L[0];if(!s)return;
+function rhOrigTh(gid,id){let out=null;try{gsWith(gid,()=>{const L=Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&!s.adopted&&!s.gst&&s.debut!=null&&thAll(s).some(it=>it.song==id)).sort((a,b)=>a.debut-b.debut),s=L[0];if(!s)return;
   const oi=(s.orig||[]).find(it=>it.k=='song'&&it.song==id),it=thAll(s).find(q=>q.song==id);let mem,cen,unit=null;
   if(oi&&oi.mem&&oi.mem.length){mem=oi.mem.slice();cen=[oi.center,oi.c2].filter(x=>x!=null&&mem.includes(x));unit=oi.unit?oi.unit.name:null}else if(it){mem=thMem(s,it).slice();const c=thCen(s,it);cen=c!=null?[c]:[];unit=it.unit?((s.units||[]).find(u=>u.id==it.unit)||{}).name||'Unit':null}
   if(!mem)return;out={sid:s.id,stage:s.name,stLabel:typeof thLabel=='function'?thLabel(s.k):'',tid:rhTeamOfStage(gid,s),mem,cen,unit,day:s.debut,retired:s.status=='retired'}})}catch(e){console.error(e)}return out}

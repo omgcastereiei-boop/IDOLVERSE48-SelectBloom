@@ -1556,3 +1556,7 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .rhbub{flex:1;min-width:220px;background:#fff;color:#3b2a4a;border-radius:16px;padding:12px 14px;text-align:left}.rhbub b{display:block;font-size:16px}.rhbub small{display:block;opacity:.7;font-size:11px;margin-bottom:6px}.rhbub p{margin:0;line-height:1.6}
 .rhstg{width:100%;height:auto;display:block;border-radius:12px}
 @media (max-width:600px){.rhtab .ctr{display:none}.rhsong{padding:8px}.rhst{min-width:0}}
+/* Graduation Stage in the Theater (grad4.js) */
+.g4ban{border:1px solid #c9b6ef;background:linear-gradient(135deg,#f6f0ff,#fff8fb)}.g4ban .row{align-items:center;gap:10px;flex-wrap:wrap}.g4ic{font-size:26px}
+.g4card{border-left:4px solid #a993e0}.g4tag{background:#efe7ff;color:#5b3fa0}
+.g4pics h3{margin:4px 0 8px}
