@@ -29,7 +29,7 @@ function pfSenHtml(m){const rel=h=>S.singles.find(x=>x.rid==h.rid)||(S.albums||[
  const H=(m.hist||[]).filter(h=>!reused(h)).slice().sort((a,b)=>(a.day??0)-(b.day??0)||plRidNo(a.rid)-plRidNo(b.rid));
  const isA=h=>{const r=rel(h);return h.cat=='main'||!!(r&&r.kind=='album'&&r.mainId==h.song)};
  const mainOf=h=>{const r=rel(h);if(!r)return h.rel||'';if(r.kind=='album')return'Album: '+(r.title||'');const o=S.songs[r.mainId];return o?o.title:(r.title||'')};
- const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':''}</li>`};
+ const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':h.pt?` <span class="tag">${h.pt=='solo'?'Solo':'Duet'}</span>`:''}</li>`};
  // her own group first, then every other group in company order
  const gidOf=h=>h.gid!=null?h.gid:m.group,own=m.group,ids=[...new Set(H.map(gidOf))].sort((a,b)=>(a==own?-1:0)-(b==own?-1:0)||(S.groups||[]).findIndex(g=>g.id==a)-(S.groups||[]).findIndex(g=>g.id==b));
  const tot=H.length,A0=H.filter(isA).length;
