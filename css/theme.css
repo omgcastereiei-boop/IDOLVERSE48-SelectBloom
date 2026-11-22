@@ -1448,3 +1448,5 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .pfh2 ul:not(.pfl)>li>b{flex:1 1 100%;font-size:15px}.pfh2 ul:not(.pfl)>li>.st{font-size:12.5px}.pfh2 ul:not(.pfl)>li>.tag{font-size:11px;padding:2px 8px}
 .pfh2 .pfl ul li{border-bottom:0!important}
 .pfh2 .pfl ul>li{display:block!important;border:0!important;border-left:3px solid #f3b7d3!important;border-radius:0!important;background:none!important;padding:3px 0 3px 10px!important;margin:3px 0!important}
+.cpbtn i{flex:0 0 26px;min-width:26px}
+.czcol .cpbtn,.czmc .cpbtn{padding:3px;justify-content:center;width:44px;box-sizing:border-box}.czcol .cpbtn span,.czmc .cpbtn span{display:none}.czcol .cpbtn i{width:30px;height:24px;flex-basis:30px}
