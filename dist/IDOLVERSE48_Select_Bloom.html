@@ -16260,6 +16260,23 @@ function xmFit(r,m){const CR=(typeof XE_EVAL!='undefined'&&XE_EVAL[r.cat])||[];i
  if(out.length<n)for(const id of xmRankList(gid)){if(out.length>=n)break;if(!out.includes(id)&&ok(id))out.push(id)}return out}}
 // offers keep their lineup once drawn (no daily re-draw), unless a member became unavailable
 {const f=xmApply;xmApply=function(r,size){try{if(r&&r.status=='open'&&r.ch!='mp'&&!size){const ids=r.mode=='org'?(r.req||[]).map(q=>q.mid):((r.draft&&r.draft.sel)||[]);if(ids.length&&ids.every(id=>{const m=get(id);return m&&isAct(m)&&(+m.en||0)>=0&&xeFree(id,r.day,r.id)}))return true}}catch(e){}return f.apply(this,arguments)}}
+// ---- performance events: the whole Media Senbatsu, or else the latest single's Title Track Senbatsu; only the members who
+//      cannot come are replaced (General Election rank, then fanbase), and a replacement takes the position of the member
+//      she replaces (Center included) ----------------------------------------------------------------------------------------------
+function xmTT(gid){let L=[];try{gsWith(gid,()=>{const x=(S.singles||[]).slice(-1)[0];if(!x)return;if(x.media&&x.media.length){L=x.media.slice();return}const mn=S.songs[x.mainId];
+  if(mn&&mn.fm&&mn.fm.sl){try{L=slotOrder(mn.fm).map(k=>mn.fm.sl[k].m).filter(v=>v!=null)}catch(e){}}if(!L.length)L=((x.tt&&x.tt.members)||(mn&&mn.slots)||[]).filter(v=>v!=null)})}catch(e){}return L}
+{const f=xmIds;xmIds=function(gid,n,day,except){const r=except?xeGet(except):null;if(!r||!(r.acts||[]).includes('live'))return f.apply(this,arguments);
+ const ok=id=>{const m=get(id);return m&&isAct(m)&&(+m.en||0)>=0&&xeFree(id,day,except)},B=xmTT(gid);if(!B.length)return f.apply(this,arguments);
+ const out=[],subs={},rank=xmRankList(gid).filter(id=>!B.includes(id));B.forEach(id=>{if(ok(id)){out.push(id);return}const rep=rank.find(x=>!out.includes(x)&&ok(x));if(rep!=null){out.push(rep);subs[rep]=id}});
+ r.subs=subs;return out}}
+{const f=xmApply;xmApply=function(r,size){try{if(r&&r.status=='open'&&r.ch!='mp'&&(r.acts||[]).includes('live')){const B=xmTT(xmGid(r));if(B.length)size=B.length;
+  const cur=r.mode=='org'?(r.req||[]).map(q=>q.mid):((r.draft&&r.draft.sel)||[]);if(cur.length==B.length&&cur.every(id=>{const m=get(id);return m&&isAct(m)&&(+m.en||0)>=0&&xeFree(id,r.day,r.id)})&&B.every(id=>cur.includes(id)||(r.subs&&Object.values(r.subs).includes(id))))return true;
+  if(r.draft&&r.draft.songs)r.draft.songs=[]}}catch(e){}return f.call(this,r,size)}}
+// positions: a replacement stands where the member she replaces stood
+let XM_SUBS=null;
+{const f=xeOrigOrder;xeOrigOrder=function(gid,song,ids){let subs=XM_SUBS;if(!subs){try{const r=xeGet(ui.xe);subs=r&&r.subs}catch(e){}}if(!subs||!Object.keys(subs).length)return f.apply(this,arguments);
+ const fw=id=>subs[id]!=null?+subs[id]:id,back={};Object.keys(subs).forEach(k=>back[subs[k]]=+k);const X=f.call(this,gid,song,ids.map(fw)),bw=id=>back[id]!=null?back[id]:id;return{O:X.O.map(bw),cen:X.cen.map(bw)}}}
+{const f=xmAutoSongs;xmAutoSongs=function(r){XM_SUBS=r&&r.subs||null;try{return f.apply(this,arguments)}finally{XM_SUBS=null}}}
 
 </script>
 <script>
