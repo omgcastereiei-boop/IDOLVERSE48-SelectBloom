@@ -90,3 +90,15 @@ function f10RsDress(sp){if(!sp||sp.k!='road'||!Array.isArray(sp.m)||!sp.rid)retu
 {const f=evRoadSpec;evRoadSpec=function(){const sp=f.apply(this,arguments);try{f10RsDress(sp)}catch(e){console.error(e)}return sp}}
 function f10RsMigrate(){try{(S.groups||[]).forEach(g=>gsWith(g.id,()=>{const L=[...(S.cal||[]),...(S.singles||[]).flatMap(x=>x.promo||[]),...Object.values((S.rs&&S.rs.hist)||{}).flat()];L.forEach(e=>{if(e&&e.img&&e.img.k=='road'&&e.img.rs2!=2)f10RsDress(e.img)})}))}catch(e){console.error(e)}}
 {const f=migrate;migrate=function(){const o=f.apply(this,arguments);f10RsMigrate();return o}}
+
+// ---- 9. Theater › team page: Team Songs (released songs made only for this team) in the team's history ------------------
+function f10TeamSongs(key){const K=thK(key);if(!K||K.kind!='team')return[];let L=[];try{gsWith(K.gid,()=>{const g=grp(K.gid),t=g&&(g.teams||[]).find(x=>x.id==K.tid);if(!t)return;
+ L=Object.values(S.songs||{}).filter(o=>o&&o.tm&&o.tm==t.name&&o.rel).map(o=>{const ids=(o.slots||[]).filter(Boolean),cen=(o.centers&&o.centers.length?o.centers:o.center!=null?[o.center]:[]).map(get).filter(Boolean);
+  return{t:o.title,rel:o.rel,day:o.relDay,n:ids.length,lab:ids.length==1?`Solo · ${(get(ids[0])||{}).name||''}`:ids.length==2?`Duet · ${ids.map(id=>(get(id)||{}).name||'').join(' & ')}`:cen.length?`Center ${cen.map(m=>m.name).join(' & ')}`:''}}).sort((a,b)=>(a.day??0)-(b.day??0))})}catch(e){console.error(e)}return L}
+{const f=V.thov;V.thov=function(){const h=f.apply(this,arguments);try{const L=f10TeamSongs(thCur());if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
+ return h+`<div class="c"><h3>${th?'เพลงทีม':'Team Songs'} <small class="st">${L.length}</small></h3><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(String(z.rel).replace(/^Album: /,'Album '))}${z.day!=null?' · '+jd(z.day):''} · ${z.n} ${th?'คน':'member(s)'}${z.lab?' · '+esc(z.lab):''}</span></li>`).join('')}</ul></div>`}catch(e){console.error(e);return h}}}
+// profile › Team History: the Team Songs she sang
+function f10MemTeamSongs(m){const L=[];(m.hist||[]).forEach(h=>{try{const o=gsWith(h.gid??(typeof gsGid=='function'?gsGid(m):m.group),()=>S.songs[h.song]);if(o&&o.tm&&!L.some(z=>z.t==o.title))L.push({t:o.title,tm:o.tm,rel:h.rel||o.rel||'',day:h.day,tag:h.pt=='solo'?'Solo':h.pt=='duet'?'Duet':h.center?'Center':''})}catch(e){}});return L.sort((a,b)=>(a.day??0)-(b.day??0))}
+{const f=histHtml;histHtml=function(m){let h=f.apply(this,arguments);try{const L=f10MemTeamSongs(m);if(!L.length)return h;const th=typeof UIP!='undefined'&&UIP.lang=='th';
+ const blk=`<h4>${th?'เพลงทีม':'Team Songs'}</h4><ul class="pfl">${L.map(z=>`<li><b>${esc(z.t)}</b> <span class="st">· ${esc(z.tm)} · ${esc(String(z.rel))}${z.day!=null?' · '+jd(z.day):''}${z.tag?` (${z.tag})`:''}</span></li>`).join('')}</ul>`;
+ const a=h.indexOf('<h3>Team History');if(a<0)return h+blk;const b=h.indexOf('<h3>',a+5);return b<0?h+blk:h.slice(0,b)+blk+h.slice(b)}catch(e){return h}}}
