@@ -1385,3 +1385,6 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .nvdec h3,.nvres h3{margin-top:0}.nvch{display:flex;flex-direction:column;gap:8px;margin:8px 0}.nvch .b{text-align:left;white-space:normal;justify-content:flex-start}
 .nvres{border-left:5px solid #b9a7e6}.nvres.pos{border-left-color:#5cc28f}.nvres.neg{border-left-color:#e3607f}.nvres.mix{border-left-color:#e7b44b}
 .nvrows{list-style:none;padding:0;margin:8px 0;display:grid;gap:4px}.nvrows li{display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;background:rgba(0,0,0,.035)}.nvrows b.up{color:#1f8a55}.nvrows b.down{color:#c23a5a}
+/* fast taps: instant feedback; off-screen member cards are not laid out until visible */
+.c.m.fttap{outline:3px solid #f07bb0;transform:scale(.97);transition:transform .08s}
+.g.msel>.c.m{content-visibility:auto;contain-intrinsic-size:auto 230px}

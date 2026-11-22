@@ -1467,6 +1467,9 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 .nvdec h3,.nvres h3{margin-top:0}.nvch{display:flex;flex-direction:column;gap:8px;margin:8px 0}.nvch .b{text-align:left;white-space:normal;justify-content:flex-start}
 .nvres{border-left:5px solid #b9a7e6}.nvres.pos{border-left-color:#5cc28f}.nvres.neg{border-left-color:#e3607f}.nvres.mix{border-left-color:#e7b44b}
 .nvrows{list-style:none;padding:0;margin:8px 0;display:grid;gap:4px}.nvrows li{display:flex;justify-content:space-between;gap:8px;padding:4px 8px;border-radius:8px;background:rgba(0,0,0,.035)}.nvrows b.up{color:#1f8a55}.nvrows b.down{color:#c23a5a}
+/* fast taps: instant feedback; off-screen member cards are not laid out until visible */
+.c.m.fttap{outline:3px solid #f07bb0;transform:scale(.97);transition:transform .08s}
+.g.msel>.c.m{content-visibility:auto;contain-intrinsic-size:auto 230px}
 
 </style>
 </head><body>
@@ -16745,6 +16748,22 @@ function soUsed(o){const p=S.pj,M=new Map();if(!p||!o)return M;const T=soTracks(
 function soWithout(fn){const o=S.songs[ui.es],U=soUsed(o);if(!(ui.aa&&ui.aa.nf)||!U.size)return fn();const e0=gsElig;gsElig=function(){return e0.apply(this,arguments).filter(m=>!U.has(m.id))};try{return fn()}finally{gsElig=e0}}
 {const f=autoAdv;autoAdv=function(){const a=arguments,t=this;return soWithout(()=>f.apply(t,a))}}
 if(typeof genAuto=='function'){const f=genAuto;genAuto=function(){const a=arguments,t=this;return soWithout(()=>f.apply(t,a))}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — fast taps on the Senbatsu screen
+// -------------------------------------------------------------------------------------
+//  Tapping members to fill positions used to redraw the whole page after every tap (dozens of member
+//  cards with portraits), so quick taps felt stuck. Now each tap is applied at once (data + a highlight
+//  on the tapped card) and the page is redrawn once per frame, however fast you tap.
+//  Cards below the visible part of the list are not laid out until they are scrolled into view.
+// =====================================================================================
+let FT_DEFER=0,FT_PEND=0;
+{const f=render;render=function(){if(FT_DEFER){if(!FT_PEND){FT_PEND=1;requestAnimationFrame(()=>{FT_PEND=0;try{f()}catch(e){console.error(e)}})}return}return f.apply(this,arguments)}}
+function ftFast(name){const f=window[name];if(typeof f!='function')return;window[name]=function(){try{const e=window.event,el=e&&e.currentTarget&&e.currentTarget.classList?e.currentTarget:null;if(el)el.classList.add('fttap')}catch(e){}
+ FT_DEFER++;try{return f.apply(this,arguments)}finally{FT_DEFER--}}}
+['fmAssign','slotClick','fmRemove','fmClear'].forEach(ftFast);
 
 </script>
 <script>
