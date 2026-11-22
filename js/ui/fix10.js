@@ -73,4 +73,7 @@ try{if(typeof plAlbumRelease=='function'){const f=plAlbumRelease;plAlbumRelease=
 
 // ---- 7. Fanbase sort = the supporters shown in the profile (always computed from the fan database) ------------------------
 let F10SUP={v:null,M:null,s:null};
-function fdSupFresh(m){try{const fb=S&&S.fb;if(!fb||typeof fdSup!='function')return+m.fans||0;const key=fb.ver+'|'+S.day+'|'+(fb.segs||[]).length;if(F10SUP.v!==key||F10SUP.s!==S){F10SUP={v:key,s:S,M:fdSup()}}const X=F10SUP.M[m.id];return X?X.t:(+m.fans||0)}catch(e){return+m.fans||0}}
+function fdSupFresh(m,k){try{const fb=S&&S.fb;if(!fb||typeof fdSup!='function')return+m.fans||0;const key=fb.ver+'|'+S.day+'|'+(fb.segs||[]).length;if(F10SUP.v!==key||F10SUP.s!==S){F10SUP={v:key,s:S,M:fdSup()}}const X=F10SUP.M[m.id];if(!X)return k&&k!='fans'?0:(+m.fans||0);return k=='kami'?X.k:k=='oshi'?X.o:k=='ko'?X.k+X.o:X.t}catch(e){return+m.fans||0}}
+// sort options: Kami Oshi · Oshi · Kami Oshi & Oshi (everywhere members can be sorted)
+try{const i=STATS.findIndex(x=>x[0]=='fans');STATS.splice(i<0?STATS.length:i+1,0,['kami','Kami Oshi'],['oshi','Oshi'],['ko','Kami Oshi & Oshi'])}catch(e){}
+try{Object.assign(I18N_TH,{"Kami Oshi & Oshi":"คามิโอชิ & โอชิ"})}catch(e){}
