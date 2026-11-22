@@ -3573,7 +3573,8 @@ function alRelease(){const a=S.al;if(!a.title.trim())return toast('Enter an albu
  const ps=a.tracks.map(i=>avg(S.songs[i].slots.filter(x=>x).map(j=>get(j)?.pop||0)));const sales=Math.min(CD_MAX,Math.round((avg(ps)*80+S.fans*.1)*(.8+.05*a.tracks.length)*rnd(90,115)/100)),rev=sales*250,fans=Math.round(sales*.15);earn(rev,'Album sales: '+a.title);S.fans+=fans;const rl=[],nw=[];a.tracks.forEach(i=>{const o=S.songs[i];if(!o.rel){nw.push(i);rl.push(...grantRep(o,2+sales/3000));o.rel='Album: '+a.title}});
  const r={...a,id:'a'+(++S.sid),covers:{'Album Cover':S.cov['Album Cover']},cost:c.t,sales,rev,fans,day:S.day};delete S.cov['Album Cover'];S.albums.push(r);recordHistAlbum(r,nw);S.al=null;ui.cd=null;ui.mod={t:'html',h:`<h2 class="ht">✦ "${r.title}" released! ✦</h2>${coverSvg(r.covers['Album Cover'],{size:240})}<p>${r.tracks.length} tracks · Sales <b>${sales.toLocaleString()}</b> · Revenue <b>${yen(rev)}</b> · Fans +${fans.toLocaleString()}</p>${repTable(rl)}`};render()}
 function setCos(id,v){const d=ui.cd;if(d.cmode=='shared')return toast('Switch to Individual Costumes to change one member.','err');snap();const l=d.layers.find(x=>x.id==id),c=COS[+v];l.cid=+v;l.of=c[1];l.oh=c[2];render()}
-CFG.maxSen=32;CFG.maxCenters=6;CFG.rep={base:3,main:1,coup:.6,row:[.30,.15,.05],center:.25};
+CFG.maxSen=999; // no fixed Senbatsu size limit: a single or album song can use every eligible member (eligible members are the only limit)
+CFG.maxCenters=6;CFG.rep={base:3,main:1,coup:.6,row:[.30,.15,.05],center:.25};
 const RNM=['Front Row','Middle Row','Back Row'];
 function fmSync(o,keep){const f=o.fm;o.slots=f.sl.map(x=>x.m).filter(x=>x);o.centers=f.sl.filter(x=>x.c&&x.m).map(x=>x.m);o.center=o.centers[0]||null;f.saved=!!keep}
 const orderedIds=f=>f.sl.filter(x=>x.m).sort((a,b)=>b.c-a.c||a.n-b.n).map(x=>x.m);
