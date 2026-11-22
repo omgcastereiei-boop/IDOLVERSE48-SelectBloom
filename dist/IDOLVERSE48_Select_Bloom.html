@@ -1603,6 +1603,41 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .aw4pop .st{color:#d9c28c}
 .aw4act{justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;position:relative}
 .aw4act .b{min-width:140px;min-height:42px}
+/* ---- Request Hour (reqhour.js / reqhour-cc.js) ---- */
+.rhhead{align-items:center;gap:10px;flex-wrap:wrap}.rhhead .ht{margin:0}
+.rhintro p{margin:0 0 10px;line-height:1.55}
+.rhcard{cursor:pointer}.rhcard b{margin-right:8px}.rhcard:hover{box-shadow:var(--sh2)}
+.rhevt{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:16px;margin-bottom:6px}
+.rhstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:8px 0}
+.rhk2{background:var(--lv2);border-radius:12px;padding:8px 10px}.rhk2 small{display:block;color:var(--mut);font-size:11px}.rhk2 b{font-size:18px}
+.rhsetup label{display:block;margin:6px 0}.rhsetup input:not([type=checkbox]),.rhsetup select{width:100%;max-width:420px;display:block;margin-top:4px}
+.rhcats{display:flex;flex-wrap:wrap;gap:6px 16px;margin:4px 0}.rhchk{display:flex!important;align-items:center;gap:6px;cursor:pointer}
+.rhgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 14px}
+.rhsplit{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.rhsplit span{background:var(--ch2);border:1px solid var(--line);border-radius:10px;padding:5px 9px;font-size:13px}
+.rhact{gap:8px;flex-wrap:wrap;margin-top:10px}
+.rhsong{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:8px 0;flex-wrap:wrap}
+.rhst{flex:1;min-width:220px}.rhst b{margin-right:6px}.rhfaces{display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;align-items:center}
+.rhface{display:inline-block;line-height:0}.rhvote{display:flex;align-items:center;gap:6px}.rhvote input{width:72px}
+.rhcodes{font-family:ui-monospace,monospace;font-size:11px;color:var(--mut);margin-top:4px}
+.rhbuy{display:flex;flex-wrap:wrap;gap:6px}.rhbuy small{opacity:.7;margin-left:4px}
+.rhflt{gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}.rhflt input{flex:1;min-width:160px}
+.rhpg{justify-content:center;gap:10px;align-items:center;margin:10px 0}
+.rhtab{width:100%;border-collapse:collapse;margin:4px 0 14px}.rhtab td{padding:6px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.rhtab .rk{font-weight:800;width:52px;white-space:nowrap}.rhtab .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.rhtab .ctr{white-space:nowrap}
+.rhtab tr.top .rk{color:#c7486f}.rhtab tr.top{background:rgba(253,227,236,.45)}
+.rhnew,.rhre,.rhup,.rhdn,.rhsame{font-size:11px;font-weight:800;border-radius:6px;padding:1px 5px;white-space:nowrap}
+.rhnew{background:#ffe08a;color:#7a5200}.rhre{background:#c8e8ff;color:#1d5a85}.rhup{color:#2f8a5b}.rhdn{color:#c3456b}.rhsame{color:var(--mut)}
+.rhh summary{cursor:pointer;line-height:1.5}.rhtop{margin:6px 0 0;padding-left:30px;line-height:1.6}.rhtop small{color:var(--mut)}
+.rhbanner{background:linear-gradient(90deg,#2a1f45,#4b2c5e);color:#fff3fa;border:none}
+.rhrk{display:inline-block;background:#2a1f45;color:#ffe3a0;font-weight:800;font-size:12px;border-radius:8px;padding:2px 7px;margin-right:6px}
+.rhpop{position:relative;text-align:center;padding:20px 14px 14px;border-radius:16px;background:radial-gradient(120% 90% at 50% 0%,#3a2456 0%,#160f24 60%,#0b0814 100%);color:#f6eaff;border:1px solid #b48ae066}
+.rhpop .rhk{font-size:11px;letter-spacing:.3em;color:#e0b8ff}.rhpop h2{margin:6px 0 2px;color:#ffe3a0;font-size:20px}.rhpop h3{color:#fff;margin:8px 0}
+.rhpop p{line-height:1.5}.rhpop .st{color:#d8c6ee}.rhpop .rhtop{text-align:left;max-width:440px;margin:8px auto}.rhpop .rhtop small{color:#cdb9e8}.rhpop .rhact{justify-content:center}
+.rhkick b{color:#ffe3a0;font-size:1.25em}
+.rhspk{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;max-width:760px;margin:10px auto}
+.rhbub{flex:1;min-width:220px;background:#fff;color:#3b2a4a;border-radius:16px;padding:12px 14px;text-align:left}.rhbub b{display:block;font-size:16px}.rhbub small{display:block;opacity:.7;font-size:11px;margin-bottom:6px}.rhbub p{margin:0;line-height:1.6}
+.rhstg{width:100%;height:auto;display:block;border-radius:12px}
+@media (max-width:600px){.rhtab .ctr{display:none}.rhsong{padding:8px}.rhst{min-width:0}}
 
 </style>
 </head><body>
@@ -18362,6 +18397,456 @@ function aw4Go(k,y){ui.mod=null;if(k=='nom'){ui.awy=y;goView('awards')}else{goVi
 {const f=render;render=function(){try{if(S&&!ui.t&&!ui.mod&&!ui.awsh&&!ui.jkov&&!(ui.newRes&&ui.newRes.length)){const z=aw4Pending();if(z){z.Y.ntf[z.k]=1;ui.mod={t:'html',h:aw4Html(z)}}}}catch(e){console.error(e)}return f.apply(this,arguments)}}
 // the old toast on ceremony day is replaced by the pop-up
 {const f=awTick;awTick=function(){const t0=toast;toast=function(m){if(String(m).startsWith('Tonight:'))return;return t0.apply(this,arguments)};try{return f.apply(this,arguments)}finally{toast=t0}}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Request Hour (リクエストアワー セットリストベスト)
+// -------------------------------------------------------------------------------------
+//  An annual ranking concert: fans vote for the songs they want to see performed again.
+//   1. Setup (Concerts → Request Hour): name, ranking categories (All Songs / Single & Album Song /
+//      Coupling Song / Theater Stage Song — one or several), Best N (10–200), 1–5 performances
+//      (≤ 50 ranked songs each, split as evenly as possible), concert date, sister-group songs.
+//   2. The Request Hour single is produced with the normal single production / CD sales system
+//      (it is linked like the General Election single). Each CD bought during the voting month
+//      carries exactly one voting code = one vote. Sales continue after voting closes, but
+//      those CDs carry no usable code.
+//   3. Voting month: the existing fan cohorts (Casual / Regular / Dedicated / Hardcore, their Kami
+//      Oshi and 0–5 Oshi) spend their codes on the songs they personally want to see again:
+//      song appeal, Kami Oshi / Oshi in the ORIGINAL lineup (center, unit), team & generation,
+//      nostalgia (time since last performed, ended stages, rarely performed), and the group's
+//      history (team disbanded / formed, graduation announcements, debut songs, anniversaries).
+//      Every cohort is split into several "fans" with their own taste, so no rule guarantees a winner.
+//      The producer can buy CDs too and vote with the codes in the voting screen.
+//   4. When voting closes the votes are locked, codes validated, songs ranked and the result
+//      saved permanently (history, rank changes). The ranking can never be edited.
+//   5. A Request Hour concert is created in the existing Concert system (reqhour-cc.js).
+//  Songs are keyed by their ORIGINAL owner ("gid:songId"): a Revival copy (song.xFrom) never
+//  changes ownership and a song appears once however many stages performed it.
+// =====================================================================================
+const RH_CATS={all:'All Songs',sa:'Single & Album Song',cpl:'Coupling Song',th:'Theater Stage Song'};
+const RH_CATS_TH={all:'เพลงทั้งหมด',sa:'เพลงซิงเกิลและอัลบั้ม',cpl:'เพลงคัปปลิ้ง',th:'เพลงเธียเตอร์สเตจ'};
+const RH_ST={setup:'Setup',single:'Single in production',voting:'Voting open',closed:'Results announced',concert:'Concert',done:'Completed'};
+const RH_ST_TH={setup:'ตั้งค่า',single:'กำลังผลิตซิงเกิล',voting:'เปิดโหวต',closed:'ประกาศผลแล้ว',concert:'คอนเสิร์ต',done:'จบแล้ว'};
+const RH_CD_PRICE=1100; // the producer buying a CD pays the shop price (no revenue is booked for these copies)
+const rhTh=()=>typeof UIP!='undefined'&&UIP.lang=='th';
+const rhT=(en,th)=>rhTh()?th:en;
+function rhS(){if(!S)return null;if(!S.rh||typeof S.rh!='object')S.rh={v:1,seq:0,list:[],hist:[]};const R=S.rh;R.list=Array.isArray(R.list)?R.list:[];R.hist=Array.isArray(R.hist)?R.hist:[];R.seq=+R.seq||0;return R}
+const rhGet=id=>(rhS().list||[]).find(e=>e.id==id)||null;
+const rhCur=()=>ui.rhe?rhGet(ui.rhe):null;
+const rhGrp=gid=>(S.groups||[]).find(g=>g.id==gid)||null;
+const rhCatName=k=>rhTh()?RH_CATS_TH[k]:RH_CATS[k];
+// ---- performances: N ranked songs over P shows, ≤ 50 each, lowest ranks first (countdown) -------------------------------------
+function rhSplit(N,P){P=Math.max(1,Math.min(5,P|0));const b=Math.floor(N/P),x=N%P;return Array.from({length:P},(_,i)=>b+(i<x?1:0))}
+function rhSplitErr(N,P){return Math.ceil(N/Math.max(1,P))>50?rhT(`${Math.ceil(N/P)} songs per performance — a performance holds at most 50 ranked songs. Add performances or lower the ranking size.`,`การแสดงละ ${Math.ceil(N/P)} เพลง — แต่ละรอบรับได้สูงสุด 50 เพลง เพิ่มจำนวนรอบหรือลดขนาดอันดับ`):''}
+// ranks per performance, e.g. Best 100 × 4 → [[100..76],[75..51],[50..26],[25..1]]
+function rhPerfRanks(N,P){const L=rhSplit(N,P),out=[];let hi=N;L.forEach(n=>{out.push([hi,hi-n+1]);hi-=n});return out}
+// ---- event ---------------------------------------------------------------------------------------------------------------
+function rhAutoName(E){const g=rhGrp(E.gid),y=dayDate(E.date).getFullYear(),c=E.cats.includes('all')?'':E.cats.map(k=>k=='sa'?'Single & Album':k=='cpl'?'Coupling':'Theater Stage').join(' & ')+' Song ';return`${g?g.name:'Group'} ${c}Request Hour ${y} Setlist Best ${E.size}`}
+function rhNew(){const R=rhS(),gid=typeof gsAg=='function'?gsAg():(S.groups[0]||{}).id,g=rhGrp(gid);if(!g)return;
+ if(R.list.some(e=>e.gid==gid&&!['done'].includes(e.status)))return toast(rhT('This group already has a Request Hour in progress.','วงนี้มี Request Hour ที่ยังไม่จบอยู่แล้ว'),'err');
+ const E={id:'rh'+(++R.seq),gid,cats:['all'],size:100,nperf:4,date:S.day+120,sis:false,name:'',nameEd:false,status:'setup',created:S.day,rid:null,open:null,close:null,
+  codes:{next:1,fanIss:0,fanUsed:0,plIss:0,plUsed:0,pl:[],vd:null},cdV:0,cdPl:{},votes:{},pv:{},trend:null,rank:null,cc:null,log:[]};
+ E.name=rhAutoName(E);R.list.push(E);ui.rhe=E.id;ui.rht='setup';view='rh';render();return E}
+function rhEditable(E){return E&&(E.status=='setup'||E.status=='single')}
+function rhSet(k,v){const E=rhCur();if(!E)return;
+ if(k=='date'){if(E.status=='closed'||E.status=='concert'||E.status=='done')return;const d=dateDay(new Date(v+'T00:00:00'));if(!isFinite(d))return;E.date=d}
+ else{if(!rhEditable(E))return toast(rhT('These settings are locked once voting has started.','ล็อกการตั้งค่าแล้วเมื่อเริ่มโหวต'),'err');
+  if(k=='size')E.size=Math.max(10,Math.min(200,Math.round(+v||100)));else if(k=='nperf')E.nperf=Math.max(1,Math.min(5,+v||1));else if(k=='sis')E.sis=!!v;
+  else if(k=='name'){const s=String(v||'').replace(/[<>]/g,'').trim().slice(0,90);E.name=s||rhAutoName(E);E.nameEd=!!s;render();return}
+  else if(k=='cat'){let C=new Set(E.cats);if(v=='all')C=new Set(['all']);else{C.delete('all');C.has(v)?C.delete(v):C.add(v);if(!C.size)C.add('all')}E.cats=['all','sa','cpl','th'].filter(x=>C.has(x))}}
+ if(!E.nameEd)E.name=rhAutoName(E);render()}
+function rhDel(id){const E=rhGet(id);if(!E||E.status!='setup'&&E.status!='single')return;ask(rhT('Delete this Request Hour plan?','ลบแผน Request Hour นี้?'),()=>{const R=rhS();R.list=R.list.filter(e=>e!==E);try{S.groups.forEach(g=>gsWith(g.id,()=>{if(S.pj&&S.pj.rh==id)delete S.pj.rh}))}catch(e){}ui.rhe=null;render()})}
+function rhErrs(E,noDate){const out=[],se=rhSplitErr(E.size,E.nperf);if(se)out.push(se);const P=rhPool(E);if(!P.length)out.push(rhT('No released song matches the selected categories.','ไม่มีเพลงที่วางจำหน่ายแล้วตรงกับหมวดที่เลือก'));
+ if(noDate)return out;
+ if(E.close!=null&&E.date<=E.close+6)out.push(rhT(`The concert must be at least a week after voting closes (${jd(E.close)}).`,`วันคอนเสิร์ตต้องห่างจากวันปิดโหวต (${jd(E.close)}) อย่างน้อย 1 สัปดาห์`));
+ else if(E.close==null&&E.date<S.day+45)out.push(rhT('Leave time for the single, one month of voting and the concert preparation (at least 45 days from today).','เผื่อเวลาผลิตซิงเกิล โหวต 1 เดือน และเตรียมคอนเสิร์ต (อย่างน้อย 45 วันจากวันนี้)'));return out}
+// ---- the song pool ------------------------------------------------------------------------------------------------------------
+function rhGroups(E){const h=rhGrp(E.gid);if(!h)return[];const L=[h];if(E.sis&&h.type=='main')(S.groups||[]).forEach(g=>{if(g.id!=h.id&&!g.dis&&g.type=='sister')L.push(g)});return L}
+function rhReleased(o){if(!o)return false;if(o.relDay!=null&&o.rel&&o.relDay<=S.day)return true;if(o.th&&o.th.deb!=null&&o.th.deb<=S.day)return true;return false}
+function rhAlbumIds(gid){const set=new Set();try{(gsCtx(gid,'albums')||[]).forEach(a=>{if(a.day!=null&&a.day>S.day)return;(a.types||[]).forEach(t=>(t.songs||[]).forEach(id=>set.add(id)));(a.songs||[]).forEach(id=>set.add(typeof id=='object'?id.id:id));(a.tracks||[]).forEach(t=>set.add(t.id))})}catch(e){}return set}
+function rhSongCats(o,alb,copyTh){const c=new Set();if(o.rel&&o.relDay!=null)c.add('sa');if(alb&&alb.has(o.id))c.add('sa');if(o.rel&&o.relDay!=null&&o.role=='Coupling')c.add('cpl');if(o.th||copyTh)c.add('th');return c}
+let RH_POOLC=null;
+function rhPool(E){const sig=[E.id,E.gid,E.cats.join(),E.sis,S.day,(S.groups||[]).length].join('|');if(RH_POOLC&&RH_POOLC.sig==sig)return RH_POOLC.L;
+ const G=rhGroups(E),gids=new Set(G.map(g=>g.id)),M=new Map();
+ G.forEach(g=>{const SG=gsCtx(g.id,'songs')||{},alb=rhAlbumIds(g.id);Object.values(SG).forEach(o=>{if(!o||!rhReleased(o))return;let og=g.id,oid=o.id,oo=o,copy=false;
+  if(o.xFrom&&o.xFrom.gid!=null){og=o.xFrom.gid;oid=o.xFrom.id;copy=true;const so=(gsCtx(og,'songs')||{})[oid];if(so)oo=so;
+   // a Revival copy is eligible for the group that performed it (the event host), or when the owner group is part of the event
+   if(g.id!=E.gid&&!gids.has(og))return}
+  const key=og+':'+oid;let z=M.get(key);if(!z){z={key,gid:og,id:oid,title:oo.title||o.title,cats:new Set(),via:[]};M.set(key,z)}
+  const oalb=og==g.id?alb:rhAlbumIds(og);rhSongCats(oo,oalb,copy&&o.th).forEach(c=>z.cats.add(c));if(copy)z.via.push(g.id)})});
+ const all=E.cats.includes('all'),L=[...M.values()].filter(z=>all||E.cats.some(c=>z.cats.has(c))).sort((a,b)=>String(a.title).localeCompare(String(b.title)));
+ RH_POOLC={sig,L};return L}
+// ---- song facts: original lineup, revival lineups, history ---------------------------------------------------------------------
+const rhSong=(gid,id)=>(gsCtx(gid,'songs')||{})[id]||null;
+function rhTeamOfStage(gid,st){let t=null;try{gsWith(gid,()=>{const K=typeof thK=='function'?thK(st.k):null;t=K&&(K.tid||K.team)||null;if(!t){const m=/^t[tr](\d+)$/.exec(String(st.k||''));if(m)t='t'+m[1]}})}catch(e){}return t}
+function rhOrigTh(gid,id){let out=null;try{gsWith(gid,()=>{const L=Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&!s.adopted&&s.debut!=null&&thAll(s).some(it=>it.song==id)).sort((a,b)=>a.debut-b.debut),s=L[0];if(!s)return;
+  const oi=(s.orig||[]).find(it=>it.k=='song'&&it.song==id),it=thAll(s).find(q=>q.song==id);let mem,cen,unit=null;
+  if(oi&&oi.mem&&oi.mem.length){mem=oi.mem.slice();cen=[oi.center,oi.c2].filter(x=>x!=null&&mem.includes(x));unit=oi.unit?oi.unit.name:null}else if(it){mem=thMem(s,it).slice();const c=thCen(s,it);cen=c!=null?[c]:[];unit=it.unit?((s.units||[]).find(u=>u.id==it.unit)||{}).name||'Unit':null}
+  if(!mem)return;out={sid:s.id,stage:s.name,stLabel:typeof thLabel=='function'?thLabel(s.k):'',tid:rhTeamOfStage(gid,s),mem,cen,unit,day:s.debut,retired:s.status=='retired'}})}catch(e){console.error(e)}return out}
+// Revival lineups (any group, any revival stage) — stored separately, never replacing the original
+function rhRevivals(key){const out=[];(S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const SG=S.songs||{};const ids=Object.values(SG).filter(o=>(g.id+':'+o.id)==key||(o.xFrom&&(o.xFrom.gid+':'+o.xFrom.id)==key)).map(o=>o.id);if(!ids.length)return;
+  Object.values((S.th&&S.th.st)||{}).filter(s=>s.revOf&&s.debut!=null).forEach(s=>{ids.forEach(id=>{const oi=(s.orig||[]).find(it=>it.k=='song'&&it.song==id),it=thAll(s).find(q=>q.song==id);if(!oi&&!it)return;const mem=oi&&oi.mem?oi.mem.slice():thMem(s,it).slice();out.push({gid:g.id,stage:s.name,day:s.debut,mem})})})})}catch(e){}});return out}
+let RH_PERF=null;
+// last day and number of times every song was performed (Theater shows of every group + concerts)
+function rhPerfMap(){if(RH_PERF&&RH_PERF.day==S.day)return RH_PERF.M;const M={},hit=(key,d)=>{const z=M[key]||(M[key]={n:0,last:null});z.n++;if(z.last==null||d>z.last)z.last=d};
+ (S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const SG=S.songs||{},own=id=>{const o=SG[id];return o&&o.xFrom?o.xFrom.gid+':'+o.xFrom.id:g.id+':'+id},cache={};
+  ((S.th&&S.th.pf)||[]).forEach(p=>{if(p.day==null||p.day>S.day)return;let L=cache[p.st];if(!L){const s=thStage(p.st);L=cache[p.st]=s?thAll(s).map(it=>it.song).filter(Boolean):[]}L.forEach(id=>hit(own(id),p.day))})})}catch(e){}});
+ try{ccS().list.forEach(C=>(C.pf||[]).forEach(p=>{if(!p.res||p.res.err)return;const d=p.res.day??(C.start+p.d),set=C.sets[p.res.sid]||p.res.set;((set&&set.items)||[]).forEach(it=>{if(it.k!='song')return;const o=rhSong(it.gid,it.song);hit(o&&o.xFrom?o.xFrom.gid+':'+o.xFrom.id:it.gid+':'+it.song,d)})}))}catch(e){}
+ RH_PERF={day:S.day,M};return M}
+function rhSingleOf(gid,o){let x=null;try{gsWith(gid,()=>{x=(S.singles||[]).find(s=>s.mainId==o.id||(s.types||[]).some(t=>(t.songs||[]).includes(o.id)))||null})}catch(e){}return x}
+// all facts about one pool song (cached per day)
+let RH_META={};
+function rhMeta(z){const ck=z.key+'|'+S.day;if(RH_META[ck])return RH_META[ck];if(Object.keys(RH_META).length>2000)RH_META={};
+ const o=rhSong(z.gid,z.id)||{},g=rhGrp(z.gid),P=rhPerfMap()[z.key]||{n:0,last:null},T=o.th?rhOrigTh(z.gid,z.id):null,x=o.rel?rhSingleOf(z.gid,o):null;
+ let mem=[],cen=[],kind,origin,team=null,unit=null,born=null;
+ if(T){mem=T.mem;cen=T.cen;unit=T.unit;team=T.tid;kind=unit?'unit':'th';origin=`${T.stLabel?T.stLabel+' · ':''}${T.stage}`;born=T.day}
+ else{mem=(o.slots||[]).filter(x=>x!=null);cen=(o.centers&&o.centers.length?o.centers:[o.center]).filter(x=>x!=null);kind=o.role=='Main'?'title':o.rel?'cpl':'alb';origin=x?`${x.title}${x.num?` (${x.num}${['th','st','nd','rd'][x.num%10>3||Math.floor(x.num%100/10)==1?0:x.num%10]} Single)`:''}`:(o.rel||'');born=o.relDay}
+ const sales=x?(x.sales||0):0,since=born!=null?S.day-born:999;
+ let ap;if(kind=='title')ap=1+.25*Math.log10(1+sales/10000)+(since<180?.18:0);else if(kind=='cpl'||kind=='alb')ap=.62+.12*Math.log10(1+sales/10000)+(since<180?.08:0);
+ else{let pr=null;try{gsWith(z.gid,()=>{const s=T&&thStage(T.sid);pr=s&&s.prefs&&s.prefs[z.id]?s.prefs[z.id].s:null})}catch(e){}ap=(kind=='unit'?.5:.56)+Math.min(.4,(o.thPop||0)/40)+((pr??60)-60)/220}
+ const tm=team&&g?(g.teams||[]).find(t=>t.id==team):null;
+ const R={key:z.key,gid:z.gid,id:z.id,title:z.title,o,g,gname:g?g.name:'',kind,origin,team,teamName:tm?tm.name:(team&&typeof knTeamName=='function'?'':''),teamGone:!!(team&&g&&!(g.teams||[]).some(t=>t.id==team)),unit,mem,cen,born,since,sales,
+  last:P.last,n:P.n,retired:T?T.retired:false,ap:Math.max(.25,ap),cats:z.cats,via:z.via};
+ if(team&&!tm){try{gsWith(z.gid,()=>{const K=typeof thK=='function'&&T?thK((thStage(T.sid)||{}).k):null;R.teamName=K&&K.label?String(K.label).replace(/\s*\d+(st|nd|rd|th) Stage.*$/,''):''})}catch(e){}}
+ RH_META[ck]=R;return R}
+const RH_KIND={title:'Single (title track)',cpl:'Single (coupling)',alb:'Album track',th:'Theater Stage',unit:'Theater Unit'};
+const RH_KIND_TH={title:'ซิงเกิล (เพลงหลัก)',cpl:'ซิงเกิล (คัปปลิ้ง)',alb:'เพลงในอัลบั้ม',th:'เธียเตอร์สเตจ',unit:'ยูนิตเธียเตอร์'};
+// ---- the single ---------------------------------------------------------------------------------------------------------------
+function rhLink(id){const E=rhGet(id);if(!E||E.status!='setup')return;const er=rhErrs(E,1);if(er.length)return toast(er[0],'err');
+ if(typeof gsAg=='function'&&gsAg()!=E.gid)return toast(rhT(`Switch to ${rhGrp(E.gid).name} first (the Request Hour single is that group's single).`,`สลับไปที่วง ${rhGrp(E.gid).name} ก่อน (ซิงเกิล Request Hour เป็นซิงเกิลของวงนั้น)`),'err');
+ const p=S.pj;if(!p||p.status!='draft')return toast(rhT('Finish (or release) the single currently in production first.','ปล่อยซิงเกิลที่กำลังผลิตอยู่ให้เสร็จก่อน'),'err');if(p.ge||p.geNext)return toast(rhT('This single is the General Election single.','ซิงเกิลนี้เป็นซิงเกิลเลือกตั้งทั่วไป'),'err');if(plAlb&&plAlb(p))return toast(rhT('An album cannot carry Request Hour voting codes.','อัลบั้มไม่สามารถแนบรหัสโหวต Request Hour ได้'),'err');
+ p.rh=E.id;E.status='single';E.log.push({d:S.day,t:'single'});toast(rhT('This single is now the Request Hour single. Produce it as usual — every CD sold during the voting month carries one voting code.','ซิงเกิลนี้เป็นซิงเกิล Request Hour แล้ว ผลิตตามปกติ — ซีดีที่ขายในเดือนโหวตมีรหัสโหวต 1 รหัสต่อแผ่น'));goView('music')}
+function rhUnlink(id){const E=rhGet(id);if(!E||E.status!='single')return;try{gsWith(E.gid,()=>{if(S.pj&&S.pj.rh==id)delete S.pj.rh})}catch(e){}E.status='setup';render()}
+const rhX=E=>E&&E.rid?seFind(E.gid,E.rid):null;
+// sister-group fans buy the main group's Request Hour single for their own songs (only when sister songs are eligible)
+let RH_DEM=null;
+{const f=cddDemand;cddDemand=function(gid,sen,ctx){const Z=RH_DEM;if(!Z||gid!=Z.gid)return f.apply(this,arguments);const c2={...(ctx||{}),promo:((ctx&&ctx.promo)||0)+.07},D=f.call(this,gid,sen,c2);if(!D)return D;
+ Z.sis.forEach(sg=>{try{const d=f.call(this,sg,[],{...c2,q:(c2.q||.55)*.92,commit:c2.commit});if(d){const k=.55;D.units+=Math.round(d.units*k);D.fanCopies+=Math.round(d.fanCopies*k);D.buyers+=Math.round(d.buyers*k);D.sisU=(D.sisU||0)+Math.round(d.units*k)}}catch(e){console.error(e)}});return D}}
+{const f=doRelease;doRelease=function(){const p=S.pj,E=p&&p.rh?rhGet(p.rh):null,n=S.singles.length;if(E)RH_DEM={gid:E.gid,sis:E.sis?rhGroups(E).filter(g=>g.id!=E.gid).map(g=>g.id):[]};let r;try{r=f.apply(this,arguments)}finally{RH_DEM=null}
+ try{const x=S.singles[n];if(E&&x&&S.singles.length>n){x.rh=E.id;E.rid=x.rid;E.title=x.title;E.open=x.relDay??S.day;E.close=geAddMon(E.open,1)-1;E.status='voting';E.codes.vd=E.open-1;E.trend=null;E.log.push({d:S.day,t:'open'});
+  if(E.date<=E.close+6)E.date=E.close+21;rhVoteTo(E,S.day);ui.rhPop={k:'open',id:E.id}}}catch(e){console.error(e)}return r}}
+// ---- voting codes ---------------------------------------------------------------------------------------------------------
+function rhCode(E,n){const h=String((n*2654435761+E.id.length*97+(E.created|0))>>>0).slice(-4);return`RH${String(E.id).slice(2).padStart(2,'0')}-${String(n).padStart(7,'0')}-${h}`}
+function rhPlCodesLeft(E){return Math.max(0,E.codes.plIss-E.codes.plUsed)}
+function rhBuy(id,n){const E=rhGet(id),x=rhX(E);if(!E||!x)return;n=Math.max(1,Math.min(1000,n|0));const cost=n*RH_CD_PRICE;
+ if(!spend(cost,`Request Hour CDs: ${x.title} ×${n}`))return;x.dsl=x.dsl||{};x.dsl[S.day]=(x.dsl[S.day]||0)+n;x.sales=(x.sales||0)+n;if(x.cd){x.cd.units+=n;x.cd.orders+=1}
+ E.cdPl[S.day]=(E.cdPl[S.day]||0)+n;E.cdPlTot=(E.cdPlTot||0)+n;if(E.status=='voting'&&S.day>=E.open&&S.day<=E.close&&E.codes.vd>=S.day)E.cdV+=n;
+ if(rhVotingOpen(E)){const a=E.codes.next;E.codes.next+=n;E.codes.pl.push([a,a+n-1]);E.codes.plIss+=n;toast(rhT(`${n} CD(s) bought — ${n} voting code(s) received.`,`ซื้อซีดี ${n} แผ่น — ได้รหัสโหวต ${n} รหัส`))}
+ else toast(rhT(`${n} CD(s) bought. Voting has closed, so these CDs carry no usable voting code.`,`ซื้อซีดี ${n} แผ่น แต่ปิดโหวตแล้ว ซีดีเหล่านี้จึงไม่มีรหัสโหวตที่ใช้ได้`));render()}
+const rhVotingOpen=E=>E&&E.status=='voting'&&S.day>=E.open&&S.day<=E.close;
+function rhVote(id,key,n){const E=rhGet(id);if(!rhVotingOpen(E))return toast(rhT('Voting is not open.','ไม่ได้เปิดโหวตอยู่'),'err');n=Math.max(1,n|0);const left=rhPlCodesLeft(E);if(n>left)return toast(rhT(`You have ${left} unused voting code(s).`,`คุณมีรหัสโหวตเหลือ ${left} รหัส`),'err');
+ if(!rhPool(E).some(z=>z.key==key))return toast(rhT('That song is not eligible.','เพลงนี้ไม่มีสิทธิ์'),'err');E.codes.plUsed+=n;E.pv[key]=(E.pv[key]||0)+n;toast(rhT(`${n} vote(s) submitted.`,`ส่งโหวต ${n} คะแนนแล้ว`));render()}
+// ---- fan voting simulation --------------------------------------------------------------------------------------------------
+const RH_WFT={casual:.006,oshi:.022,dedicated:.1,hardcore:.45};       // codes per fan (purchase × copies), relative
+const RH_TAU={casual:1.05,oshi:.9,dedicated:.8,hardcore:.7};           // how personal (noisy) a fan's taste is
+const RH_KM={casual:.5,oshi:.8,dedicated:1,hardcore:1.25};             // how much the Kami Oshi drives her choices
+const RH_SPLIT={casual:[.6,.25,.15],oshi:[.55,.28,.17],dedicated:[.62,.25,.13],hardcore:[.72,.2,.08]};
+const rhGumbel=r=>-Math.log(-Math.log(Math.max(1e-9,Math.min(1-1e-9,r()))));
+function rhSeedN(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+// event-wide context: song facts, the group's history and the shared mood of the year
+function rhCtx(E){const P=rhPool(E),Ms=P.map(rhMeta),G=rhGroups(E),now=S.day,r=mulb(rhSeedN(E.id+'trend'));
+ if(!E.trend){E.trend={};P.forEach(z=>{E.trend[z.key]=+(((r()+r()+r()+r())/4-.5)*.9).toFixed(3)})}
+ const past=new Map();S.members.forEach(m=>{const T=new Set();(m.mh||[]).forEach(h=>{if(h.tid&&(h.t=='team_join'||h.t=='team_transfer'||h.t=='team_leave'))T.add(h.tid)});if(m.tid)T.add(m.tid);past.set(m.id,T)});
+ // history: graduation announcements, new teams, anniversaries, previous Request Hours
+ const ann=new Map();S.members.forEach(m=>{if(m.grad&&m.grad.ann!=null&&m.status!='graduated'&&now-m.grad.ann<400)ann.set(m.id,m)});
+ const newT=new Set();G.forEach(g=>{try{gsWith(g.id,()=>{(g.teams||[]).forEach(t=>{const first=Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&s.debut!=null&&rhTeamOfStage(g.id,s)==t.id).map(s=>s.debut);const d=first.length?Math.min(...first):null;if(d!=null&&now-d<240)newT.add(t.id)})})}catch(e){}});
+ const anni=new Set();G.forEach(g=>{const d0=g.debutDay??g.formed;if(d0==null)return;const yrs=Math.round((E.close-d0)/365);if(yrs>=1&&Math.abs(E.close-(d0+yrs*365))<75)anni.add(g.id)});
+ const debutKey=new Set();G.forEach(g=>{try{gsWith(g.id,()=>{const x=(S.singles||[]).slice().sort((a,b)=>(a.relDay??a.day)-(b.relDay??b.day))[0];if(x)debutKey.add(g.id+':'+x.mainId);const st=Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&s.debut!=null).sort((a,b)=>a.debut-b.debut)[0];const f=st&&thAll(st).find(it=>it.song);if(f)debutKey.add(g.id+':'+f.song)})}catch(e){}});
+ const prev=rhPrevRank(E),gen=new Map(S.members.map(m=>[m.id,m.gen]));
+ const S2=Ms.map(M=>{const mem=new Set(M.mem),cen=new Set(M.cen),rev=new Set();rhRevivals(M.key).forEach(R=>R.mem.forEach(id=>{if(!mem.has(id))rev.add(id)}));
+  const act=M.mem.filter(id=>{const m=get(id);return m&&m.status!='graduated'}).length,gap=M.last!=null?now-M.last:(M.born!=null?now-M.born:0);
+  let nost=.36*Math.min(1,gap/540)+(M.retired&&!rhInActive(M)?.2:0)+(M.n<10&&(M.kind=='th'||M.kind=='unit')?.12:0)+(M.mem.length&&act/M.mem.length>=.6&&gap>200?.1:0);
+  let hist=0;if(M.teamGone)hist+=.15;if(debutKey.has(M.key))hist+=.22+(anni.has(M.gid)?.35:0);if(M.since<180&&M.kind=='title')hist+=.12;const pr=prev[M.key];if(pr!=null)hist+=pr<=10?.14:pr<=50?.07:.03;
+  const gc=M.cen.map(id=>get(id)).filter(m=>m&&m.status=='graduated');
+  return{M,mem,cen,rev,small:M.unit&&M.mem.length<=4,base:Math.log(M.ap)*1.5+E.trend[M.key],nost,hist,gradC:gc.length?Math.max(...gc.map(m=>(m.pop||50)/100)):0,annC:M.cen.filter(id=>ann.has(id)),annM:M.mem.filter(id=>ann.has(id)),
+   newTeam:M.team&&newT.has(M.team),cenGen:M.cen.length?gen.get(M.cen[0]):null,born:M.born}});
+ return{E,P,S2,past,ann,gen}}
+function rhInActive(M){let on=false;try{gsWith(M.gid,()=>{on=Object.values((S.th&&S.th.st)||{}).some(s=>s.status=='active'&&thAll(s).some(it=>it.song==M.id))})}catch(e){}return on}
+// one cohort → a vote distribution over the pool (several fans with their own taste inside the cohort)
+function rhCohortPref(X,s,wk){const E=X.E,ft=RH_TAU[s.ft]?s.ft:'oshi',tau=RH_TAU[ft],km=RH_KM[ft],sp=RH_SPLIT[ft],k=s.k,km_=k!=null?get(k):null,team=km_?km_.tid:null,pt=k!=null?X.past.get(k):null,kg=k!=null?X.gen.get(k):null,O=s.o||{},longFan=d=>s.born!=null&&d!=null&&s.born<=d+60;
+ const oshi=Object.keys(O).filter(j=>O[j]>0).map(Number),np=Math.max(1,Math.min(8,Math.round(1+Math.log2(1+s.n)))),r=mulb(rhSeedN(E.id+'|'+s.id+'|'+wk)),D={};
+ const fix=X.S2.map(z=>{let u=z.base+z.nost*(longFan(z.M.last??z.born)?1:.55)+z.hist;
+  if(k!=null){if(z.cen.has(k))u+=1.1*km;else if(z.mem.has(k))u+=(z.small?.75:.5)*km;else if(z.rev.has(k))u+=.25*km;
+   if(z.mem.has(k)&&z.M.last!=null&&S.day-z.M.last>180)u+=.2*km;if(team&&z.M.team==team)u+=.25;else if(pt&&z.M.team&&pt.has(z.M.team))u+=z.M.teamGone?.5:.18;
+   if(kg!=null&&z.cenGen==kg)u+=.1;if(z.newTeam&&team==z.M.team)u+=.3;if(z.annC.includes(k))u+=.9;else if(z.annM.includes(k))u+=.45}
+  let oc=0;for(const j of oshi)if(z.mem.has(j))oc++;else if(z.rev.has(j))oc+=.3;u+=.18*Math.min(3,oc);
+  if(z.annC.length&&!z.annC.includes(k))u+=.25*Math.max(...z.annC.map(id=>(get(id)||{}).pop||50))/100;
+  if(z.gradC&&longFan(z.born))u+=.35*z.gradC;if(z.M.teamGone&&longFan(z.born))u+=.12;return u});
+ for(let p=0;p<np;p++){const B=[];for(let i=0;i<fix.length;i++){const v=fix[i]+tau*rhGumbel(r);if(B.length<3||v>B[2][0]){B.push([v,i]);B.sort((a,b)=>b[0]-a[0]);if(B.length>3)B.pop()}}
+  B.forEach(([,i],j)=>{const key=X.S2[i].M.key;D[key]=(D[key]||0)+sp[j]/np})}
+ return D}
+function rhCohorts(E){const G=new Set(rhGroups(E).map(g=>g.id));return((S.fb&&S.fb.segs)||[]).filter(s=>s.n>0&&s.ft!='dormant').map(s=>{const g=typeof fmPg=='function'?fmPg(s):(s.k!=null?fdGrpOf(s.k):s.gs);if(!G.has(g))return null;
+ const w=s.n*(RH_WFT[s.ft]||.02)*(1+((s.loy||50)-50)/150)*(g==E.gid?1:.55);return w>0?{s,w}:null}).filter(Boolean)}
+// cast the fan votes of every day from (last processed + 1) to `to` (sales of a day are known after its tick)
+function rhVoteTo(E,to){if(E.status!='voting')return;const x=rhX(E);if(!x)return;to=Math.min(to,E.close);let d=(E.codes.vd??E.open-1)+1;if(d>to)return;
+ E.acc=E.acc||{};let X=null,C=null,W=0;
+ for(;d<=to;d++){const tot=Math.max(0,((x.dsl||{})[d]||0)-((E.cdPl||{})[d]||0));E.cdV+=((x.dsl||{})[d]||0);E.codes.vd=d;if(!tot)continue;
+  const a=E.codes.next;E.codes.next+=tot;E.codes.fanIss+=tot;const left=E.close-d,use=left>=3?.985:left==2?.93:left==1?.9:.85,used=Math.round(tot*use);E.codes.fanUsed+=used;
+  const wk=Math.floor((d-E.open)/7);if(!X||X.wk!=wk){X=rhCtx(E);X.wk=wk;C=rhCohorts(E);W=C.reduce((t,c)=>t+c.w,0);E.prefC={wk,D:{}}}
+  if(!W)continue;C.forEach(c=>{const share=used*c.w/W;if(share<=0)return;let D=E.prefC.D[c.s.id];if(!D){D=rhCohortPref(X,c.s,wk);E.prefC.D[c.s.id]=D}for(const key in D)E.acc[key]=(E.acc[key]||0)+share*D[key]})}
+ delete E.prefC}
+// integer votes: fan totals rounded so they add up exactly to the codes used, plus the producer's votes
+function rhTotals(E){const acc=E.acc||{},keys=Object.keys(acc),U=E.codes.fanUsed;let fl=keys.map(k=>[k,Math.floor(acc[k]),acc[k]-Math.floor(acc[k])]),s=fl.reduce((t,z)=>t+z[1],0);fl.sort((a,b)=>b[2]-a[2]);for(let i=0;s<U&&i<fl.length;i++,s++)fl[i][1]++;
+ const V={};fl.forEach(([k,n])=>{if(n)V[k]=n});for(const k in E.pv)V[k]=(V[k]||0)+E.pv[k];return V}
+// ---- close & results -------------------------------------------------------------------------------------------------------
+function rhClose(E){if(E.status!='voting')return;rhVoteTo(E,E.close);const V=rhTotals(E),P=rhPool(E);E.votes=V;E.status='closed';E.closed=S.day;E.locked=true;
+ const valid=E.codes.fanUsed+E.codes.plUsed,tv=Object.values(V).reduce((a,b)=>a+b,0);E.check={valid,tv,ok:valid==tv,expired:(E.codes.fanIss-E.codes.fanUsed)+(E.codes.plIss-E.codes.plUsed)};
+ const L=P.map(z=>{const M=rhMeta(z);return{key:z.key,gid:z.gid,id:z.id,title:z.title,v:V[z.key]||0,ap:M.ap,kind:M.kind,origin:M.origin,gname:M.gname,team:M.teamName||'',unit:M.unit,cen:M.cen.slice(),mem:M.mem.slice()}}).sort((a,b)=>b.v-a.v||b.ap-a.ap||String(a.title).localeCompare(String(b.title)));
+ const prev=rhPrevRank(E),ever=rhEverRanked(E);E.rank=L.slice(0,Math.min(E.size,L.length)).map((z,i)=>({...z,r:i+1,prev:prev[z.key]??null,re:prev[z.key]==null&&ever.has(z.key)}));E.out=L.slice(E.size).map(z=>({key:z.key,title:z.title,v:z.v}));
+ const R=rhS(),x=rhX(E);R.hist.push({eid:E.id,year:dayDate(E.date).getFullYear(),name:E.name,gid:E.gid,groups:rhGroups(E).map(g=>({id:g.id,name:g.name})),cats:E.cats.slice(),size:E.size,nperf:E.nperf,date:E.date,closed:S.day,
+  single:x?{rid:x.rid,title:x.title}:null,win:E.rank[0]?{key:E.rank[0].key,title:E.rank[0].title,v:E.rank[0].v}:null,top:E.rank.slice(0,10).map(z=>({key:z.key,title:z.title,v:z.v,r:z.r})),
+  rank:E.rank.map(z=>({r:z.r,key:z.key,title:z.title,v:z.v,gid:z.gid,prev:z.prev,re:z.re,cen:z.cen,mem:z.mem})),tv,codes:{...E.codes,pl:undefined},cdV:E.cdV,perfs:[],lineups:{}});
+ E.log.push({d:S.day,t:'close'});try{if(typeof rhMakeConcert=='function')rhMakeConcert(E)}catch(e){console.error(e)}ui.rhPop={k:'res',id:E.id}}
+const rhSig=E=>E.gid+'|'+E.cats.slice().sort().join(',')+'|'+(E.sis?1:0);
+function rhPrevRank(E){const H=rhS().hist.filter(h=>h.eid!=E.id&&h.gid==E.gid&&(h.gid+'|'+h.cats.slice().sort().join(',')+'|'+((h.groups||[]).length>1?1:0))==rhSig(E)).sort((a,b)=>b.closed-a.closed)[0];const M={};if(H)H.rank.forEach(z=>M[z.key]=z.r);return M}
+function rhEverRanked(E){const s=new Set();rhS().hist.forEach(h=>{if(h.eid!=E.id&&h.gid==E.gid)h.rank.forEach(z=>s.add(z.key))});return s}
+// daily: voting days are cast as soon as the day's sales are known; voting closes by itself after one month
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.rh)rhS().list.forEach(E=>{if(E.status=='voting'){rhVoteTo(E,S.day);if(S.day>E.close)rhClose(E)}})}catch(e){console.error(e)}return r}}
+// ---- pop-ups -----------------------------------------------------------------------------------------------------------------------
+{const f=render;render=function(){try{const z=ui.rhPop;if(z&&S&&!ui.mod&&!ui.ccsh&&!ui.awsh){ui.rhPop=null;const E=rhGet(z.id);if(E){const th=rhTh();
+ if(z.k=='open')ui.mod={t:'html',h:`<div class="rhpop"><div class="rhk">REQUEST HOUR</div><h2>${esc(E.name)}</h2><h3>${th?'เปิดโหวตแล้ว!':'Voting is now open!'}</h3><p>${th?`ซีดี “${esc(E.title||'')}” ที่ขายตั้งแต่วันนี้ถึง ${jd(E.close)} มีรหัสโหวต 1 รหัสต่อแผ่น แฟน ๆ เริ่มโหวตเพลงที่อยากดูอีกครั้งแล้ว`:`Every CD of “${esc(E.title||'')}” sold from today to ${jd(E.close)} carries one voting code. Fans are voting for the songs they want to see again.`}</p><div class="row rhact"><button class="b p" onclick="ui.mod=null;ui.rhe='${E.id}';ui.rht='vote';goView('rh')">${th?'ไปหน้าโหวต':'Open voting'}</button></div></div>`};
+ else if(z.k=='res'){const T=(E.rank||[]).slice(0,10);ui.mod={t:'html',h:`<div class="rhpop"><div class="rhk">REQUEST HOUR · ${th?'ผลการโหวต':'RESULTS'}</div><h2>${esc(E.name)}</h2><h3>${th?'อันดับ 1':'No. 1'}: ${esc(T[0]?T[0].title:'—')}</h3><ol class="rhtop">${T.map(z=>`<li><b>${esc(z.title)}</b> <small>${esc(z.gname)} · ${z.v.toLocaleString()} ${th?'โหวต':'votes'}</small></li>`).join('')}</ol><p class="st">${th?`อันดับทั้งหมด ${E.rank.length} เพลงถูกล็อกแล้ว และสร้างคอนเสิร์ต Request Hour ในระบบคอนเสิร์ตแล้ว`:`All ${E.rank.length} ranks are locked and the Request Hour concert has been created in the Concert system.`}</p><div class="row rhact"><button class="b p" onclick="ui.mod=null;ui.rhe='${E.id}';ui.rht='res';goView('rh')">${th?'ดูอันดับทั้งหมด':'Full ranking'}</button>${E.cc?`<button class="b s" onclick="ui.mod=null;ccOpen('${E.cc}','setup')">${th?'เปิดคอนเสิร์ต':'Open concert'}</button>`:''}</div></div>`}}}}}catch(e){console.error(e)}return f.apply(this,arguments)}}
+// ---- views -----------------------------------------------------------------------------------------------------------------------
+{const f=V.concert;V.concert=function(){let h=f.apply(this,arguments);try{if(!ccCur()){const b=`<button class="b s rhnav" onclick="ui.rhe=null;goView('rh')">🎤 Request Hour</button>`;const i=h.indexOf('<span style="flex:1"></span>');if(i>=0)h=h.slice(0,i)+b+h.slice(i)}}catch(e){console.error(e)}return h}}
+const rhFace=(id,sz)=>{const m=get(id);return m?`<span class="rhface" title="${esc(m.name)}">${ptc(m,sz)}</span>`:''};
+const rhNm=id=>{const m=get(id);return m?m.name+(m.status=='graduated'?rhT(' (graduated)',' (จบการศึกษา)'):''):'—'};
+V.rh=function(){const R=rhS(),E=rhCur(),th=rhTh();
+ const head=`<div class="row rhhead"><button class="b s" onclick="ui.rhe=null;ui.ccov='over';goView('concert')">← ${th?'คอนเสิร์ต':'Concerts'}</button><h2 class="ht">🎤 Request Hour <small class="st">リクエストアワー</small></h2></div>`;
+ if(!E){const act=R.list.filter(e=>e.status!='done'),H=R.hist.slice().sort((a,b)=>b.closed-a.closed);
+  return head+`<div class="c rhintro"><p>${th?'คอนเสิร์ตจัดอันดับประจำปีที่แฟน ๆ โหวตเพลงที่อยากดูอีกครั้ง ผลิตซิงเกิล Request Hour ซีดีที่ขายในเดือนโหวตมีรหัสโหวต 1 รหัสต่อแผ่น เมื่อปิดโหวต อันดับจะถูกล็อกและสร้างคอนเสิร์ตนับถอยหลังให้อัตโนมัติ':'An annual ranking concert where fans vote for the songs they want to see performed again. Produce the Request Hour single — each CD sold during the voting month carries one voting code. When voting closes the ranking is locked and a countdown concert is created.'}</p><button class="b p" onclick="rhNew()">✦ ${th?'สร้าง Request Hour':'Create Request Hour'}</button></div>`+
+   (act.length?`<h3>${th?'กำลังดำเนินการ':'In progress'}</h3>`+act.map(rhCard).join(''):'')+rhHistHtml(H)}
+ const T=[['setup',th?'ตั้งค่า':'Setup'],['vote',th?'โหวต':'Voting'],['res',th?'ผลอันดับ':'Ranking'],['hist',th?'ประวัติ':'History']],tab=ui.rht||'setup';
+ let body='';if(tab=='setup')body=rhSetupHtml(E);else if(tab=='vote')body=rhVoteHtml(E);else if(tab=='res')body=rhResHtml(E);else body=rhHistHtml(rhS().hist.filter(h=>h.gid==E.gid).sort((a,b)=>b.closed-a.closed));
+ return head+`<div class="c rhev"><div class="rhevt"><b>${esc(E.name)}</b><span class="tag">${th?RH_ST_TH[E.status]:RH_ST[E.status]}</span></div>${rhStatsHtml(E)}<div class="row cctabs">${T.map(([k,n])=>`<button class="b s ${tab==k?'p':''}" onclick="ui.rht='${k}';render()">${n}</button>`).join('')}<span style="flex:1"></span><button class="b s" onclick="ui.rhe=null;render()">${th?'ทั้งหมด':'All events'}</button></div></div>`+body};
+function rhCard(E){const th=rhTh();return`<div class="c rhcard" onclick="ui.rhe='${E.id}';ui.rht='${E.status=='voting'?'vote':E.status=='setup'||E.status=='single'?'setup':'res'}';render()"><b>${esc(E.name)}</b><span class="tag">${th?RH_ST_TH[E.status]:RH_ST[E.status]}</span><div class="st">${esc((rhGrp(E.gid)||{}).name||'')} · ${E.cats.map(rhCatName).join(' + ')} · Best ${E.size} · ${E.nperf} ${th?'รอบ':'performance(s)'} · ${th?'คอนเสิร์ต':'concert'} ${jd(E.date)}${E.status=='voting'?` · ${th?'ปิดโหวต':'voting closes'} ${jd(E.close)}`:''}</div></div>`}
+function rhStatsHtml(E){const x=rhX(E),th=rhTh();if(!x)return'';const tv=E.status=='voting'?E.codes.fanUsed+E.codes.plUsed:Object.values(E.votes||{}).reduce((a,b)=>a+b,0);
+ const K=(a,b)=>`<div class="rhk2"><small>${a}</small><b>${b}</b></div>`;
+ return`<div class="rhstats">${K(th?'ยอดขายซีดีทั้งหมด':'Total CD sales',(x.sales||0).toLocaleString())}${K(th?'ขายในช่วงโหวต':'Sold during voting',E.cdV.toLocaleString())}${K(th?'รหัสโหวตที่ออก':'Voting codes issued',(E.codes.fanIss+E.codes.plIss).toLocaleString())}${K(th?'รหัสที่ใช้แล้ว':'Voting codes used',(E.codes.fanUsed+E.codes.plUsed).toLocaleString())}${K(th?'คะแนนโหวตรวม':'Total votes received',tv.toLocaleString())}</div>
+ <p class="st">${th?`ซิงเกิล “${esc(x.title)}” · โหวต ${jd(E.open)} – ${jd(E.close)}${E.status!='voting'?` · รหัสหมดอายุ ${((E.check||{}).expired||0).toLocaleString()} รหัส · ซีดีที่ขายหลังปิดโหวตไม่มีผลต่ออันดับ`:''}`:`Single “${esc(x.title)}” · voting ${jd(E.open)} – ${jd(E.close)}${E.status!='voting'?` · ${((E.check||{}).expired||0).toLocaleString()} code(s) expired unused · CDs sold after voting closed never affect the ranking`:''}`}</p>`}
+function rhSetupHtml(E){const th=rhTh(),ed=rhEditable(E),dis=ed?'':'disabled',g=rhGrp(E.gid),P=rhPool(E),split=rhSplit(E.size,E.nperf),er=rhErrs(E),pr=rhPerfRanks(E.size,E.nperf),dd=dayDate(E.date);
+ const iso=`${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`;
+ const cats=['all','sa','cpl','th'].map(k=>`<label class="rhchk"><input type="checkbox" ${E.cats.includes(k)?'checked':''} ${dis} onchange="rhSet('cat','${k}')"> ${rhCatName(k)}${k=='all'?` <small class="st">(${th?'ค่าเริ่มต้น':'default'})</small>`:''}</label>`).join('');
+ let act='';if(E.status=='setup')act=`<button class="b p" onclick="rhLink('${E.id}')">${th?'ใช้ซิงเกิลที่กำลังวางแผนเป็นซิงเกิล Request Hour':'Use the single being planned as the Request Hour single'}</button><button class="b s" onclick="rhDel('${E.id}')">${th?'ลบ':'Delete'}</button><p class="st">${th?'เริ่มวางแผนซิงเกิลใหม่ที่หน้า Single Production ก่อน แล้วกลับมากดปุ่มนี้ เดือนโหวตเริ่มวันวางจำหน่าย':'Start planning a new single in Single Production first, then link it here. The voting month starts on its release day.'}</p>`;
+ else if(E.status=='single')act=`<button class="b p" onclick="goView('music')">${th?'ไปที่การผลิตซิงเกิล':'Go to Single Production'}</button><button class="b s" onclick="rhUnlink('${E.id}')">${th?'ยกเลิกการเชื่อมซิงเกิล':'Unlink the single'}</button>`;
+ else if(E.cc)act=`<button class="b p" onclick="ccOpen('${E.cc}','setup')">${th?'เปิดคอนเสิร์ต Request Hour':'Open the Request Hour concert'}</button>`;
+ return`<div class="c rhsetup"><label>${th?'ชื่องาน':'Event name'}<input value="${esc(E.name)}" ${dis} maxlength="90" onchange="rhSet('name',this.value)"></label><p class="st">${th?'ปล่อยว่างเพื่อใช้ชื่ออัตโนมัติ':'Leave empty for the automatic name'}: ${esc(rhAutoName(E))}</p>
+ <h4>${th?'หมวดการจัดอันดับ':'Ranking category'}</h4><div class="rhcats">${cats}</div><p class="st">${th?`เพลงที่มีสิทธิ์: ${P.length} เพลง (เฉพาะเพลงที่วางจำหน่ายแล้ว ไม่นับซ้ำ)`:`Eligible songs: ${P.length} (officially released only, never counted twice)`}</p>
+ <div class="rhgrid"><label>${th?'จำนวนเพลงในอันดับ':'Ranked songs'} (10–200)<input type="number" min="10" max="200" value="${E.size}" ${dis} onchange="rhSet('size',this.value)"></label>
+ <label>${th?'จำนวนรอบการแสดง':'Performances'} (1–5)<select ${dis} onchange="rhSet('nperf',this.value)">${[1,2,3,4,5].map(n=>`<option ${n==E.nperf?'selected':''}>${n}</option>`).join('')}</select></label>
+ <label>${th?'วันคอนเสิร์ต':'Concert date'}<input type="date" value="${iso}" ${E.status=='setup'||E.status=='single'||E.status=='voting'?'':'disabled'} onchange="rhSet('date',this.value)"></label></div>
+ <div class="rhsplit">${pr.map(([a,b],i)=>`<span><b>${th?'รอบ':'Show'} ${i+1}</b> #${a}–#${b} <small>(${split[i]} ${th?'เพลง':'songs'})</small></span>`).join('')}</div>
+ ${g&&g.type=='main'?`<label class="rhchk"><input type="checkbox" ${E.sis?'checked':''} ${dis} onchange="rhSet('sis',this.checked)"> ${th?'รวมเพลงของวงน้องสาว':'Include Sister Group Songs'} <small class="st">(${(S.groups||[]).filter(x=>x.type=='sister'&&!x.dis).map(x=>esc(x.name)).join(', ')||'—'})</small></label><p class="st">${th?'เมื่อเปิด แฟนวงน้องสาวซื้อซิงเกิลนี้เพื่อโหวตเพลงของวงตัวเองได้ ทุกโหวตรวมในอันดับเดียวกัน':'When ON, sister-group fans buy this single to vote for their own groups\' songs; all valid votes count toward the same ranking.'}</p>`:`<p class="st">${th?'วงน้องสาวโหวตได้เฉพาะเพลงของวงตัวเอง และเพลงของวงพี่ที่วงนี้เคยแสดงใน Revival Stage ของตัวเอง':'A sister group ranks only its own songs, plus senior-group songs it has performed in its own Revival Stage (ownership never changes).'}</p>`}
+ ${er.length?`<div class="thwarn">${er.map(esc).join('<br>')}</div>`:''}<div class="row rhact">${act}</div></div>`}
+function rhRowSong(E,z,canVote){const M=rhMeta(z),th=rhTh(),grp=rhGrp(z.gid);const fc=M.mem.slice(0,10).map(id=>rhFace(id,26)).join('')+(M.mem.length>10?`<small>+${M.mem.length-10}</small>`:'');
+ return`<div class="rhsong"><div class="rhst"><b>${esc(z.title)}</b><span class="tag">${th?RH_KIND_TH[M.kind]:RH_KIND[M.kind]}${M.unit?' · '+esc(M.unit):''}</span><div class="st">${esc(M.gname)}${M.teamName&&!String(M.origin).startsWith(M.teamName)?' · '+esc(M.teamName):''}${M.teamGone?th?' (ยุบทีมแล้ว)':' (disbanded)':''} · ${esc(M.origin)}${z.via&&z.via.length&&grp&&z.via.some(v=>v!=z.gid)?` · ${th?'แสดงใน Revival โดย':'Revival by'} ${z.via.filter(v=>v!=z.gid).map(v=>esc((rhGrp(v)||{}).name||'')).join(', ')}`:''}</div>
+ <div class="st">${th?'เซ็นเตอร์ดั้งเดิม':'Original center'}: <b>${M.cen.length?M.cen.map(id=>esc(rhNm(id))).join(' & '):th?'ไม่มี':'none'}</b></div><div class="rhfaces">${fc}</div></div>
+ ${canVote?`<div class="rhvote"><input type="number" min="1" value="1" id="rhv_${z.key.replace(':','_')}"><button class="b p" onclick="rhVote('${E.id}','${z.key}',+document.getElementById('rhv_${z.key.replace(':','_')}').value)">${th?'โหวต':'Vote'}</button>${E.pv[z.key]?`<small>${th?'โหวตแล้ว':'you'}: ${E.pv[z.key]}</small>`:''}</div>`:''}</div>`}
+function rhVoteHtml(E){const th=rhTh();if(E.status=='setup'||E.status=='single')return`<div class="c"><p>${th?'การโหวตเริ่มในวันวางจำหน่ายซิงเกิล Request Hour':'Voting starts on the release day of the Request Hour single.'}</p></div>`;
+ const open=rhVotingOpen(E),left=rhPlCodesLeft(E),q=String(ui.rhq||'').toLowerCase(),fc=ui.rhfc||'',fg=ui.rhfg||'';
+ let L=rhPool(E).filter(z=>(!q||String(z.title).toLowerCase().includes(q))&&(!fc||z.cats.has(fc))&&(!fg||String(z.gid)==fg));const pg=Math.max(0,ui.rhpg|0),per=25,np=Math.max(1,Math.ceil(L.length/per));const page=Math.min(pg,np-1);
+ const codes=E.codes.pl.slice(-3).map(([a,b])=>`${rhCode(E,a)}${b>a?` … ${rhCode(E,b)}`:''}`).join('<br>');
+ return`<div class="c rhvoteh"><div class="row"><div><b>${th?'รหัสโหวตที่เหลือ':'Your unused voting codes'}: ${left.toLocaleString()}</b><div class="st">${th?'1 รหัส = 1 โหวต · โหวตเพลงเดิมซ้ำหรือหลายเพลงได้ · รหัสที่ไม่ได้ใช้หมดอายุเมื่อปิดโหวต':'1 code = 1 vote · vote for the same song again or for different songs · unused codes expire when voting closes'}</div>${codes?`<div class="rhcodes">${codes}</div>`:''}</div><span style="flex:1"></span>
+ ${rhX(E)&&(open||E.status=='closed'||E.status=='concert')?`<div class="rhbuy">${[1,10,100].map(n=>`<button class="b s" onclick="rhBuy('${E.id}',${n})">${th?'ซื้อซีดี':'Buy CD'} ×${n} <small>${yen(n*RH_CD_PRICE)}</small></button>`).join('')}</div>`:''}</div>
+ <p class="st">${open?(th?`เปิดโหวตถึง ${jd(E.close)} — ระหว่างโหวตจะไม่แสดงอันดับหรือคะแนนของแต่ละเพลง`:`Voting is open until ${jd(E.close)} — the live ranking and song totals stay secret until voting closes.`):(th?'ปิดโหวตแล้ว ซีดีที่ซื้อตอนนี้ไม่มีรหัสโหวตที่ใช้ได้':'Voting has closed. CDs bought now carry no usable voting code.')}</p>
+ <div class="row rhflt"><input placeholder="${th?'ค้นหาเพลง':'Search songs'}" value="${esc(ui.rhq||'')}" onchange="ui.rhq=this.value;ui.rhpg=0;render()"><select onchange="ui.rhfc=this.value;ui.rhpg=0;render()"><option value="">${th?'ทุกหมวด':'All categories'}</option>${['sa','cpl','th'].map(k=>`<option value="${k}" ${fc==k?'selected':''}>${rhCatName(k)}</option>`).join('')}</select>${rhGroups(E).length>1?`<select onchange="ui.rhfg=this.value;ui.rhpg=0;render()"><option value="">${th?'ทุกวง':'All groups'}</option>${rhGroups(E).map(g=>`<option value="${g.id}" ${fg==String(g.id)?'selected':''}>${esc(g.name)}</option>`).join('')}</select>`:''}<span class="st">${L.length} ${th?'เพลง':'songs'}</span></div></div>
+ ${L.slice(page*per,page*per+per).map(z=>rhRowSong(E,z,open&&left>0)).join('')}
+ ${np>1?`<div class="row rhpg">${page>0?`<button class="b s" onclick="ui.rhpg=${page-1};render()">‹</button>`:''}<span>${page+1} / ${np}</span>${page<np-1?`<button class="b s" onclick="ui.rhpg=${page+1};render()">›</button>`:''}</div>`:''}`}
+function rhChg(z){const th=rhTh();if(z.prev==null)return z.re?`<span class="rhre">RE</span>`:`<span class="rhnew">NEW</span>`;const d=z.prev-z.r;return d>0?`<span class="rhup">↑${d}</span>`:d<0?`<span class="rhdn">↓${-d}</span>`:`<span class="rhsame">→</span>`}
+function rhResHtml(E){const th=rhTh();if(!E.rank)return`<div class="c"><p>${th?'อันดับจะประกาศเมื่อปิดโหวต':'The ranking is announced when voting closes.'}</p></div>`;
+ const pr=rhPerfRanks(E.rank.length,E.nperf);return`<div class="c rhres"><p class="st">${th?`ผลการโหวตถูกล็อกถาวร ตรวจสอบรหัส ${E.check.valid.toLocaleString()} รหัส = ${E.check.tv.toLocaleString()} โหวต`:`Final and locked. ${E.check.valid.toLocaleString()} valid codes = ${E.check.tv.toLocaleString()} votes.`}${E.cc?` <button class="b s" onclick="ccOpen('${E.cc}','setup')">${th?'เปิดคอนเสิร์ต':'Open concert'}</button>`:''}</p>
+ ${pr.map(([a,b],i)=>`<h4>${th?'รอบที่':'Performance'} ${i+1} · #${a}–#${b}</h4><table class="rhtab"><tbody>${E.rank.filter(z=>z.r<=a&&z.r>=b).sort((p,q)=>q.r-p.r).map(z=>`<tr class="${z.r<=10?'top':''}"><td class="rk">#${z.r}</td><td>${rhChg(z)}</td><td><b>${esc(z.title)}</b><div class="st">${esc(z.gname)}${z.team&&!String(z.origin).startsWith(z.team)?' · '+esc(z.team):''} · ${esc(z.origin)}${z.unit?' · '+esc(z.unit):''}</div></td><td class="ctr">${z.cen.map(id=>rhFace(id,28)).join('')}</td><td class="num">${z.v.toLocaleString()}</td></tr>`).join('')}</tbody></table>`).join('')}
+ ${(E.out||[]).length?`<details><summary>${th?`เพลงนอกอันดับ (${E.out.length})`:`Outside the ranking (${E.out.length})`}</summary><p class="st">${E.out.slice(0,60).map(z=>`${esc(z.title)} (${z.v.toLocaleString()})`).join(' · ')}</p></details>`:''}</div>`}
+function rhHistHtml(H){const th=rhTh();if(!H.length)return`<div class="c"><p class="st">${th?'ยังไม่มีประวัติ Request Hour':'No Request Hour history yet.'}</p></div>`;
+ const songs={};H.forEach(h=>h.rank.forEach(z=>{(songs[z.key]=songs[z.key]||{t:z.title,L:[]}).L.push([h.year,z.r])}));
+ const multi=Object.values(songs).filter(s=>s.L.length>1).sort((a,b)=>Math.min(...a.L.map(x=>x[1]))-Math.min(...b.L.map(x=>x[1]))).slice(0,15);
+ return`<h3>${th?'ประวัติ Request Hour':'Request Hour history'}</h3>`+H.map(h=>`<details class="c rhh"><summary><b>${h.year}</b> · ${esc(h.name)} · ${th?'อันดับ 1':'No. 1'}: <b>${esc(h.win?h.win.title:'—')}</b></summary><p class="st">${h.groups.map(g=>esc(g.name)).join(' + ')} · ${h.cats.map(rhCatName).join(' + ')} · Best ${h.size} · ${h.tv.toLocaleString()} ${th?'โหวต':'votes'}${h.single?` · ${th?'ซิงเกิล':'single'} “${esc(h.single.title)}”`:''}${h.perfs.length?` · ${h.perfs.length} ${th?'รอบที่แสดงแล้ว':'performance(s) held'}`:''}</p>
+ <ol class="rhtop">${h.rank.map(z=>`<li value="${z.r}"><b>${esc(z.title)}</b> <small>${z.v.toLocaleString()} ${rhChg(z)}${h.lineups[z.key]?` · ${th?'ผู้แสดง':'performed by'} ${h.lineups[z.key].slice(0,6).map(id=>esc(rhNm(id))).join(', ')}${h.lineups[z.key].length>6?'…':''}`:''}</small></li>`).join('')}</ol></details>`).join('')+
+ (multi.length?`<div class="c"><h4>${th?'เพลงที่ติดอันดับหลายปี':'Songs ranked in several years'}</h4>${multi.map(s=>`<div class="row"><b>${esc(s.t)}</b><span class="st">${s.L.sort((a,b)=>a[0]-b[0]).map(([y,r])=>`${y}: #${r}`).join(' · ')}</span></div>`).join('')}</div>`:'')}
+// Single Production: show which Request Hour the single belongs to
+{const f=V.music;if(f)V.music=function(){let h=f.apply(this,arguments);try{const p=S.pj,E=p&&p.rh?rhGet(p.rh):null;if(E)h=`<div class="c rhbanner">🎤 <b>${rhT('Request Hour single','ซิงเกิล Request Hour')}</b> · ${esc(E.name)} · ${rhT('every CD sold during the voting month (from release day) carries one voting code.','ซีดีที่ขายในเดือนโหวต (นับจากวันวางจำหน่าย) มีรหัสโหวต 1 รหัสต่อแผ่น')}</div>`+h}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Request Hour concert (built on the existing Concert system)
+// -------------------------------------------------------------------------------------
+//  · When voting closes a "Request Hour" concert is created in the Concert system: the event's date,
+//    its performances (≤ 50 ranked songs each, lowest ranks first) and one setlist per performance
+//    holding the ranked songs in countdown order. Ranked songs are LOCKED (they cannot be removed,
+//    replaced, reordered or moved to another performance); the producer can still edit members,
+//    Center, formation, costumes, add MC corners and add Encore songs (Encore songs never get a rank).
+//  · Defaults: the ORIGINAL performance — original members & center (Theater songs: the original
+//    stage / unit lineup, never the Revival lineup) and the original costume ("Original song costume").
+//    A graduated original member's place is taken by a current member (Revival performer of that
+//    song, then a member of the original team, then the most popular member).
+//  · Big screen: a large concert stage (wide stage, LED wall and side screens, lighting rig, penlight
+//    audience) with a two-sided Hina-dan BEHIND the stage (2 × 50 tiered seats). A member sits there
+//    after performing, wearing the costume of the LAST song she performed in that show, and leaves
+//    before rank N+2 begins when her next song is rank N (e.g. next #15 → she leaves before #17).
+//    Seats never overlap; with more than 100 members the absent members' seats are reused and the
+//    rest wait backstage. Seated members react to each song (original members, former centers,
+//    close friends, team mates…).
+//  · After ranks #3, #2 and #1 the original center (or an original member / current performer) gives
+//    a speech that depends on the song's story.
+// =====================================================================================
+CC_TYPE.rh='Request Hour';
+{const f=ccTypeF;ccTypeF=function(C){return C&&C.type=='rh'?1.12:f.apply(this,arguments)}}
+const rhOfC=C=>C&&C.rh?rhGet(C.rh):null;
+const RH_SLOTS={1:[[0,'e']],2:[[0,'e'],[1,'e']],3:[[0,'e'],[1,'e'],[2,'e']],4:[[0,'e'],[1,'a'],[1,'e'],[2,'e']],5:[[0,'e'],[1,'a'],[1,'e'],[2,'a'],[2,'e']]};
+function rhVenue(){const L=Object.values(CC_V||{});const pick=c=>L.filter(v=>v.cat==c).sort((a,b)=>(b.cap.seat||b.cap.stand||0)-(a.cap.seat||a.cap.stand||0))[0];return pick('arena')||pick('lhall')||pick('dome')||L[0]||null}
+// a current member for an empty original place: Revival performer → original team → popularity
+function rhFill(C,it,M){const used=new Set(it.pos.map(z=>z.m).filter(x=>x!=null)),P=new Set(C.parts),ok=id=>{const m=get(id);return m&&P.has(id)&&m.status!='graduated'&&!used.has(id)};
+ const rev=[];try{rhRevivals(it.gid+':'+it.song).forEach(R=>R.mem.forEach(id=>rev.push(id)))}catch(e){}
+ const team=M&&M.team?S.members.filter(m=>m.tid==M.team).map(m=>m.id):[],grp=S.members.filter(m=>(m.group==it.gid||(typeof gsGid=='function'&&gsGid(m)==it.gid))).sort((a,b)=>(b.pop||0)-(a.pop||0)).map(m=>m.id);
+ const Q=[...rev,...team,...grp].filter((id,i,a)=>a.indexOf(id)==i);
+ it.pos.forEach(z=>{if(z.m!=null)return;const id=Q.find(ok);if(id==null)return;z.m=id;z.rf=1;used.add(id)})}
+function rhMakeConcert(E){if(!E||E.cc||!E.rank||!E.rank.length)return null;const X=ccS(),id='cc'+(++X.seq),V=rhVenue(),G=rhGroups(E),gids=new Set(G.map(g=>g.id));
+ const C={id,name:E.name,type:'rh',host:E.gid,anni:null,grad:[],vid:V?V.id:null,vcfg:'seat',start:Math.max(E.date,S.day+21),pf:[],parts:[],sets:{},snap:{},status:'plan',created:S.day,log:[],rh:E.id};
+ C.parts=S.members.filter(m=>m.status!='graduated'&&(isAct(m)||m.status=='trainee')&&gids.has(typeof gsGid=='function'?gsGid(m):m.group)).map(m=>m.id);
+ const PR=rhPerfRanks(E.rank.length,E.nperf);
+ PR.forEach(([hi,lo],i)=>{const sid='rh'+(i+1)+'_'+Date.now().toString(36).slice(-4),items=[];
+  for(let r=hi;r>=lo;r--){const z=E.rank.find(q=>q.r==r);if(!z)continue;const o=ccSong(z.gid,z.id);if(!o)continue;
+   const it={id:ccIid(),k:'song',gid:z.gid,song:z.id,title:o.title,pos:ccCopyPos(C,o),orig:ccOrigPos(o).map(q=>({m:q.m,r:q.r,c:q.c})),cz:{mode:'orig'},rh:{eid:E.id,r,v:z.v}};
+   try{if(o.th)ccThApply(C,it)}catch(e){console.error(e)}try{rhFill(C,it,rhMeta({key:z.key,gid:z.gid,id:z.id,title:z.title,cats:new Set(),via:[]}))}catch(e){console.error(e)}items.push(it)}
+  C.sets[sid]={id:sid,name:`${rhT('Show','รอบ')} ${i+1} · #${hi}–#${lo}`,items,rh:1};
+  const sl=(RH_SLOTS[PR.length]||RH_SLOTS[1])[i];const p=ccPfNew(C,sl[0],sl[1]);p.set=sid;p.rhR=[hi,lo];C.pf.push(p)});
+ try{ccRenum(C)}catch(e){}X.list.push(C);E.cc=C.id;E.status='concert';E.log.push({d:S.day,t:'concert',cc:C.id});
+ try{const h=rhS().hist.find(x=>x.eid==E.id);if(h)h.cc=C.id}catch(e){}return C}
+// ---- locks: ranked songs keep their place; Encore songs are extra ---------------------------------------------------------------
+const rhLockMsg=()=>rhT('Ranked songs are fixed by the fans\' votes — they cannot be removed, replaced or reordered. You can edit members, Center, formation and costumes, add MC corners and Encore songs.','เพลงในอันดับถูกกำหนดโดยผลโหวตของแฟน ลบ แทนที่ หรือสลับลำดับไม่ได้ แต่แก้สมาชิก เซ็นเตอร์ ฟอร์เมชัน ชุด เพิ่ม MC และเพลงอังกอร์ได้');
+const rhCi=()=>{const C=ccCur();return C&&C.rh?C:null};
+{const f=ccItemDel;ccItemDel=function(iid){const C=rhCi();if(C){const r=ccItem(C,iid);if(r&&r.it.rh)return toast(rhLockMsg(),'err')}return f.apply(this,arguments)}}
+{const f=ccItemMove;ccItemMove=function(iid,dir){const C=rhCi();if(C){const r=ccItem(C,iid);if(r){const L=r.s.items,i=L.indexOf(r.it),j=i+dir,o=L[j];if(r.it.rh&&o&&(o.rh||o.enc))return toast(rhLockMsg(),'err');if(o&&o.rh&&(r.it.enc))return toast(rhLockMsg(),'err');if(r.it.rh&&!o)return}}return f.apply(this,arguments)}}
+{const f=ccAddSong;ccAddSong=function(key){const C=rhCi(),s=C&&C.sets[ui.ccs],n=s?s.items.length:0;const r=f.apply(this,arguments);if(C&&s&&s.items.length>n){const it=s.items[s.items.length-1];it.enc=true;toast(rhT('Added as an Encore song (Encore songs have no rank).','เพิ่มเป็นเพลงอังกอร์แล้ว (เพลงอังกอร์ไม่มีอันดับ)'));render()}return r}}
+if(typeof ccEncTog=='function'){const f=ccEncTog;ccEncTog=function(iid){const C=rhCi();if(C){const r=ccItem(C,iid);if(r&&(r.it.rh||r.it.enc))return toast(rhT('In a Request Hour concert ranked songs stay ranked and added songs stay Encore songs.','ในคอนเสิร์ต Request Hour เพลงในอันดับคงเป็นเพลงในอันดับ และเพลงที่เพิ่มเป็นเพลงอังกอร์'),'err')}return f.apply(this,arguments)}}
+{const f=ccSetDel;ccSetDel=function(sid){const C=rhCi();if(C&&C.sets[sid]&&C.sets[sid].rh)return toast(rhLockMsg(),'err');return f.apply(this,arguments)}}
+{const f=ccPfAdd;ccPfAdd=function(){if(rhCi())return toast(rhT('The number of performances follows the Request Hour settings.','จำนวนรอบเป็นไปตามการตั้งค่า Request Hour'),'err');return f.apply(this,arguments)}}
+{const f=ccPfDel;ccPfDel=function(){if(rhCi())return toast(rhT('The number of performances follows the Request Hour settings.','จำนวนรอบเป็นไปตามการตั้งค่า Request Hour'),'err');return f.apply(this,arguments)}}
+{const f=ccPfSet;ccPfSet=function(pid,k,v){const C=rhCi();if(C&&k=='set')return toast(rhLockMsg(),'err');return f.apply(this,arguments)}}
+{const f=ccLibUse;ccLibUse=function(){if(rhCi())return toast(rhLockMsg(),'err');return f.apply(this,arguments)}}
+{const f=ccSet;ccSet=function(k,v){const C=ccCur();if(C&&C.rh&&(k=='type'||k=='host'))return toast(rhT('A Request Hour concert keeps its type and host group.','คอนเสิร์ต Request Hour คงประเภทและวงเจ้าภาพไว้'),'err');if(C&&!C.rh&&k=='type'&&v=='rh')return toast(rhT('Request Hour concerts are created from the Request Hour page.','คอนเสิร์ต Request Hour สร้างจากหน้า Request Hour'),'err');return f.apply(this,arguments)}}
+// setlist rows: show the rank and the lock
+{const f=ccSongRow;ccSongRow=function(C,s,it){let h=f.apply(this,arguments);try{if(C&&C.rh&&it&&it.rh){const b=`<span class="rhrk" title="${esc(rhLockMsg())}">🔒 #${it.rh.r}</span>`;const i=h.indexOf('>');if(i>0)h=h.slice(0,i+1)+b+h.slice(i+1)}}catch(e){}return h}}
+{const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{const E=rhOfC(C);if(E)h=`<div class="c rhbanner">🎤 <b>${esc(E.name)}</b> · ${rhLockMsg()}</div>`+h}catch(e){}return h}}
+// ---- Hina-dan plan for one performance ---------------------------------------------------------------------------------------
+const RH_SEATS=50,RH_ROWS=5,RH_COLS=10;
+// seat order: front tier first, centre seats first, alternating left / right blocks
+const RH_SEAT_ORDER=(()=>{const L=[];for(let r=0;r<RH_ROWS;r++){const cols=[];for(let k=0;k<RH_COLS;k++)cols.push(k);cols.sort((a,b)=>Math.abs(a-4.5)-Math.abs(b-4.5));cols.forEach(c=>{L.push([0,r,9-c]);L.push([1,r,c])})}return L})();
+let RH_HP={};
+function rhPerfIds(C,p,it){const out=((p&&p.res)||{}).out||{};return(it.pos||[]).map(z=>z.m).filter(m=>m!=null&&!out[m]&&ccMem(m))}
+function rhHinaPlan(C,p,set){const songs=[];set.items.forEach((it,idx)=>{if(it.k=='song')songs.push({it,idx,P:rhPerfIds(C,p,it)})});
+ const key=C.id+'|'+(p&&p.id)+'|'+set.id+'|'+songs.map(s=>s.P.join(',')).join(';');if(RH_HP[key])return RH_HP[key];if(Object.keys(RH_HP).length>12)RH_HP={};
+ const J={};songs.forEach((s,j)=>s.P.forEach(m=>(J[m]=J[m]||[]).push(j)));
+ const seatOf={},taken=new Map(),freeSeat=()=>RH_SEAT_ORDER.find(s=>!taken.has(s.join(',')));
+ const states=songs.map((s,j)=>{const perf=new Set(s.P),want=[];
+  for(const m in J){const L=J[m],last=L.filter(a=>a<j).pop();if(last==null||perf.has(+m))continue;const next=L.find(b=>b>j);if(next!=null&&j>=next-2)continue;want.push({m:+m,last,next:next??null})}
+  const wantSet=new Set(want.map(w=>w.m));
+  // members who are away keep their seat while there is room; with more than 100 members the seats of absent members are reused
+  want.sort((a,b)=>(seatOf[a.m]?0:1)-(seatOf[b.m]?0:1)||a.last-b.last);const seated=[],wait=[];
+  want.forEach(w=>{let st=seatOf[w.m];if(!st){st=freeSeat();if(!st){const ev=[...taken.entries()].find(([k,mm])=>!wantSet.has(mm));if(ev){taken.delete(ev[0]);delete seatOf[ev[1]];st=ev[0].split(',').map(Number)}}if(!st){wait.push(w.m);return}seatOf[w.m]=st;taken.set(st.join(','),w.m)}seated.push({m:w.m,seat:st,czIdx:songs[w.last].idx})});
+  return{idx:s.idx,seated,wait,perf:s.P}});
+ const R={songs,states};RH_HP[key]=R;return R}
+// how a seated member reacts to the song being performed
+function rhReact(C,it,m,perf,rank){const r=mulb(rhSeedN(C.id+'|'+it.id+'|'+m.id)),orig=(it.orig||[]).filter(z=>z.m!=null),wasC=orig.some(z=>z.m==m.id&&z.c),wasM=orig.some(z=>z.m==m.id);
+ let bond=0;try{if(typeof capBond=='function')perf.forEach(id=>{const b=capBond(m.id,id);if(b!=null&&b>bond)bond=b})}catch(e){}
+ const cen=(it.pos||[]).find(z=>z.c&&z.m!=null),cm=cen&&ccMem(cen.m),sameTeam=cm&&cm.tid&&cm.tid==m.tid;
+ if(wasC)return r()<.55?{k:'own',pose:3,ex:6,ic:'🥹',stand:1}:{k:'own',pose:15,ex:3,ic:'⭐',stand:1};
+ if(wasM)return r()<.5?{k:'nost',pose:0,ex:6,ic:'😢'}:{k:'nost',pose:3,ex:1,ic:'💗'};
+ if(rank<=3)return{k:'top',pose:15,ex:3,ic:r()<.5?'🙌':'👏',stand:1};
+ if(bond>=75)return{k:'friend',pose:r()<.5?15:1,ex:3,ic:'📣',stand:r()<.4?1:0};
+ if(sameTeam&&r()<.6)return{k:'team',pose:1,ex:11,ic:'',pen:1};
+ const L=[{k:'clap',pose:5,ex:1,ic:'👏'},{k:'pen',pose:1,ex:2,ic:'',pen:1},{k:'sing',pose:0,ex:2,ic:'🎵'},{k:'smile',pose:0,ex:2,ic:''},{k:'laugh',pose:0,ex:1,ic:'😆'},{k:'wow',pose:0,ex:5,ic:'😮'},{k:'hype',pose:15,ex:3,ic:'✨',stand:r()<.3?1:0},{k:'pen',pose:6,ex:11,ic:'',pen:1}];
+ return L[Math.floor(r()*L.length)]}
+// ---- the large Request Hour stage ----------------------------------------------------------------------------------------------
+function rhStageSvg(C,p,set,idx,W=1400,H=760){const it=set.items[idx],E=rhOfC(C),plan=rhHinaPlan(C,p,set),stt=plan.states.find(s=>s.idx==idx)||{seated:[],perf:[]},id='rh'+(++PTC[0]);
+ const pos=(it.pos||[]).filter(z=>z.m!=null&&stt.perf.includes(z.m)),cds={};pos.forEach(z=>{cds[z.m]=ccCzFor(C,set,idx,z.m)});
+ const P=ccPal(Object.values(cds),it.song+it.id),style=(ccLedPlan(set)||{})[it.id]||'rays',r=mulb(rhSeedN(C.id+it.id)),rank=it.rh?it.rh.r:null;
+ let s=`<defs><linearGradient id="bg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05030c"/><stop offset=".55" stop-color="${czHsl(260,40,10)}"/><stop offset="1" stop-color="#0a0614"/></linearGradient>
+ <linearGradient id="fl${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2140"/><stop offset="1" stop-color="#0e0a18"/></linearGradient><linearGradient id="lg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.bg}"/><stop offset="1" stop-color="${P.bg2}"/></linearGradient>
+ <filter id="gl${id}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter><clipPath id="cl${id}"><rect x="500" y="70" width="400" height="230" rx="4"/></clipPath>
+ <radialGradient id="sp${id}" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="${P.c}" stop-opacity=".35"/><stop offset="1" stop-color="${P.c}" stop-opacity="0"/></radialGradient></defs>
+ <rect width="${W}" height="${H}" fill="url(#bg${id})"/>`;
+ // roof truss with moving heads
+ s+=`<rect x="20" y="10" width="${W-40}" height="14" fill="#2b2740"/><rect x="20" y="10" width="${W-40}" height="3" fill="${P.a}" opacity=".7"/>`;for(let i=0;i<22;i++){const x=40+i*(W-80)/21;s+=`<line x1="${x}" y1="10" x2="${x+((i%2)?14:-14)}" y2="24" stroke="#4a4466" stroke-width="2"/><rect x="${x-7}" y="24" width="14" height="10" rx="2" fill="#1c1a28"/><circle cx="${x}" cy="36" r="5" fill="${i%3?P.c:P.a}"/>`}
+ for(let i=0;i<14;i++){const x=60+i*(W-120)/13,tx=x+(r()-.5)*380;s+=`<path d="M${x-5} 38L${tx-60} ${H-150}H${tx+60}L${x+5} 38Z" fill="${i%2?P.a:P.b}" opacity=".08"/>`}
+ // side towers + side screens
+ [[18,1],[W-118,0]].forEach(([x,k])=>{s+=`<rect x="${x}" y="40" width="100" height="${H-200}" fill="#141222"/>${[0,1,2,3,4,5].map(i=>`<rect x="${x+8}" y="${60+i*80}" width="84" height="4" fill="${P.a}" opacity=".5"/>`).join('')}`});
+ const lead=pos.find(z=>z.c)||pos[0],lm=lead&&ccMem(lead.m);
+ [[26,120],[W-110,120]].forEach(([x,y],k)=>{s+=`<rect x="${x-4}" y="${y-4}" width="92" height="148" rx="4" fill="#2b2740"/><rect x="${x}" y="${y}" width="84" height="140" fill="url(#lg${id})"/>`;if(lm){const a=ap(lm);s+=`<svg x="${x}" y="${y}" width="84" height="140" viewBox="22 4 56 96" preserveAspectRatio="xMidYMid slice">${fig(lm,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:k?3:2,...(cds[lm.id]?{cd:cds[lm.id]}:{})})}</svg>`}});
+ // Hina-dan: two tiered blocks behind the stage, 5 tiers × 10 seats each
+ const HX=[[130,500],[900,1270]],TY=r0=>396-r0*46,cw=37;
+ HX.forEach(([x0,x1],side)=>{for(let row=RH_ROWS-1;row>=0;row--){const y=TY(row);s+=`<path d="M${x0-8+row*(side?-6:6)} ${y+8}H${x1+8-row*(side?6:-6)}V${y+40}H${x0-8+row*(side?-6:6)}Z" fill="${row%2?'#2d2347':'#342a52'}" stroke="${P.a}" stroke-opacity=".35"/>`}});
+ const seatXY=([side,row,col])=>{const[x0,x1]=HX[side];return[x0+(x1-x0)*(col+.5)/RH_COLS+(side?-1:1)*row*3,TY(row)]};
+ for(let side=0;side<2;side++)for(let row=RH_ROWS-1;row>=0;row--)for(let col=0;col<RH_COLS;col++){const[x,y]=seatXY([side,row,col]);s+=`<rect x="${(x-14).toFixed(1)}" y="${(y+12).toFixed(1)}" width="28" height="22" rx="4" fill="${czHsl(330,45,30)}" stroke="#000" stroke-opacity=".4"/>`}
+ // seated members (back tier first), each in the costume of her last song in this show
+ const seated=stt.seated.slice().sort((a,b)=>b.seat[1]-a.seat[1]);let pens='';
+ seated.forEach(z=>{const m=ccMem(z.m);if(!m)return;const[x,y]=seatXY(z.seat),cd=ccCzFor(C,set,z.czIdx,m.id),a=ap(m),R=rhReact(C,it,m,stt.perf,rank??99),up=R.stand?12:0,w=cw*1.5,h=w*1.45;
+  s+=`<svg x="${(x-w/2).toFixed(1)}" y="${(y-h+30-up).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" viewBox="14 -4 72 104" overflow="hidden">${fig(m,{pose:R.pose,of:a.of,oh:a.oh,ac:a.ac,ex:R.ex,...(cd?{cd}:{})})}</svg>`;
+  s+=`<rect x="${(x-14).toFixed(1)}" y="${(y+22).toFixed(1)}" width="28" height="12" rx="3" fill="${czHsl(330,45,24)}"/>`;
+  if(R.pen)pens+=`<line x1="${(x+10).toFixed(1)}" y1="${(y-6-up).toFixed(1)}" x2="${(x+16).toFixed(1)}" y2="${(y-26-up).toFixed(1)}" stroke="${P.c}" stroke-width="3" stroke-linecap="round"/><circle cx="${(x+16).toFixed(1)}" cy="${(y-26-up).toFixed(1)}" r="4" fill="${P.c}" opacity=".6" filter="url(#gl${id})"/>`;
+  if(R.ic)pens+=`<text x="${(x+12).toFixed(1)}" y="${(y-h+34-up).toFixed(1)}" font-size="13">${R.ic}</text>`});
+ s+=pens;
+ // main LED wall + top banner + rank screen
+ s+=`<rect x="482" y="52" width="436" height="266" rx="22" fill="${P.a}" opacity=".25" filter="url(#gl${id})"/><rect x="492" y="62" width="416" height="246" rx="6" fill="#1a1726"/><g clip-path="url(#cl${id})">${ccLed(style,P,500,70,400,230,r,id,it.title)}</g>
+ <rect x="130" y="40" width="1140" height="22" rx="4" fill="#1a1726"/><text x="700" y="56" text-anchor="middle" font-size="13" letter-spacing="3" fill="${P.c}">REQUEST HOUR · SETLIST BEST ${E?E.size:''} · ${rank?`#${rank}`:it.enc?'ENCORE':''} ${esc(String(it.title||'').slice(0,30))}</text>`;
+ // stage floor (wide and deep) with runways
+ s+=`<path d="M70 440H${W-70}L${W} 640H0Z" fill="url(#fl${id})"/><path d="M70 440H${W-70}" stroke="${P.a}" stroke-width="4" opacity=".9"/><ellipse cx="700" cy="540" rx="520" ry="90" fill="url(#sp${id})"/>`;
+ for(let i=0;i<13;i++){const t=i/12;s+=`<path d="M${70+(W-140)*t} 440L${(W+120)*t-60} 640" stroke="${P.c}" stroke-opacity=".08"/>`}
+ s+=`<path d="M640 640H760L790 ${H}H610Z" fill="#221a36" stroke="${P.c}" stroke-opacity=".5"/>`;[0,1].forEach(k=>{s+=`<path d="M${k?W-70:70} 440L${k?W-10:10} 470V640H${k?W:0}Z" fill="#1a1428"/>`});
+ // performers on the main stage (rows from the formation, everyone the same size)
+ const rows=[...new Set(pos.map(z=>z.r))].sort((a,b)=>a-b).map(rr=>pos.filter(z=>z.r==rr)),RN=rows.length,maxN=Math.max(1,...rows.map(x=>x.length)),fw=Math.min(118,1100/maxN*1.15,(250)/(1.9+.35*Math.max(0,RN-1)));
+ rows.slice().reverse().forEach((row,ri)=>{const back=RN-1-ri,feet=620-back*Math.min(46,fw*.55),step=Math.min(1150/Math.max(1,row.length),fw*1.25),x0=700-step*(row.length-1)/2+(back%2&&row.length==(rows[back-1]||[]).length?step/2:0);
+  row.forEach((z,i)=>{const m=ccMem(z.m);if(!m)return;const a=ap(m),x=x0+step*i,ww=z.c?fw*1.08:fw;s+=`<ellipse cx="${x.toFixed(1)}" cy="${(feet+1).toFixed(1)}" rx="${(ww*.3).toFixed(1)}" ry="${(ww*.06).toFixed(1)}" fill="#000" opacity=".4"/>`+stFig(m,x,feet+(z.c?4:0),ww,fig(m,{pose:z.c?3:TH_MICP[Math.floor(r()*TH_MICP.length)],of:a.of,oh:a.oh,ac:a.ac,ex:2,prop:1,...(cds[m.id]?{cd:cds[m.id]}:{})}))})});
+ // audience with penlights in the song's colours
+ let crowd=`<rect x="0" y="${H-118}" width="${W}" height="118" fill="#07050d"/>`;for(let i=0;i<150;i++){const x=(i%50)*W/49+(r()-.5)*14,yy=H-100+Math.floor(i/50)*36+(r()-.5)*8,c=[P.c,P.a,P.b][i%3];crowd+=`<circle cx="${x.toFixed(0)}" cy="${yy.toFixed(0)}" r="11" fill="#120e1c"/><line x1="${(x+6).toFixed(0)}" y1="${(yy-6).toFixed(0)}" x2="${(x+12+r()*6).toFixed(0)}" y2="${(yy-30).toFixed(0)}" stroke="${c}" stroke-width="3.5" stroke-linecap="round"/>`}
+ s+=crowd;
+ return`<svg viewBox="0 0 ${W} ${H}" class="ccstg rhstg" role="img" aria-label="${esc(it.title||'')}" preserveAspectRatio="xMidYMid meet">${s}</svg>`}
+{const f=ccStageSvg;ccStageSvg=function(C,p,set,idx){if(C&&C.rh&&set&&set.items&&set.items[idx]&&set.items[idx].k=='song'){try{return rhStageSvg(C,p,set,idx)}catch(e){console.error(e)}}return f.apply(this,arguments)}}
+// ---- Top 3 speeches ----------------------------------------------------------------------------------------------------------
+function rhSpeaker(C,p,set,idx){const it=set.items[idx],out=((p&&p.res)||{}).out||{},P=new Set(C.parts),ok=id=>{const m=ccMem(id);return m&&m.status!='graduated'&&P.has(id)&&!out[id]};
+ const orig=(it.orig||[]).filter(z=>z.m!=null),oc=orig.filter(z=>z.c).map(z=>z.m).find(ok);if(oc!=null)return{m:oc,why:'center'};
+ const om=orig.map(z=>z.m).filter(ok).sort((a,b)=>(ccMem(b).pop||0)-(ccMem(a).pop||0))[0];if(om!=null)return{m:om,why:'orig'};
+ const perf=rhPerfIds(C,p,it),cc=(it.pos||[]).find(z=>z.c&&perf.includes(z.m));if(cc)return{m:cc.m,why:'perf'};return perf.length?{m:perf[0],why:'perf'}:null}
+function rhSpeech(C,p,set,idx,used){const it=set.items[idx],E=rhOfC(C),z=E&&E.rank?E.rank.find(q=>q.r==it.rh.r):null,sp=rhSpeaker(C,p,set,idx);if(!sp)return null;const m=ccMem(sp.m),th=rhTh();
+ const M=rhMeta({key:it.gid+':'+it.song,gid:it.gid,id:it.song,title:it.title,cats:new Set(),via:[]}),T=it.title,R=it.rh.r,V=(it.rh.v||0).toLocaleString(),yrs=M.last!=null?Math.floor((S.day-M.last)/365):0,gap=M.last!=null?S.day-M.last:0;
+ const grad=m.grad&&m.grad.ann!=null&&m.status!='graduated',origC=(M.cen||[]).map(id=>ccMem(id)).filter(Boolean),gone=origC.filter(x=>x.status=='graduated');
+ const ctx=[];if(grad)ctx.push('grad');if(M.teamGone)ctx.push('team');if(M.kind=='unit')ctx.push('unit');if(gap>540)ctx.push('long');if(sp.why!='center'&&gone.length)ctx.push('succ');if(z&&z.prev!=null&&z.prev>R+5)ctx.push('rise');const firstRH=!rhEverRanked(E).size;if(z&&z.prev==null&&!z.re&&!firstRH)ctx.push('new');if(firstRH)ctx.push('first');if(sp.why=='center')ctx.push('cen');if(z&&z.re)ctx.push('back');if(M.kind=='title')ctx.push('single');if(M.kind=='th')ctx.push('stage');ctx.push('gen');
+ const N={T,R,V,y:Math.max(1,yrs),team:M.teamName||(th?'ทีมเดิม':'our old team'),unit:M.unit||'Unit',stage:M.origin,old:gone.map(x=>x.name).join(' & ')};
+ const LIB={grad:[[`“${T}” at #${R}… Since I announced my graduation I kept wondering whether I would get to sing this again. Thank you for giving me this stage one more time.`,`“${T}” อันดับ ${R}… ตั้งแต่ประกาศจบการศึกษา ฉันคิดตลอดว่าจะได้ร้องเพลงนี้อีกไหม ขอบคุณที่มอบเวทีนี้ให้ฉันอีกครั้งนะคะ`],[`I will carry the ${V} votes for “${T}” with me after I graduate. This song is where my story started.`,`ฉันจะเก็บ ${V} โหวตของ “${T}” ไว้ในใจหลังจบการศึกษา เพลงนี้คือจุดเริ่มต้นของเรื่องราวของฉัน`]],
+  team:[[`${N.team} doesn't exist anymore, but tonight it felt like we were all back together. “${T}” is ours forever.`,`${N.team} ไม่มีอีกแล้ว แต่คืนนี้รู้สึกเหมือนเราได้กลับมาอยู่ด้วยกันอีกครั้ง “${T}” จะเป็นเพลงของพวกเราตลอดไป`],[`When the team was disbanded I thought this song would disappear with it. You didn't let it. Thank you.`,`ตอนทีมถูกยุบ ฉันนึกว่าเพลงนี้จะหายไปด้วย แต่ทุกคนไม่ปล่อยให้มันหายไป ขอบคุณนะคะ`]],
+  unit:[[`Thank you for remembering the ${N.unit} version of “${T}”. We rehearsed it every night after the theater show… I never thought it would reach #${R}.`,`ขอบคุณที่ยังจำ “${T}” เวอร์ชัน ${N.unit} ได้ เราซ้อมกันทุกคืนหลังการแสดงเธียเตอร์… ไม่เคยคิดเลยว่าจะได้ถึงอันดับ ${R}`],[`A unit song is so small on the theater stage. Seeing it on this huge stage with all of you — I'm a little overwhelmed.`,`เพลงยูนิตบนเวทีเธียเตอร์มันเล็กนิดเดียว ได้เห็นมันบนเวทีใหญ่ขนาดนี้กับทุกคน ฉันตื้นตันจนพูดไม่ออก`]],
+  long:[[`We hadn't performed “${T}” for about ${N.y} year(s). I was scared I'd forgotten the choreography — my body remembered everything.`,`เราไม่ได้แสดง “${T}” มาประมาณ ${N.y} ปีแล้ว กลัวมากว่าจะลืมท่าเต้น แต่ร่างกายจำได้ทุกอย่างเลย`],[`It has been so long since “${T}”… Thank you for waiting for it all this time.`,`นานมากแล้วที่ไม่ได้แสดง “${T}”… ขอบคุณที่รอเพลงนี้มาตลอดนะคะ`]],
+  succ:[[`This was ${N.old}'s song. I tried to protect it tonight, with all the love the fans gave it.`,`เพลงนี้เป็นเพลงของ ${N.old} คืนนี้ฉันพยายามรักษามันไว้ ด้วยความรักทั้งหมดที่แฟน ๆ มอบให้เพลงนี้`]],
+  rise:[[`Last year “${T}” was #${z&&z.prev}. To come all the way up to #${R}… I'm really speechless.`,`ปีที่แล้ว “${T}” อยู่อันดับ ${z&&z.prev} การขึ้นมาถึงอันดับ ${R} ได้… ฉันพูดไม่ออกจริง ๆ`]],
+  new:[[`The first Request Hour for “${T}” and it's #${R}! ${V} votes… thank you, everyone!`,`Request Hour ครั้งแรกของ “${T}” ก็ได้อันดับ ${R} เลย! ${V} โหวต… ขอบคุณทุกคนนะคะ!`]],
+  first:[[`Our very first Request Hour… and “${T}” is #${R}. I will never forget this night.`,`Request Hour ครั้งแรกของพวกเรา… และ “${T}” ได้อันดับ ${R} ฉันจะไม่มีวันลืมคืนนี้เลย`],[`I didn't know what to expect from the first Request Hour. ${V} votes for “${T}” — now I know how much you love it.`,`ไม่รู้เลยว่า Request Hour ครั้งแรกจะเป็นยังไง ${V} โหวตให้ “${T}” ตอนนี้รู้แล้วว่าทุกคนรักเพลงนี้มากแค่ไหน`]],
+  cen:[[`Standing at the center of “${T}” again, I remembered the day I first got this position. Thank you for letting me come back here.`,`ได้ยืนเซ็นเตอร์ของ “${T}” อีกครั้ง ทำให้นึกถึงวันแรกที่ได้ตำแหน่งนี้ ขอบคุณที่ให้ฉันได้กลับมาตรงนี้อีกครั้ง`],[`“${T}” is the song that made me who I am. Being its center at #${R} tonight… I'm so proud.`,`“${T}” คือเพลงที่ทำให้ฉันเป็นฉันในวันนี้ ได้เป็นเซ็นเตอร์ของมันที่อันดับ ${R} คืนนี้… ภูมิใจมากเลยค่ะ`]],
+  back:[[`“${T}” came back to the ranking! I'm so happy it isn't forgotten.`,`“${T}” กลับมาติดอันดับอีกครั้ง! ดีใจมากที่ทุกคนไม่ลืมเพลงนี้`]],
+  single:[[`You keep supporting “${T}” long after its release. Hearing everyone sing along tonight — this is why I stand on stage.`,`ทุกคนยังสนับสนุน “${T}” แม้จะผ่านมานานแล้ว ได้ยินทุกคนร้องตามคืนนี้ นี่แหละคือเหตุผลที่ฉันยืนบนเวที`],[`${V} votes for “${T}”. I'll make sure this song keeps growing with all of you.`,`${V} โหวตให้ “${T}” ฉันจะทำให้เพลงนี้เติบโตไปพร้อมกับทุกคนนะคะ`]],
+  stage:[[`“${T}” was born on the theater stage of ${N.stage}. Tonight it's #${R} on the biggest stage of the year.`,`“${T}” เกิดบนเวทีเธียเตอร์ของ ${N.stage} คืนนี้มันได้อันดับ ${R} บนเวทีที่ใหญ่ที่สุดของปี`]],
+  gen:[[`#${R}… ${V} votes. I can't believe it. Thank you for loving “${T}” this much!`,`อันดับ ${R}… ${V} โหวต ยังไม่อยากเชื่อเลย ขอบคุณที่รัก “${T}” ขนาดนี้นะคะ!`],[`Every vote is someone saying “I want to see it again”. We heard you. Thank you!`,`ทุกโหวตคือเสียงของใครสักคนที่บอกว่า “อยากดูอีกครั้ง” พวกเราได้ยินแล้วนะคะ ขอบคุณค่ะ!`]]};
+ used=used||new Set();let txt=null,r=mulb(rhSeedN(C.id+it.id+m.id));
+ // the most specific story first; a line already used in this show is never used again (tracked by template, not by the filled-in text)
+ for(const k of ctx){const L=(LIB[k]||[]).map((x,i)=>[k+i,x]).filter(([id])=>!used.has(id));if(L.length){const[id,x]=L[Math.floor(r()*L.length)];used.add(id);txt=x;break}}if(!txt)txt=LIB.gen[0];
+ return{m,why:sp.why,en:txt[0],th:txt[1]}}
+// the three speeches of a show never repeat a line: ranks #3 → #1 are written in order
+function rhSpeechFor(C,p,set,idx){const used=new Set(),R=set.items[idx].rh.r;let out=null;set.items.map((it,i)=>[it,i]).filter(([it])=>it.rh&&it.rh.r<=3&&it.rh.r>=R).sort((a,b)=>b[0].rh.r-a[0].rh.r).forEach(([it,i])=>{const sp=rhSpeech(C,p,set,i,used);if(i==idx)out=sp});return out}
+// ---- big-screen show: ranks, speeches ------------------------------------------------------------------------------------------
+{const f=ccShSteps;ccShSteps=function(){const St=f.apply(this,arguments),out=[];St.forEach(z=>{out.push(z);if(z.k=='song'&&z.C&&z.C.rh&&z.it&&z.it.rh){z.lb='#'+z.it.rh.r;if(z.it.rh.r<=3)out.push({k:'rhsp',qi:z.qi,C:z.C,p:z.p,set:z.set,it:z.it,idx:z.idx})}});return out}}
+{const f=ccShHtml;ccShHtml=function(){let h=f.apply(this,arguments);try{const s=ui.ccsh,St=ccShSteps(s.q),i=Math.min(s.i,St.length-1),z=St[i];if(!z||!z.C||!z.C.rh)return h;const th=rhTh();
+ const swap=body=>{const a=h.indexOf('<div class="gebody"'),b=h.indexOf('<div class="geact">');if(a<0||b<0)return h;const c=h.indexOf('>',a)+1;return h.slice(0,c)+body+'</div>'+h.slice(b)};
+ if(z.k=='song'&&z.it.rh){const kick=`<div class="gekicker">${z.lb}</div>`;h=h.replace(kick,`<div class="gekicker rhkick">REQUEST HOUR · <b>#${z.it.rh.r}</b> · ${(z.it.rh.v||0).toLocaleString()} ${th?'โหวต':'votes'}</div>`)}
+ else if(z.k=='rhsp'){const sp=rhSpeechFor(z.C,z.p,z.set,z.idx);if(!sp)return h;const m=sp.m,cd=ccCzFor(z.C,z.set,z.idx,m.id),a=ap(m);
+  h=swap(`<div class="gestage"><div class="gekicker">#${z.it.rh.r} · ${esc(z.it.title)} · ${th?'สุนทรพจน์':'Speech'}</div><div class="rhspk"><svg viewBox="10 -2 80 200" width="150">${fig(m,{pose:3,of:a.of,oh:a.oh,ac:a.ac,ex:z.it.rh.r==1?3:6,...(cd?{cd}:{})})}</svg><div class="rhbub"><b>${esc(m.name)}</b><small>${sp.why=='center'?(th?'เซ็นเตอร์ดั้งเดิม':'original center'):sp.why=='orig'?(th?'สมาชิกดั้งเดิม':'original member'):(th?'ผู้แสดงในคืนนี้':'tonight\'s performer')}</small><p>“${esc(th?sp.th:sp.en)}”</p></div></div></div>`)}
+ }catch(e){console.error(e)}return h}}
+// ---- records: performed lineups go into the Request Hour history (the songs' original history is never changed) ----------------------
+{const f=ccPerform;ccPerform=function(C,p){const r=f.apply(this,arguments);try{const E=rhOfC(C);if(E&&p&&p.res&&!p.res.err){const H=rhS().hist.find(h=>h.eid==E.id);const set=C.sets[p.res.sid]||p.res.set;if(H&&set){
+ if(!H.perfs.some(x=>x.pid==p.id))H.perfs.push({pid:p.id,no:p.no,day:p.res.day??(C.start+p.d),ranks:p.rhR||null,mc:set.items.filter(x=>x.k=='mc').length,enc:set.items.filter(x=>x.enc).map(x=>x.title)});
+ set.items.forEach(it=>{if(it.rh)H.lineups[it.gid+':'+it.song]=rhPerfIds(C,p,it)})}}}catch(e){console.error(e)}return r}}
+{const f=ccFinish;ccFinish=function(C){const r=f.apply(this,arguments);try{const E=rhOfC(C);if(E&&E.status=='concert'){E.status='done';E.log.push({d:S.day,t:'done'})}}catch(e){console.error(e)}return r}}
+// if the concert is cancelled the Request Hour still keeps its results
+{const f=ccCancel;ccCancel=function(id){const r=f.apply(this,arguments);try{const C=ccGet(id),E=rhOfC(C);if(E&&(C.status=='cancel'||C.status=='cancelled')&&E.status=='concert'){E.status='done';E.log.push({d:S.day,t:'cancel'})}}catch(e){}return r}}
 
 </script>
 <script>
