@@ -129,3 +129,11 @@ function f10CloseCases(){try{const X=scS&&scS();if(!X||!Array.isArray(X.list))re
 try{const M=SECS.find(s=>s.k=='media');if(M)M.v=M.v.filter(x=>x[0]!='crisis')}catch(e){}
 V.crisis=function(){view='news';return V.news.apply(this,arguments)};
 {const f=render;render=function(){if(S&&view=='crisis')view='news';const r=f.apply(this,arguments);try{document.querySelectorAll('[onclick*="goView(\'crisis\')"]').forEach(b=>b.remove())}catch(e){}return r}}
+
+// ---- 12. Team Song: the Senbatsu screens show only what applies to a team song ------------------------------------------------
+//  Everyone of that team may sing it (also Title Track members), so the "Under Girls" and "not in another song" filters
+//  are hidden (and switched off) for team songs; a short note explains who can be chosen.
+function f10TeamClean(h,o){h=h.replace(/<label class="plnm">(?:(?!<\/label>)[\s\S])*?(?:Under Girls|not yet in any other song)[\s\S]*?<\/label>/g,'');return h}
+function f10TeamNote(o){const n=elig(o).length,th=typeof UIP!='undefined'&&UIP.lang=='th';return`<p class="st f10tm">👥 ${th?`เพลงทีม: เลือกได้เฉพาะสมาชิก ${esc(o.tm)} (${n} คน) รวมถึงคนที่อยู่ในเซ็มบัตสึเพลงหลักด้วย`:`Team Song: only ${esc(o.tm)} members can sing it (${n} eligible), Title Track members included.`}</p>`}
+{const f=selUI;selUI=function(){const o=S.songs[ui.es];if(o&&o.tm){ui.sf=ui.sf||{};ui.sf.nf=0;ui.sf.nm=0}let h=f.apply(this,arguments);try{if(o&&o.tm)h=f10TeamNote(o)+f10TeamClean(h,o)}catch(e){}return h}}
+{const f=autoPanel;autoPanel=function(o,dis){if(o&&o.tm){ui.aa=ui.aa||{};ui.aa.nf=0;ui.aa.nt=0}let h=f.apply(this,arguments);try{if(o&&o.tm)h=f10TeamClean(h,o).replace('<h3>Auto Select</h3>','<h3>Auto Select</h3>'+f10TeamNote(o))}catch(e){}return h}}
