@@ -1,13 +1,12 @@
 // =====================================================================================
-//  IDOLVERSE48: Select Bloom! — Casual fans have no Kami Oshi and no Oshi
+//  IDOLVERSE48: Select Bloom! — Casual fans: Kami Oshi and Oshi like every fan
 // -------------------------------------------------------------------------------------
-//  Extends fan3.js (same cohorts, same IDs, same counts). A Casual cohort has exactly one Kami Oshi (her
-//  former favourite when she is still active, else one from her group) but no Oshi: her other links are
-//  counted and shown only as "other supporters" (internally they keep their place so every group's unique
-//  fan count stays exact). When a Casual cohort becomes Regular it keeps its Kami Oshi and may count up to
-//  5 Oshi again. Every fan is still counted once for the group fanbase.
+//  Extends fan3.js (same cohorts, same IDs, same counts). Casual fans now have the same relationships as
+//  every fan: exactly one Kami Oshi (her former favourite when she is still active, else one from her group)
+//  and 0–5 Oshi. They differ from Regular fans only in behaviour (lower loyalty, rarely buy CDs).
+//  Every fan is still counted once for the group fanbase.
 // =====================================================================================
-// Casual fans have exactly one Kami Oshi (like every fan) but no Oshi: their other links count as "other supporters".
+// Casual fans have exactly one Kami Oshi and 0–5 Oshi, like every fan.
 // A cohort without a Kami Oshi takes back her former favourite (s.ck) when she is still active.
 function fcCasualize(s){if(!s||s.ft!='casual')return;s.o=s.o||{};s.u=s.u||{};
  if(s.k==null&&s.ck!=null){const m=get(s.ck);if(m&&isAct(m))s.k=s.ck}
@@ -23,6 +22,4 @@ fdFixAll=function(){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return;cons
 {const f=fdSegHas;fdSegHas=function(s,g){if(s&&s.k==null&&s.ft=='casual'&&s.gs!=null&&s.gs==g)return true;return f.apply(this,arguments)}}
 {const f=fdSegGroups;fdSegGroups=function(s){const G=f.apply(this,arguments);if(s&&s.k==null&&s.ft=='casual'&&s.gs!=null)G.add(s.gs);return G}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.fb&&!S.fb.cas1){S.fb.cas1=1;(S.fb.segs||[]).forEach(z=>{if(z.ft!='casual'&&z.ft!='dormant'&&z.cdl==null)z.cdl=S.day-60});fdFixAll();fdWrite()}}catch(e){console.error(e)}return r}}
-// member supporter counts: a Casual cohort's links are "other supporters", never Oshi
-{const f=fdSup;fdSup=function(){const M=f.apply(this,arguments);try{(S.fb&&S.fb.segs||[]).forEach(s=>{if(s.ft!='casual')return;for(const j in s.o){const X=M[j];if(!X)continue;const c=s.o[j]||0;X.o-=c;X.u+=c}})}catch(e){}return M}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.fb&&Array.isArray(S.fb.segs)&&!S.fb.cas2){S.fb.cas2=1;fdFixAll();fdWrite()}}catch(e){console.error(e)}return r}}
