@@ -164,7 +164,7 @@ function ccGrowth(C,p,res){const fb=fbState();if(!fb)return;const per=res._per||
   if(sat<40){const l=Math.min(s.n,fbRound(b*(40-sat)/100*.3));if(l>0){s.n-=l;fbFix(s);G.lost+=l;fb.acc.lost=(fb.acc.lost||0)+l;fb.acc.lossBy['Concert']=(fb.acc.lossBy['Concert']||0)+l;if(s.k!=null)gm(s.k).lost+=l}return}
   if(!exT||fresh<=0)return;
   // casual → regular
-  if(s.ft=='casual'&&sat>54){const c=Math.min(s.n-1,fbRound(fresh*Math.min(.25,(sat-50)/100)));if(c>0){const t=fbSplit(s,c);t.ft='oshi';t.org='Concert: '+C.name;G.newReg+=c}}
+  if(s.ft=='casual'&&sat>54){const c=Math.min(s.n-1,fbRound(fresh*Math.min(.08,(sat-50)/300)));if(c>0){const t=fbSplit(s,c);t.ft='oshi';t.org='Concert: '+C.name;G.newReg+=c}}
   // new Kami Oshi for fans without one
   if(s.k==null&&sat>58&&s.n>1){const c=Math.min(s.n-1,fbRound(fresh*(sat-55)/100*.25));if(c>0){const mid=pickM(),t=fbSplit(s,c),had=t.o[mid]||0;t.k=mid;delete t.o[mid];t.pat=fbPick();t.org='Concert: '+C.name;if(had)fbLife(mid,'ol',had);fbLife(mid,'kg',c);G.newKami+=c;gm(mid).kg+=c}}
   // Kami Oshi change (existing rule: uncommon, loyalty lowers it, the previous Kami Oshi often stays as an Oshi)

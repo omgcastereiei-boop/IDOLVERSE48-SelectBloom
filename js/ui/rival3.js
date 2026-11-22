@@ -33,8 +33,10 @@ const RV_STARS={
 const RV_REN={'Shion Amagi':'Riko','Rina Kurosaki':'NuMinnie','Momoka Sakuraba':'Sherbelle','Yukino Shiraishi':'Center','Sayuri Hyodo':'Midorin','Rei Fuyutsuki':'Cara','Mafuyu Kagami':'Lovetan','Natsumi Hinata':'Yuki','Kaho Minazuki':'Sunny','Hikari Asahi':'Ranran','Seoa':'Layla','Hayul':'Miso','Dain':'Sunji'};
 const RV_NAMED=new Set(Object.values(RV_STARS).flat().map(x=>x[0]));
 // identity & market position of the established acts (fans = Japanese fanbase, br = share that buys, cp = copies per buyer)
-const RV_PROF={omg4ki:{fans:1200000,br:.5,cp:2.6,q:.9,loy:88,size:24,img:"Japan's No.1 · pink & yellow idol elegance"},winer4:{fans:500000,br:.45,cp:2.9,q:.82,loy:80,size:16},sumer4:{fans:500000,br:.45,cp:2.9,q:.8,loy:78,size:16},sefira:{fans:400000,br:.32,cp:1.8,q:.86,loy:74,size:5}};
-const RV_CEIL=2600000;
+const RV_PROF={omg4ki:{fans:4500000,mix:{r:.28,d:.15,h:.08},sp:70,types:4,hs:1,q:.9,loy:88,size:24,img:"Japan's No.1 · pink & yellow idol elegance"},winer4:{fans:2200000,mix:{r:.27,d:.13,h:.055},sp:65,types:3,hs:1,q:.82,loy:80,size:16},sumer4:{fans:2200000,mix:{r:.27,d:.13,h:.055},sp:65,types:3,hs:1,q:.8,loy:78,size:16},sefira:{fans:1500000,mix:{r:.2,d:.08,h:.025},sp:55,types:2,hs:0,q:.86,loy:74,size:5}};
+const RV_CEIL=12000000;
+// fan mix (share of Regular / Dedicated / Hardcore; the rest are Casual fans who never buy) by kind of act
+const RV_MIX={fidol:{r:.2,d:.08,h:.02},midol:{r:.2,d:.07,h:.015},kpop:{r:.18,d:.06,h:.012},fsolo:{r:.15,d:.035,h:.005},msolo:{r:.15,d:.035,h:.005},band:{r:.15,d:.035,h:.005}};
 // keep the constants of industry2.js in line so new games start with the right names
 try{const conv=k=>RV_STARS[k].map(([nm,pos,per,vo,da,va])=>[nm,pos,per,vo,da,va]);OMG_MX.splice(0,OMG_MX.length,...conv('omg4ki'));NAEVIS.splice(0,NAEVIS.length,...OMG_MX[0]);IND_FIX.forEach(o=>{if(RV_STARS[o.id])o.mx=conv(o.id)})}catch(e){console.error(e)}
 
@@ -62,7 +64,7 @@ function rvCanDraw(a){return a&&a.cat!='player'&&indSexOf(a)!='m'&&a.cat!='band'
 
 // ---- rosters -----------------------------------------------------------------------------------------------------------------------
 function rvRoster(a){if(!a||a.cat=='player'||a.rv3)return;const I=rvI(),r=mulb(String(a.id).split('').reduce((h,c)=>h*31+c.charCodeAt(0)|0,7)),P=RV_PROF[a.id],FX=RV_STARS[a.id];a.rv3=1;
- if(P){a.q=P.q;a.br=P.br;a.cp=P.cp;a.loy=P.loy;if(!a.fx3){a.fx3=1;a.fans=Math.max(a.fans|0,P.fans)}if(P.img&&a.id=='omg4ki')a.img=P.img}
+ if(P){a.q=P.q;a.mix=P.mix;a.sp=P.sp;a.types=P.types;a.hsk=P.hs;if(!Array.isArray(a.hs))a.hs=[];a.loy=P.loy;if(!a.fx4){a.fx4=1;a.fx3=1;a.fans=Math.max(a.fans|0,P.fans)}if(P.img&&a.id=='omg4ki')a.img=P.img}
  else{const K=IND_K[a.cat]||IND_K.fidol;a.q=a.q??+(.35+r()*.5).toFixed(2);a.cp=a.cp??(a.cat=='fidol'?1.6:a.cat=='midol'||a.cat=='kpop'?1.5:1.1);a.br=a.br??+(K.buy/a.cp).toFixed(3);a.loy=a.loy??Math.round(40+r()*40)}
  const old=Array.isArray(a.mx)?a.mx:[];old.forEach(s=>{if(RV_REN[s.nm])s.nm=RV_REN[s.nm]});
  const solo=a.cat=='fsolo'||a.cat=='msolo',size=P?P.size:solo?1:Math.max(old.length,(a.mem||[]).length,a.cat=='band'?3:4),L=[];
@@ -86,12 +88,17 @@ function rvCenter(a,r){const M=rvAct(a);if(!M.length)return null;const W=M.map(s
 {const f=indRelease;indRelease=function(a,k,day,o){if(!a||a.cat=='player'||(o&&o.F!=null)||!S||!S.ind||!S.ind.rv3v)return f.apply(this,arguments);
  if(!a.rv3)rvRoster(a);const r=Math.random,alb=k=='a',gap=a.last!=null?day-a.last:999,fat=gap>=70?1:Math.max(.78,.78+.22*gap/70);
  const q=Math.max(.5,Math.min(1.5,.82+.3*(a.q||.6)+rvGauss(r)*.17)),hype=Math.pow(Math.max(.25,1+(a.mom||0)/30),.6),ci=rvCenter(a,r),cs=ci!=null?a.mx[ci]:null,cen=cs?Math.pow(Math.max(.6,indStarPop(a,cs)/Math.max(1,indPop(a))),.25):1;
- const F=Math.round(a.fans*(a.br||.3)*(a.cp||1.5)*q*hype*fat*cen*(alb?.72:1));const R=f.call(this,a,k,day,{...(o||{}),F});
+ const F=Math.round(rvCds(a,q,hype,cen,gap)*(alb?.72:1));const R=f.call(this,a,k,day,{...(o||{}),F});
  try{R.q=+q.toFixed(3);if(ci!=null){R.cen=ci;const M=rvAct(a),n=Math.min(M.length,a.cat=='fidol'?16:M.length);R.sen=M.slice().sort((x,y)=>indStarPop(a,y)+(y.star?6:0)-indStarPop(a,x)-(x.star?6:0)+(r()-.5)*8).slice(0,n).map(s=>a.mx.indexOf(s));if(!R.sen.includes(ci))R.sen[R.sen.length-1]=ci}
   if(a.lock&&a.rel.length>1)rvRelNews(a,R)}catch(e){console.error(e)}return R}}
 // fans follow the results: buyers and listeners become fans, a soft market ceiling, one decay per artist and week
-indFansAfter=function(w,rows){const I=S.ind,G={};rows.forEach(x=>{const a=I.A[x.r.aid];if(!a||a.cat=='player')return;G[a.id]=(G[a.id]||0)+((x.cd/Math.max(1,a.cp||1.5))*.04+x.st*.0004)*(x.r.q||1)});
- Object.values(I.A).forEach(a=>{if(a.cat=='player'||a.st=='disbanded')return;const sat=Math.max(.04,1-a.fans/RV_CEIL),g=(G[a.id]||0)*sat*(a.st=='hiatus'?.3:1);a.fans=Math.max(200,Math.round(a.fans*(1-(a.st=='hiatus'?.003:.0012))+g))});
+// rival CD sales: the same fan purchase model as the player's singles (cd-demand.js) with the act's own fanbase,
+// fan mix, spending power, Types and incentives; release quality, momentum and the Center are the interest
+function rvCds(a,q,hype,cen,gap){const X=a.mix||RV_MIX[a.cat]||RV_MIX.fidol,N=a.fans||0,I=(q-1)*.8+(hype-1)*.5+(cen-1)*.5,fat=gap<45?.35:gap<70?.2:gap<95?.08:0,idol=['fidol','midol'].includes(a.cat);
+ const M=cdModel({oshi:N*X.r,dedicated:N*X.d,hardcore:N*X.h},I,{types:a.types||(idol?3:a.cat=='kpop'?2:1),hs:a.hsk!=null?!!a.hsk:idol,sp:a.sp||(idol?55:45),loy:a.loy||55,fat});a.cpb=M.buyers?M.copies/M.buyers:1.5;
+ return M.copies+cdmPublic(N*.5,.55+(q-1)*.6,hype)}
+indFansAfter=function(w,rows){const I=S.ind,G={};rows.forEach(x=>{const a=I.A[x.r.aid];if(!a||a.cat=='player')return;G[a.id]=(G[a.id]||0)+((x.cd/Math.max(1,a.cpb||1.5))*.06+x.st*.0004)*(x.r.q||1)});
+ Object.values(I.A).forEach(a=>{if(a.cat=='player'||a.st=='disbanded')return;const sat=Math.max(.04,1-a.fans/RV_CEIL),g=(G[a.id]||0)*sat*(a.st=='hiatus'?.3:1);a.fans=Math.max(200,Math.round(a.fans*(1-(a.st=='hiatus'?.003:.0009))+g))});
  if(w%4==0){Object.values(I.A).forEach(indLife);try{rvMonth()}catch(e){console.error(e)}}
  const act=Object.values(I.A).filter(a=>a.cat!='player'&&a.st!='disbanded'&&a.st!='hiatus').length,p=Math.max(.08,Math.min(.8,.95-act/110));if(Math.random()<p)indDebut(indWs(w+1)+Math.floor(iR(0,7)))};
 // OMG4ki: strong but not invincible — its momentum is no longer held up artificially

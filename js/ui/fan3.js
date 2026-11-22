@@ -84,7 +84,7 @@ function fdSpreadKami(s,L,wf){if(!L.length)return;s.o=s.o||{};s.u=s.u||{};const 
 // what an activity does to existing fans (its main purpose), proportional to the activity and limited
 function fdPurpose(kind,raw,F,o){if(!F||!(raw>0))return;const fb=S.fb,x=Math.min(1,raw/Math.max(1,F)),mids=o.mid!=null?new Set([o.mid]):null,hit=s=>!mids||mids.has(s.k)||(s.o&&s.o[o.mid]);
  if(kind=='retain'||kind=='other')fb.segs.forEach(s=>{if(hit(s)){s.loy=fbCl(s.loy+3*x+.2);s.last=S.day}});
- else if(kind=='loyal'){fb.segs.slice().forEach(s=>{if(!hit(s))return;s.loy=fbCl(s.loy+4*x+.3);s.eng=fbCl(s.eng+3*x);s.last=S.day;if(s.ft=='casual'&&s.n>=4){const c=fbRound(s.n*Math.min(.05,.4*x));if(c>0){const t=fbSplit(s,c);t.ft='oshi'}}})}
+ else if(kind=='loyal'){fb.segs.slice().forEach(s=>{if(!hit(s))return;s.loy=fbCl(s.loy+4*x+.3);s.eng=fbCl(s.eng+3*x);s.last=S.day;if(s.ft=='casual'&&s.n>=4&&s.loy>35){const c=fbRound(s.n*Math.min(.006,.05*x));if(c>0){const t=fbSplit(s,c);t.ft='oshi'}}})}
  else if(kind=='bond'){fb.segs.forEach(s=>{if(!hit(s))return;s.loy=fbCl(s.loy+2*x+.2);s.last=S.day;if(o.mid!=null&&s.u[o.mid]>0&&s.k!=o.mid){const c=fbRound(s.u[o.mid]*Math.min(.08,.6*x));if(c>0){s.u[o.mid]-=c;s.o[o.mid]=(s.o[o.mid]||0)+c}}})}
  else if(kind=='engage')fb.segs.forEach(s=>{if(hit(s)){s.eng=fbCl(s.eng+4*x+.3);s.last=S.day}});
  else if(kind=='attention')fb.segs.forEach(s=>{s.eng=fbCl(s.eng+1.5*x)})}

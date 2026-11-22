@@ -1,25 +1,53 @@
 // =====================================================================================
-//  IDOLVERSE48: Select Bloom! — CD demand from the real fanbase (buyers × copies)
+//  IDOLVERSE48: Select Bloom! — Fan purchase behaviour & CD sales (one model for every group)
 // -------------------------------------------------------------------------------------
-//  The single's sales formula (doRelease) used "total fans × 12%" as its fan term, so every new
-//  fan behaved like a CD buyer. This hook keeps the formula and every other factor (song quality,
-//  Senbatsu, Center, concept fit, number of Types, handshake benefits, randomness) and only
-//  replaces that fan term with the fans who really buy, from the existing fan database (fan3.js):
-//   · Casual fans rarely buy (2.5%), Regular ≈20%, Dedicated ≈45% (more copies), Hardcore ≈75%
-//     (multiple copies). Dormant fans do not buy.
-//   · Spending power and loyalty of each fan cohort change the share; fans whose Kami Oshi sings
-//     in the Senbatsu buy more often.
-//   · Each fan is counted once for the group (fdSegGroupN), however many members she supports.
-//   · Fan fatigue: a single released less than ~75 days after the previous one sells less.
-//  It sits directly around the core formula (loaded right after game-systems.js), so every other
-//  release hook sees the result exactly as before.
+//  CD sales come from fans who really buy, never from the total fanbase:
+//   · Casual fans never buy (they are reach / popularity only).
+//   · Regular, Dedicated and Hardcore fans each have a purchase PROBABILITY and a number of COPIES
+//     per buyer. Probability = base by type × (1 + interest); interest is ONE additive score
+//     (song quality, concept fit, Center appeal, Kami Oshi / Oshi in the Title Track, loyalty,
+//     promotion, the previous release's quality, minus fan fatigue) — nothing is stacked
+//     multiplicatively. Copies: Regular ≈1, Dedicated 1–2, Hardcore 1–3 (more only with strong
+//     incentives: several Types, handshake tickets), always capped by the cohort's spending power.
+//   · Every fan is counted once per group (fdSegGroupN), however many members she supports.
+//   · General public buyers (non-fans) are computed separately from awareness × song appeal.
+//   · Fan fatigue: short gaps between releases, a repeated concept and repeated purchase incentives lower
+//     probability and extra copies; it is computed per release from recent history, so it heals by itself.
+//  The single's sales formula (doRelease) still runs for everything else (revenue flow, editions,
+//  handshake tickets, charts…); only the number of CDs it produces is replaced by this model.
+//  Rival groups (rival3.js) use the same cdModel with their own fanbase size, mix and spending power.
 // =====================================================================================
-const CDD_RATE={casual:[.025,1],oshi:[.2,1.05],dedicated:[.45,1.3],hardcore:[.75,2.1],dormant:[0,0]};
-function cddDemand(gid,sen){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)||!fb.segs.length)return null;const senS=new Set(sen||[]);let u=0,n0=0,by={};
- fb.segs.forEach(s=>{const n=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):s.n;if(!n)return;n0+=n;const R=CDD_RATE[s.ft]||CDD_RATE.casual;let b=R[0]*(.55+.9*((s.sp==null?40:s.sp)/100))*(.8+.4*((s.loy==null?50:s.loy)/100));if(senS.has(s.k))b*=1.25;const v=n*Math.min(.95,b)*R[1];u+=v;by[s.ft]=(by[s.ft]||0)+v});
- let last=null;try{const L=(S.singles||[]).map(x=>x.relDay??x.day).filter(d=>d!=null&&d<S.day);last=L.length?Math.max(...L):null}catch(e){}
- const gap=last==null?999:S.day-last,fat=gap>=75?1:Math.max(.72,.72+.28*gap/75);return{units:u*fat,fans:n0,fat,gap,by}}
-{const f=doRelease;doRelease=function(){const p=S&&S.pj;let D=null;try{if(p&&p.status=='producing'){const mn=S.songs[p.mainId];D=cddDemand(typeof gsAg=='function'?gsAg():0,mn&&mn.slots?mn.slots.filter(Boolean):[])}}catch(e){D=null}
- if(!D||!(D.fans>0))return f.apply(this,arguments);const n=S.singles.length,f0=S.fans,eff=Math.max(0,Math.round(D.units/.12));S.fans=eff;let r;
- try{r=f.apply(this,arguments)}finally{const dl=S.fans-eff;S.fans=f0+dl}
- try{const x=S.singles[n];if(x)x.cdd={buy:Math.round(D.units),fans:D.fans,fat:+D.fat.toFixed(2),by:Object.fromEntries(Object.entries(D.by).map(([k,v])=>[k,Math.round(v)]))}}catch(e){}return r}}
+const CDM_P0={oshi:.14,dedicated:.48,hardcore:.82};
+const CDM_TYPES=['oshi','dedicated','hardcore'];
+const cdmCl=(v,a,b)=>Math.max(a,Math.min(b,v));
+// copies per buyer for one cohort (mean), limited by spending power (sp 0–100) and dampened by fatigue
+function cdmCopies(t,I,o){const types=Math.max(1,o.types||1),inc=Math.max(0,I);let c;
+ if(t=='oshi')c=1+.05*inc;else if(t=='dedicated')c=1.1+.3*inc+.08*(types-1);else c=1.55+.6*inc+.3*(types-1)+(o.hs?.7:0);
+ const cap=t=='oshi'?1.2:t=='dedicated'?1+(o.sp??50)/100*2:1+(o.sp??55)/100*4.2;c=Math.min(c,cap);return 1+(c-1)*(1-cdmCl(o.fat||0,0,.8))}
+function cdmProb(t,I,loy){const p=CDM_P0[t]*(1+cdmCl(I+((loy??50)-50)/250,-.85,1.2));return cdmCl(p,0,.95)}
+// aggregated model: n = {oshi,dedicated,hardcore} fans, I = interest, o = {types,hs,sp,loy,fat}
+function cdModel(n,I,o){o=o||{};let buy=0,cp=0;const by={};CDM_TYPES.forEach(t=>{const N=n[t]||0;if(!N)return;const p=cdmProb(t,I-(o.fat||0)*.6,o.loy),b=N*p,c=b*cdmCopies(t,I,o);buy+=b;cp+=c;by[t]={buyers:Math.round(b),copies:Math.round(c)}});return{buyers:buy,copies:cp,by}}
+function cdmPublic(aware,q,hype){return Math.max(0,aware)*cdmCl(.004+.03*Math.pow(cdmCl(q,0,1.3),2)*(hype||1),0,.06)}
+// ---- the player's single ---------------------------------------------------------------------------------------------------
+function cdmFatigue(gid,concept,hsNow){let gap=999,same=0,hsRun=0;try{gsWith(gid,()=>{const L=(S.singles||[]).filter(x=>(x.relDay??x.day)!=null&&(x.relDay??x.day)<S.day).sort((a,b)=>(b.relDay??b.day)-(a.relDay??a.day));
+ if(L[0])gap=S.day-(L[0].relDay??L[0].day);same=L.slice(0,2).filter(x=>x.concept&&x.concept==concept).length;hsRun=L.slice(0,3).filter(x=>x.seHs||x.hs&&x.hs.on!==false).length})}catch(e){}
+ return cdmCl((gap<45?.35:gap<70?.2:gap<95?.08:0)+same*.07+(hsNow&&hsRun>=3?.06:0),0,.6)}
+function cddDemand(gid,sen,ctx){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)||!fb.segs.length)return null;ctx=ctx||{};const senS=new Set(sen||[]),cen=ctx.center;
+ const q=cdmCl(ctx.q??.55,0,1.3),base=(q-.55)*.6+((ctx.comp??1)-1)*.6+(ctx.cpop!=null?(ctx.cpop-50)/400:0)+(ctx.promo||0)+(ctx.prevQ!=null?(ctx.prevQ-.55)*.3:0),fat=ctx.fat||0;
+ let buyers=0,copies=0,casual=0,fans=0;const by={oshi:{buyers:0,copies:0,fans:0},dedicated:{buyers:0,copies:0,fans:0},hardcore:{buyers:0,copies:0,fans:0}},R=ctx.rnd||Math.random;
+ fb.segs.forEach(s=>{const N=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):s.n;if(!N)return;fans+=N;if(s.ft=='casual'||s.ft=='dormant'||!CDM_P0[s.ft]){if(s.ft=='casual')casual+=N;return}
+  let I=base;if(s.k!=null){I+=senS.has(s.k)?.2:-.15;if(cen!=null&&s.k==cen)I+=.15}let on=0;for(const j in s.o)if(senS.has(+j))on++;I+=Math.min(.12,on*.04);
+  const p=cdmProb(s.ft,I-fat*.6,s.loy),b=N*p,c=b*cdmCopies(s.ft,I,{types:ctx.types,hs:ctx.hs,sp:s.sp,fat});buyers+=b;copies+=c;const z=by[s.ft];z.buyers+=b;z.copies+=c;z.fans+=N;
+  if(ctx.commit&&b>=.5){s.h=s.h||{};s.h.cdb=Math.round((s.h.cdb||0)+b);s.h.cdc=Math.round((s.h.cdc||0)+c);s.cdl=S.day}});
+ const pub=cdmPublic(fans*.5+(ctx.buzz||0)*400,q,1+(ctx.promo||0)),noise=cdmCl(1+((R()+R()+R())/3-.5)*.16,.88,1.12);
+ Object.values(by).forEach(z=>{z.buyers=Math.round(z.buyers);z.copies=Math.round(z.copies)});
+ return{units:Math.round((copies+pub)*noise),fanCopies:Math.round(copies*noise),buyers:Math.round(buyers),pub:Math.round(pub*noise),casual,fans,fat:+fat.toFixed(2),by}}
+function cddCtx(p,mn){const gid=typeof gsAg=='function'?gsAg():0,L=(mn.slots||[]).filter(Boolean),ctx={types:(p.types||[]).length||1};
+ try{const RC=seRecep(mn),E=RC.E||{};ctx.q=((+E.comp||60)/100)*.5+((E.abil&&+E.abil.all)||50)/100*.5;ctx.comp=RC.comp||1}catch(e){ctx.q=.55}
+ const c=get(mn.center);ctx.center=mn.center;ctx.cpop=c?c.pop:null;try{ctx.hs=!!(typeof hsOn=='function'&&hsOn(p))}catch(e){}
+ ctx.promo=((mn.video&&mn.video!='none')?.03:0)+(ctx.hs?.05:0);const M=L.map(get).filter(Boolean);ctx.buzz=M.length?avg(M.map(m=>m.buzz||0)):0;
+ const R=S.fb.relQ=S.fb.relQ||{};ctx.prevQ=R[gid]!=null?R[gid]:null;ctx.fat=cdmFatigue(gid,mn.concept,ctx.hs);return{gid,L,ctx}}
+{const f=doRelease;doRelease=function(){const p=S&&S.pj;let D=null,mn=null,C=null;try{if(p&&p.status=='producing'){mn=S.songs[p.mainId];if(mn){C=cddCtx(p,mn);D=cddDemand(C.gid,C.L,{...C.ctx,commit:1})}}}catch(e){console.error(e);D=null}
+ const n=S.singles.length,r=f.apply(this,arguments);
+ try{const x=S.singles[n];if(x&&D&&D.fans>0){const u=Math.max(0,D.units);x.sales=u;if(x.cd){const r0=x.cd.units||1;x.cd.units=u;x.cd.orders=Math.max(1,Math.round(D.buyers+D.pub));if(x.cd.tickets)x.cd.tickets=Math.round(x.cd.tickets*u/r0)}
+  x.cdd={units:u,buyers:D.buyers,pub:D.pub,casual:D.casual,fans:D.fans,fat:D.fat,by:D.by};S.fb.relQ[C.gid]=+C.ctx.q.toFixed(3)}}catch(e){console.error(e)}return r}}

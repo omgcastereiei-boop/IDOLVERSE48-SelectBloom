@@ -96,12 +96,13 @@ function fbStatsRaw(){FBC.v=-1;return fbStats()}
 
 // ---- acquisition ------------------------------------------------------------------------
 function fbAcquire(n,o={}){const fb=fbState();n=Math.round(n);if(!fb||!Number.isFinite(n)||n<=0)return;const act=fbActive(),org=o.org||'Group activity',m=o.mid!=null?get(o.mid):null;fb.acc.src[org]=(fb.acc.src[org]||0)+n;
- if(o.via!='member'||!m||m.status=='graduated'){const ov=o.reg&&o.reg!='Japan'?n:fbRound(n*.04),jp=n-ov,nd=fbRound(jp*fbJit(.18,.3));
-  [['casual',jp-nd,'Japan'],['dedicated',nd,'Japan'],['casual',ov,o.reg&&o.reg!='Japan'?o.reg:fbAbroad()]].forEach(([ft,c,reg])=>{if(c<=0)return;const b=FB_BASE[ft],s=fbNew({n:c,ft,org,pat:'multi',loy:fbJ(b[0]-4,5),eng:fbJ(b[1]+3,5),sp:fbJ(b[2],6),reg});fbOshiFill(s,act,.3)});fb.acc.newG+=n}
+ if(o.via!='member'||!m||m.status=='graduated'){const ov=o.reg&&o.reg!='Japan'?n:fbRound(n*.04),jp=n-ov,nd=fbRound(jp*fbJit(.06,.12));
+  // newcomers mostly start as Casual fans; a few already pick a favourite (Regular). Nobody starts as Dedicated / Hardcore.
+  [['casual',jp-nd,'Japan'],['oshi',nd,'Japan'],['casual',ov,o.reg&&o.reg!='Japan'?o.reg:fbAbroad()]].forEach(([ft,c,reg])=>{if(c<=0)return;const b=FB_BASE[ft],s=fbNew({n:c,ft,org,pat:'multi',loy:fbJ(b[0]-4,5),eng:fbJ(b[1]+3,5),sp:fbJ(b[2],6),reg});fbOshiFill(s,act,.3)});fb.acc.newG+=n}
  else{const pk=fbCl(.42+.22*m.pop/100+(o.kb||0),.25,.78),nk=fbRound(n*pk),no=n-nk,ab=fbNatReg(m),ng=(m.gen||1)==fbNewestGen()&&fbNewestGen()>1,ub=(55-m.pop)*.12;
   const mk=(c,ft,k,reg)=>{if(c<=0)return null;const b=FB_BASE[ft],pat=k!=null?fbPick():'multi',s=fbNew({n:c,ft,org,k,pat,loy:fbJ(b[0]-6+ub,6),eng:fbJ(b[1]+4,6),sp:fbJ(b[2],6),reg,ng});return s};
   const ovk=ab?fbRound(nk*.3):o.reg&&o.reg!='Japan'?nk:0,ovo=ab?fbRound(no*.3):o.reg&&o.reg!='Japan'?no:0,reg2=o.reg&&o.reg!='Japan'?o.reg:(ab||'Japan');
-  const kc=fbRound((nk-ovk)*.45);[mk(kc,'oshi',m.id,'Japan'),mk(nk-ovk-kc,'casual',m.id,'Japan'),mk(ovk,'oshi',m.id,reg2)].forEach(s=>{if(s)fbOshiFill(s,act,FB_ON[s.pat]*.5)});
+  const kc=fbRound((nk-ovk)*.22);[mk(kc,'oshi',m.id,'Japan'),mk(nk-ovk-kc,'casual',m.id,'Japan'),mk(ovk,'oshi',m.id,reg2)].forEach(s=>{if(s)fbOshiFill(s,act,FB_ON[s.pat]*.5)});
   [mk(no-ovo,'casual',null,'Japan'),mk(ovo,'casual',null,reg2)].forEach(s=>{if(s){s.o[m.id]=s.n;fbOshiFill(s,act,.25);s.o[m.id]=s.n}});
   fbLife(m.id,'kg',nk);fbLife(m.id,'og',no);fb.acc.newM+=n}
  fb.ver++}
@@ -169,13 +170,15 @@ function fbMonthly(){const _gm=new Map(S.members.map(m=>[m.id,m]));const fb=S.fb
  const gp=avg(act.map(m=>m.pop));fbAcquire(fbRound((10+gp*2.5)*fbJit(.75,1.25)*(c.recent?1.4:c.stale?.6:1)),{via:'group',org:'Word of mouth'});
  act.forEach(m=>{const n=fbRound(fbAppeal(m,c)*fbJit(.6,1.4));if(n>0)fbAcquire(n,{via:'member',mid:m.id,org:fbWhy(m,c)})});
  // fans without a Kami Oshi slowly choose one (prefers an existing Oshi)
- fb.segs.filter(s=>s.k==null&&s.n>0).forEach(s=>{const mv=fbRound(s.n*.07*(s.eng/60));if(mv<=0)return;const W=act.map(m=>[m,(m.pop+5)*(1+4*(s.o[m.id]||0)/s.n)*(1+(fb.exp[m.id]||0)*.2)]).sort((a,b)=>b[1]-a[1]).slice(0,3),Wt=W.reduce((a,b)=>a+b[1],0);let left=mv;
+ fb.segs.filter(s=>s.k==null&&s.n>0&&s.ft!='casual').forEach(s=>{const mv=fbRound(s.n*.07*(s.eng/60));if(mv<=0)return;const W=act.map(m=>[m,(m.pop+5)*(1+4*(s.o[m.id]||0)/s.n)*(1+(fb.exp[m.id]||0)*.2)]).sort((a,b)=>b[1]-a[1]).slice(0,3),Wt=W.reduce((a,b)=>a+b[1],0);let left=mv;
   W.forEach(([m,w],i)=>{const n=i==W.length-1?left:Math.min(left,fbRound(mv*w/Wt));left-=n;if(n<=0)return;const t=fbSplit(s,n),had=t.o[m.id]||0;t.k=m.id;delete t.o[m.id];t.pat=fbPick();if(t.ft=='casual')t.ft='oshi';fbLife(m.id,'kg',n);if(had)fbLife(m.id,'ol',had)})});
  // 2. fan loss (type, loyalty, activity, exposure over several singles)
  fb.segs.forEach(s=>{const km=s.k!=null?_gm.get(s.k):null;let r=FB_CHURN[s.ft]*(1.5-s.loy/100)*(c.stale?1.5:1)*(1+.15*fb.flops);if(km&&!c.seen(km.id))r*=1.25;if(km&&!isAct(km))r*=1.1;r=Math.min(.1,r*fbJit(.85,1.15));
   const L=fbRound(s.n*r);if(L<=0)return;const f=L/s.n;if(s.k!=null)fbLife(s.k,'kl',L);for(const j in s.o){const d=Math.round(s.o[j]*f);s.o[j]-=d;fbLife(+j,'ol',d)}s.n-=L;A.lost+=L;A.lossBy[FB_TN[s.ft]]=(A.lossBy[FB_TN[s.ft]]||0)+L});
  // 3. fan type evolution (gradual: a few % of a segment per month)
- const EVO=[['casual',s=>s.k!=null&&s.loy>30&&s.eng>42,'oshi',.07],['casual',s=>s.eng>46&&s.loy>32,'dedicated',.06],['dedicated',s=>s.loy>62,'hardcore',.04],['oshi',s=>s.sp>52,'collector',.04],['oshi',s=>s.loy>66,'hardcore',.03],['hardcore',s=>s.eng<42,'dedicated',.05],['collector',s=>s.sp<40,'oshi',.04]];
+ // one step at a time; upgrades beyond Regular need recent CD purchases (s.cdl), downgrades need sustained low activity
+ const buy=s=>s.cdl!=null&&S.day-s.cdl<=200,idle=s=>!(s.cdl!=null&&S.day-s.cdl<=300);
+ const EVO=[['casual',s=>s.loy>35&&s.eng>48,'oshi',.02],['oshi',s=>s.loy>55&&s.eng>48&&buy(s),'dedicated',.035],['dedicated',s=>s.loy>64&&s.sp>45&&buy(s),'hardcore',.025],['hardcore',s=>s.eng<40||idle(s),'dedicated',.04],['dedicated',s=>s.eng<34&&idle(s),'oshi',.035],['collector',s=>true,'dedicated',1]];
  fb.segs.slice().forEach(s=>{const e=EVO.find(([f,p])=>f==s.ft&&p(s));if(!e)return;const n=fbRound(s.n*e[3]*fbJit(.7,1.3));if(n<=0)return;const t=fbSplit(s,n);t.ft=e[2];const b=FB_BASE[e[2]];t.loy=fbCl(t.loy+(b[0]-t.loy)*.2);t.sp=fbCl(t.sp+(b[2]-t.sp)*.2);A.evo+=n});
  // 4. loyalty & engagement drift (popularity is separate: underrated members can have very loyal fans)
  fb.segs.forEach(s=>{const b=FB_BASE[s.ft],km=s.k!=null?_gm.get(s.k):null;let tl=b[0],te=b[1]+(c.recent?10:c.stale?-12:0);if(km){tl+=(55-km.pop)*.12+(km.mor-50)*.06+(c.sen.has(km.id)?2:c.seen(km.id)?0:-3);te+=(fb.exp[km.id]||0)*1.5}
