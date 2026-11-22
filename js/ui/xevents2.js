@@ -29,6 +29,9 @@ const XE_REACH={music:[1,.05],corp:[1,.02],media:[25,.0025],school:[1,.04],fashi
 const xeGrade=v=>v>=85?'Excellent':v>=72?'Great':v>=58?'Good':v>=45?'Average':'Poor';
 function xeOut(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp=(S.exp||0)+a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80)}
 // ---- running the event -----------------------------------------------------------------------------------------------------------
+// floor: an event that went reasonably well brings more new group fans than an average Theater show of the booked group(s)
+function xeFanFloor(r,q){if(q<=-.1)return 0;let n=0,c=0;try{((r.gr&&r.gr.length)?r.gr.map(e=>e.gid):[gsAg()]).forEach(gid=>gsWith(gid,()=>((S.th&&S.th.pf)||[]).slice(-12).forEach(p=>{const a=p.aud||{};if(a.trial==null&&a.liveNew==null)return;n+=(a.liveNew||0)+(a.trial||0)*(a.conv||0);c++})))}catch(e){}
+ const th=c?n/c:40,lv=Math.max(0,Math.min(5,r.lv|0));return Math.round(th*(1.6+.4*lv)*Math.max(.25,Math.min(1.25,(q+.25)/1.3))*(.9+Math.random()*.2))}
 function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.org];const want=(r.sel||[]).slice(),here=want.filter(id=>xeOk(get(id))),miss=want.filter(id=>!here.includes(id));
  if(!here.length){xeCancel(r,'company','Every participating member is unavailable on the day (health, leave or departure)',true);return}
  const M=here.map(get),gid0=r.gid??gsGid(M[0]);
@@ -47,6 +50,7 @@ function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.
  // impact
  const q=Math.max(-.3,Math.min(1.4,(overall-45)/40)),RC=r.ch=='mp'?[(r.prog&&r.prog.aud||2e6)/XE_LV[r.lv][3],.0006]:XE_REACH[r.cat]||[1,.02],reach=XE_LV[r.lv][3]*RC[0];
  const ids=new Set(here);let G=Math.max(0,Math.round(reach*RC[1]*Math.max(0,q+.25)*(.8+Math.random()*.4)));
+ G=Math.max(G,xeFanFloor(r,q));
  if(G>0){try{fbWith('xe',()=>{S.fans+=G},{org:(r.ch=='mp'?'Music program · ':'External event · ')+r.name})}catch(e){S.fans+=G}}
  const wsum=mem.reduce((a,z)=>a+z.vis*Math.pow(Math.max(1,z.sc),2),0)||1;
  mem.forEach(z=>{const m=get(z.id);if(!m)return;const p0=m.pop,f0=m.fans,ps0=m.pas;const share=Math.round(G*z.vis*Math.pow(Math.max(1,z.sc),2)/wsum);if(share>0){m.fans+=share}

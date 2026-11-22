@@ -15,8 +15,8 @@
 //    events get the latest single's songs with their original Centers.
 //  · Fans: an event reaches many people but converts few of them into fans.
 // =====================================================================================
-// ---- fans: far fewer new fans per event ---------------------------------------------------------------------------------------------
-try{Object.keys(XE_REACH).forEach(k=>{if(!XE_REACH[k].x9){XE_REACH[k][1]*=.15;XE_REACH[k].x9=1}})}catch(e){console.error(e)}
+// ---- fans: conversion per category (rebalanced: a good event brings more new group fans than a Theater show) ---------------------------------------------------------------------------------------------
+try{Object.keys(XE_REACH).forEach(k=>{if(!XE_REACH[k].x9){XE_REACH[k][1]*=.9;XE_REACH[k].x9=1}})}catch(e){console.error(e)}
 // ---- Media Senbatsu -------------------------------------------------------------------------------------------------------------------
 function xmMembersFor(p){try{const mn=S.songs[p.mainId];return elig(mn).filter(m=>isAct(m))}catch(e){return[]}}
 function xmOpen(){const p=S.pj;if(!p)return;ui.xmP={sel:(p.media||[]).slice()};ui.mod={t:'html',xm:1,h:xmHtml()};render()}

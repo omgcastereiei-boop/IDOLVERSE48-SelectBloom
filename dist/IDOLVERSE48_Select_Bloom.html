@@ -13406,6 +13406,9 @@ const XE_REACH={music:[1,.05],corp:[1,.02],media:[25,.0025],school:[1,.04],fashi
 const xeGrade=v=>v>=85?'Excellent':v>=72?'Great':v>=58?'Good':v>=45?'Average':'Poor';
 function xeOut(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp=(S.exp||0)+a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80)}
 // ---- running the event -----------------------------------------------------------------------------------------------------------
+// floor: an event that went reasonably well brings more new group fans than an average Theater show of the booked group(s)
+function xeFanFloor(r,q){if(q<=-.1)return 0;let n=0,c=0;try{((r.gr&&r.gr.length)?r.gr.map(e=>e.gid):[gsAg()]).forEach(gid=>gsWith(gid,()=>((S.th&&S.th.pf)||[]).slice(-12).forEach(p=>{const a=p.aud||{};if(a.trial==null&&a.liveNew==null)return;n+=(a.liveNew||0)+(a.trial||0)*(a.conv||0);c++})))}catch(e){}
+ const th=c?n/c:40,lv=Math.max(0,Math.min(5,r.lv|0));return Math.round(th*(1.6+.4*lv)*Math.max(.25,Math.min(1.25,(q+.25)/1.3))*(.9+Math.random()*.2))}
 function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.org];const want=(r.sel||[]).slice(),here=want.filter(id=>xeOk(get(id))),miss=want.filter(id=>!here.includes(id));
  if(!here.length){xeCancel(r,'company','Every participating member is unavailable on the day (health, leave or departure)',true);return}
  const M=here.map(get),gid0=r.gid??gsGid(M[0]);
@@ -13424,6 +13427,7 @@ function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.
  // impact
  const q=Math.max(-.3,Math.min(1.4,(overall-45)/40)),RC=r.ch=='mp'?[(r.prog&&r.prog.aud||2e6)/XE_LV[r.lv][3],.0006]:XE_REACH[r.cat]||[1,.02],reach=XE_LV[r.lv][3]*RC[0];
  const ids=new Set(here);let G=Math.max(0,Math.round(reach*RC[1]*Math.max(0,q+.25)*(.8+Math.random()*.4)));
+ G=Math.max(G,xeFanFloor(r,q));
  if(G>0){try{fbWith('xe',()=>{S.fans+=G},{org:(r.ch=='mp'?'Music program · ':'External event · ')+r.name})}catch(e){S.fans+=G}}
  const wsum=mem.reduce((a,z)=>a+z.vis*Math.pow(Math.max(1,z.sc),2),0)||1;
  mem.forEach(z=>{const m=get(z.id);if(!m)return;const p0=m.pop,f0=m.fans,ps0=m.pas;const share=Math.round(G*z.vis*Math.pow(Math.max(1,z.sc),2)/wsum);if(share>0){m.fans+=share}
@@ -16781,12 +16785,17 @@ xeSetEdHtml=function(r){const L=xeL(r),max=r.songs||0,acc=r.status=='accepted';
 // accepting keeps the second Centers chosen in the offer draft
 {const f=xeDoAccept;xeDoAccept=function(r,ids,set){const D=r&&r.draft&&r.draft.songs?r.draft.songs.slice():[];const ok=f.apply(this,arguments);try{if(ok&&r&&r.set)r.set.forEach(z=>{const d=D.find(x=>x.song==z.song&&x.gid==z.gid);if(d&&d.c2!=null&&(r.sel||[]).includes(d.c2)&&d.c2!=z.center){z.c2=d.c2;xeCenFix(z)}})}catch(e){console.error(e)}return ok}}
 // ---- 4. every member wears her latest single costume ---------------------------------------------------------------------------
-function xeLatestCz(m){if(!m)return null;if(m.profCz&&m.profCz.p)return m.profCz.p;
+// a sister-group member at an event booked for her senior group wears the SENIOR group's latest single costume:
+// her own costume of its title track when she was in that Senbatsu, otherwise the single's (non-Senbatsu) costume
+function xeHostGid(r,m){const G=r&&Array.isArray(r.gr)?r.gr.map(e=>e.gid):[];const own=typeof gsGid=='function'?gsGid(m):m.group;if(!G.length||G.includes(own))return null;const main=G.find(g=>{const x=grp(g);return x&&x.type=='main'});return main??G[0]}
+function xeSeniorCz(gid,m){let cd=null;try{gsWith(gid,()=>{const x=(S.singles||[]).filter(z=>z.mainId&&S.songs[z.mainId]).sort((a,b)=>(b.relDay??b.day??0)-(a.relDay??a.day??0))[0];if(!x)return;const o=S.songs[x.mainId],tt=new Set((x.tt&&x.tt.members)||(o.slots||[]).filter(Boolean)),sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{};
+ if(tt.has(m.id)){const c=evCostume(o,m);if(c&&c.cd){cd=c.cd;return}}const v=sc[m.id];if(v&&v.own&&v.own.p){cd=v.own.p;return}const any=Object.values(sc).find(z=>z&&z.own&&z.own.p&&z.ok);if(any){cd=any.own.p;return}const c=evCostume(o,m);cd=c&&c.cd||null})}catch(e){}return cd}
+function xeLatestCz(m,r){if(!m)return null;const hg=r?xeHostGid(r,m):null;if(hg!=null){const cd=xeSeniorCz(hg,m);if(cd)return cd}if(m.profCz&&m.profCz.p)return m.profCz.p;
  try{const gid=typeof gsGid=='function'?gsGid(m):m.group;let cd=null;gsWith(gid,()=>{for(const x of (S.singles||[]).slice().reverse()){const o=S.songs[x.mainId];if(!o)continue;const c=evCostume(o,m);if(c&&c.cd){cd=c.cd;break}}});return cd}catch(e){return null}}
-function xeDressLatest(sp){if(!sp||!Array.isArray(sp.m))return sp;const keys=[],cds=[];sp.m.forEach(e=>{const m=get(e.id),cd=xeLatestCz(m);if(cd){const k=JSON.stringify(cd);let ci=keys.indexOf(k);if(ci<0){keys.push(k);cds.push(JSON.parse(k));ci=cds.length-1}e.c=ci;delete e.of;delete e.oh}else{const a=m?ap(m):{};e.c=null;e.of=a.of;e.oh=a.oh}});sp.cd=cds;sp.czLatest=1;return sp}
-{const f=xeArtMake;xeArtMake=function(){const sp=f.apply(this,arguments);try{xeDressLatest(sp)}catch(e){console.error(e)}return sp}}
-{const f=xeArtFix;xeArtFix=function(r){try{if(r){r.cz=null;if(r.draft)r.draft.cz=null}}catch(e){}const out=f.apply(this,arguments);try{if(r&&r.art&&r.status!='done')xeDressLatest(r.art)}catch(e){console.error(e)}return out}}
-xeCzHtml=function(r){const ids=xeM(r).slice(0,8);return`<div class="c xecz"><h3>Event costume</h3><p class="st">Every member wears her latest single costume (like the Roadshow).</p><div class="row xeczrow">${ids.map(id=>{const m=get(id);if(!m)return'';const a=ap(m),cd=xeLatestCz(m);return`<span class="xeczm"><svg viewBox="10 -2 80 200" width="34">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:cd||undefined})}</svg><small>${esc(m.name.split(' ')[0])}</small></span>`}).join('')}${xeM(r).length>8?`<small class="st">+${xeM(r).length-8}</small>`:''}</div></div>`};
+function xeDressLatest(sp,r){if(!sp||!Array.isArray(sp.m))return sp;const keys=[],cds=[];sp.m.forEach(e=>{const m=get(e.id),cd=xeLatestCz(m,r);if(cd){const k=JSON.stringify(cd);let ci=keys.indexOf(k);if(ci<0){keys.push(k);cds.push(JSON.parse(k));ci=cds.length-1}e.c=ci;delete e.of;delete e.oh}else{const a=m?ap(m):{};e.c=null;e.of=a.of;e.oh=a.oh}});sp.cd=cds;sp.czLatest=1;return sp}
+{const f=xeArtMake;xeArtMake=function(r){const sp=f.apply(this,arguments);try{xeDressLatest(sp,r)}catch(e){console.error(e)}return sp}}
+{const f=xeArtFix;xeArtFix=function(r){try{if(r){r.cz=null;if(r.draft)r.draft.cz=null}}catch(e){}const out=f.apply(this,arguments);try{if(r&&r.art&&r.status!='done')xeDressLatest(r.art,r)}catch(e){console.error(e)}return out}}
+xeCzHtml=function(r){const ids=xeM(r).slice(0,8);return`<div class="c xecz"><h3>Event costume</h3><p class="st">Every member wears her latest single costume (like the Roadshow). Sister-group members at a senior-group event wear the senior group's latest single costume.</p><div class="row xeczrow">${ids.map(id=>{const m=get(id);if(!m)return'';const a=ap(m),cd=xeLatestCz(m,r);return`<span class="xeczm"><svg viewBox="10 -2 80 200" width="34">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:cd||undefined})}</svg><small>${esc(m.name.split(' ')[0])}</small></span>`}).join('')}${xeM(r).length>8?`<small class="st">+${xeM(r).length-8}</small>`:''}</div></div>`};
 // the accepted-event page no longer shows an old "one costume" choice
 {const f=V.xedet;V.xedet=function(){const r=xeGet(ui.xe);if(r&&r.status!='done')r.cz=null;return f.apply(this,arguments)}}
 
@@ -16809,8 +16818,8 @@ xeCzHtml=function(r){const ids=xeM(r).slice(0,8);return`<div class="c xecz"><h3>
 //    events get the latest single's songs with their original Centers.
 //  · Fans: an event reaches many people but converts few of them into fans.
 // =====================================================================================
-// ---- fans: far fewer new fans per event ---------------------------------------------------------------------------------------------
-try{Object.keys(XE_REACH).forEach(k=>{if(!XE_REACH[k].x9){XE_REACH[k][1]*=.15;XE_REACH[k].x9=1}})}catch(e){console.error(e)}
+// ---- fans: conversion per category (rebalanced: a good event brings more new group fans than a Theater show) ---------------------------------------------------------------------------------------------
+try{Object.keys(XE_REACH).forEach(k=>{if(!XE_REACH[k].x9){XE_REACH[k][1]*=.9;XE_REACH[k].x9=1}})}catch(e){console.error(e)}
 // ---- Media Senbatsu -------------------------------------------------------------------------------------------------------------------
 function xmMembersFor(p){try{const mn=S.songs[p.mainId];return elig(mn).filter(m=>isAct(m))}catch(e){return[]}}
 function xmOpen(){const p=S.pj;if(!p)return;ui.xmP={sel:(p.media||[]).slice()};ui.mod={t:'html',xm:1,h:xmHtml()};render()}
