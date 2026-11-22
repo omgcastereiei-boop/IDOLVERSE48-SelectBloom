@@ -6,7 +6,7 @@
 //    from the 2nd election on, the change vs the previous election stands before the rank (▲ / ▼ / ＝,
 //    NEW, Comeback). Preliminary Result 01 and 02 are shown at the bottom of each archived election.
 //  · Rank changes, NEW / Comeback and reactions only compare elections of the SAME group.
-//  · Only one group can run a General Election at a time (until its results are announced).
+//  · Every group can run its own General Election, also at the same time as another group's.
 //  · Main Group election: optional sister-group rankings (e.g. "Group B TOP 16" = the 16 sister
 //    members with the most votes). Each can become the Title Track Senbatsu of that group's next single.
 //    The member history shows e.g. "Group A 1st General Election: TOP 16 (Senbatsu) (Group B TOP 1)".
@@ -20,7 +20,8 @@ function geOnlyHere(m,fn){if(!m||!Array.isArray(m.geRec))return fn();const all=m
 function geGidOf(eid){for(const g of S.groups){const G=gsCtx(g.id,'ge');const e=((G&&G.list)||[]).find(z=>z.id==eid);if(e)return{g,e}}return null}
 // ---- one election at a time ----------------------------------------------------------------------------------------
 function geBusyElsewhere(){const ag=gsAg();for(const g of S.groups){if(g.id==ag)continue;const G=gsCtx(g.id,'ge'),c=G&&((G.list||[]).find(z=>z.id==G.cur));if(c&&c.st!='done')return{g,e:c}}return null}
-{const f=geNew;geNew=function(){try{if(S.groups.length>1){const B=geBusyElsewhere();if(B)return toast(`${B.g.name} is running its ${B.e.name}. Only one group can hold a General Election at a time — wait until its results are announced.`,'err')}}catch(e){console.error(e)}return f.apply(this,arguments)}}
+// (removed) groups may now hold their General Elections at the same time — a sister group can run its own election
+// while the main group's election is running (each group's election runs in its own group).
 // ---- sister-group rankings in the Main Group election ----------------------------------------------------------------
 const geIsMainE=e=>S.groups.length>1&&(e.gid??gsAg())==(gsMain()||{}).id;
 function geSubOf(e,gid){const s=e.sub&&e.sub[gid];if(!s||!s.on||!e.final)return[];return e.final.rows.filter(r=>!r.withdrawn&&r.votes>0&&gsGid(get(r.id)||(S.alumni||[]).find(a=>a.id==r.id)||{group:null})==gid).sort((a,b)=>b.votes-a.votes||(a.rank||999)-(b.rank||999)).slice(0,s.n).map(r=>r.id)}
@@ -55,3 +56,14 @@ function geArchRow(e,r,hasPrev,lab){const chg=hasPrev&&r.rank?geBadge(e,r):'';re
  const li=L.map(({x,G})=>{const gn=G&&S.groups.length>1?G.g.name+' ':'',sub=G&&geIsMainE(G.e)?(()=>{const id=gsGid(m),L2=geSubOf(G.e,id),k=L2.indexOf(m.id);return k>=0?` (${esc((grp(id)||{}).name||'')} TOP ${k+1})`:''})():'';
   return`<li><b>${esc(gn+x.name)}</b>: <span class="wlpos ${x.top?'center':x.rank?'front':'none'}">${x.rank?'TOP '+x.rank:'Unranked'}</span>${x.rank&&x.group?` (${esc(x.group)})`:''}${sub} <span class="st">· ${(x.votes||0).toLocaleString()} votes${x.change!=null?` · ${x.change>0?'▲'+x.change:x.change<0?'▼'+(-x.change):'＝'} vs previous`:''}${x.top?' · '+GE_CAPE[x.top].n:''}</span>${x.speech?`<br><q>${esc(x.speech)}</q>`:''}</li>`}).join('');
  h=h.slice(0,a)+`<div class="c gerec"><h3>General Elections</h3><ul class="wll">${li}`+h.slice(b)}catch(e){console.error(e)}return h}}
+
+// ---- cancel a General Election (created by mistake) — possible until voting starts -------------------------------------------------
+function geCanCancel(e){return!!(e&&(e.st=='setup'||e.st=='producing'))}
+function geCancel(){const e=geActive();if(!geCanCancel(e))return toast('An election can only be cancelled before voting starts.','err');
+ ask(`Cancel “${e.name}”? It is removed completely. A single already linked to it continues as a normal single.`,()=>{const G=geS();
+  try{const p=S.pj;if(p&&p.ge==e.id){delete p.ge;delete p.geNext}}catch(x){}
+  try{(S.singles||[]).forEach(x=>{if(x.ge==e.id)delete x.ge})}catch(x){}
+  S.cal=(S.cal||[]).filter(c=>c.ge!=e.id);G.list=G.list.filter(z=>z!==e);const last=G.list.slice().reverse().find(z=>z.st=='done');G.cur=last?last.id:null;
+  toast(`${e.name} was cancelled.`);render()})}
+{const f=geSetupHtml;geSetupHtml=function(e){let h=f.apply(this,arguments);try{if(geCanCancel(e))h+=`<div class="c gecx"><p class="st">Created this election by mistake? It can be cancelled until voting starts.</p><button class="b s warn" onclick="geCancel()">✕ Cancel this General Election</button></div>`}catch(x){console.error(x)}return h}}
+try{Object.assign(I18N_TH,{'✕ Cancel this General Election':'✕ ยกเลิกการเลือกตั้งนี้','Created this election by mistake? It can be cancelled until voting starts.':'สร้างการเลือกตั้งนี้โดยไม่ได้ตั้งใจ? ยกเลิกได้จนกว่าจะเริ่มโหวต','An election can only be cancelled before voting starts.':'ยกเลิกการเลือกตั้งได้เฉพาะก่อนเริ่มโหวต'})}catch(x){}
