@@ -1510,3 +1510,14 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 @media(max-width:560px){.jkarena{grid-template-columns:1fr 92px 1fr}.jkmid{height:200px}.jkthrow{font-size:34px}.jkvs{font-size:26px}.jkcount i{font-size:42px}.jkname b{font-size:13px}.jkwin{font-size:16px}.jkcol{min-width:168px}}
 @media(min-width:1000px){.jkov .jkarena{margin-top:40px}}
 @media(min-width:1100px){.jkblocks.multi{display:grid;grid-template-columns:1fr 1fr;gap:12px}.jkblocks.multi .jkblk{margin:0;min-width:0}}
+/* Music Awards notifications (aw4.js) */
+.aw4pop{position:relative;text-align:center;padding:22px 14px 16px;border-radius:16px;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#3a2a08 0%,#16110a 55%,#0b0906 100%);color:#f6ead0;border:1px solid #c9a24a66}
+.aw4glow{position:absolute;inset:-40% -20% auto;height:70%;background:radial-gradient(closest-side,#ffd77a55,transparent);pointer-events:none}
+.aw4star{font-size:46px;line-height:1;filter:drop-shadow(0 0 12px #ffcf6a88);position:relative}
+.aw4k{font-size:11px;letter-spacing:.3em;color:#d9b866;margin-top:6px;position:relative}
+.aw4pop h2{margin:4px 0 2px;color:#ffe3a0;font-size:22px;position:relative}
+.aw4pop h3{margin:8px 0;color:#fff;font-size:17px;position:relative}
+.aw4pop p{position:relative;line-height:1.5;margin:6px 0}
+.aw4pop .st{color:#d9c28c}
+.aw4act{justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;position:relative}
+.aw4act .b{min-width:140px;min-height:42px}
