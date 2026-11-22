@@ -119,3 +119,13 @@ function f10Care(){const N=[];S.members.forEach(m=>{if(m.status=='graduated')ret
  if(w.redAuto&&w.red&&w.ph>=F10_OK){w.red=false;w.redAuto=0;wlLog(m,{t:'care',txt:'Automatic Reduced Schedule ended (recovered).'})}});
  N.forEach(t=>{try{wlN(`<li>${t}</li>`)}catch(e){}})}
 {const f=tick;tick=function(){const o=f.apply(this,arguments);try{f10Care()}catch(e){console.error(e)}return o}}
+
+// ---- 11. Crisis Room removed: no new scandal / rumor cases; open cases are closed quietly (no effects);
+//          the page, its menu entry, banner and article buttons are gone. Old cases stay in the save as history only.
+scNew=function(){return null};scDaily=function(){};
+function f10CloseCases(){try{const X=scS&&scS();if(!X||!Array.isArray(X.list))return;X.list.forEach(c=>{if(!['resolved','archived'].includes(c.st)){c.st='archived';c.pend=[];(c.hist=c.hist||[]).push({d:S.day,e:'status',st:'archived',why:'Crisis Room removed'})}})}catch(e){}}
+{const f=migrate;migrate=function(){const o=f.apply(this,arguments);f10CloseCases();return o}}
+{const f=tick;tick=function(){const o=f.apply(this,arguments);f10CloseCases();return o}}
+try{const M=SECS.find(s=>s.k=='media');if(M)M.v=M.v.filter(x=>x[0]!='crisis')}catch(e){}
+V.crisis=function(){view='news';return V.news.apply(this,arguments)};
+{const f=render;render=function(){if(S&&view=='crisis')view='news';const r=f.apply(this,arguments);try{document.querySelectorAll('[onclick*="goView(\'crisis\')"]').forEach(b=>b.remove())}catch(e){}return r}}
