@@ -18209,6 +18209,11 @@ const jkBlockEdit=id=>{const o=jkSong(id);if(o){toast(JT(`🔒 “${o.title}” 
  return h+`<h3>${JT('Janken Tournament','การแข่งขันจังเก้น')}</h3><ul class="pfl">${L.map(e=>{const q=(e.qual||[]).find(z=>z.id==m.id),sl=(e.form||[]).find(x=>x.m==m.id),rk=e.st=='done'?jkRank(e).indexOf(m.id)+1:null,M=[];(e.B||[]).forEach(B=>B.R.forEach(L2=>L2.forEach(x=>{if(x.done&&!x.bye&&(x.a==m.id||x.b==m.id))M.push(x.w==m.id?'W':'L')})));[...(e.F?e.F.s:[]),e.F&&e.F.f].forEach(x=>{if(x&&x.done&&(x.a==m.id||x.b==m.id))M.push(x.w==m.id?'W':'L')});
   return`<li><b>${m.id==e.queen?'👑 ':''}${esc(e.name)}</b><span class="st">${esc(jkGn(e,m.id))} · ${JT('Block','บล็อก')} ${JK_BL[jkBlockOf(e,m.id)]||'—'} · ${esc(jkStage(e,m.id))}${rk?` · ${JT('rank','อันดับ')} ${rk}`:''}${q?` · Senbatsu #${q.ord}`:''}${sl?` · ${sl.c?'Center':jkRowName(sl.r)+' #'+sl.n}`:''}${M.length?` · ${M.join(' ')}`:''}</span></li>`}).join('')}</ul>`}catch(e){return h}}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{jkS()}catch(e){}return r}}
+// ---- the same costume rule for the Music Awards (attendance, red carpet, stage, speeches) -------------------------------------------
+function jkCdRef(r,m){if(!r||r.k=='def'||!m)return null;let cd=null;try{gsWith(r.gid,()=>{const x=(S.singles||[]).find(z=>z.rid==r.rid);if(!x)return;const o=S.songs[x.mainId],sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{};
+ if(r.k=='title'){const c=o&&evCostume(o,m);cd=c&&c.cd||null}else if(r.k=='own'){const v=sc[m.id];cd=v&&v.own?v.own.p:null}else{const any=Object.values(sc).find(z=>z&&z.own&&z.own.p&&z.ok);cd=any?any.own.p:null}})}catch(e){}return cd}
+const JK_AWC=new Map();
+if(typeof awCzOf=='function')awCzOf=function(Y,m){if(!m)return null;const k=m.id+'|'+S.day+'|'+(S.singles||[]).length;if(JK_AWC.has(k))return JK_AWC.get(k);const cd=jkCdRef(jkCzRef(m),m)||null;if(JK_AWC.size>300)JK_AWC.clear();JK_AWC.set(k,cd);return cd};
 
 </script>
 <script>
