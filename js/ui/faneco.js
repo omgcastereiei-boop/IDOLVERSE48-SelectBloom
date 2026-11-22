@@ -43,7 +43,8 @@ let FX_EXQ={};
 function fxExFlush(){const Q=FX_EXQ;if(!Object.keys(Q).length||!S||!S.fb)return;FX_EXQ={};S.fb.segs.forEach(s=>{if(s.k!=null&&Q[s.k]!=null)s.af[s.k]=fbCl(fxAf(s,s.k,1)+Q[s.k]*(1+Math.random()));for(const j in s.o)if(Q[j]!=null&&+j!=s.k)s.af[j]=fbCl(fxAf(s,+j,0)+Q[j]*(.6+Math.random()*.9))})}
 // ---- shared budget & purchases --------------------------------------------------------------------------------------------
 function fxTx(){const X=fxS(),k=fbMon();return X.tx[k]=X.tx[k]||{k:{},cat:{},mem:{},grp:{},pub:0,tot:0}}
-const fxGrpOk=(s,gid)=>{if(!S||S.groups.length<2||gid==null)return 1;try{const w=gsSupW(s,gid,gsAffMap(gid));return w||(s.k==null&&s.gs==null&&gid==(gsMain()||{}).id?1:0)}catch(e){return 1}};
+const fxGrpOk=(s,gid)=>typeof fxGrpOkCached=='function'?fxGrpOkCached(s,gid):fxGrpOk0(s,gid);
+const fxGrpOk0=(s,gid)=>{if(!S||S.groups.length<2||gid==null)return 1;try{const w=gsSupW(s,gid,gsAffMap(gid));return w||(s.k==null&&s.gs==null&&gid==(gsMain()||{}).id?1:0)}catch(e){return 1}};
 // budget fullness of the fans who would pay for this (1 = fresh month, → 0 = spent)
 function fxFull(kind,gid){let a=0,b=0;try{S.fb.segs.forEach(s=>{fxSeg(s);const w=s.n*(FX_PREF[kind]||FX_PREF.other)[s.ft]*fxGrpOk(s,gid);if(!w)return;a+=w*Math.max(0,s.bl);b+=w*fxBud(s)})}catch(e){}return b?a/b:1}
 let FX_DC={d:-1,m:{}};const fxDem=(kind,gid)=>{if(FX_DC.d!==S.day||FX_DC.s!==S)FX_DC={d:S.day,s:S,m:{}};const k=kind+'|'+gid;if(FX_DC.m[k]==null)FX_DC.m[k]=fbCl(.6+.42*fxFull(kind,gid),.6,1.05);return FX_DC.m[k]};

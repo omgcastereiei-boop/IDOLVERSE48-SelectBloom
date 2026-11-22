@@ -85,7 +85,9 @@ function gsFinOf(gid,from){const T=gsFin().tx.filter(t=>(gid==null||t.gid==gid)&
 function gsPart(m){const P=m.gsp||{};return P}
 function gsAff(m,gid){if(gsGid(m)==gid)return 1;if(!(m.kn&&m.kn.gid==gid))return 0;const P=gsPart(m),a=P[gid]||0,t=Object.values(P).reduce((x,y)=>x+y,0);return Math.max(.25,Math.min(1,.3+.7*(t?a/t:.5)))}
 function gsSupW(s,gid,A){let w=s.gs==gid&&s.k==null?1:0;if(s.k!=null&&A[s.k]!=null)w=Math.max(w,A[s.k]);for(const k in s.o||{})if(A[k]!=null&&s.o[k]>0){w=Math.max(w,.5*A[k]);break}return w}
-let GS_AC={k:null,m:{}};function gsAffMap(gid){const k=S.day+'|'+S.members.length+'|'+S.members.reduce((x,m)=>x+(m.kn?String(m.kn.tid).length+m.kn.gid:0)+(m.group|0)*7+(m.status=='graduated'?3:0),0);if(GS_AC.k!==k)GS_AC={k,m:{}};if(GS_AC.m[gid])return GS_AC.m[gid];const A={};S.members.forEach(m=>{const a=gsAff(m,gid);if(a>0)A[m.id]=a});return GS_AC.m[gid]=A}
+let GS_AC={k:null,m:{}};// the cache key scans every member, so it is computed once per synchronous run (reset on the next microtask), not on every call
+let GS_AK=null;function gsAffKey(){if(GS_AK!=null)return GS_AK;GS_AK=S.day+'|'+S.members.length+'|'+S.members.reduce((x,m)=>x+(m.kn?String(m.kn.tid).length+m.kn.gid:0)+(m.group|0)*7+(m.status=='graduated'?3:0),0);try{queueMicrotask(()=>{GS_AK=null})}catch(e){setTimeout(()=>{GS_AK=null},0)}return GS_AK}
+function gsAffMap(gid){const k=gsAffKey();if(GS_AC.k!==k)GS_AC={k,m:{}};if(GS_AC.m[gid])return GS_AC.m[gid];const A={};S.members.forEach(m=>{const a=gsAff(m,gid);if(a>0)A[m.id]=a});return GS_AC.m[gid]=A}
 function gsFans(gid,raw){const A=gsAffMap(gid),main=(gsMain()||{}).id;let n=0;((S.fb&&S.fb.segs)||[]).forEach(s=>{if(!(s.n>0))return;let w=gsSupW(s,gid,A);if(!w&&s.k==null&&s.gs==null&&gid==main)w=1;if(raw?w>0:w)n+=raw?s.n:s.n*w});return Math.round(n)}
 const gsShare=gid=>{if(!S||S.groups.length<2)return 1;const T=Math.max(1,S.fans||0);return Math.max(.03,Math.min(1,gsFans(gid)/T))};
 {const f=fbFactor;fbFactor=function(kind){const r=f.apply(this,arguments);return S&&S.groups.length>1?r*gsShare(GS_TXG!=null?GS_TXG:gsAg()):r}}

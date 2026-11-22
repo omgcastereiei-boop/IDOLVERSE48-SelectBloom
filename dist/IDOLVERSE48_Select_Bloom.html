@@ -8674,7 +8674,9 @@ function gsFinOf(gid,from){const T=gsFin().tx.filter(t=>(gid==null||t.gid==gid)&
 function gsPart(m){const P=m.gsp||{};return P}
 function gsAff(m,gid){if(gsGid(m)==gid)return 1;if(!(m.kn&&m.kn.gid==gid))return 0;const P=gsPart(m),a=P[gid]||0,t=Object.values(P).reduce((x,y)=>x+y,0);return Math.max(.25,Math.min(1,.3+.7*(t?a/t:.5)))}
 function gsSupW(s,gid,A){let w=s.gs==gid&&s.k==null?1:0;if(s.k!=null&&A[s.k]!=null)w=Math.max(w,A[s.k]);for(const k in s.o||{})if(A[k]!=null&&s.o[k]>0){w=Math.max(w,.5*A[k]);break}return w}
-let GS_AC={k:null,m:{}};function gsAffMap(gid){const k=S.day+'|'+S.members.length+'|'+S.members.reduce((x,m)=>x+(m.kn?String(m.kn.tid).length+m.kn.gid:0)+(m.group|0)*7+(m.status=='graduated'?3:0),0);if(GS_AC.k!==k)GS_AC={k,m:{}};if(GS_AC.m[gid])return GS_AC.m[gid];const A={};S.members.forEach(m=>{const a=gsAff(m,gid);if(a>0)A[m.id]=a});return GS_AC.m[gid]=A}
+let GS_AC={k:null,m:{}};// the cache key scans every member, so it is computed once per synchronous run (reset on the next microtask), not on every call
+let GS_AK=null;function gsAffKey(){if(GS_AK!=null)return GS_AK;GS_AK=S.day+'|'+S.members.length+'|'+S.members.reduce((x,m)=>x+(m.kn?String(m.kn.tid).length+m.kn.gid:0)+(m.group|0)*7+(m.status=='graduated'?3:0),0);try{queueMicrotask(()=>{GS_AK=null})}catch(e){setTimeout(()=>{GS_AK=null},0)}return GS_AK}
+function gsAffMap(gid){const k=gsAffKey();if(GS_AC.k!==k)GS_AC={k,m:{}};if(GS_AC.m[gid])return GS_AC.m[gid];const A={};S.members.forEach(m=>{const a=gsAff(m,gid);if(a>0)A[m.id]=a});return GS_AC.m[gid]=A}
 function gsFans(gid,raw){const A=gsAffMap(gid),main=(gsMain()||{}).id;let n=0;((S.fb&&S.fb.segs)||[]).forEach(s=>{if(!(s.n>0))return;let w=gsSupW(s,gid,A);if(!w&&s.k==null&&s.gs==null&&gid==main)w=1;if(raw?w>0:w)n+=raw?s.n:s.n*w});return Math.round(n)}
 const gsShare=gid=>{if(!S||S.groups.length<2)return 1;const T=Math.max(1,S.fans||0);return Math.max(.03,Math.min(1,gsFans(gid)/T))};
 {const f=fbFactor;fbFactor=function(kind){const r=f.apply(this,arguments);return S&&S.groups.length>1?r*gsShare(GS_TXG!=null?GS_TXG:gsAg()):r}}
@@ -10937,7 +10939,8 @@ let FX_EXQ={};
 function fxExFlush(){const Q=FX_EXQ;if(!Object.keys(Q).length||!S||!S.fb)return;FX_EXQ={};S.fb.segs.forEach(s=>{if(s.k!=null&&Q[s.k]!=null)s.af[s.k]=fbCl(fxAf(s,s.k,1)+Q[s.k]*(1+Math.random()));for(const j in s.o)if(Q[j]!=null&&+j!=s.k)s.af[j]=fbCl(fxAf(s,+j,0)+Q[j]*(.6+Math.random()*.9))})}
 // ---- shared budget & purchases --------------------------------------------------------------------------------------------
 function fxTx(){const X=fxS(),k=fbMon();return X.tx[k]=X.tx[k]||{k:{},cat:{},mem:{},grp:{},pub:0,tot:0}}
-const fxGrpOk=(s,gid)=>{if(!S||S.groups.length<2||gid==null)return 1;try{const w=gsSupW(s,gid,gsAffMap(gid));return w||(s.k==null&&s.gs==null&&gid==(gsMain()||{}).id?1:0)}catch(e){return 1}};
+const fxGrpOk=(s,gid)=>typeof fxGrpOkCached=='function'?fxGrpOkCached(s,gid):fxGrpOk0(s,gid);
+const fxGrpOk0=(s,gid)=>{if(!S||S.groups.length<2||gid==null)return 1;try{const w=gsSupW(s,gid,gsAffMap(gid));return w||(s.k==null&&s.gs==null&&gid==(gsMain()||{}).id?1:0)}catch(e){return 1}};
 // budget fullness of the fans who would pay for this (1 = fresh month, → 0 = spent)
 function fxFull(kind,gid){let a=0,b=0;try{S.fb.segs.forEach(s=>{fxSeg(s);const w=s.n*(FX_PREF[kind]||FX_PREF.other)[s.ft]*fxGrpOk(s,gid);if(!w)return;a+=w*Math.max(0,s.bl);b+=w*fxBud(s)})}catch(e){}return b?a/b:1}
 let FX_DC={d:-1,m:{}};const fxDem=(kind,gid)=>{if(FX_DC.d!==S.day||FX_DC.s!==S)FX_DC={d:S.day,s:S,m:{}};const k=kind+'|'+gid;if(FX_DC.m[k]==null)FX_DC.m[k]=fbCl(.6+.42*fxFull(kind,gid),.6,1.05);return FX_DC.m[k]};
@@ -18856,6 +18859,49 @@ function rhSpeechFor(C,p,set,idx){const used=new Set(),R=set.items[idx].rh.r;let
 {const f=ccFinish;ccFinish=function(C){const r=f.apply(this,arguments);try{const E=rhOfC(C);if(E&&E.status=='concert'){E.status='done';E.log.push({d:S.day,t:'done'})}}catch(e){console.error(e)}return r}}
 // if the concert is cancelled the Request Hour still keeps its results
 {const f=ccCancel;ccCancel=function(id){const r=f.apply(this,arguments);try{const C=ccGet(id),E=rhOfC(C);if(E&&(C.status=='cancel'||C.status=='cancelled')&&E.status=='concert'){E.status='done';E.log.push({d:S.day,t:'cancel'})}}catch(e){}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — faster fan updates for large fanbases
+// -------------------------------------------------------------------------------------
+//  Same results, less repeated work (a big save spent most of "Next day" here):
+//   · one fan sync asks "does this cohort support group G?" for every member whose fans changed × every cohort;
+//     the answer cannot change during that sync, so it is computed once per cohort and reused
+//   · counting a group's fans skips the interval layout when a cohort has no link to that group at all
+// =====================================================================================
+let FD_HC=null;
+{const f=fdSegHas;fdSegHas=function(s,g){if(FD_HC&&s){let G=FD_HC.get(s);if(!G){G=fdSegGroups(s);FD_HC.set(s,G)}return G.has(g)}return f.apply(this,arguments)}}
+{const f=fdSegGroupN;fdSegGroupN=function(s,gid){if(!s||s.k==null)return f.apply(this,arguments);if(fdGrpOf(s.k)==gid)return s.n;let hit=false;for(const j in s.o){if(fdGrpOf(+j)==gid){hit=true;break}}if(!hit)for(const j in s.u){if(fdGrpOf(+j)==gid){hit=true;break}}return hit?f.apply(this,arguments):0}}
+// cohort merging: with many members the merge cannot go below the fixed cap (members × fan types × …), so it ran again every
+// day and after every fan gain without shrinking anything. The cap now follows what a merge can actually reach: after a merge
+// that stays above the cap, the next one waits until the fanbase has 20% more cohorts.
+{const f=fdCompact;fdCompact=function(force){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs))return;const cap=Math.max(FD_SEGCAP,fb.capEff||0);if(!force&&fb.segs.length<=cap)return;
+ const r=f.call(this,true);try{const n=fb.segs.length;if(n>FD_SEGCAP)fb.capEff=Math.round(n*1.2);else delete fb.capEff}catch(e){}return r}}
+// one fan sync: the cohorts that support each group are listed once (they do not change during the sync)
+let FD_IP=null;
+fdInterest=function(m,d,org){const fb=S.fb;if(!(d>0))return;const g=fdGrpOf(m.id),F=fb.segs.reduce((a,s)=>a+s.n,0);
+ let P=FD_IP&&FD_IP[g];if(!P||P.a!==fb.segs||P.n!==fb.segs.length){P={a:fb.segs,n:fb.segs.length,L:fb.segs.filter(s=>fdSegHas(s,g))};if(FD_IP)FD_IP[g]=P}
+ const pool=P.L.filter(s=>s.k!=m.id),free=s=>Math.max(0,s.n-(s.o[m.id]||0)-(s.u[m.id]||0));let FR=0;const fw=pool.map(s=>{const w=free(s)*(.3+s.eng/100);FR+=w;return w});
+ const conv=Math.min(d*.35,FR*.04)*fdDim(F);let left=fbRound(conv);if(left>0&&FR>0)pool.forEach((s,i)=>{const c=Math.min(free(s),fbRound(conv*fw[i]/FR));if(c>0&&left>0){const cc=Math.min(c,left);s.u=s.u||{};s.u[m.id]=(s.u[m.id]||0)+cc;left-=cc}});
+ const nw=fbRound(d*.012*fdDim(F));if(nw>0)fbAcquire(nw,{via:'member',mid:m.id,org:org||'Member buzz'})};
+// ---- caches kept for the whole day and dropped whenever the cohorts are rebuilt -------------------------------------------------
+//  (membership answers only change when cohorts are rebuilt / merged, Kami Oshi move, members change group, or a new day starts)
+let FD_GF=null,FX_OK=null;
+function fdCacheReset(){FD_HC=new WeakMap();FD_IP={};FD_GF=null;FX_OK=new WeakMap()}
+fdCacheReset();
+['fdFixAll','fbMerge','fbMonthly','fdMonthlyU','migrate'].forEach(n=>{try{const f=window[n];if(typeof f!='function')return;window[n]=function(){try{return f.apply(this,arguments)}finally{fdCacheReset()}}}catch(e){}});
+{const f=tick;tick=function(){fdCacheReset();return f.apply(this,arguments)}}
+{const f=svImportNow;if(typeof f=='function')svImportNow=function(){fdCacheReset();return f.apply(this,arguments)}}
+// group fan totals: computed once per fan pass (refreshed after every full fan update and every day), not on every call
+{const f=fdGroupFans;fdGroupFans=function(gid){const fb=S&&S.fb;if(!fb)return f.apply(this,arguments);if(!FD_GF||FD_GF.s!==S||FD_GF.d!==S.day)FD_GF={s:S,d:S.day,m:new Map()};const k=String(gid);if(!FD_GF.m.has(k))FD_GF.m.set(k,f.apply(this,arguments));return FD_GF.m.get(k)};
+ if(typeof gsFans=='function')gsFans=function(gid){return fdGroupFans(gid)}}
+{const f=fdWrite;fdWrite=function(){FD_GF=null;return f.apply(this,arguments)}}
+// "does this cohort count for group G" (music preferences, fan economy): same per day
+if(typeof fxGrpOk0=='function'){const f=fxGrpOk0;window.fxGrpOkCached=function(s,gid){if(!FX_OK||!s)return f(s,gid);let M=FX_OK.get(s);if(!M){M={};FX_OK.set(s,M)}const k=gid==null?'n':gid;if(!(k in M))M[k]=f(s,gid);return M[k]}}
+// fbApply (after a fan boost) rebuilt every cohort at once, many times a day; during the daily update it now marks the fanbase as
+// changed and the single clean-up at the end of the day does the work (outside the daily update it still applies at once)
+{const f=fbApply;fbApply=function(){if(typeof FD_DEFER!='undefined'&&FD_DEFER&&S&&S.fb&&!FBW){S.fb.ver++;FD_DIRTY=1;return}return f.apply(this,arguments)}}
 
 </script>
 <script>
