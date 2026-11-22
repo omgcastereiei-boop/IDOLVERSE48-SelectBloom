@@ -17,7 +17,8 @@
 //  handshake tickets, charts…); only the number of CDs it produces is replaced by this model.
 //  Rival groups (rival3.js) use the same cdModel with their own fanbase size, mix and spending power.
 // =====================================================================================
-const CDM_P0={oshi:.14,dedicated:.48,hardcore:.82};
+// base purchase probability per single (calibrated for the standard fan mix Casual 20 · Regular 40 · Dedicated 25 · Hardcore 15)
+const CDM_P0={oshi:.02,dedicated:.065,hardcore:.18};
 const CDM_TYPES=['oshi','dedicated','hardcore'];
 const cdmCl=(v,a,b)=>Math.max(a,Math.min(b,v));
 // copies per buyer for one cohort (mean), limited by spending power (sp 0–100) and dampened by fatigue

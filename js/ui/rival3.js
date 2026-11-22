@@ -33,10 +33,12 @@ const RV_STARS={
 const RV_REN={'Shion Amagi':'Riko','Rina Kurosaki':'NuMinnie','Momoka Sakuraba':'Sherbelle','Yukino Shiraishi':'Center','Sayuri Hyodo':'Midorin','Rei Fuyutsuki':'Cara','Mafuyu Kagami':'Lovetan','Natsumi Hinata':'Yuki','Kaho Minazuki':'Sunny','Hikari Asahi':'Ranran','Seoa':'Layla','Hayul':'Miso','Dain':'Sunji'};
 const RV_NAMED=new Set(Object.values(RV_STARS).flat().map(x=>x[0]));
 // identity & market position of the established acts (fans = Japanese fanbase, br = share that buys, cp = copies per buyer)
-const RV_PROF={omg4ki:{fans:4500000,mix:{r:.28,d:.15,h:.08},sp:70,types:4,hs:1,q:.9,loy:88,size:24,img:"Japan's No.1 · pink & yellow idol elegance"},winer4:{fans:2200000,mix:{r:.27,d:.13,h:.055},sp:65,types:3,hs:1,q:.82,loy:80,size:16},sumer4:{fans:2200000,mix:{r:.27,d:.13,h:.055},sp:65,types:3,hs:1,q:.8,loy:78,size:16},sefira:{fans:1500000,mix:{r:.2,d:.08,h:.025},sp:55,types:2,hs:0,q:.86,loy:74,size:5}};
-const RV_CEIL=12000000;
+const RV_PROF={omg4ki:{fans:10000000,mix:{r:.4,d:.25,h:.15},sp:70,types:4,hs:1,q:.9,loy:88,size:24,img:"Japan's No.1 · pink & yellow idol elegance"},winer4:{fans:3500000,mix:{r:.4,d:.25,h:.15},sp:65,types:3,hs:1,q:.82,loy:80,size:16},sumer4:{fans:3500000,mix:{r:.4,d:.25,h:.15},sp:65,types:3,hs:1,q:.8,loy:78,size:16},sefira:{fans:1500000,mix:{r:.4,d:.25,h:.15},sp:55,types:2,hs:0,q:.86,loy:74,size:5}};
+const RV_CEIL=25000000;
 // fan mix (share of Regular / Dedicated / Hardcore; the rest are Casual fans who never buy) by kind of act
-const RV_MIX={fidol:{r:.2,d:.08,h:.02},midol:{r:.2,d:.07,h:.015},kpop:{r:.18,d:.06,h:.012},fsolo:{r:.15,d:.035,h:.005},msolo:{r:.15,d:.035,h:.005},band:{r:.15,d:.035,h:.005}};
+// every act uses the same standard fan mix (Casual 20% · Regular 40% · Dedicated 25% · Hardcore 15%); acts differ by fans, popularity and support
+const RV_STD={r:.4,d:.25,h:.15};
+const RV_MIX={fidol:RV_STD,midol:RV_STD,kpop:RV_STD,fsolo:RV_STD,msolo:RV_STD,band:RV_STD};
 // keep the constants of industry2.js in line so new games start with the right names
 try{const conv=k=>RV_STARS[k].map(([nm,pos,per,vo,da,va])=>[nm,pos,per,vo,da,va]);OMG_MX.splice(0,OMG_MX.length,...conv('omg4ki'));NAEVIS.splice(0,NAEVIS.length,...OMG_MX[0]);IND_FIX.forEach(o=>{if(RV_STARS[o.id])o.mx=conv(o.id)})}catch(e){console.error(e)}
 
