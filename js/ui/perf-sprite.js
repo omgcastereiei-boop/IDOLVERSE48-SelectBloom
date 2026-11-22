@@ -30,3 +30,12 @@ if(PT_WK){const f0=ptUse;ptUse=function(k,t){let y=PT_IMG.get(k);if(!y){try{if(P
   return`<svg${y.at}>${y.u}</svg>`}}
 // WebKit (iPhone / iPad / Safari): lighter rendering — the html element gets the class "wk" (see theme.css)
 try{if(PT_WK)document.documentElement.classList.add('wk')}catch(e){}
+// ---- WebKit: full-body figures as images too ----------------------------------------------------------------------------
+//  Event pictures, ceremonies, stage photos and tournament screens draw many full-body characters. On WebKit each one is
+//  drawn once into an image (then a PNG) and reused, instead of keeping thousands of live SVG elements in memory.
+if(PT_WK){const FIG_IMG=new Map(),VB=[-25,-35,150,270];const hsh=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);return(h>>>0).toString(36)+t.length};
+ const f0=fig;fig=function(m,l){let k;try{k=hsh(JSON.stringify([m&&m.id,m&&m.hue,m?ap(m):0,l||0]))}catch(e){return f0.apply(this,arguments)}let y=FIG_IMG.get(k);if(y)return y.u;const frag=f0.apply(this,arguments);try{if(typeof frag!='string'||frag.length<400)return frag;
+  if(!y){if(FIG_IMG.size>300){FIG_IMG.forEach(z=>{try{URL.revokeObjectURL(z.url)}catch(e){}});FIG_IMG.clear()}
+   const doc=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${VB.join(' ')}" width="${VB[2]}" height="${VB[3]}">${frag}</svg>`;
+   const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={url,u:`<image href="${url}" x="${VB[0]}" y="${VB[1]}" width="${VB[2]}" height="${VB[3]}" preserveAspectRatio="xMidYMid meet"/>`};FIG_IMG.set(k,y);ptPng(y,[0,0,VB[2]*2/3,VB[3]*2/3])}
+  return y.u}catch(e){return frag}}}
