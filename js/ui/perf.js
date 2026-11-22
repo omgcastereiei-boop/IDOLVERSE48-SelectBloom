@@ -12,7 +12,7 @@
 // =====================================================================================
 const SVP={lsOff:false,tm:null,dirty:false,n:0};
 try{SVP.lsOff=localStorage.getItem('iv48_lsoff')=='1'}catch(e){}
-save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S)}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
+save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);SVP.tm=null;SVP.at=Date.now();let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S);SVP.sz=j.length}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
  let ok=false;const skip=!SVP.lsOff&&SV.dbOk&&!SVP.now&&SVP.n%10!=9;if(skip)ok=true;else if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
  SV.idbMain=j;SVP.n++;clearTimeout(SV.t);const put=()=>svPut('main',j).then(r=>{
   SV.dbOk=!!r;if(!r&&skip){try{localStorage.setItem(KEY,j)}catch(e){}}
@@ -20,7 +20,12 @@ save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The ga
   else if(!ok){SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.';if(S&&!ui.t)render()}});if(SVP.lsOff||!ok||SVP.now||skip)put();else SV.t=setTimeout(put,250);
  if(ok)SV.warn=null;else if(!SV.db)SV.warn='Browser storage is full and the game could not be saved. Export a save file from Management › Save & Load now.'};
 // autosave from a screen update: once, shortly after the last action
-function svAuto(){if(!S)return;SVP.dirty=true;clearTimeout(SVP.tm);SVP.tm=setTimeout(()=>{if(SVP.dirty)save()},800)}
+// a big save takes a long time to write (it blocks the screen on phones), so it is written at most every 15 s while
+// you keep playing (and right away when the page is hidden / closed, and ~1.5 s after a new day); small saves as before
+function svAuto(){if(!S)return;SVP.dirty=true;const big=(SVP.sz||0)>3e6;if(!big){clearTimeout(SVP.tm);SVP.tm=setTimeout(()=>{if(SVP.dirty)save()},800);return}
+ if(SVP.tm&&!SVP.soon)return;clearTimeout(SVP.tm);const wait=SVP.soon?1500:Math.max(2000,15000-(Date.now()-(SVP.at||0)));SVP.soon=0;
+ SVP.tm=setTimeout(()=>{SVP.tm=null;const go=()=>{if(SVP.dirty)save()};if(window.requestIdleCallback)requestIdleCallback(go,{timeout:4000});else go()},wait)}
+{const f=adv;adv=function(){const r=f.apply(this,arguments);try{SVP.soon=1;svAuto()}catch(e){}return r}}
 // leaving the page: write now (IndexedDB too), not after a delay
 const svNow=()=>{try{if(S&&!ui.t){SVP.now=1;try{save()}finally{SVP.now=0}}}catch(e){}};
 window.addEventListener('pagehide',svNow);window.addEventListener('beforeunload',svNow);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')svNow()});
