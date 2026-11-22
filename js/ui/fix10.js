@@ -137,3 +137,7 @@ function f10TeamClean(h,o){h=h.replace(/<label class="plnm">(?:(?!<\/label>)[\s\
 function f10TeamNote(o){const n=elig(o).length,th=typeof UIP!='undefined'&&UIP.lang=='th';return`<p class="st f10tm">👥 ${th?`เพลงทีม: เลือกได้เฉพาะสมาชิก ${esc(o.tm)} (${n} คน) รวมถึงคนที่อยู่ในเซ็มบัตสึเพลงหลักด้วย`:`Team Song: only ${esc(o.tm)} members can sing it (${n} eligible), Title Track members included.`}</p>`}
 {const f=selUI;selUI=function(){const o=S.songs[ui.es];if(o&&o.tm){ui.sf=ui.sf||{};ui.sf.nf=0;ui.sf.nm=0}let h=f.apply(this,arguments);try{if(o&&o.tm)h=f10TeamNote(o)+f10TeamClean(h,o)}catch(e){}return h}}
 {const f=autoPanel;autoPanel=function(o,dis){if(o&&o.tm){ui.aa=ui.aa||{};ui.aa.nf=0;ui.aa.nt=0}let h=f.apply(this,arguments);try{if(o&&o.tm)h=f10TeamClean(h,o).replace('<h3>Auto Select</h3>','<h3>Auto Select</h3>'+f10TeamNote(o))}catch(e){}return h}}
+
+// ---- 13. Concurrent-position (kennin) members count as members of their concurrent team: team filters show them and
+//          they can be chosen for that team's Team Songs (they were already eligible, but the filter and the checks hid them)
+function knTeamName(m){try{if(!m||!m.kn||m.status=='graduated')return null;const T=typeof gsTeam=='function'?gsTeam(m.kn.tid):null;return T&&T.t?T.t.name:null}catch(e){return null}}
