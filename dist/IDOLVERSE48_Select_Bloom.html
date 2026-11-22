@@ -1470,6 +1470,26 @@ img.nwthumb{width:96px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;flex
 /* fast taps: instant feedback; off-screen member cards are not laid out until visible */
 .c.m.fttap{outline:3px solid #f07bb0;transform:scale(.97);transition:transform .08s}
 .g.msel>.c.m{content-visibility:auto;contain-intrinsic-size:auto 230px}
+/* in-game calendar */
+input[type=date].gchide{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}
+.gcbtn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:14px;border:2px solid #f0c6dc;background:linear-gradient(180deg,#fff,#fff4f9);color:#4b3a5e;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 2px 0 #f3d7e6}
+.gcbtn:disabled{opacity:.5}.gcbtn i{font-style:normal}
+#gcov{position:fixed;inset:0;z-index:99999;background:rgba(40,20,60,.42);display:flex;align-items:center;justify-content:center;padding:16px}
+.gcbox{width:min(360px,100%);background:#fffaf5;border-radius:22px;box-shadow:0 12px 40px rgba(60,20,80,.35);padding:14px 14px 12px;border:3px solid #f7c9de;font-family:inherit;color:#4b3a5e}
+.gchd{display:flex;align-items:center;justify-content:space-between;font-weight:800;color:#c76a95}.gcx{border:0;background:#f7e3ee;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:#7a4a6a}
+.gcsel{font-size:20px;font-weight:800;margin:6px 2px 8px}
+.gcnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.gcnav b{font-size:16px}
+.gcgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.gcw{text-align:center;font-size:12px;font-weight:800;color:#8a7aa0;padding:4px 0}.gcw.we{color:#d07aa3}
+.gcd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;border:0;background:transparent;font:inherit;font-weight:700;color:#4b3a5e;cursor:pointer;font-size:15px}
+button.gcd:hover{background:#fde6f0}.gcd.we{color:#c45b8e}.gcd.td{box-shadow:inset 0 0 0 2px #b98bff}.gcd.on{background:linear-gradient(135deg,#f78fc0,#b98bff);color:#fff}.gcd.off{color:#cfc6d8;cursor:default}.gcd.e{visibility:hidden}
+.gcleg{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:#8a7aa0;margin-top:8px}.gcleg i{display:inline-block;width:10px;height:10px;border-radius:50%;box-shadow:inset 0 0 0 2px #b98bff;margin-right:4px;vertical-align:-1px}
+.gcft{margin-top:8px;align-items:center}
+/* single details: covers */
+.g.edcv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.g.edcv>.c.m{content-visibility:visible;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;min-height:0}
+.g.edcv>.c.m>svg,.g.edcv>.c.m>img{width:100%!important;height:auto!important;max-width:none;border-radius:10px;box-shadow:0 3px 10px rgba(80,40,100,.18)}
+.g.edcv>.c.m>.st{font-weight:800;color:#6b5a86}
 
 </style>
 </head><body>
@@ -6762,7 +6782,7 @@ function thItemsHtml(items,res){let n=0,e=0,eh=0;return`<ol class="thtl ro">${it
  const v=it.cz&&it.cz.ver&&S.th.ver[it.cz.ver],c=get(it.center),a=c&&ap(c);return`${hd}<li class="thsg ${it.enc?'enc':''}"><span class="thnum">${it.enc?'E'+String(e).padStart(2,'0'):'M'+String(n).padStart(2,'0')}</span><div class="thsgm"><b>${esc(it.title||(S.songs[it.song]||{}).title||'')}</b><small><span class="thptb ${it.pt=='unit'?'unit':'team'}">${it.pt=='unit'?'UNIT · '+esc((it.unit||{}).name||''):'Team'}</span> Center ${esc(c?c.name:'—')} · 👗 ${v?esc(v.name)+' v'+v.n:esc(thCzName(it.cz))} · rows ${(it.rows||[it.fr]).filter(Boolean).join('-')||'—'}</small></div>${v&&c?`<svg viewBox="10 -2 80 200" width="28">${fig(c,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:v.p})}</svg>`:''}<span class="thmcm">${(it.mem||[]).slice(0,8).map(id=>thMini(id,20)).join('')}${(it.mem||[]).length>8?`<i>+${it.mem.length-8}</i>`:''}</span></li>`}).join('')}</ol>`}
 function thOpenPerf(id){const p=thS().pf.find(z=>z.id==id);if(!p)return;const it=S.th.snap[p.snap]||[];ui.mod={t:'html',h:`<h2 class="ht">🎭 ${p.no?esc(thLabel(p.k))+' '+ordN(p.no)+' Stage':esc(thLabel(p.k))} — “${esc(p.nm)}”</h2><div class="st">${wd(p.day)} · ${TH_SLOT[p.sl]} · ${esc(thOf(p.k).name)}</div>
  <div class="gekg">${thKpi('Physical audience',`${p.att}/${p.cap}`)}${thKpi('Tickets sold',p.sold,`${p.cap-p.sold} seats unsold`)}${thKpi('Ticket revenue',yen(p.rev),`${yen(p.price)} each · cost ${yen(p.cost)}`)}${thKpi('Online viewers',p.online.toLocaleString(),`${p.subs.toLocaleString()} members · included in membership`)}${thKpi('Satisfaction',p.sat+'%',`performance ${p.q}`)}${thKpi('New member fans','+'+p.nf.toLocaleString())}</div>
- ${p.notes.length?`<h3>Availability &amp; replacements</h3><ul class="ms">${p.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}<h3>Setlist as performed</h3>${thItemsHtml(it)}
+ <h3>Setlist as performed</h3>${thItemsHtml(it)}
  <h3>Members</h3><div class="thfx2">${p.fx.map(([mid,dp,df,db,de,rp])=>{const m=get(mid);return`<div class="thfxm">${m?ptc(m,34):''}<b>${esc(m?m.name:'#'+mid)}</b><small>${rp?'Trainee replacement · ':''}Pop ${dp>=0?'+':''}${dp} · Fans +${df} · Buzz +${db} · Energy −${de}</small></div>`}).join('')}</div>`};render()}
 function thOpenStage(id){const s=thStage(id);if(!s)return;const key=thCur(),P=thS().pf.filter(p=>p.st==s.id),own=s.k==key,items=s.orig||thSnapItems(s);
  ui.mod={t:'html',h:`<h2 class="ht">${s.no?esc(thLabel(s.k))+' '+ordN(s.no)+' Stage':esc(thLabel(s.k))+' · Stage'}: “${esc(s.name)}”</h2><div>${thStBadge(s)}</div><div class="st">Owner ${esc(thLabel(s.k))}${s.adopted||s.revOf?` · Revival Stage of ${esc((typeof thLabelAny=='function'?thLabelAny:thLabel)(s.srcK))}${s.srcNo?' '+ordN(s.srcNo)+' Stage':''}${s.revOf&&s.revOf.name?' “'+esc(s.revOf.name)+'”':''}`:''} · template ${esc(s.tpl)} · debut ${s.debut!=null?jd(s.debut):'—'} · final ${s.final!=null?jd(s.final):'—'}${s.reuse?` · reused ${s.reuse}×`:''}</div>
@@ -7257,7 +7277,7 @@ function thAudApply(x,A){if(!A||!A.nf)return;const f0=S.fans;if(typeof fbWith=='
  <h3>Fanbase Report</h3><div class="gekg">${K('Existing fans reached',(A.liveFan+A.onFan).toLocaleString(),`${A.liveFan.toLocaleString()} live · ${A.onFan.toLocaleString()} online`)}${K('Newcomers watching',(A.liveNew+A.trial).toLocaleString(),`${A.liveNew} live · ${A.trial} online trial`)}${K('New fans acquired','+'+(A.groupNew??A.nf).toLocaleString(),`${A.lc} from live · ${A.oc} from online · conversion ${(A.conv*100).toFixed(1)}%`)}${K('Theater frequency',`${A.recent} show(s) / 30 days`,A.dim<1?`newcomer conversion ×${A.dim}`:'')}</div>
  <p class="st">Most of the audience are existing fans: only newcomers can become new fans, and only some of them do. New fans join the group fanbase (each person counted once).</p>
  ${memRows.length?`<div class="thfx2">${memRows.map(([mid,n])=>{const m=get(+mid);return`<div class="thfxm">${m?ptc(m,34):''}<b>${esc(m?m.name:'#'+mid)}</b><small>drew ${n} new fan(s)</small></div>`}).join('')}</div>`:'<p class="st">No newcomer became a fan at this performance.</p>'}
- <h3>Performance Report</h3><div class="gekg">${K('Satisfaction',p.sat+'%',`performance ${p.q}`)}</div>${p.notes.length?`<h3>Availability &amp; replacements</h3><ul class="ms">${p.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}
+ <h3>Performance Report</h3><div class="gekg">${K('Satisfaction',p.sat+'%',`performance ${p.q}`)}</div>
  ${p.pics&&s?thPicsHtml(s):''}<h3>Setlist as performed</h3>${thItemsHtml(it)}
  <h3>Members</h3><div class="thfx2">${p.fx.map(([mid,dp,df,db,de,rp])=>{const m=get(mid);return`<div class="thfxm">${m?ptc(m,34):''}<b>${esc(m?m.name:'#'+mid)}</b><small>${rp?'Replacement · ':''}Popularity ${dp>=0?'+':''}${dp} · Recognition +${df} · Buzz +${db} · Energy −${de}</small></div>`}).join('')}</div>`};render()}}
 // ---- 3. Revival Stage -----------------------------------------------------------------------------------
@@ -13038,7 +13058,7 @@ function xeScene(sp){const r=mulb(sp.seed|0),h=sp.hue|0,t=esc(sp.t||''),sub=esc(
  const crowd=(y,n,dark)=>{let c='';for(let i=0;i<n;i++){const x=(i+.5)*W/n+(r()-.5)*14,yy=y+(r()-.5)*10;c+=`<circle cx="${x.toFixed(0)}" cy="${yy.toFixed(0)}" r="${11+r()*4|0}" fill="${dark?'#130c22':'#2b1d3d'}"/>`;if(r()<.45)c+=`<line x1="${x.toFixed(0)}" y1="${yy-8|0}" x2="${(x+(r()-.5)*16).toFixed(0)}" y2="${yy-34|0}" stroke="hsl(${(h+r()*160)|0},95%,70%)" stroke-width="4" stroke-linecap="round"/>`}return c};
  const scene=sp.scene;
  if(scene=='fest'){const night=r()<.5;s+=`<defs><linearGradient id="xs${sp.seed}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night?'#0f1240':'hsl('+h+',70%,62%)'}"/><stop offset="1" stop-color="${night?'#5a2d82':'#ffd7a8'}"/></linearGradient></defs><rect width="800" height="450" fill="url(#xs${sp.seed})"/>`+(night?[...Array(40)].map(()=>`<circle cx="${r()*800|0}" cy="${r()*160|0}" r="${(r()*1.6+.4).toFixed(1)}" fill="#fff" opacity=".8"/>`).join(''):`<circle cx="${600+r()*120|0}" cy="90" r="46" fill="#fff4c8" opacity=".9"/>`)+
-  `<rect x="70" y="70" width="12" height="300" fill="#2a2440"/><rect x="718" y="70" width="12" height="300" fill="#2a2440"/><rect x="70" y="66" width="660" height="16" fill="#2a2440"/>${[...Array(8)].map((_,i)=>`<circle cx="${110+i*82}" cy="90" r="7" fill="#fff6c8"/><path d="M${110+i*82} 92L${70+i*82} 330H${150+i*82}Z" fill="hsl(${(h+i*40)%360},90%,80%)" opacity=".12"/>`).join('')}<rect x="250" y="100" width="300" height="110" rx="8" fill="#140f2c" stroke="#4a4166" stroke-width="4"/><rect x="258" y="108" width="284" height="94" rx="5" fill="hsl(${h},85%,62%)" opacity=".9"/><text x="400" y="150" text-anchor="middle" font-size="26" font-family="Dela Gothic One,sans-serif" fill="#fff">${esc((sp.sub||'FESTIVAL').toUpperCase().slice(0,18))}</text><text x="400" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${org.slice(0,40)}</text>
+  `<rect x="70" y="70" width="12" height="300" fill="#2a2440"/><rect x="718" y="70" width="12" height="300" fill="#2a2440"/><rect x="70" y="66" width="660" height="16" fill="#2a2440"/>${[...Array(8)].map((_,i)=>`<circle cx="${110+i*82}" cy="90" r="7" fill="#fff6c8"/><path d="M${110+i*82} 92L${70+i*82} 330H${150+i*82}Z" fill="hsl(${(h+i*40)%360},90%,80%)" opacity=".12"/>`).join('')}<rect x="250" y="100" width="300" height="110" rx="8" fill="#140f2c" stroke="#4a4166" stroke-width="4"/><rect x="258" y="108" width="284" height="94" rx="5" fill="hsl(${h},85%,62%)" opacity=".9"/><text x="400" y="150" text-anchor="middle" font-size="26" font-family="Dela Gothic One,sans-serif" fill="#fff">${esc((sp.sub||'FESTIVAL').toUpperCase().slice(0,34))}</text><text x="400" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">${org.slice(0,40)}</text>
   <path d="M40 300H760L800 360H0Z" fill="#3b2f5e"/>`+xeMembers(sp,330,120,680,1,r)+`<rect y="360" width="800" height="90" fill="#1a1230"/>`+crowd(395,30,1)}
  else if(scene=='corp'){s+=`<rect width="800" height="450" fill="#e9eef7"/><rect width="800" height="300" fill="hsl(${h},35%,88%)"/>${[...Array(9)].map((_,i)=>`<rect x="${i*90}" y="0" width="45" height="300" fill="#fff" opacity=".25"/>`).join('')}<rect x="170" y="52" width="460" height="150" rx="10" fill="#fff" stroke="hsl(${h},45%,60%)" stroke-width="4"/><circle cx="240" cy="127" r="40" fill="hsl(${h},60%,55%)"/><text x="240" y="139" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">${org.slice(0,1)}</text><text x="300" y="118" font-size="22" font-weight="800" fill="#2b3550" font-family="M PLUS Rounded 1c,sans-serif">${org.slice(0,24)}</text><text x="300" y="148" font-size="16" fill="#5b6785">${sub}</text>
   <path d="M0 300H800V450H0Z" fill="#c9d3e6"/><rect x="560" y="250" width="80" height="80" rx="6" fill="#3a4766"/><rect x="590" y="232" width="20" height="22" fill="#77839f"/>${[0,1].map(i=>`<path d="M${i?700:100} 0L${i?560:240} 330H${i?660:340}Z" fill="#fff" opacity=".18"/>`).join('')}`+xeMembers(sp,350,90,700,1.02,r)}
@@ -16723,6 +16743,15 @@ function evdScreen(sp){const c=evdColors(sp),seed=(sp.day|0)*7+(sp.m||[]).length
 // ---- Music programs -------------------------------------------------------------------------------------------------------------
 {const f=xeScene;xeScene=function(sp){if(!sp||sp.scene!='mp'||!(sp.m||[]).length)return f.apply(this,arguments);let s=f.call(this,{...sp,m:[]});
  try{const fig=evdDraw(sp,{fy:350,dy:46,maxRise:90,x0:110,x1:690,smax:.98,shrink:.11},sp.seed|0),k=s.indexOf('<rect y="380" width="800" height="70" fill="#05060f"/>');s=k>=0?s.slice(0,k)+fig+s.slice(k):s+fig}catch(e){console.error(e)}return s}}
+// ---- External event pictures: bigger members standing in front of the set (not on signs / roofs), two rows for big groups;
+//      sign texts shrink to fit their boards --------------------------------------------------------------------------------------
+const XE_FEET={corp:408,tv:398,school:420,fashion:432,cm:412,park:418,press:428};
+{const f=xeMembers;xeMembers=function(sp,y,x0,x1,smax,rnd){const sc=sp&&sp.scene;if(!sp||!(sc in XE_FEET))return f.apply(this,arguments);
+ const L=(sp.m||[]).slice(0,10),n=L.length;if(!n)return'';const ord=[...L],ci=ord.findIndex(z=>z.id==sp.center);if(ci>0){const[c]=ord.splice(ci,1);ord.unshift(c)}
+ const two=n>5,front=two?ord.slice(0,Math.ceil(n/2)):ord,back=two?ord.slice(front.length):[],fy=XE_FEET[sc],W=Math.min(760,Math.max(x1-x0+120,n*90)),cx0=400-W/2;
+ const row=(R,feet,scale,first)=>{const k=R.length,step=W/Math.max(k,1),s=Math.min(scale,step/56),sl=evSlots(k);return R.map((z,i)=>[z,cx0+step*(sl[i]+.5)+(first?0:(k%2?step*.5:0)-step*.25),i]).sort((a,b)=>Math.abs(b[1]-400)-Math.abs(a[1]-400)).map(([z,cx,i])=>evFigOne(sp,z,first&&i==0&&sc!='tv'?13:EV_POSES[(i*3+Math.floor(rnd()*5))%EV_POSES.length],[1,3,11,2][(i+Math.floor(rnd()*4))%4],cx,feet,s)).join('')};
+ const big=Math.min(1.45,(smax||1)*1.3);return(two?row(back,fy-46,big*.86,0):'')+row(front,fy,big,1)}}
+{const f=xeScene;xeScene=function(sp){let s=f.apply(this,arguments);try{s=s.replace(/<text([^>]*?)font-size="(\d+(?:\.\d+)?)"([^>]*)>([^<]{12,})<\/text>/g,(a,p1,fs,p3,txt)=>{const max=/Dela Gothic/.test(a)?290:400,w=txt.length*fs*(/Dela Gothic/.test(a)?.72:.56);if(w<=max)return a;const nf=Math.max(9,Math.floor(fs*max/w));return`<text${p1}font-size="${nf}"${p3}>${txt}</text>`})}catch(e){}return s}}
 
 </script>
 <script>
@@ -16779,6 +16808,61 @@ let FT_DEFER=0,FT_PEND=0;
 function ftFast(name){const f=window[name];if(typeof f!='function')return;window[name]=function(){try{const e=window.event,el=e&&e.currentTarget&&e.currentTarget.classList?e.currentTarget:null;if(el)el.classList.add('fttap')}catch(e){}
  FT_DEFER++;try{return f.apply(this,arguments)}finally{FT_DEFER--}}}
 ['fmAssign','slotClick','fmRemove','fmClear'].forEach(ftFast);
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Theater: automatic substitutes
+// -------------------------------------------------------------------------------------
+//  When members cannot perform, the most important open position is filled first (positions are
+//  ranked by where she stands in the songs: Center / front positions first). Candidates: the team's
+//  Under members (bench) first, then Trainees. Within each, the latest General Election rank comes
+//  first (if there was an election), then Performance, then Energy. E.g. positions 3, 7 and 13 are
+//  open → the best candidate takes 3, the next one 7, then 13.
+// =====================================================================================
+function thPosRank(s,id){let best=1e9;try{thAll(s).forEach(it=>{const L=thMem(s,it),i=L.indexOf(id);if(i>=0){const c=(it.center!=null&&it.center==id)?-1:i;if(c<best)best=c}})}catch(e){}return best}
+function thEleRank(gid){const M={};let ed=-1;S.members.forEach(m=>{if(gid!=null&&m.group!=gid)return;(m.geRec||[]).forEach(h=>{if(h.rank&&(h.ed||0)>ed)ed=h.ed||0})});if(ed<0)return null;S.members.forEach(m=>{const h=(m.geRec||[]).find(z=>(z.ed||0)==ed&&z.rank);if(h)M[m.id]=h.rank});return M}
+thAutoPick=function(x,s,missing,taken){const bench=new Set(thBench(s).map(m=>m.id)),K=thK(x.k),ER=thEleRank(K&&K.gid);
+ const key=m=>[bench.has(m.id)?0:1,ER?(ER[m.id]||1e6):0,-(m.cha|0),-(+m.en||0),m.id];
+ const C=thTrainees(x,s).filter(m=>!taken.has(m.id)).sort((a,b)=>{const A=key(a),B=key(b);for(let i=0;i<A.length;i++)if(A[i]!=B[i])return A[i]-B[i];return 0});
+ const R={};missing.slice().sort((a,b)=>thPosRank(s,a)-thPosRank(s,b)).forEach(id=>{const c=C.find(m=>!taken.has(m.id));if(c){R[id]=c.id;taken.add(c.id)}});return R};
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — in-game calendar for every date field
+// -------------------------------------------------------------------------------------
+//  Every <input type="date"> of the game is shown as a game-styled date button. Tapping it opens the
+//  game's own calendar (month view, today marked, days outside the allowed range greyed out). Picking a
+//  day writes the value into the original field and fires its normal "change" handler, so every screen
+//  keeps working exactly as before. Works in pages and in pop-ups.
+// =====================================================================================
+const GC_TH=()=>typeof UIP!='undefined'&&UIP.lang=='th';
+const gcIso=t=>`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+const gcParse=v=>{if(!v)return null;const t=new Date(v+'T00:00:00');return isNaN(t)?null:t};
+function gcLabel(v){const t=gcParse(v);if(!t)return GC_TH()?'เลือกวันที่':'Choose a date';try{return GC_TH()?t.toLocaleDateString('th-TH-u-ca-gregory',{weekday:'short',day:'numeric',month:'short',year:'numeric'}):t.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}catch(e){return v}}
+let GC=null;
+function gcOpen(inp){const v=gcParse(inp.value)||gcParse(inp.min)||dayDate(S?S.day:0);GC={inp,y:v.getFullYear(),m:v.getMonth()};gcDraw()}
+function gcClose(){GC=null;const o=document.getElementById('gcov');if(o)o.remove()}
+function gcNav(d){if(!GC)return;GC.m+=d;if(GC.m<0){GC.m=11;GC.y--}if(GC.m>11){GC.m=0;GC.y++}gcDraw()}
+function gcPick(iso){if(!GC)return;const inp=GC.inp;gcClose();inp.value=iso;try{inp.dispatchEvent(new Event('input',{bubbles:true}))}catch(e){}try{inp.dispatchEvent(new Event('change',{bubbles:true}))}catch(e){}const b=inp.nextElementSibling;if(b&&b.classList.contains('gcbtn'))b.querySelector('span').textContent=gcLabel(iso)}
+function gcDraw(){if(!GC)return;let o=document.getElementById('gcov');if(!o){o=document.createElement('div');o.id='gcov';o.setAttribute('data-notr','');o.onclick=e=>{if(e.target===o)gcClose()};document.body.appendChild(o)}
+ const th=GC_TH(),inp=GC.inp,mn=gcParse(inp.min),mx=gcParse(inp.max),sel=inp.value,today=gcIso(dayDate(S?S.day:0)),first=new Date(GC.y,GC.m,1),days=new Date(GC.y,GC.m+1,0).getDate(),lead=first.getDay();
+ const title=first.toLocaleDateString(th?'th-TH-u-ca-gregory':'en-US',{month:'long',year:'numeric'}),wk=th?['อา','จ','อ','พ','พฤ','ศ','ส']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+ let cells='';for(let i=0;i<lead;i++)cells+='<span class="gcd e"></span>';
+ for(let d=1;d<=days;d++){const t=new Date(GC.y,GC.m,d),iso=gcIso(t),off=(mn&&t<mn)||(mx&&t>mx),cls=['gcd',iso==sel?'on':'',iso==today?'td':'',off?'off':'',t.getDay()==0||t.getDay()==6?'we':''].join(' ');cells+=off?`<span class="${cls}">${d}</span>`:`<button class="${cls}" onclick="gcPick('${iso}')">${d}</button>`}
+ const canPrev=!mn||new Date(GC.y,GC.m,0)>=new Date(mn.getFullYear(),mn.getMonth(),1),canNext=!mx||new Date(GC.y,GC.m+1,1)<=mx;
+ o.innerHTML=`<div class="gcbox" role="dialog"><div class="gchd"><span>📅 ${th?'เลือกวันที่':'Choose a date'}</span><button class="gcx" onclick="gcClose()" aria-label="Close">✕</button></div>
+ <div class="gcsel">${esc(gcLabel(sel))}</div><div class="gcnav"><button class="b s" ${canPrev?'':'disabled'} onclick="gcNav(-1)">◀</button><b>${esc(title)}</b><button class="b s" ${canNext?'':'disabled'} onclick="gcNav(1)">▶</button></div>
+ <div class="gcgrid">${wk.map((w,i)=>`<span class="gcw ${i==0||i==6?'we':''}">${w}</span>`).join('')}${cells}</div>
+ <div class="gcleg"><span><i class="td"></i>${th?'วันนี้ในเกม':'Today (game)'}</span>${mn?`<span>${th?'เลือกได้ตั้งแต่':'From'} ${esc(gcLabel(inp.min))}</span>`:''}</div>
+ <div class="row gcft"><button class="b s" onclick="gcPick('${gcIso(dayDate(S?S.day:0))}')" ${(mn&&dayDate(S?S.day:0)<mn)||(mx&&dayDate(S?S.day:0)>mx)?'disabled':''}>${th?'วันนี้':'Today'}</button><span style="flex:1"></span><button class="b s" onclick="gcClose()">${th?'ยกเลิก':'Cancel'}</button></div></div>`}
+// replace the native fields (pages and pop-ups), whenever they appear
+function gcEnhance(root){(root||document).querySelectorAll('input[type="date"]:not([data-gc])').forEach(inp=>{inp.setAttribute('data-gc','1');inp.classList.add('gchide');const b=document.createElement('button');b.type='button';b.className='gcbtn';b.disabled=inp.disabled;b.innerHTML=`<i>📅</i><span>${esc(gcLabel(inp.value))}</span>`;b.onclick=e=>{e.preventDefault();e.stopPropagation();gcOpen(inp)};inp.insertAdjacentElement('afterend',b)})}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{gcEnhance()}catch(e){console.error(e)}return r}}
+try{new MutationObserver(()=>{if(document.querySelector('input[type="date"]:not([data-gc])'))gcEnhance()}).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
+// ---- single details: the CD covers fill their cards (two per row) -------------------------------------------------------------
+{const f=showEds;showEds=function(){const r=f.apply(this,arguments);try{if(ui.mod&&ui.mod.t=='html'&&ui.mod.h.indexOf('<div class="g"><div class="c m">')>=0){ui.mod.h=ui.mod.h.replace('<div class="g"><div class="c m">','<div class="g edcv"><div class="c m">');render()}}catch(e){console.error(e)}return r}}
 
 </script>
 <script>

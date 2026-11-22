@@ -36,3 +36,12 @@ function evdScreen(sp){const c=evdColors(sp),seed=(sp.day|0)*7+(sp.m||[]).length
 // ---- Music programs -------------------------------------------------------------------------------------------------------------
 {const f=xeScene;xeScene=function(sp){if(!sp||sp.scene!='mp'||!(sp.m||[]).length)return f.apply(this,arguments);let s=f.call(this,{...sp,m:[]});
  try{const fig=evdDraw(sp,{fy:350,dy:46,maxRise:90,x0:110,x1:690,smax:.98,shrink:.11},sp.seed|0),k=s.indexOf('<rect y="380" width="800" height="70" fill="#05060f"/>');s=k>=0?s.slice(0,k)+fig+s.slice(k):s+fig}catch(e){console.error(e)}return s}}
+// ---- External event pictures: bigger members standing in front of the set (not on signs / roofs), two rows for big groups;
+//      sign texts shrink to fit their boards --------------------------------------------------------------------------------------
+const XE_FEET={corp:408,tv:398,school:420,fashion:432,cm:412,park:418,press:428};
+{const f=xeMembers;xeMembers=function(sp,y,x0,x1,smax,rnd){const sc=sp&&sp.scene;if(!sp||!(sc in XE_FEET))return f.apply(this,arguments);
+ const L=(sp.m||[]).slice(0,10),n=L.length;if(!n)return'';const ord=[...L],ci=ord.findIndex(z=>z.id==sp.center);if(ci>0){const[c]=ord.splice(ci,1);ord.unshift(c)}
+ const two=n>5,front=two?ord.slice(0,Math.ceil(n/2)):ord,back=two?ord.slice(front.length):[],fy=XE_FEET[sc],W=Math.min(760,Math.max(x1-x0+120,n*90)),cx0=400-W/2;
+ const row=(R,feet,scale,first)=>{const k=R.length,step=W/Math.max(k,1),s=Math.min(scale,step/56),sl=evSlots(k);return R.map((z,i)=>[z,cx0+step*(sl[i]+.5)+(first?0:(k%2?step*.5:0)-step*.25),i]).sort((a,b)=>Math.abs(b[1]-400)-Math.abs(a[1]-400)).map(([z,cx,i])=>evFigOne(sp,z,first&&i==0&&sc!='tv'?13:EV_POSES[(i*3+Math.floor(rnd()*5))%EV_POSES.length],[1,3,11,2][(i+Math.floor(rnd()*4))%4],cx,feet,s)).join('')};
+ const big=Math.min(1.45,(smax||1)*1.3);return(two?row(back,fy-46,big*.86,0):'')+row(front,fy,big,1)}}
+{const f=xeScene;xeScene=function(sp){let s=f.apply(this,arguments);try{s=s.replace(/<text([^>]*?)font-size="(\d+(?:\.\d+)?)"([^>]*)>([^<]{12,})<\/text>/g,(a,p1,fs,p3,txt)=>{const max=/Dela Gothic/.test(a)?290:400,w=txt.length*fs*(/Dela Gothic/.test(a)?.72:.56);if(w<=max)return a;const nf=Math.max(9,Math.floor(fs*max/w));return`<text${p1}font-size="${nf}"${p3}>${txt}</text>`})}catch(e){}return s}}
