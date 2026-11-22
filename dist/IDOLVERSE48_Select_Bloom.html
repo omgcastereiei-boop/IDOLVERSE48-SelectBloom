@@ -1490,6 +1490,17 @@ button.gcd:hover{background:#fde6f0}.gcd.we{color:#c45b8e}.gcd.td{box-shadow:ins
 .g.edcv>.c.m{content-visibility:visible;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;min-height:0}
 .g.edcv>.c.m>svg,.g.edcv>.c.m>img{width:100%!important;height:auto!important;max-width:none;border-radius:10px;box-shadow:0 3px 10px rgba(80,40,100,.18)}
 .g.edcv>.c.m>.st{font-weight:800;color:#6b5a86}
+/* industry ranking */
+.rvrk td,.rvrk th{white-space:nowrap;font-size:12px}.rvrk tr.pl{background:rgba(255,143,192,.14)}.rvrk tr.boss td:nth-child(2){color:#c2458a}
+.rvbar{display:block;height:4px;border-radius:3px;background:rgba(0,0,0,.08);margin-top:2px;min-width:38px}.rvbar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#f58fb9,#a58df0)}
+.rvme{margin:6px 0}
+/* awards ceremony v3 */
+.awstage{width:min(760px,100%);height:auto;aspect-ratio:16/9;border-radius:14px;display:block;margin:8px auto;box-shadow:0 0 28px #f3c35c33}
+.awcarpet span b{font-size:12px}.awcarpet span small{font-size:10px;opacity:.8}.awcarpet.npc{background:linear-gradient(#0000 70%,#6a0d22 70%)}
+.awsp{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;margin:10px auto;max-width:720px}.awsp svg{filter:drop-shadow(0 0 16px #ffe08a88)}
+.awbub{flex:1;min-width:200px;background:#fff;color:#3b2a4a;border-radius:16px;padding:12px 14px;position:relative;text-align:left}.awbub b{display:block;font-size:15px}.awbub small{display:block;opacity:.7;font-size:11px;margin-bottom:4px}.awbub p{margin:4px 0 0;line-height:1.5}
+.awini.host{width:90px;height:90px;font-size:44px}
+.awa.lk{outline:2px solid #e9b949}.awrep{justify-content:space-between;gap:8px;margin:4px 0;flex-wrap:wrap}.awspk{margin:2px 0 6px}
 
 </style>
 </head><body>
@@ -4046,6 +4057,34 @@ albums(){if(ui.cvCtx!='album'){ui.cvCtx=null}if(!S.al)newAl();const a=S.al,C=alC
 events(){return`<h2 class="ht">Theater & Events</h2><div class="g2">${Object.entries(EV).map(([k,e])=>`<div class="c">${evBan(k)}<p class="st">${e.d}</p><p>Cost ${yen(e.cost)} · ${e.dur} day${e.dur>1?'s':''}<br>${e.fee?'Fee ~'+yen(e.fee)+' · reach up to ':'Capacity '}${e.cap.toLocaleString()}<br>Performers: 2–${e.max}</p><button class="b p" onclick="openEv('${k}')">Plan event</button></div>`).join('')}</div>`},
 finances(){const mo=S.members.length*25000;return`<h2 class="ht">Office</h2><div class="g"><div class="c"><div class="st">Balance</div><div class="big">${yen(S.money)}</div></div><div class="c"><div class="st">Total income</div><div class="big">${yen(S.inc)}</div></div><div class="c"><div class="st">Total expenses</div><div class="big">${yen(S.exp)}</div></div><div class="c"><div class="st">Monthly salaries</div><div class="big">${yen(mo)}</div></div></div>
 <div class="c" style="margin-top:12px"><h3>Ledger</h3><div class="wrap"><table>${S.led.map(e=>`<tr><td>${new Date(2026,3,1+e.d).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td><td>${e.l}</td><td style="color:${e.a<0?'var(--err)':'#3c9a6c'}">${e.a<0?'−':'+'}${yen(Math.abs(e.a))}</td></tr>`).join('')||'<tr><td class="st">No transactions yet.</td></tr>'}</table></div></div>`}};
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — CD demand from the real fanbase (buyers × copies)
+// -------------------------------------------------------------------------------------
+//  The single's sales formula (doRelease) used "total fans × 12%" as its fan term, so every new
+//  fan behaved like a CD buyer. This hook keeps the formula and every other factor (song quality,
+//  Senbatsu, Center, concept fit, number of Types, handshake benefits, randomness) and only
+//  replaces that fan term with the fans who really buy, from the existing fan database (fan3.js):
+//   · Casual fans rarely buy (2.5%), Regular ≈20%, Dedicated ≈45% (more copies), Hardcore ≈75%
+//     (multiple copies). Dormant fans do not buy.
+//   · Spending power and loyalty of each fan cohort change the share; fans whose Kami Oshi sings
+//     in the Senbatsu buy more often.
+//   · Each fan is counted once for the group (fdSegGroupN), however many members she supports.
+//   · Fan fatigue: a single released less than ~75 days after the previous one sells less.
+//  It sits directly around the core formula (loaded right after game-systems.js), so every other
+//  release hook sees the result exactly as before.
+// =====================================================================================
+const CDD_RATE={casual:[.025,1],oshi:[.2,1.05],dedicated:[.45,1.3],hardcore:[.75,2.1],dormant:[0,0]};
+function cddDemand(gid,sen){const fb=S&&S.fb;if(!fb||!Array.isArray(fb.segs)||!fb.segs.length)return null;const senS=new Set(sen||[]);let u=0,n0=0,by={};
+ fb.segs.forEach(s=>{const n=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):s.n;if(!n)return;n0+=n;const R=CDD_RATE[s.ft]||CDD_RATE.casual;let b=R[0]*(.55+.9*((s.sp==null?40:s.sp)/100))*(.8+.4*((s.loy==null?50:s.loy)/100));if(senS.has(s.k))b*=1.25;const v=n*Math.min(.95,b)*R[1];u+=v;by[s.ft]=(by[s.ft]||0)+v});
+ let last=null;try{const L=(S.singles||[]).map(x=>x.relDay??x.day).filter(d=>d!=null&&d<S.day);last=L.length?Math.max(...L):null}catch(e){}
+ const gap=last==null?999:S.day-last,fat=gap>=75?1:Math.max(.72,.72+.28*gap/75);return{units:u*fat,fans:n0,fat,gap,by}}
+{const f=doRelease;doRelease=function(){const p=S&&S.pj;let D=null;try{if(p&&p.status=='producing'){const mn=S.songs[p.mainId];D=cddDemand(typeof gsAg=='function'?gsAg():0,mn&&mn.slots?mn.slots.filter(Boolean):[])}}catch(e){D=null}
+ if(!D||!(D.fans>0))return f.apply(this,arguments);const n=S.singles.length,f0=S.fans,eff=Math.max(0,Math.round(D.units/.12));S.fans=eff;let r;
+ try{r=f.apply(this,arguments)}finally{const dl=S.fans-eff;S.fans=f0+dl}
+ try{const x=S.singles[n];if(x)x.cdd={buy:Math.round(D.units),fans:D.fans,fat:+D.fat.toFixed(2),by:Object.fromEntries(Object.entries(D.by).map(([k,v])=>[k,Math.round(v)]))}}catch(e){}return r}}
 
 </script>
 <script>
@@ -17249,6 +17288,384 @@ function rwShowHtml(){const s=ui.rwsh,Y=rwS().years[s.y],R=Y.res,St=rwShowSteps(
 {const f=histHtml;histHtml=function(m){const h=f.apply(this,arguments);try{const E=(m.mh||[]).filter(e=>e.t=='rw');if(!E.length)return h;return h+`<h3>${RW_NAME}</h3><ul class="pfl">${E.map(e=>`<li><b>${e.yr}</b> · “${esc(e.song||'')}”${e.cen?' · ★ Center':''} · ${e.win?'Red team won':'White team won'}</li>`).join('')}</ul>`}catch(e){return h}}}
 {const f=evText;evText=function(e){if(e&&e.t=='rw')return`Performed “${e.song||''}” at the ${RW_NAME} ${e.yr}${e.cen?' as Center':''}`;return f.apply(this,arguments)}}
 try{const C=SECS.find(s=>s.k=='charts');if(C&&!C.v.some(x=>x[0]=='rwfest'))C.v.push(['rwfest','Red & White']);SUBLOC.rwfest='Broadcast Hall · Red & White Grand Music Festival'}catch(e){}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Rival groups, industry balance & the final boss (OMG4ki)
+// -------------------------------------------------------------------------------------
+//  Extends the existing industry (industry.js / industry2.js, S.ind). Nothing is duplicated:
+//  artists, releases, charts, fans and news stay the same systems.
+//  · Established acts keep their identity; their top members are now:
+//      OMG4ki  Naevis 👑 · Riko · NuMinnie · Sherbelle      (Japan's No.1, the final boss)
+//      WINÉR4  Center · Midorin · Cara · Lovetan            (winter · elegant, cool, mysterious)
+//      SUMÉR4  Yuki · Sunny · Ranran                        (summer · bright, energetic)
+//      Sefira  Layla · Miso · Sunji · Riel · Mirae          (K-pop · exactly five, permanent)
+//    Old saves are renamed once (the old star records become these members; nothing is added twice).
+//  · Every group now has its whole roster as real members (a.mx): unique names, Vocal / Dance /
+//    Variety, popularity, a persistent appearance (ap) and a member id for portraits (pid).
+//    Generated once and saved; never regenerated on load.
+//  · CD sales of rival releases: active fans × buyer rate × copies per buyer × the release's
+//    quality, momentum, Center appeal and release fatigue — no fixed targets. With their current
+//    fanbases OMG4ki usually lands around 1–3 million, WINÉR4 / SUMÉR4 around 0.5–1 million, Sefira
+//    as a K-pop act in Japan far lower; singles can flop or explode. Fans follow results with
+//    a soft market ceiling (no endless growth) and decay once per artist per week.
+//  · Rivals develop on their own (monthly): new members, rising stars, graduations of non-core
+//    members, new Centers, hits and underperforming singles, tours, controversies, sister rivalry —
+//    each with news through the existing news engine.
+//  · Industry Ranking (Charts › Industry Ranking): sales, charts, fanbase, fan loyalty, member
+//    popularity, music quality, live, awards, media and consistency, each 0–100; the overall
+//    standing needs several of them.
+// =====================================================================================
+const RV_STARS={
+ omg4ki:[['Naevis','Ace · Center','Legendary',92,91,88,1],['Riko','Main Vocal','Graceful',90,74,68],['NuMinnie','Main Dancer','Cute',74,92,78],['Sherbelle','Visual · Variety','Elegant',76,78,88]],
+ winer4:[['Center','Center','Cool',82,80,60],['Midorin','Main Dancer','Mysterious',70,93,58],['Cara','Main Vocal','Elegant',92,66,56],['Lovetan','Visual','Calm',72,74,70]],
+ sumer4:[['Yuki','Center','Energetic',78,84,80],['Sunny','Variety','Cheerful',68,74,94],['Ranran','Main Dancer','Genki',70,91,76]],
+ sefira:[['Layla','Leader · Main Dancer','Charismatic',76,94,72],['Miso','Main Vocal','Warm',95,72,70],['Sunji','Main Rapper','Bold',80,86,82],['Riel','Visual · Sub Vocal','Elegant',76,76,72],['Mirae','Maknae · Lead Dancer','Playful',72,88,84]]};
+// old star names of earlier versions → the established members (one-time rename)
+const RV_REN={'Shion Amagi':'Riko','Rina Kurosaki':'NuMinnie','Momoka Sakuraba':'Sherbelle','Yukino Shiraishi':'Center','Sayuri Hyodo':'Midorin','Rei Fuyutsuki':'Cara','Mafuyu Kagami':'Lovetan','Natsumi Hinata':'Yuki','Kaho Minazuki':'Sunny','Hikari Asahi':'Ranran','Seoa':'Layla','Hayul':'Miso','Dain':'Sunji'};
+const RV_NAMED=new Set(Object.values(RV_STARS).flat().map(x=>x[0]));
+// identity & market position of the established acts (fans = Japanese fanbase, br = share that buys, cp = copies per buyer)
+const RV_PROF={omg4ki:{fans:1200000,br:.5,cp:2.6,q:.9,loy:88,size:24,img:"Japan's No.1 · pink & yellow idol elegance"},winer4:{fans:500000,br:.45,cp:2.9,q:.82,loy:80,size:16},sumer4:{fans:500000,br:.45,cp:2.9,q:.8,loy:78,size:16},sefira:{fans:400000,br:.32,cp:1.8,q:.86,loy:74,size:5}};
+const RV_CEIL=2600000;
+// keep the constants of industry2.js in line so new games start with the right names
+try{const conv=k=>RV_STARS[k].map(([nm,pos,per,vo,da,va])=>[nm,pos,per,vo,da,va]);OMG_MX.splice(0,OMG_MX.length,...conv('omg4ki'));NAEVIS.splice(0,NAEVIS.length,...OMG_MX[0]);IND_FIX.forEach(o=>{if(RV_STARS[o.id])o.mx=conv(o.id)})}catch(e){console.error(e)}
+
+// ---- names ---------------------------------------------------------------------------------------------------------------------
+const RV_GN=['Akari','Haruka','Honoka','Miyu','Airi','Yuzuki','Kokona','Mahiro','Nanami','Rino','Tsumugi','Wakana','Hinata','Ayane','Karin','Konomi','Mizuki','Natsuki','Nonoka','Rika','Saya','Suzu','Uta','Yuika','Chika','Ema','Fuuka','Hiyori','Iroha','Kanon','Kurumi','Mitsuki','Noa','Sana','Shiho','Yua','Amane','Kotori','Minori','Miu','Seira','Riona','Moe','Yurika','Hazuki','Asuka','Momone','Kiara'];
+const RV_FN=['Aizawa','Kudo','Mizuhara','Sakaki','Tachibana','Kanzaki','Shiina','Asakura','Minami','Takane','Ozora','Morino','Fujishiro','Amamiya','Kurose','Hiiragi','Izumi','Hoshino','Kamiya','Nishino','Shirasaki','Arisugawa','Kirishima','Hayase','Sakurai','Toyama','Yagami','Onodera','Kisaragi','Mikami'];
+const RV_KN=['Jiwoo','Seoyeon','Yuna','Minji','Chaeyoung','Dahyun','Soyeon','Eunbi','Haerin','Jisoo','Nayeon','Yerin','Sohee','Gaeun','Bora','Hyejin','Seulgi','Yeji','Jieun','Sumin','Ahyeon','Rora','Hayoon','Siyeon'];
+function rvI(){const I=S&&S.ind;if(!I)return null;I.mn=I.mn||[];I.pseq=I.pseq||900000;return I}
+function rvName(a,r){const I=rvI(),taken=new Set([...I.mn,...(S.members||[]).map(m=>m.name),...RV_NAMED]);const male=indSexOf(a)=='m';
+ for(let i=0;i<80;i++){let n;if(a.cat=='kpop')n=RV_KN[Math.floor(r()*RV_KN.length)]+(i>20?' '+String.fromCharCode(65+Math.floor(r()*26)):'');else if(male)n=INDW.mg[Math.floor(r()*INDW.mg.length)]+' '+RV_FN[Math.floor(r()*RV_FN.length)];else n=RV_GN.concat(INDW.fg)[Math.floor(r()*(RV_GN.length+INDW.fg.length))]+' '+RV_FN.concat(INDW.fam)[Math.floor(r()*(RV_FN.length+INDW.fam.length))];if(!taken.has(n)){I.mn.push(n);return n}}
+ const n=`${a.nm} #${++I.pseq}`;I.mn.push(n);return n}
+
+// ---- appearance: persistent and unique for every rival member (same renderer as the player's members) -------------------------
+const RV_HUE={omg4ki:330,winer4:220,sumer4:175,sefira:285};
+function rvAp(pid,seed,style){const r=mulb(seed|0),p=n=>Math.floor(r()*n),pers=['Genki','Cool','Shy','Elegant','Airhead','Serious'][p(6)];let a=newAp({id:pid,hue:p(360),pers},p(9999));
+ const n=(o,d)=>{try{return o&&o.length?o.length:d}catch(e){return d}};
+ a={...a,fc:p(4),sk:[0,0,1,1,1,1,2,2,3,4][p(10)],ey:p(n(typeof EYG!='undefined'?EYG:null,6)),br:p(n(typeof APBR!='undefined'?APBR:null,4)),mt:p(n(typeof APMT!='undefined'?APMT:null,5)),ft:p(n(typeof BANGS!='undefined'?BANGS:null,11)),bk:p(n(typeof BKN!='undefined'?BKN:null,12)),ah:r()<.3?1+p(5):0};
+ if(style=='kpop'&&r()<.5)a.hc=[0,0,1,4,5,6,7][p(7)];return{pers,ap:a}}
+function rvMem(a,o,r,day){const I=rvI(),pid=++I.pseq,b=Math.max(0,Math.min(1,a.q==null?.6:a.q));const st=v=>Math.round(Math.max(25,Math.min(96,v)));
+ const L=rvAp(pid,Math.floor(r()*1e9),a.cat=='kpop'?'kpop':'jp');
+ return{nm:o.nm,pos:o.pos||'Member',per:o.per||L.pers,vo:o.vo??st(38+r()*40+b*12),da:o.da??st(38+r()*40+b*12),va:o.va??st(32+r()*44+b*8),off:o.off??Math.round(-22+r()*16),pid,ap:L.ap,st:'act',jn:day,gen:o.gen||1,...(o.legend?{legend:1}:{}),...(o.star?{star:1}:{})}}
+// figure / portrait stand-in for a rival member (never stored as a player member)
+function rvPm(a,s){return{id:s.pid,hue:(RV_HUE[a.id]??a.hue??330)|0,name:s.nm,ap:s.ap,_x:1,pers:s.per,bgc:`hsl(${(RV_HUE[a.id]??a.hue??330)|0},55%,88%)`}}
+function rvCanDraw(a){return a&&a.cat!='player'&&indSexOf(a)!='m'&&a.cat!='band'}
+
+// ---- rosters -----------------------------------------------------------------------------------------------------------------------
+function rvRoster(a){if(!a||a.cat=='player'||a.rv3)return;const I=rvI(),r=mulb(String(a.id).split('').reduce((h,c)=>h*31+c.charCodeAt(0)|0,7)),P=RV_PROF[a.id],FX=RV_STARS[a.id];a.rv3=1;
+ if(P){a.q=P.q;a.br=P.br;a.cp=P.cp;a.loy=P.loy;if(!a.fx3){a.fx3=1;a.fans=Math.max(a.fans|0,P.fans)}if(P.img&&a.id=='omg4ki')a.img=P.img}
+ else{const K=IND_K[a.cat]||IND_K.fidol;a.q=a.q??+(.35+r()*.5).toFixed(2);a.cp=a.cp??(a.cat=='fidol'?1.6:a.cat=='midol'||a.cat=='kpop'?1.5:1.1);a.br=a.br??+(K.buy/a.cp).toFixed(3);a.loy=a.loy??Math.round(40+r()*40)}
+ const old=Array.isArray(a.mx)?a.mx:[];old.forEach(s=>{if(RV_REN[s.nm])s.nm=RV_REN[s.nm]});
+ const solo=a.cat=='fsolo'||a.cat=='msolo',size=P?P.size:solo?1:Math.max(old.length,(a.mem||[]).length,a.cat=='band'?3:4),L=[];
+ if(FX)FX.forEach(([nm,pos,per,vo,da,va,lg],i)=>{const s=old.find(x=>x.nm==nm)||{};L.push({...rvMem(a,{nm,pos,per,vo,da,va,off:Math.max(-6,8-i*4),legend:lg,star:1},r,a.deb),...(s.pid?{pid:s.pid,ap:s.ap}:{})})});
+ old.forEach(s=>{if(L.some(x=>x.nm==s.nm)||L.length>=size)return;L.push(s.pid?{...s,st:s.st||'act'}:{...rvMem(a,{...s,star:1},r,a.deb)})});
+ if(solo&&!L.length)L.push(rvMem(a,{nm:a.nm,pos:'Solo artist',off:0,star:1},r,a.deb));
+ while(L.length<size)L.push(rvMem(a,{nm:rvName(a,r),pos:'Member'},r,a.deb+Math.round(r()*Math.max(0,S.day-a.deb))));
+ L.forEach(s=>{if(!I.mn.includes(s.nm))I.mn.push(s.nm)});a.mx=L;a.mem=L.filter(s=>s.st!='grad').map(s=>s.nm)}
+function rvAll(){const I=rvI();if(!I)return;Object.values(I.A).forEach(a=>{try{rvRoster(a)}catch(e){console.error('rv',a.id,e)}})}
+// awards / festival read the active members only (graduated rival members stay in the record)
+{const f=indStars;indStars=function(a){if(a&&a.cat!='player'&&!a.rv3)rvRoster(a);return(f.apply(this,arguments)||[]).filter(s=>s.st!='grad')}}
+const rvAct=a=>(a&&a.mx||[]).filter(s=>s.st!='grad');
+{const f=indS;indS=function(){const I=f.apply(this,arguments);try{if(I&&I.rv3v!=1){I.rv3v=1;rvAll()}}catch(e){console.error(e)}return I}}
+{const f=indNewArtist;indNewArtist=function(){const a=f.apply(this,arguments);try{if(S&&S.ind&&S.ind.rv3v)rvRoster(a)}catch(e){}return a}}
+// card: the established members by name
+{const f=indArtistCard;indArtistCard=function(a){let h=f.apply(this,arguments);try{if(a&&a.mx&&a.mx.length>4){const st=rvAct(a).filter(s=>s.star).map(s=>`${esc(s.nm)}${s.legend?' 👑':''}`);if(st.length)h=h.replace(/<p class="st">⭐[^]*?<\/p>/,`<p class="st">⭐ ${st.join(' · ')} · ${rvAct(a).length} members</p>`)}}catch(e){}return h}}
+
+// ---- CD sales of rival releases: buyers × copies × quality / momentum / Center / fatigue -------------------------------------------
+const rvGauss=r=>{let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+function rvCenter(a,r){const M=rvAct(a);if(!M.length)return null;const W=M.map(s=>Math.pow(Math.max(1,indStarPop(a,s)),3)*(s.star?1.5:1)*(.7+r()*.6));let t=W.reduce((x,y)=>x+y,0)*r();for(let i=0;i<M.length;i++){t-=W[i];if(t<=0)return a.mx.indexOf(M[i])}return a.mx.indexOf(M[0])}
+{const f=indRelease;indRelease=function(a,k,day,o){if(!a||a.cat=='player'||(o&&o.F!=null)||!S||!S.ind||!S.ind.rv3v)return f.apply(this,arguments);
+ if(!a.rv3)rvRoster(a);const r=Math.random,alb=k=='a',gap=a.last!=null?day-a.last:999,fat=gap>=70?1:Math.max(.78,.78+.22*gap/70);
+ const q=Math.max(.5,Math.min(1.5,.82+.3*(a.q||.6)+rvGauss(r)*.17)),hype=Math.pow(Math.max(.25,1+(a.mom||0)/30),.6),ci=rvCenter(a,r),cs=ci!=null?a.mx[ci]:null,cen=cs?Math.pow(Math.max(.6,indStarPop(a,cs)/Math.max(1,indPop(a))),.25):1;
+ const F=Math.round(a.fans*(a.br||.3)*(a.cp||1.5)*q*hype*fat*cen*(alb?.72:1));const R=f.call(this,a,k,day,{...(o||{}),F});
+ try{R.q=+q.toFixed(3);if(ci!=null){R.cen=ci;const M=rvAct(a),n=Math.min(M.length,a.cat=='fidol'?16:M.length);R.sen=M.slice().sort((x,y)=>indStarPop(a,y)+(y.star?6:0)-indStarPop(a,x)-(x.star?6:0)+(r()-.5)*8).slice(0,n).map(s=>a.mx.indexOf(s));if(!R.sen.includes(ci))R.sen[R.sen.length-1]=ci}
+  if(a.lock&&a.rel.length>1)rvRelNews(a,R)}catch(e){console.error(e)}return R}}
+// fans follow the results: buyers and listeners become fans, a soft market ceiling, one decay per artist and week
+indFansAfter=function(w,rows){const I=S.ind,G={};rows.forEach(x=>{const a=I.A[x.r.aid];if(!a||a.cat=='player')return;G[a.id]=(G[a.id]||0)+((x.cd/Math.max(1,a.cp||1.5))*.04+x.st*.0004)*(x.r.q||1)});
+ Object.values(I.A).forEach(a=>{if(a.cat=='player'||a.st=='disbanded')return;const sat=Math.max(.04,1-a.fans/RV_CEIL),g=(G[a.id]||0)*sat*(a.st=='hiatus'?.3:1);a.fans=Math.max(200,Math.round(a.fans*(1-(a.st=='hiatus'?.003:.0012))+g))});
+ if(w%4==0){Object.values(I.A).forEach(indLife);try{rvMonth()}catch(e){console.error(e)}}
+ const act=Object.values(I.A).filter(a=>a.cat!='player'&&a.st!='disbanded'&&a.st!='hiatus').length,p=Math.max(.08,Math.min(.8,.95-act/110));if(Math.random()<p)indDebut(indWs(w+1)+Math.floor(iR(0,7)))};
+// OMG4ki: strong but not invincible — its momentum is no longer held up artificially
+// the established acts: momentum from their own management quality (no age decline, no fixed bonus)
+{const f=indLife;indLife=function(a){if(a&&RV_PROF[a.id]){const m=a.mom,st=a.st;f.apply(this,arguments);a.mom=Math.max(-15,Math.min(15,m*.85+iR(-3,3)+((a.q||.8)-.78)*2.5));if(a.id=='omg4ki')a.st='established';return}return f.apply(this,arguments)}}
+
+// ---- rival development & news ------------------------------------------------------------------------------------------------------
+function rvNews(o){try{return nwPublish({src:'game',cat:'industry',type:o.type,sent:o.sent||'neu',att:o.att||28,imp:o.imp||2,refs:{},img:o.img||{k:'edit',th:'industry'},alt:nwAlt(o.alt||'Industry','วงการเพลง'),en:o.en,th:o.th})}catch(e){}}
+function rvAvgF(a,ex){const I=S.ind,L=(a.rel||[]).map(id=>I.R[id]).filter(r=>r&&r.k=='s'&&r.id!=ex).slice(-6);return L.length?L.reduce((s,r)=>s+r.F,0)/L.length:null}
+function rvRelNews(a,R){if(R.k!='s')return;const av=rvAvgF(a,R.id);if(!av)return;const x=R.F/av,cs=R.cen!=null?a.mx[R.cen]:null,prev=(a.rel||[]).map(id=>S.ind.R[id]).filter(r=>r&&r.k=='s'&&r.id!=R.id).slice(-1)[0],nc=cs&&prev&&prev.cen!=null&&prev.cen!=R.cen;
+ if(nc)rvNews({type:'rv_cen',att:30,alt:a.nm,en:{h:`${cs.nm} is the new Center of ${a.nm}`,s:`“${R.t}” changes the face of the group.`,b:`${a.nm} announced its new single “${R.t}” with ${cs.nm} as Center${prev.cen!=null&&a.mx[prev.cen]?`, taking over from ${a.mx[prev.cen].nm}`:''}.`},th:{h:`${cs.nm} คือเซ็นเตอร์คนใหม่ของ ${a.nm}`,s:`“${R.t}” เปลี่ยนหน้าตาของวง`,b:`${a.nm} ประกาศซิงเกิลใหม่ “${R.t}” โดยมี ${cs.nm} เป็นเซ็นเตอร์${prev.cen!=null&&a.mx[prev.cen]?` ต่อจาก ${a.mx[prev.cen].nm}`:''}`}});
+ if(x>=1.3)rvNews({type:'rv_hit',sent:'pos',att:36,alt:a.nm,en:{h:`${a.nm}'s “${R.t}” is heading for a huge hit`,s:`Pre-orders point to about ${indFmt(R.F)} copies.`,b:`Industry insiders expect “${R.t}” to sell around ${indFmt(R.F)} copies — far above ${a.nm}'s recent average of ${indFmt(av)}.`},th:{h:`“${R.t}” ของ ${a.nm} ส่อแววฮิตถล่มทลาย`,s:`ยอดพรีออเดอร์ชี้ว่าอาจถึงราว ${indFmt(R.F)} แผ่น`,b:`คนในวงการคาดว่า “${R.t}” จะขายได้ราว ${indFmt(R.F)} แผ่น สูงกว่าค่าเฉลี่ยช่วงหลังของ ${a.nm} ที่ ${indFmt(av)} แผ่นอย่างมาก`}});
+ else if(x<=.75)rvNews({type:'rv_flop',sent:'neg',att:30,alt:a.nm,en:{h:`Slow start for ${a.nm}'s “${R.t}”`,s:'The new single trails the group\'s usual numbers.',b:`“${R.t}” is expected to sell about ${indFmt(R.F)} copies, below ${a.nm}'s recent average of ${indFmt(av)}. Critics point at the song choice.`},th:{h:`“${R.t}” ของ ${a.nm} เปิดตัวช้ากว่าที่คาด`,s:'ซิงเกิลใหม่ทำยอดต่ำกว่าปกติของวง',b:`“${R.t}” คาดว่าจะขายได้ราว ${indFmt(R.F)} แผ่น ต่ำกว่าค่าเฉลี่ยช่วงหลังของ ${a.nm} ที่ ${indFmt(av)} แผ่น นักวิจารณ์มองว่าเป็นเพราะการเลือกเพลง`}})}
+const RV_DEV=['omg4ki','winer4','sumer4','sefira'];
+function rvMonth(){const I=S.ind,r=Math.random;
+ Object.values(I.A).forEach(a=>{if(a.cat=='player'||a.st=='disbanded'||!a.mx||a.cat=='fsolo'||a.cat=='msolo')return;const big=RV_DEV.includes(a.id)||(a.st=='established'&&a.fans>80000);if(!big)return;const M=rvAct(a);
+  // members' popularity moves with the group's results and their own skills
+  M.forEach(s=>{s.off=Math.max(-30,Math.min(14,(s.off||0)+(r()-.5)*1.6+((s.vo+s.da+s.va)/300-.6)*.4))});
+  // rising star
+  if(r()<.12){const c=M.filter(s=>!s.star&&!s.legend);const s=c.sort((x,y)=>(y.vo+y.da+y.va)-(x.vo+x.da+x.va))[Math.floor(r()*Math.min(5,c.length))];if(s){s.off=Math.min(14,(s.off||0)+5+Math.round(r()*4));if(s.off>2&&!s.star){s.star=1;s.rise=S.day}
+   if(RV_DEV.includes(a.id))rvNews({type:'rv_rise',sent:'pos',att:26,alt:a.nm,en:{h:`${s.nm} of ${a.nm} is the name everyone is talking about`,s:'A rising star in one of Japan\'s top groups.',b:`${s.nm} (${a.nm}) keeps winning new fans with her ${s.da>=s.vo&&s.da>=s.va?'dance':s.vo>=s.va?'vocals':'variety talk'}. Fans call her the group's next big star.`},th:{h:`${s.nm} แห่ง ${a.nm} ชื่อที่ใคร ๆ ก็พูดถึง`,s:'ดาวรุ่งในหนึ่งในวงท็อปของญี่ปุ่น',b:`${s.nm} (${a.nm}) ได้ใจแฟนใหม่ไม่หยุดด้วย${s.da>=s.vo&&s.da>=s.va?'การเต้น':s.vo>=s.va?'เสียงร้อง':'ความสนุกในรายการวาไรตี้'} แฟน ๆ ยกให้เธอเป็นดาวดวงต่อไปของวง`}})}}
+  // graduation of a long-serving member (the established named members stay)
+  if(!a.fixed5&&M.length>6&&r()<.09){const c=M.filter(s=>!RV_NAMED.has(s.nm)&&S.day-(s.jn||a.deb)>365*3);const s=c[Math.floor(r()*c.length)];if(s){s.st='grad';s.gd=S.day;a.mem=rvAct(a).map(x=>x.nm);a.mom=Math.max(-15,a.mom-(s.star?1.5:.4));
+   if(RV_DEV.includes(a.id)||s.star)rvNews({type:'rv_grad',att:s.star?34:22,alt:a.nm,en:{h:`${s.nm} announces her graduation from ${a.nm}`,s:'A farewell concert is planned.',b:`${s.nm} will graduate from ${a.nm} after ${Math.max(1,Math.round((S.day-(s.jn||a.deb))/365))} years. ${s.star?'Fans of the group are shocked by the news.':'Her fans thanked her for every stage.'}`},th:{h:`${s.nm} ประกาศจบการศึกษาจาก ${a.nm}`,s:'มีแผนจัดคอนเสิร์ตอำลา',b:`${s.nm} จะจบการศึกษาจาก ${a.nm} หลังอยู่กับวงมา ${Math.max(1,Math.round((S.day-(s.jn||a.deb))/365))} ปี ${s.star?'แฟน ๆ ต่างตกใจกับข่าวนี้':'แฟน ๆ ขอบคุณเธอสำหรับทุกเวที'}`}})}}
+  // new members (new generation) when the roster gets small
+  const P=RV_PROF[a.id],want=P?P.size:Math.max(4,(a.mx||[]).length);if(!a.fixed5&&M.length<want-1&&r()<.35){const n=Math.min(want-M.length,1+Math.floor(r()*4)),g=Math.max(...a.mx.map(s=>s.gen||1))+1,rr=mulb(Math.floor(r()*1e9)),nw=[];for(let i=0;i<n;i++){const s=rvMem(a,{nm:rvName(a,rr),pos:'Member',gen:g,off:-24},rr,S.day);a.mx.push(s);nw.push(s.nm)}a.mem=rvAct(a).map(x=>x.nm);
+   if(RV_DEV.includes(a.id))rvNews({type:'rv_new',sent:'pos',att:26,alt:a.nm,en:{h:`${a.nm} welcomes generation ${g}`,s:nw.join(', '),b:`${a.nm} introduced ${n} new member(s): ${nw.join(', ')}. They will join the group's next activities.`},th:{h:`${a.nm} ต้อนรับสมาชิกรุ่นที่ ${g}`,s:nw.join(', '),b:`${a.nm} เปิดตัวสมาชิกใหม่ ${n} คน: ${nw.join(', ')} ซึ่งจะร่วมกิจกรรมต่อไปของวง`}})}
+  if(!RV_DEV.includes(a.id))return;
+  // tours and controversies
+  if(r()<.08){a.mom=Math.min(15,a.mom+1.2);a.fans=Math.round(a.fans*1.004);rvNews({type:'rv_tour',sent:'pos',att:28,alt:a.nm,en:{h:`${a.nm} sells out its ${['dome','arena','stadium'][Math.floor(r()*3)]} tour`,s:'Tickets were gone within hours.',b:`${a.nm}'s new tour sold out in record time, another sign of the group's strength on stage.`},th:{h:`${a.nm} ขายบัตรทัวร์หมดเกลี้ยง`,s:'บัตรหมดภายในไม่กี่ชั่วโมง',b:`ทัวร์ใหม่ของ ${a.nm} ขายหมดในเวลาทำลายสถิติ อีกหนึ่งสัญญาณของความแข็งแกร่งบนเวที`}})}
+  else if(r()<.03){a.mom=Math.max(-15,a.mom-3);const s=M[Math.floor(r()*M.length)];rvNews({type:'rv_scandal',sent:'neg',att:34,alt:a.nm,en:{h:`Controversy around ${a.nm}`,s:`${s?s.nm:'A member'} apologises after a backstage clip spreads online.`,b:`A clip from backstage caused criticism online. ${a.nm}'s agency issued an apology; the group's next activities continue as planned.`},th:{h:`ดราม่ารอบ ${a.nm}`,s:`${s?s.nm:'สมาชิกคนหนึ่ง'} ขอโทษหลังคลิปหลังเวทีแพร่ในโลกออนไลน์`,b:`คลิปจากหลังเวทีถูกวิจารณ์ในโลกออนไลน์ ต้นสังกัดของ ${a.nm} ออกแถลงขอโทษ และกิจกรรมต่อไปของวงยังเดินหน้าตามแผน`}})}});
+ // sister rivalry: who leads the year so far
+ const y=indYr(S.day),yp=a=>(a.rel||[]).reduce((s,id)=>{const R=I.R[id];return s+((R&&R.yp&&R.yp[y])||0)},0),W=I.A.winer4,U=I.A.sumer4,O=I.A.omg4ki;
+ if(W&&U){const lead=yp(W)>=yp(U)?W:U,k='rvsis'+y;I.rvL=I.rvL||{};if(I.rvL[k]&&I.rvL[k]!=lead.id){const o=lead.id==W.id?U:W;rvNews({type:'rv_sis',att:30,alt:'WINÉR4 · SUMÉR4',en:{h:`${lead.nm} overtakes ${o.nm} this year`,s:'The sister groups trade places on the year chart.',b:`${lead.nm} now leads ${o.nm} on this year's combined chart points. The two sister groups of OMG4ki keep pushing each other.`},th:{h:`${lead.nm} แซง ${o.nm} ในปีนี้`,s:'วงน้องสาวสลับอันดับกันบนชาร์ตประจำปี',b:`ตอนนี้ ${lead.nm} นำ ${o.nm} ในคะแนนชาร์ตรวมของปีนี้ วงน้องสาวทั้งสองของ OMG4ki ยังคงผลักดันกันและกันต่อไป`}})}I.rvL[k]=lead.id;
+  if(O){const best=[W,U].sort((a,b)=>yp(b)-yp(a))[0],kk='rvomg'+y;if(yp(best)>yp(O)&&!I.rvL[kk]){I.rvL[kk]=1;rvNews({type:'rv_beat',sent:'pos',att:38,alt:best.nm,en:{h:`${best.nm} ahead of OMG4ki this year`,s:'A rare moment in the industry.',b:`For now, ${best.nm} has more chart points this year than its senior group OMG4ki — a rare sight in Japan's idol industry.`},th:{h:`${best.nm} นำหน้า OMG4ki ในปีนี้`,s:'ภาพที่หาได้ยากในวงการ',b:`ตอนนี้ ${best.nm} มีคะแนนชาร์ตปีนี้มากกว่ารุ่นพี่ OMG4ki ภาพที่หาได้ยากในวงการไอดอลญี่ปุ่น`}})}}}}
+
+// ---- Industry Ranking ------------------------------------------------------------------------------------------------------------------
+const RV_DIM=[['sales','CD sales','ยอดขาย CD',.16],['chart','Charts','ชาร์ต',.12],['fans','Fanbase','ฐานแฟน',.12],['loy','Fan loyalty','ความภักดีของแฟน',.08],['mem','Member popularity','ความนิยมของสมาชิก',.1],['qual','Music quality','คุณภาพเพลง',.1],['live','Live & theater','การแสดงสด',.08],['aw','Awards','รางวัล',.1],['media','Media & reputation','สื่อและชื่อเสียง',.07],['cons','Consistency','ความสม่ำเสมอ',.07]];
+function rvPlayerLoy(gid){let d=0,n=0;(S.fb&&S.fb.segs||[]).forEach(s=>{const k=typeof fdSegGroupN=='function'?fdSegGroupN(s,gid):0;if(!k)return;n+=k;if(s.ft=='dedicated'||s.ft=='hardcore')d+=k;else if(s.ft=='oshi')d+=k*.45});return n?Math.min(100,30+100*d/n):40}
+function rvAwards(id,gid){let n=0;try{const A=awS(),y0=indYr(S.day)-3;Object.values(A.years).filter(Y=>Y.y>=y0&&Y.win).forEach(Y=>Object.values(Y.win).forEach(w=>{if(gid!=null?w.gid==gid:(w.aid==id||w.id==id))n+=1}))}catch(e){}return n}
+function rvRank(){const I=indS();if(!I)return[];try{(S.groups||[]).forEach(g=>gsWith(g.id,()=>indPlayerArtist()))}catch(e){}
+ const yr=S.day-365,L=Object.values(I.A).filter(a=>a.st!='disbanded'&&['fidol','midol','kpop','player'].includes(a.cat)&&(a.cat!='player'||(S.groups||[]).some(g=>'P'+g.id==a.id))).map(a=>{const R=(a.rel||[]).map(id=>I.R[id]).filter(r=>r&&r.day>=yr),gid=awPlayerGid(a),sales=R.reduce((s,r)=>s+(r.tot||0),0);
+  const pk=Math.min(99,...R.map(r=>{const h=I.H[(r.k=='a'?'ca':'cs')+':'+r.id];return h?h.pk:99})),pts=R.reduce((s,r)=>s+Object.values(r.yp||{}).reduce((x,y)=>x+y,0),0);
+  let fans=a.fans,mem=0,qual=50,live=50,media=50,loy=a.loy||50;
+  if(gid!=null){try{fans=awGFans(gid);const M=S.members.filter(m=>m.group==gid&&isAct(m)).sort((x,y)=>y.pop-x.pop).slice(0,5);mem=M.length?avg(M.map(m=>m.pop)):0;loy=rvPlayerLoy(gid);
+    gsWith(gid,()=>{const X=(S.singles||[]).filter(x=>(x.relDay??x.day)>=yr);qual=X.length?Math.min(100,avg(X.map(x=>(x.comp||1)*55))):40;const P=(thS().pf||[]).filter(p=>p.day>=yr);live=P.length?Math.min(100,avg(P.map(p=>p.sat||50))+Math.min(15,P.length/10)):35});
+    try{const C=ccS().list.filter(C=>C.status=='done'&&C.done>=yr);if(C.length)live=Math.min(100,live+8)}catch(e){}
+    try{const g=grp(gid);media=g&&g.rep!=null?g.rep:Math.min(100,40+awLog(fans)*6)}catch(e){}}catch(e){}}
+  else{const M=rvAct(a).map(s=>indStarPop(a,s)).sort((x,y)=>y-x).slice(0,5);mem=M.length?avg(M):indPop(a);qual=R.length?Math.min(100,avg(R.map(r=>(r.q||1)*60))):45;live=Math.min(100,indPop(a)*.6+(a.q||.5)*40);media=Math.min(100,45+(a.mom||0)*2.5+indPop(a)*.3)}
+  const F=R.filter(r=>r.k=='s').map(r=>r.tot||r.F||0),mu=F.length?avg(F):0,sd=F.length>1?Math.sqrt(avg(F.map(v=>(v-mu)*(v-mu)))):0,cons=F.length>1?Math.max(0,100-100*sd/Math.max(1,mu)):F.length?55:20;
+  return{a,gid,nm:awArtistName(a),raw:{sales,chart:Math.sqrt(pts)+(pk<99?(21-pk)*30:0),fans,loy,mem,qual,live,aw:rvAwards(a.id,gid),media,cons},pk,pts}});
+ const mx={};RV_DIM.forEach(([k])=>mx[k]=Math.max(1e-9,...L.map(x=>x.raw[k])));
+ L.forEach(x=>{x.d={};RV_DIM.forEach(([k])=>{const v=x.raw[k],m=mx[k];x.d[k]=Math.round(k=='sales'||k=='fans'||k=='chart'?100*Math.sqrt(Math.max(0,v)/m):k=='aw'?100*v/m:Math.max(0,Math.min(100,v)))});x.tot=Math.round(RV_DIM.reduce((s,[k,,,w])=>s+x.d[k]*w,0)*10)/10});
+ L.sort((a,b)=>b.tot-a.tot);try{const me=L.findIndex(x=>x.gid!=null),H=I.rkH=I.rkH||{};if(me==0&&!H.n1){H.n1=S.day;rvNews({type:'rv_no1',sent:'pos',att:60,imp:5,alt:L[0].nm,en:{h:`${L[0].nm} is now Japan's No.1 idol group`,s:'The industry ranking has a new leader.',b:`After years of work, ${L[0].nm} has overtaken OMG4ki at the top of the industry ranking — sales, fans, music, live shows and awards together.`},th:{h:`${L[0].nm} ขึ้นเป็นวงไอดอลอันดับ 1 ของญี่ปุ่น`,s:'อันดับวงการมีผู้นำคนใหม่',b:`หลังจากทำงานหนักมาหลายปี ${L[0].nm} แซง OMG4ki ขึ้นสู่อันดับหนึ่งของวงการ ทั้งยอดขาย แฟน เพลง การแสดงสด และรางวัล`}})}}catch(e){}return L}
+function rvRankHtml(){const L=rvRank(),th=typeof UIP!='undefined'&&UIP.lang=='th',om=L.find(x=>x.a.id=='omg4ki'),mine=L.filter(x=>x.gid!=null);
+ const beat=me=>om?RV_DIM.filter(([k])=>me.d[k]>om.d[k]).map(([k,en,t])=>th?t:en):[];
+ const bar=v=>`<span class="rvbar"><i style="width:${v}%"></i></span>`;
+ return`<div class="indbd"><h3>${th?'อันดับวงการไอดอล':'Industry Ranking'} <small class="st">${th?'12 เดือนล่าสุด · หลายมิติรวมกัน':'last 12 months · many dimensions together'}</small></h3>
+ <p class="st">${th?'การเป็นอันดับ 1 ต้องแข็งแกร่งหลายด้านพร้อมกัน ไม่ใช่แค่ด้านเดียว':'Being No.1 needs strength in several areas at once — one metric is not enough.'}</p>
+ ${mine.map(me=>{const b=beat(me),pos=L.indexOf(me)+1;return`<div class="c rvme"><b>${esc(me.nm)}</b> · #${pos} ${th?'โดยรวม':'overall'} (${me.tot})${om?` · OMG4ki #${L.indexOf(om)+1} (${om.tot})`:''}<p class="st">${b.length?`${th?'แซง OMG4ki ใน':'Ahead of OMG4ki in'}: ${b.join(', ')}`:(th?'ยังไม่แซง OMG4ki ในด้านใด':'Not yet ahead of OMG4ki in any dimension')}</p></div>`}).join('')}
+ <div class="wrap"><table class="thmft rvrk"><tr><th>#</th><th>${th?'ศิลปิน':'Artist'}</th><th>${th?'รวม':'Total'}</th>${RV_DIM.map(([k,en,t])=>`<th>${th?t:en}</th>`).join('')}</tr>
+ ${L.slice(0,20).map((x,i)=>`<tr class="${x.gid!=null?'pl':''} ${x.a.id=='omg4ki'?'boss':''}"><td>${i+1}</td><td><b>${esc(x.nm)}</b>${x.a.id=='omg4ki'?' 👑':''}</td><td><b>${x.tot}</b></td>${RV_DIM.map(([k])=>`<td>${x.d[k]}${bar(x.d[k])}</td>`).join('')}</tr>`).join('')}</table></div></div>`}
+{const f=V.charts;V.charts=function(){if(ui.cht=='rk'){const h=f.call(this,...arguments);ui.cht='rk';const tabs=(h.match(/<div class="row">[\s\S]*?<\/div>/)||[''])[0].replace(/ on"/g,'"');return`<h2 class="ht">Charts &amp; Sales</h2>${tabs.replace(/<\/div>$/,`<button class="b s on" onclick="ui.cht='rk';render()">Industry Ranking</button></div>`)}${rvRankHtml()}`}
+ const h=f.apply(this,arguments);return h.replace(/(<div class="row">[\s\S]*?)(<\/div>)/,`$1<button class="b s" onclick="ui.cht='rk';render()">Industry Ranking</button>$2`)}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.ind){S.ind.rv3v=0;indS()}}catch(e){console.error(e)}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Music Awards upgrade: nominations, attendance, speakers,
+//  speeches, award outfits and the ceremony on stage
+// -------------------------------------------------------------------------------------
+//  Extends awards.js (same award, categories, dates, history in S.aw.years). Nothing is duplicated.
+//  · Individual categories are judged on the year: popularity is only one part. Vocal, Dance /
+//    Performance, Variety, Center work, songs and Senbatsu of the year, TV / event appearances,
+//    growth and career. Player members' skills (0–1000) are compared on the same 0–100 scale as rivals.
+//  · Every real member of every group can be nominated (rival rosters, rival-industry members,
+//    the player's members). Nominees are drawn with weights from the achievement scores: strong
+//    years make a nomination likely but never certain, and less famous members with a great year
+//    can get in. No member twice in a category, at most two per act, nominees shown in a neutral order.
+//  · Winner: unchanged (category score × a small judges' factor).
+//  · Attendance: your members with an individual nomination always attend (locked); add others of
+//    your own groups up to 16. Representatives for group / song / stage awards are chosen from
+//    the eligible attendees (song awards: only that song's Senbatsu).
+//  · Speakers are validated for every award: individual awards — the winner herself; group awards —
+//    the chosen / a valid member of the winning group; song awards — a member of that song's Senbatsu;
+//    otherwise the host accepts. Speeches come from a bilingual library that depends on the category,
+//    first or repeated win, career stage, the group's identity and the facts of the year; no speech
+//    is repeated in a ceremony. Speaker and speech are saved in the year's history.
+//  · Outfits: your members wear their own costume (and song hairstyle) of their latest single —
+//    nothing is copied or overwritten. Rival groups get a coordinated award outfit collection per
+//    ceremony in their identity (OMG4ki pink & yellow idol elegance, WINÉR4 navy / silver / white
+//    winter elegance, SUMÉR4 turquoise / white / yellow / pink summer, Sefira modern chic K-pop,
+//    other groups from their own colour), each member with her own variation; saved with the year.
+//  · Ceremony: red carpet → for every award: nominees → winner walks on stage and receives the
+//    trophy → speech and reactions → next award → special performance → closing.
+// =====================================================================================
+const AW_CAP=16;
+const awTh=()=>typeof UIP!='undefined'&&UIP.lang=='th';
+const awSk=v=>Math.round(Math.max(0,Math.min(100,(+v||0)>100?(+v||0)/10:(+v||0))));
+const awSeedN=k=>Math.floor(awJ(k)*2147483647);
+// ---- people with their year ---------------------------------------------------------------------------------------------------------
+// releases from before the rosters existed have no Senbatsu list: the group's most popular members (16 at most) sang them
+function awNpcTop(a){const M=(a.mx||[]).map((s,i)=>[s,i]).filter(([s])=>s.st!='grad').sort((x,y)=>indStarPop(a,y[0])+(y[0].star?6:0)-indStarPop(a,x[0])-(x[0].star?6:0));return new Set(M.slice(0,a.cat=='fidol'?16:M.length).map(x=>x[1]))}
+function awNpcYear(a,i,y,end){const R=awRel(y,end).filter(r=>r.aid==a.id&&r.k=='s'),s=a.mx[i]||{},top=awNpcTop(a);let cen=0,sen=0,pts=0;R.forEach(r=>{const inS=Array.isArray(r.sen)?r.sen.includes(i):top.has(i);if(r.cen==i||(r.cen==null&&i==0&&s.star)){cen++;pts+=r.yp[y]||0}if(inS)sen++});
+ const Z=awS().snap[y]||{},z=Z.s||{},o0=z[a.id+'#'+i],fa=(Z.a||{})[a.id],gr=o0!=null?(s.off||0)-o0:(fa?Math.round(30*(a.fans-fa)/fa):0)+(s.rise&&awY(s.rise)==y?6:0),xe=Math.round((s.va||50)/100*6*awJ(a.id+i+y)+(s.star?2:0));return{songs:sen,cen,main:cen,xe,gr,pts,yrs:Math.max(0,(S.day-(s.jn||a.deb))/365)}}
+awPeople=function(){const I=S.ind,L=[];const y=awY(S.day),end=S.day;
+ // the player's members on the industry's popularity scale: the group's real fanbase plus her standing inside the group
+ const GF={};(S.groups||[]).forEach(g=>{try{GF[g.id]=awGFans(g.id)}catch(e){GF[g.id]=S.fans|0}});
+ S.members.filter(m=>m.status!='graduated').forEach(m=>{const g=grp(m.group),ip=Math.round(Math.max(1,Math.min(100,18*Math.log10(Math.max(500,GF[m.group]||S.fans||500)/500)+((m.pop|0)-50)*.35)));L.push({k:'m',id:m.id,nm:m.name,sub:g?g.name:'',sex:'f',pop:ip,pop0:m.pop|0,vo:awSk(m.sing),da:awSk(m.dance),va:awSk(m.variety),pf:awSk(m.cha),player:1,gid:m.group,trainee:m.status=='trainee',yrs:Math.max(0,(S.day-(m.jd??m.join??(g&&g.debutDay)??0))/365)})});
+ if(I)Object.values(I.A).filter(a=>a.cat!='player'&&a.st!='disbanded'&&a.st!='hiatus').forEach(a=>{if(!a.rv3&&typeof rvRoster=='function')rvRoster(a);const sx=indSexOf(a);(a.mx||[]).forEach((s,i)=>{if(s.st=='grad')return;L.push({k:'s',id:a.id+'#'+i,aid:a.id,i,nm:s.nm,sub:a.nm,sex:sx=='x'?(i==0?a.lead||'m':'m'):sx,pop:indStarPop(a,s),vo:s.vo,da:s.da,va:s.va,pf:Math.round((s.da*.6+s.va*.4)),legend:!!s.legend,star:!!s.star,idol:['fidol','midol','kpop'].includes(a.cat),solo:a.cat=='fsolo'||a.cat=='msolo',pos:s.pos})})});return L};
+function awYearOf(p,y,end){if(p.player){const m=get(p.id),Y=awMemYear(m,y,end),z=(awS().snap[y]||{}).m||{},p0=z[p.id];return{...Y,gr:p0==null?0:(p.pop0-p0)*.5,yrs:p.yrs}}const a=S.ind.A[p.aid];return awNpcYear(a,p.i,y,end)}
+const awYA=Y=>Math.min(100,Y.cen*12+Y.songs*4+Y.xe*2+Math.max(0,Y.gr)*2);
+const awCareer=(p,Y)=>Math.min(100,(Y.yrs||0)*8+(p.legend?35:0)+(p.star?8:0));
+// year-start snapshot also keeps rival members' standing (for growth)
+{const f=awSnap;awSnap=function(y){const z=f.apply(this,arguments);try{z.s=z.s||{};Object.values(S.ind.A).forEach(a=>(a.mx||[]).forEach((s,i)=>{const k=a.id+'#'+i;if(z.s[k]==null)z.s[k]=s.off||0}))}catch(e){}return z}}
+// ---- category criteria (individual categories; music / group categories keep their own data) ------------------------------------------
+const AW_IND={
+ fidol:(p,Y)=>p.sex=='f'&&(p.player||p.idol)?[p.pop*.35+(p.vo+p.da+p.va+p.pf)/4*.2+awYA(Y)*.3+awCareer(p,Y)*.15,`popularity ${p.pop}${Y.songs?`, ${Y.songs} song(s) this year`:''}${Y.cen?`, Center ×${Y.cen}`:''}`]:null,
+ midol:(p,Y)=>p.sex=='m'&&p.idol?[p.pop*.35+(p.vo+p.da+p.va+p.pf)/4*.2+awYA(Y)*.3+awCareer(p,Y)*.15,`popularity ${p.pop}${Y.songs?`, ${Y.songs} song(s) this year`:''}`]:null,
+ center:(p,Y)=>Y.cen>0&&(p.player||p.idol)?[Math.min(48,Y.cen*12)+p.pop*.3+(p.vo+p.da+p.pf)/3*.15+Math.min(12,Math.sqrt(Y.pts||0)*.02),`Center ×${Y.cen} this year`]:null,
+ vocal:(p,Y)=>(p.player?Y.songs>0:(Y.songs>0||p.solo))?[p.vo*.65+Math.min(25,Y.songs*3+Y.cen*4)+p.pop*.1,`Vocal ${p.vo}, ${Y.songs||1} performance(s) this year`]:null,
+ dance:(p,Y)=>(p.player?Y.songs>0:(Y.songs>0&&!p.solo)||p.da>70)?[p.da*.55+p.pf*.15+Math.min(25,Y.songs*3+Y.cen*4)+p.pop*.1,`Dance ${p.da}, Performance ${p.pf}`]:null,
+ variety:(p,Y)=>[p.va*.6+Math.min(30,Y.xe*3)+p.pop*.1,`Variety ${p.va}${Y.xe?`, ${Y.xe} TV / event appearance(s)`:''}`],
+ rising:(p,Y)=>{const g=Y.gr;if(!(g>2)&&!(p.player&&g>1))return null;return[Math.min(60,g*4)+awYA(Y)*.25+p.pop*.15-(Y.yrs>6?10:0),`popularity ${g>=0?'+':''}${Math.round(g)} this year`]},
+ infl:(p,Y)=>[p.pop*.5+awCareer(p,Y)*.25+awYA(Y)*.25,p.legend?'the idol queen of the industry':`popularity ${p.pop}, ${Math.round(Y.yrs)} year(s) of career`]};
+AW_CAT.forEach(c=>{if(AW_IND[c[0]]){const k=c[0];c[3]=(y,end)=>awPeople().map(p=>{const Y=awYearOf(p,y,end),r=AW_IND[k](p,Y);return r?awP(p,r[0],r[1]):null}).filter(Boolean)}});
+try{const c=AW_CAT.find(x=>x[0]=='dance');if(c)c[1]='Best Performer'}catch(e){}
+// ---- weighted nominations -------------------------------------------------------------------------------------------------------------
+awNominate=function(y){const A=awS();if(A.years[y]&&A.years[y].noms)return A.years[y];const end=awDayOf(y,[10,30]),Y=A.years[y]=A.years[y]||{y};Y.nomDay=S.day;Y.cerDay=awDayOf(y,AW_CER);Y.noms={};const prev=(A.years[y-1]||{}).noms||{};
+ AW_CAT.forEach(([k,n,c,fn])=>{let L=[];try{L=fn(y,end)||[]}catch(e){console.error('aw',k,e)}L=L.filter(x=>x&&isFinite(x.score)&&x.score>0).map(x=>({...x,fin:x.score*awNoise(k+y+x.id)}));if(!L.length)return;L.sort((a,b)=>b.score-a.score);
+  const top=L[0].score,was=new Set((prev[k]||[]).map(x=>x.k+':'+x.id)),pool=L.filter(x=>x.score>=top*.6).slice(0,15),r=mulb(awSeedN('nom'+k+y)),N=[],per={},seen=new Set();
+  while(N.length<5){const C=pool.filter(x=>{const key=x.k+':'+x.id,act=x.aid||(x.gid!=null?'g'+x.gid:x.sub||key);return!seen.has(key)&&(per[act]|0)<2});if(!C.length)break;
+   const W=C.map(x=>Math.pow(x.score/top,8)*(was.has(x.k+':'+x.id)?.8:1));let t=W.reduce((a,b)=>a+b,0)*r(),j=0;for(;j<C.length-1;j++){t-=W[j];if(t<=0)break}const x=C[j],act=x.aid||(x.gid!=null?'g'+x.gid:x.sub||x.k+':'+x.id);seen.add(x.k+':'+x.id);per[act]=(per[act]|0)+1;N.push(x)}
+  if(N.length>=2||(k=='spec'||k=='life')&&N.length)Y.noms[k]=N.sort((a,b)=>String(a.nm).localeCompare(String(b.nm))).map(({a,...x})=>x)});
+ Y.prep=Y.prep||{att:null,cz:'last',rep:null,reps:{}};awNomNews(Y);return Y};
+// ---- attendance: nominees locked, others up to the capacity ------------------------------------------------------------------------------
+function awMust(Y){const C=awCount(Y);return Object.keys(C.m).map(Number).filter(id=>{const m=get(id);return m&&m.status!='graduated'})}
+function awNomCats(Y,id){return Object.entries(Y.noms||{}).filter(([k,L])=>L.some(x=>x.mid==id||(x.mids||[]).includes(id))).map(([k])=>awCatName(k))}
+awAtt=function(Y){const P=Y.prep=Y.prep||{};const must=awMust(Y);if(!Array.isArray(P.att)){P.att=must.slice();if(!P.att.length)P.att=S.members.filter(m=>isAct(m)).sort((a,b)=>b.pop-a.pop).slice(0,3).map(m=>m.id)}
+ if(!Y.win)must.forEach(id=>{if(!P.att.includes(id))P.att.unshift(id)});P.att=P.att.filter((id,i,A)=>A.indexOf(id)==i&&get(id));return P.att};
+awTog=function(id){const Y=awCurY();if(!Y||Y.win)return;const L=awAtt(Y),i=L.indexOf(id);if(i>=0){if(awMust(Y).includes(id))return toast(awTh()?'ผู้เข้าชิงต้องเข้าร่วมงาน':'Nominees must attend the ceremony.','err');L.splice(i,1);Object.keys(Y.prep.reps||{}).forEach(k=>{if(Y.prep.reps[k]==id)delete Y.prep.reps[k]})}
+ else{if(L.length>=AW_CAP)return toast(awTh()?`ที่นั่งเต็มแล้ว (${AW_CAP} คน)`:`The seats for your company are full (${AW_CAP}).`,'err');const m=get(id);if(!m||m.status=='graduated')return;L.push(id)}render()};
+// ---- who may speak for a nominee ---------------------------------------------------------------------------------------------------------
+function awSongSen(gid,sid){let L=[];try{gsWith(gid,()=>{const o=S.songs[sid];L=o&&o.slots?o.slots.filter(Boolean):[]})}catch(e){}return L}
+function awRelSen(x){const I=S.ind,r=I.R[x.id];if(!r||!r.pref)return[];let L=[];try{gsWith(r.pref.gid,()=>{if(r.pref.k=='a'){const al=(S.albums||[]).find(z=>(z.rid||z.id)==r.pref.rid);(al&&al.tracks||[]).forEach(t=>{const o=S.songs[t];(o&&o.slots||[]).filter(Boolean).forEach(id=>{if(!L.includes(id))L.push(id)})})}else{const s=(S.singles||[]).find(z=>(z.rid||z.id)==r.pref.rid);const o=s&&S.songs[s.mainId];L=o&&o.slots?o.slots.filter(Boolean):[]}})}catch(e){}return L}
+function awElig(x){if(x.gid==null&&x.k!='cc')return null;const kind=x.k;let L;
+ if(kind=='r')L=awRelSen(x);else if(kind=='song'){const[g,s]=String(x.id).split(':');L=awSongSen(+g,s)}else if(kind=='cc')L=S.members.filter(m=>m.status!='graduated').map(m=>m.id);else if(kind=='duo')L=x.mids||[];else L=S.members.filter(m=>m.group==x.gid&&m.status!='graduated').map(m=>m.id);
+ return L.filter(id=>{const m=get(id);return m&&m.status!='graduated'})}
+const awRepKey=(k,x)=>k+'|'+x.k+':'+x.id;
+function awSetRep2(key,v){const Y=awCurY();if(!Y||Y.win)return;Y.prep.reps=Y.prep.reps||{};if(v==='')delete Y.prep.reps[key];else Y.prep.reps[key]=+v;render()}
+// ---- speaker resolution (validated) -------------------------------------------------------------------------------------------------------
+function awNpcRef(id){const[aid,i]=String(id).split('#');const a=S.ind.A[aid];const s=a&&a.mx&&a.mx[+i];return s&&s.st!='grad'?{t:'npc',aid,i:+i,nm:s.nm,grp:a.nm}:null}
+function awNpcBest(a,L){const M=(L||(a.mx||[]).map((s,i)=>i)).filter(i=>a.mx[i]&&a.mx[i].st!='grad');if(!M.length)return null;const i=M.slice().sort((x,y)=>indStarPop(a,a.mx[y])+(a.mx[y].star?5:0)-indStarPop(a,a.mx[x])-(a.mx[x].star?5:0))[0];return{t:'npc',aid:a.id,i,nm:a.mx[i].nm,grp:a.nm}}
+function awSpeaker(Y,k,w){const I=S.ind,att=new Set((Y.prep&&Y.prep.att)||[]),host={t:'host',nm:awTh()?'พิธีกร':'The host'};
+ const mem=id=>{const m=get(id);return m&&m.status!='graduated'?{t:'m',mid:m.id,nm:m.name,grp:(grp(m.group)||{}).name||''}:null};
+ if(w.k=='m')return mem(w.mid)||host;
+ if(w.k=='duo'){const a=mem((w.mids||[])[0]);return a?{...a,with:(w.mids||[])[1]}:host}
+ if(w.k=='s'||w.k=='sduo')return awNpcRef(w.id)||host;
+ const E=awElig(w);if(E){const ok=E.filter(id=>att.has(id)),ch=(Y.prep.reps||{})[awRepKey(k,w)];if(ch!=null&&ok.includes(ch))return mem(ch);if(!ok.length)return{...host,why:'none'};const b=ok.map(get).sort((a,b)=>b.pop-a.pop)[0];return mem(b.id)}
+ if(w.k=='r'){const r=I.R[w.id],a=r&&I.A[r.aid];if(!a||a.cat=='player')return host;if(!a.rv3&&typeof rvRoster=='function')rvRoster(a);if(a.cat=='fsolo'||a.cat=='msolo')return awNpcBest(a)||host;const sen=Array.isArray(r.sen)?r.sen:null;if(sen&&r.cen!=null&&a.mx[r.cen]&&a.mx[r.cen].st!='grad')return{t:'npc',aid:a.id,i:r.cen,nm:a.mx[r.cen].nm,grp:a.nm};return(sen?awNpcBest(a,sen):awNpcBest(a,[...awNpcTop(a)]))||host}
+ if(w.k=='a'){const a=I.A[w.aid||w.id];return a?(awNpcBest(a)||host):host}
+ return host}
+// ---- speeches -------------------------------------------------------------------------------------------------------------------------------
+const AW_TYPE={fidol:'ind',midol:'ind',infl:'ind',vocal:'vocal',dance:'perf',live:'perf',theater:'perf',variety:'variety',center:'center',rising:'rising',goy:'group',idolg:'group',newg:'group',sis:'group',fandom:'group',life:'legacy',soy:'song',single:'song',album:'song',mv:'song',spec:'song',duo:'duo'};
+const AW_OPEN={
+ shock:[['I… really? I did not expect this at all!','เอ๊ะ… จริงเหรอคะ? ไม่คิดเลยจริง ๆ ค่ะ!'],['My hands are shaking — I can\'t believe my name was called.','มือสั่นไปหมดเลยค่ะ ไม่อยากเชื่อว่าจะได้ยินชื่อตัวเอง'],['Wait, wait… is this really happening?','เดี๋ยวนะคะ… นี่เรื่องจริงใช่ไหม?']],
+ grat:[['Thank you so much, everyone.','ขอบคุณทุกคนมาก ๆ เลยค่ะ'],['First of all, thank you to everyone who voted and supported us.','ก่อนอื่นต้องขอบคุณทุกคนที่โหวตและสนับสนุนพวกเรานะคะ'],['I want to say thank you before anything else.','ขอพูดคำว่าขอบคุณก่อนเลยค่ะ']],
+ heart:[['Standing here, I keep thinking about the days I almost gave up.','ยืนอยู่ตรงนี้แล้วนึกถึงวันที่เกือบจะยอมแพ้ค่ะ'],['I promised myself a long time ago that one day I would stand on this stage.','เคยสัญญากับตัวเองไว้นานแล้วว่าสักวันจะได้ยืนบนเวทีนี้'],['I\'m sorry, I might cry…','ขอโทษนะคะ อาจจะร้องไห้…']],
+ conf:[['We worked for this, and tonight it paid off.','พวกเราทำงานหนักเพื่อสิ่งนี้ และคืนนี้มันคุ้มค่าแล้วค่ะ'],['I am proud — truly proud — of this year.','ภูมิใจกับปีนี้มาก ๆ จริง ๆ ค่ะ'],['This trophy is proof that hard work never lies.','ถ้วยรางวัลนี้คือข้อพิสูจน์ว่าความพยายามไม่เคยทรยศใคร']],
+ vet:[['Even after all these years, this moment still feels special.','ผ่านมาหลายปีแล้ว แต่ช่วงเวลานี้ยังพิเศษเสมอค่ะ'],['Receiving this again is an honour I never take for granted.','การได้รับรางวัลนี้อีกครั้งเป็นเกียรติที่ไม่เคยมองว่าเป็นเรื่องธรรมดาเลยค่ะ']]};
+const AW_BODY={
+ ind:[['This year I tried to grow a little every single day — {why}.','ปีนี้พยายามเติบโตขึ้นทีละนิดทุกวัน — {why}'],['Every stage this year taught me something new about myself.','ทุกเวทีในปีนี้สอนอะไรใหม่ ๆ เกี่ยวกับตัวเองเสมอค่ะ'],['I am still far from perfect, but I gave everything I had this year.','ยังห่างไกลจากความสมบูรณ์แบบ แต่ปีนี้ทุ่มสุดตัวแล้วค่ะ']],
+ vocal:[['I spent countless nights in the studio with my vocal coach — {why}.','ใช้เวลานับไม่ถ้วนในสตูดิโอกับโค้ชร้องเพลง — {why}'],['Singing is how I talk to the people I love. Thank you for listening.','การร้องเพลงคือวิธีที่ฉันพูดกับคนที่รัก ขอบคุณที่ตั้งใจฟังนะคะ'],['Every note this year was for the fans who waited for our songs.','ทุกโน้ตในปีนี้เป็นของแฟน ๆ ที่รอฟังเพลงของพวกเรา']],
+ perf:[['Behind every performance there are hours of practice in front of the mirror — {why}.','เบื้องหลังทุกการแสดงคือการซ้อมหน้ากระจกหลายชั่วโมง — {why}'],['A stage is never one person — I share this with everyone who danced beside me.','เวทีไม่เคยเป็นของคนคนเดียว ขอแบ่งรางวัลนี้ให้ทุกคนที่เต้นเคียงข้างกันค่ะ'],['My legs hurt every day this year, but every stage was worth it.','ขาเจ็บทุกวันในปีนี้ แต่ทุกเวทีคุ้มค่าค่ะ']],
+ variety:[['I just wanted to make people laugh — I didn\'t know it could win an award!','แค่อยากให้ทุกคนหัวเราะ ไม่คิดเลยว่าจะได้รางวัล!'],['Thank you to every TV staff member who trusted me — {why}.','ขอบคุณทีมงานรายการทุกคนที่เชื่อใจฉัน — {why}'],['If I made even one person smile this year, I am happy.','ถ้าปีนี้ทำให้ใครยิ้มได้แม้แค่คนเดียว ก็มีความสุขแล้วค่ะ']],
+ center:[['Standing in the Center is scary, because everyone behind me trusts me — {why}.','การยืนเซ็นเตอร์น่ากลัว เพราะทุกคนข้างหลังไว้ใจฉัน — {why}'],['The Center is only as strong as the members around her.','เซ็นเตอร์จะแข็งแกร่งได้ก็เพราะสมาชิกรอบตัวเธอค่ะ']],
+ rising:[['A year ago, nobody knew my name. Thank you for finding me.','เมื่อปีก่อนยังไม่มีใครรู้จักชื่อฉัน ขอบคุณที่ค้นพบกันนะคะ'],['I am just getting started — {why}.','นี่เพิ่งเริ่มต้นเท่านั้นค่ะ — {why}']],
+ group:[['This award belongs to every member, to our staff and to our fans — {why}.','รางวัลนี้เป็นของสมาชิกทุกคน ทีมงาน และแฟน ๆ — {why}'],['We are not perfect, but we are a team. That is our strength.','พวกเราไม่สมบูรณ์แบบ แต่พวกเราเป็นทีม นั่นคือจุดแข็งของเรา'],['On behalf of all members — thank you for walking with us this year.','ในนามของสมาชิกทุกคน ขอบคุณที่เดินไปด้วยกันในปีนี้ค่ะ']],
+ song:[['“{nm}” is a song we recorded with all our hearts — {why}.','“{nm}” คือเพลงที่พวกเราตั้งใจร้องด้วยหัวใจ — {why}'],['When we first heard “{nm}”, we knew it was special. Thank you for loving it.','ตอนได้ฟัง “{nm}” ครั้งแรก พวกเรารู้เลยว่ามันพิเศษ ขอบคุณที่รักเพลงนี้นะคะ'],['Thank you to the composers, the dancers and every member of this Senbatsu.','ขอบคุณผู้แต่งเพลง แดนเซอร์ และสมาชิกเซ็มบัตสึทุกคนค่ะ']],
+ legacy:[['So many years on stage — every one of them was a gift.','อยู่บนเวทีมาหลายปี ทุกปีคือของขวัญค่ะ'],['We stand here because of everyone who came before us.','พวกเรายืนอยู่ตรงนี้ได้เพราะทุกคนที่มาก่อนหน้าค่ะ']],
+ duo:[['I couldn\'t have done any of this without my partner.','ถ้าไม่มีคู่หูคนนี้ คงทำไม่ได้แน่นอนค่ะ'],['Friendship made every hard day easier.','มิตรภาพทำให้ทุกวันที่ยากลำบากง่ายขึ้นค่ะ']]};
+const AW_ID={omg4ki:[['As OMG4ki, we will keep protecting the place our seniors built.','ในฐานะ OMG4ki พวกเราจะปกป้องที่ที่รุ่นพี่สร้างไว้ต่อไปค่ะ'],['Being No.1 is not a goal — it is a responsibility.','การเป็นอันดับหนึ่งไม่ใช่เป้าหมาย แต่เป็นความรับผิดชอบค่ะ']],
+ winer4:[['Like a quiet winter night, we will keep shining softly but surely.','เหมือนคืนฤดูหนาวที่เงียบสงบ พวกเราจะเปล่งประกายอย่างนุ่มนวลแต่มั่นคงค่ะ'],['WINÉR4 will keep showing the beauty of elegance.','WINÉR4 จะแสดงความงามของความสง่างามต่อไปค่ะ']],
+ sumer4:[['SUMÉR4 will keep bringing summer sunshine to everyone!','SUMÉR4 จะส่งแสงแดดฤดูร้อนให้ทุกคนต่อไปค่ะ!'],['Let\'s make next year even brighter together!','ปีหน้ามาสดใสกว่านี้ไปด้วยกันนะคะ!']],
+ sefira:[['Gamsahamnida! Japan, thank you for loving Sefira.','คัมซาฮัมนีดา! ขอบคุณญี่ปุ่นที่รัก Sefira นะคะ'],['From Seoul to Tokyo — thank you for always cheering for the five of us.','จากโซลถึงโตเกียว ขอบคุณที่เชียร์พวกเราทั้งห้าคนเสมอค่ะ']],
+ player:[['To everyone at {co} — thank you for believing in us from the very beginning.','ถึงทุกคนที่ {co} ขอบคุณที่เชื่อในพวกเราตั้งแต่วันแรกค่ะ'],['{g} is still growing. Please keep watching us!','{g} ยังเติบโตต่อไป ฝากติดตามพวกเราด้วยนะคะ!']]};
+const AW_CLOSE=[['I love you all!','รักทุกคนนะคะ!'],['We will keep working hard. Thank you!','จะพยายามต่อไปค่ะ ขอบคุณค่ะ!'],['Let\'s meet again on the next stage!','แล้วพบกันใหม่บนเวทีถัดไปนะคะ!'],['Thank you for this wonderful night.','ขอบคุณสำหรับค่ำคืนที่แสนวิเศษนี้ค่ะ'],['This is not the end — it is a new start.','นี่ไม่ใช่จุดจบ แต่เป็นจุดเริ่มต้นใหม่ค่ะ'],['To our fans: you are our light.','ถึงแฟน ๆ ทุกคน พวกคุณคือแสงสว่างของพวกเราค่ะ']];
+// the facts of the year in natural words (only what really happened; numbers come from the award's own data)
+function awFacts(why){const t=String(why||''),E=[],T=[],m=(re,f)=>{const x=t.match(re);if(x)f(x)};
+ m(/(\d+) song\(s\) this year/,x=>{E.push(`I sang in ${x[1]} song${x[1]>1?'s':''} this year`);T.push(`ปีนี้ได้ร้อง ${x[1]} เพลง`)});
+ m(/Center (?:×|of )(\d+)/,x=>{E.push(`stood at the Center ${x[1]} time${x[1]>1?'s':''}`);T.push(`ได้ยืนเซ็นเตอร์ ${x[1]} ครั้ง`)});
+ m(/(\d+) TV \/ event appearance/,x=>{E.push(`appeared on ${x[1]} TV show${x[1]>1?'s':''} and events`);T.push(`ออกรายการทีวีและงานต่าง ๆ ${x[1]} ครั้ง`)});
+ m(/([\d,]+) CDs/,x=>{E.push(`${x[1]} people took our CD home`);T.push(`มีคนซื้อซีดีของพวกเราถึง ${x[1]} แผ่น`)});
+ m(/peak #(\d+)/,x=>{E.push(`we reached No.${x[1]} on the chart`);T.push(`ขึ้นถึงอันดับ ${x[1]} บนชาร์ต`)});
+ m(/([\d,]+) MV views/,x=>{E.push(`the music video was watched ${x[1]} times`);T.push(`MV มียอดชม ${x[1]} ครั้ง`)});
+ m(/(\d+) performances, (\d+) average satisfaction/,x=>{E.push(`we performed ${x[1]} times on the theater stage`);T.push(`พวกเราแสดงบนเวทีเธียเตอร์ ${x[1]} รอบ`)});
+ m(/([\d,]+) fans/,x=>{E.push(`${x[1]} fans are with us now`);T.push(`ตอนนี้มีแฟน ๆ อยู่กับพวกเรา ${x[1]} คน`)});
+ m(/popularity \+(\d+) this year/,x=>{E.push('so many new people found us this year');T.push('ปีนี้มีคนรู้จักพวกเรามากขึ้นเยอะเลย')});
+ m(/(\d+) years in the industry/,x=>{E.push(`we have been on stage for ${x[1]} years`);T.push(`พวกเราอยู่บนเวทีมา ${x[1]} ปีแล้ว`)});
+ return{en:E.slice(0,2).join(' and '),th:T.slice(0,2).join(' และ ')}}
+function awPrevWins(Y,who){let n=0;Object.values(awS().years).forEach(z=>{if(!z.win||z.y>=Y.y)return;Object.values(z.win).forEach(w=>{if(who.t=='m'&&(w.mid==who.mid||(w.mids||[]).includes(who.mid)))n++;else if(who.t=='npc'&&(w.id==who.aid+'#'+who.i||w.aid==who.aid||w.id==who.aid))n++;else if(who.gid!=null&&w.gid==who.gid)n++})});return n}
+function awSpeech(Y,k,w,who,used){const F=awFacts(w.why);const r=mulb(awSeedN('sp'+Y.y+k+(who.nm||''))),pk=(L,tag)=>{const o=L.map((_,i)=>i).sort(()=>r()-.5);for(const i of o){const key=tag+i;if(!used.has(key)){used.add(key);return L[i]}}return L[o[0]]};
+ if(who.t=='host'){const g=w.sub||w.nm;return{en:`Accepting on behalf of ${w.nm}${g&&g!=w.nm?` (${g})`:''}, the host thanks the winners, who send their gratitude to the fans.`,th:`พิธีกรรับรางวัลแทน ${w.nm}${g&&g!=w.nm?` (${g})`:''} และส่งคำขอบคุณจากผู้ชนะถึงแฟน ๆ`}}
+ const type=AW_TYPE[k]||'ind',a=who.t=='npc'?S.ind.A[who.aid]:null,s=a?a.mx[who.i]:null,leg=s&&s.legend,yrs=a?(S.day-((s&&s.jn)||a.deb))/365:0,first=awPrevWins(Y,who)==0&&!(a&&(leg||yrs>=4));
+ const style=!first&&(leg||yrs>5)?'vet':first?(r()<.5?'shock':r()<.5?'heart':'grat'):(['grat','conf','heart'])[Math.floor(r()*3)];
+ const o=pk(AW_OPEN[style],'o'+style),BL=(AW_BODY[type]||AW_BODY.ind).filter(x=>F.en||x[0].indexOf('{why}')<0),b=pk(BL.length?BL:AW_BODY.ind.slice(1),'b'+type),idk=a&&AW_ID[a.id]?a.id:who.t=='m'?'player':null,idl=idk&&r()<.75?pk(AW_ID[idk],'i'+idk):null,c=pk(AW_CLOSE,'c');
+ const gname=who.grp||w.sub||'',fill=(t,th)=>t.replace(/\{why\}/g,th?F.th:F.en).replace(/\{nm\}/g,w.nm).replace(/\{co\}/g,S.co||'our agency').replace(/\{g\}/g,gname);
+ const fr=first?[` (This is my first award!)`,' (รางวัลแรกในชีวิตเลยค่ะ!)']:['',''];const partner=who.with!=null&&get(who.with)?get(who.with).name:'';
+ return{en:[fill(o[0])+(type=='ind'||type=='vocal'||type=='perf'||type=='variety'||type=='center'||type=='rising'?fr[0]:''),fill(b[0]),partner?`${partner}, thank you for always being by my side.`:'',idl?fill(idl[0]):'',c[0]].filter(Boolean).join(' '),
+  th:[fill(o[1],1)+(type=='ind'||type=='vocal'||type=='perf'||type=='variety'||type=='center'||type=='rising'?fr[1]:''),fill(b[1],1),partner?`${partner} ขอบคุณที่อยู่ข้างกันเสมอนะ`:'',idl?fill(idl[1],1):'',c[1]].filter(Boolean).join(' '),first,style}}
+function awSpeechesFor(Y){if(Y.sp&&Y.spv==2)return Y.sp;const used=new Set();Y.sp={};Y.spv=2;Object.entries(Y.win||{}).forEach(([k,w])=>{const who=awSpeaker(Y,k,w),t=awSpeech(Y,k,w,who,used);Y.sp[k]={who,en:t.en,th:t.th,first:!!t.first}});return Y.sp}
+{const f=awRun;awRun=function(y){const A=awS(),Y=A.years[y];const had=Y&&Y.win;f.apply(this,arguments);try{if(Y&&Y.win&&!had){awAtt(Y);Y.attH=(Y.prep.att||[]).slice();awSpeechesFor(Y)}}catch(e){console.error(e)}}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{const A=S&&S.aw;if(A&&A.years)Object.values(A.years).forEach(Y=>{if(Y.prep&&!Y.prep.reps)Y.prep.reps={}})}catch(e){}return r}}
+// ---- outfits ------------------------------------------------------------------------------------------------------------------------------
+// player members: her own costume of the latest single (with her song hairstyle); nothing is copied or saved
+function awLastCz(m){if(!m)return null;try{const gid=typeof gsGid=='function'?gsGid(m):m.group;let cd=null;gsWith(gid,()=>{for(const x of (S.singles||[]).slice().reverse()){const o=S.songs[x.mainId];if(!o||!(o.slots||[]).includes(m.id))continue;const c=evCostume(o,m);if(c&&c.cd){cd=c.cd;break}}
+ if(!cd)for(const x of (S.singles||[]).slice().reverse()){const o=S.songs[x.mainId];const c=o&&evCostume(o,m);if(c&&c.cd){cd=c.cd;break}}});return cd}catch(e){return null}}
+awCzOf=function(Y,m){return awLastCz(m)||(m.profCz&&m.profCz.p)||null};
+const AW_STY={
+ omg4ki:{m:['#ff9cc8','#ffb3d4','#f77fb4'],a:['#ffd84d','#ffe680','#f5c842'],l:['#fff6fb','#fffbea'],dr:['princess','ballgown','tiered','puffdress','fitflare','babydoll','ruffle','tulleparty'],sl:['puff','lpuff','none','lace','short'],co:['frill','lacebib','round','none'],fab:['satin','tulle','organza','sequin','chiffon'],pat:['solid','solid','hearts','sparkle','dots','ribbons'],trim:['laceapp','ruffletrim','pearltrim','heartapp','starapp'],a:['hbow','crown','hribbon','earrings','necklace','choker','gloves'],bk:['bigbow','dblbow','ribtails'],orn:['brooch','gememb','heartorn','crystal','pearltassel'],skx:['tulle','petal','cascade','bubble'],hd:['minicrown','layerbow','pearlhp','princesshp'],sh:['heels','mary','boots'],lg:['knee','thigh','none','stockings']},
+ winer4:{m:['#1f2a5c','#26346e','#18224a'],a:['#c9ced8','#dfe3ea','#aeb6c4'],l:['#f7f9ff','#e8f0fb','#b8d3f0'],dr:['mermaid','sheath','trumpet','aline','oneshoulder','highlow','wrap','empire'],sl:['formal','lace','long','bell','none'],co:['high','boat','vneck','none','formal'],fab:['satin','velvet','lace','organza','sequin'],pat:['solid','solid','lace','sparkle','embroid'],trim:['emborder','metemb','pearltrim','laceapp','mpipe'],a:['earrings','necklace','gloves','choker'],bk:['layereddrape','royalcape'],orn:['crystal','pearlsh','pendant','brooch','starburst'],skx:['longside','sidedrape','asymback'],emb:['ecrystal','emoon','estar'],hd:['crystalhp','pearlhp','jewelcomb','veil','snowflake'],sh:['heels','ankle'],lg:['stockings','none']},
+ sumer4:{m:['#2ec4c4','#3fd6c8','#20b2b8'],a:['#ffd84d','#ff8fb8','#ffe680'],l:['#ffffff','#fffdf2','#e6fbf8'],dr:['aline','fitflare','babydoll','tiered','halter','ruffle','highlow','puffdress'],sl:['none','puff','short','osl'],co:['sailor','frill','round','none','wide'],fab:['chiffon','cotton','organza','tulle'],pat:['floral','dots','stripe','solid','sparkle','butterflies'],trim:['florapp','ruffletrim','starapp','cfringe'],a:['hribbon','hbow','clip','earrings','necklace'],bk:['ribtails','bigbow'],orn:['heartorn','brooch','pearltassel'],skx:['petal','tulle','bubble','hanky'],emb:['elily','ebutterfly','esakura'],hd:['floralcrown','festflower','bflyclip','floraclip'],sh:['mary','sneakers','heels','ankle'],lg:['socks','knee','none']},
+ sefira:{m:['#1c1a24','#2a2433','#5b2a6e'],a:['#cfd3dc','#ff4f9a','#e8c66a'],l:['#ffffff','#f1eef7'],dr:['sheath','asym','oneshoulder','halter','mermaid','sequin','wrap'],two:{top:['crop','tube','offshoulder','sleeveless'],bot:['mini','pants','wide','pleated']},sl:['none','long','formal','osl'],co:['none','high','vneck'],fab:['leather','sequin','metallic','satin','velvet'],pat:['solid','solid','geo','sparkle','diamond'],trim:['mpipe','metemb','stitch'],a:['choker','earrings','gloves','necklace'],bod:['harness','crisscross','bustier','obcorset'],shd:['shchain','epaul'],orn:['buckle','crystal','starburst'],hd:['hairchain','jewelcomb'],sh:['boots','heels','ankle'],lg:['thigh','stockings','none']}};
+function awStyOf(a){if(AW_STY[a.id])return AW_STY[a.id];const h=(a.hue|0),c=(s,l)=>`hsl(${h},${s}%,${l}%)`,hx=(hh,s,l)=>{l/=100;const k=n=>(n+hh/30)%12,f=n=>l-s/100*Math.min(l,1-l)*Math.max(-1,Math.min(k(n)-3,9-k(n),1));return'#'+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,'0')).join('')};
+ const cool=/Cool|Rock|Elegant|Dark/i.test((a.gen||[]).join(' '));return{m:[hx(h,60,70),hx(h,55,62),hx(h,65,78)],a:[hx((h+40)%360,70,72),hx((h+180)%360,40,85),'#f3c35c'],l:['#ffffff','#fff8f0'],dr:cool?['sheath','aline','mermaid','oneshoulder','highlow']:['aline','fitflare','babydoll','tiered','princess','ruffle'],sl:['none','puff','short','long'],co:['round','frill','none','vneck'],fab:['satin','chiffon','tulle','sequin'],pat:['solid','solid','dots','sparkle','stars'],trim:['ruffletrim','pearltrim','starapp','laceapp'],a:['hbow','earrings','necklace','hribbon'],orn:['brooch','crystal'],hd:['layerbow','pearlhp','floraclip'],sh:['heels','mary','boots'],lg:['knee','none','stockings']}}
+function awOutfit(a,i,seed){const T=awStyOf(a),gr=mulb(awSeedN('g'+seed)),r=mulb(awSeedN('m'+seed+'#'+i)),P=L=>L[Math.floor(r()*L.length)],G=L=>L[Math.floor(gr()*L.length)];
+ // group decisions (shared by every member of this ceremony): main colour, fabric, dress family, trim
+ const gm=G(T.m),ga=G(T.a),gl=G(T.l),gfab=G(T.fab),fam=T.dr.slice().sort(()=>gr()-.5).slice(0,3),gtrim=G(T.trim),swap=r()<.3;
+ const c1=swap?gl:gm,c2=swap?gm:ga,c3=swap?ga:gl,pc=P([ga,gl,gm]),pz=()=>({pat:P(T.pat),pc,dc:P([ga,gl]),fab:r()<.7?gfab:P(T.fab),v:0,ps:+(0.8+r()*.6).toFixed(1)});
+ const pc_=(t,x,y,z,o)=>czPiece(t,x,y,z,{...pz(),...(o||{})});const p={x:{},a:{}};
+ const two=T.two&&r()<.35;if(two){p.top=pc_(P(T.two.top),c1,c2,c3);p.bottom=pc_(P(T.two.bot),c1,c2,c3);p.dr={t:'none'}}else{p.top=pc_('blouse',c1,c2,c3);p.bottom=pc_('flared',c1,c2,c3);p.dr=pc_(P(fam),c1,c2,c3)}
+ p.sleeve=pc_(P(T.sl),c1,c2,c3);p.collar=pc_(P(T.co),r()<.5?c3:c1,c2,c3);if(p.collar.t=='none')p.collar={t:'none'};if(p.sleeve.t=='none')p.sleeve={t:'none'};
+ p.outer={t:'none'};p.over={t:'none'};p.shoes=pc_(P(T.sh),r()<.5?c1:c3,c2,c3,{pat:'solid'});const lg=P(T.lg);p.legs=lg=='none'?{t:'none'}:pc_(lg,c3,c3,c2,{pat:'solid'});
+ const multi=(k,L,n,col)=>{if(!L||!L.length)return;p[k]=p[k]||{};L.slice().sort(()=>r()-.5).slice(0,n).forEach(t=>{p[k][t]=pc_(t,col||c2,c1,c3,{pat:'solid'})})};
+ multi('a',T.a,1+Math.floor(r()*2),ga);multi('trim',[gtrim],1);multi('orn',T.orn,r()<.7?1:0,ga);if(T.bk&&r()<.55)multi('bk',T.bk,1,r()<.5?c2:c1);if(T.skx&&!two&&r()<.5)multi('skx',T.skx,1,c3);if(T.emb&&r()<.4)multi('emb',T.emb,1,ga);if(T.hd&&r()<.6)multi('hd',T.hd,1,ga);if(T.bod&&r()<.6)multi('bod',T.bod,1,c2);if(T.shd&&r()<.4)multi('shd',T.shd,1,ga);
+ if(i==0&&T.hd)multi('hd',[T.hd[0]],1,ga);return p}
+function awNpcCz(Y,aid,i){const k=aid+'#'+i;Y.fit=Y.fit||{};if(Y.fit[k])return Y.fit[k];const a=S.ind.A[aid];if(!a||!rvCanDraw(a))return null;try{Y.fit[k]=awOutfit(a,i,aid+Y.y)}catch(e){console.error(e);return null}return Y.fit[k]}
+// ---- drawing ---------------------------------------------------------------------------------------------------------------------------------
+function awWhoFig(Y,who,w,pose){if(!who)return'';if(who.t=='m'){const m=get(who.mid);if(!m)return'';const a=ap(m),cd=awCzOf(Y,m);return fig(m,{pose:pose|0,of:a.of,oh:a.oh,ac:a.ac,ex:1,...(cd?{cd}:{})})}
+ if(who.t=='npc'){const a=S.ind.A[who.aid],s=a&&a.mx[who.i];if(!s||!rvCanDraw(a))return'';const pm=rvPm(a,s),cd=awNpcCz(Y,who.aid,who.i);return fig(pm,{pose:pose|0,of:s.ap.of,oh:s.ap.oh,ac:s.ap.ac,ex:1,...(cd?{cd}:{})})}return''}
+function awPortrait(x,sz){try{if(x.mid!=null&&get(x.mid))return ptc(get(x.mid),sz);if(x.mids)return x.mids.map(id=>get(id)?ptc(get(id),Math.round(sz*.75)):'').join('');if(x.k=='s'||x.k=='sduo'){const R=awNpcRef(x.id);const a=R&&S.ind.A[R.aid];if(a&&rvCanDraw(a))return pt(rvPm(a,a.mx[R.i]),sz)}
+ if(x.k=='r'&&S.ind.R[x.id])return indCover(S.ind.R[x.id],sz);if(x.k=='a'||x.k=='g'){const a=x.k=='a'?S.ind.A[x.id]:null;if(a&&rvCanDraw(a)){const b=awNpcBest(a);if(b)return pt(rvPm(a,a.mx[b.i]),sz)}if(x.gid!=null){const m=S.members.filter(m=>m.group==x.gid&&isAct(m)).sort((a,b)=>b.pop-a.pop)[0];if(m)return ptc(m,sz)}}}catch(e){}return`<span class="awini" style="width:${sz}px;height:${sz}px">${esc(String(x.nm).slice(0,1))}</span>`}
+const AW_TROPHY=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M-10 -34h20v6q0 14-10 18q-10-4-10-18z" fill="#f3c35c" stroke="#b88f35" stroke-width="1.2"/><path d="M-10 -31q-7 0-6 6q1 6 7 6M10 -31q7 0 6 6q-1 6-7 6" fill="none" stroke="#d9a441" stroke-width="2"/><rect x="-2.5" y="-10" width="5" height="8" fill="#d9a441"/><rect x="-8" y="-2" width="16" height="5" rx="1.5" fill="#7a4f1d"/><circle cx="0" cy="-24" r="3" fill="#fff6c8"/></g>`;
+function awStageSvg(Y,figs,opt){const o=opt||{},n=figs.length,W=800,step=Math.min(150,640/Math.max(1,n));let F='';figs.forEach((f,i)=>{const cx=400+(i-(n-1)/2)*step,sc=n==1?1.55:n>3?.95:1.2,y0=n==1?40:(o.y||118);F+=`<g transform="translate(${cx-50*sc} ${y0}) scale(${sc})">${f}</g>`;if(o.trophy&&i==0)F+=AW_TROPHY(cx+(n==1?52:30),y0+(n==1?122:100)*sc,n==1?1.7:1.25)});
+ return`<svg class="awstage" viewBox="0 0 ${W} 450" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="awsp" cx=".5" cy=".2" r=".7"><stop offset="0" stop-color="#fff4d6" stop-opacity=".9"/><stop offset=".6" stop-color="#f7c96b" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient><linearGradient id="awbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1036"/><stop offset="1" stop-color="#3a1a4a"/></linearGradient></defs>
+ <rect width="800" height="450" fill="url(#awbg)"/>${[...Array(14)].map((_,i)=>`<rect x="${i*60}" y="0" width="34" height="250" fill="#ffffff" opacity="${.03+(i%3)*.02}"/>`).join('')}<path d="M260 0L540 0L700 380L100 380Z" fill="url(#awsp)"/>
+ <text x="400" y="62" text-anchor="middle" font-family="Dela Gothic One,sans-serif" font-size="22" fill="#f3d27a" opacity=".85">${esc(AW_NAME.toUpperCase())}</text>
+ <rect y="360" width="800" height="90" fill="#140a22"/><ellipse cx="400" cy="372" rx="300" ry="20" fill="#f3c35c" opacity=".25"/>${F}
+ <g fill="#0b0614">${[...Array(18)].map((_,i)=>`<circle cx="${20+i*45}" cy="${440-(i%2)*6}" r="${22+(i%3)*3}"/>`).join('')}</g>${o.lights!==false?[...Array(10)].map((_,i)=>`<circle cx="${40+i*80}" cy="${420-(i%2)*8}" r="3" fill="${['#ff8fc0','#9fd3ff','#f3d27a'][i%3]}"/>`).join(''):''}</svg>`}
+function awGroupFigs(Y,w,max,who){const L=[];if(w.gid!=null){const E=(awElig(w)||[]).filter(id=>(Y.attH||Y.prep.att||[]).includes(id)).map(get).filter(Boolean).sort((a,b)=>(who&&who.mid==b.id)-(who&&who.mid==a.id)||b.pop-a.pop).slice(0,max);E.forEach(m=>L.push(awWhoFig(Y,{t:'m',mid:m.id},w,EV_POSES[L.length%EV_POSES.length])))}
+ else{const aid=w.k=='a'?(w.aid||w.id):w.k=='r'&&S.ind.R[w.id]?S.ind.R[w.id].aid:null,a=aid&&S.ind.A[aid];if(a&&rvCanDraw(a)){const r=w.k=='r'?S.ind.R[w.id]:null,idx=(r&&Array.isArray(r.sen)?r.sen:(a.mx||[]).map((s,i)=>i)).filter(i=>a.mx[i]&&a.mx[i].st!='grad').sort((x,y)=>(who&&who.aid==aid&&who.i==y)-(who&&who.aid==aid&&who.i==x)||indStarPop(a,a.mx[y])-indStarPop(a,a.mx[x])).slice(0,max);idx.forEach(i=>L.push(awWhoFig(Y,{t:'npc',aid,i},w,EV_POSES[L.length%EV_POSES.length])))}}return L}
+// ---- ceremony ------------------------------------------------------------------------------------------------------------------------------
+awShowSteps=function(Y){const St=[{k:'open'},{k:'carpet'}];AW_CAT.forEach(([k])=>{if(Y.noms[k]&&Y.win&&Y.win[k])St.push({k:'nom',c:k},{k:'win',c:k},{k:'sp',c:k})});St.push({k:'perf'},{k:'end'});return St};
+awShowHtml=function(){const s=ui.awsh,Y=awS().years[s.y],St=awShowSteps(Y),i=Math.min(s.i,St.length-1),z=St[i],btn=(t,f,c='p')=>`<button class="geb ${c}" onclick="${f}">${t}</button>`,th=awTh();let body='';const SP=awSpeechesFor(Y);
+ const att=((Y.attH||Y.prep&&Y.prep.att)||[]).map(get).filter(Boolean);
+ if(z.k=='open')body=`<div class="gestage op"><div class="gekicker">${AW_JP}</div><h1 class="getitle">${AW_NAME}</h1><div class="gesub">${Y.y}</div><div class="geven">${longDate(Y.cerDay)} · ${Object.keys(Y.win).length} ${th?'รางวัล':'awards'}</div></div>`;
+ else if(z.k=='carpet'){const stars=['omg4ki','winer4','sumer4','sefira'].map(id=>S.ind.A[id]).filter(a=>a&&a.mx).map(a=>{const b=awNpcBest(a);return b?{a,b}:null}).filter(Boolean);
+  body=`<div class="gestage"><div class="gekicker">Red Carpet</div><h2 class="ccshtt">${th?'เหล่าดาวเดินพรมแดง':'The stars arrive'}</h2><div class="awcarpet">${att.map(m=>`<span><svg viewBox="10 -2 80 200" width="74">${awWhoFig(Y,{t:'m',mid:m.id},null,EV_POSES[m.id%EV_POSES.length])}</svg><b>${esc(m.name)}</b><small>${esc((grp(m.group)||{}).name||'')}${awNomCats(Y,m.id).length?' · 🏅':''}</small></span>`).join('')}</div>
+  <div class="awcarpet npc">${stars.map(({a,b})=>`<span><svg viewBox="10 -2 80 200" width="64">${awWhoFig(Y,b,null,13)}</svg><b>${esc(b.nm)}</b><small>${esc(a.nm)}</small></span>`).join('')}</div><p class="gemc">${th?'ศิลปินแถวหน้าของปีเดินพรมแดงเข้าสู่งาน':'The year\'s biggest names walk the red carpet.'}</p></div>`}
+ else if(z.k=='nom'){const L=Y.noms[z.c];body=`<div class="gestage"><div class="gekicker">${th?'ผู้เข้าชิงได้แก่':'The nominees are'}</div><h2 class="ccshtt">${esc(awCatName(z.c))}</h2><div class="awnoms">${L.map(x=>`<div class="awnom ${x.gid!=null?'pl':''}">${awPortrait(x,58)}<b>${esc(x.nm)}</b><small>${esc(x.sub||'')}</small></div>`).join('')}</div></div>`}
+ else if(z.k=='win'){const w=Y.win[z.c],sp=SP[z.c]||{},who=sp.who||{t:'host'},ind=w.k=='m'||w.k=='s'||w.k=='duo'||w.k=='sduo';let figs=ind?[awWhoFig(Y,who,w,13)]:awGroupFigs(Y,w,5,who);if(w.k=='duo'&&who.with!=null)figs.push(awWhoFig(Y,{t:'m',mid:who.with},w,2));figs=figs.filter(Boolean);
+  body=`<div class="gestage op"><div class="gekicker">${esc(awCatName(z.c))} ${th?'ได้แก่…':'goes to…'}</div><h1 class="getitle ccshsm">${esc(w.nm)}</h1><div class="gesub">${esc(w.sub||'')}</div>${figs.length?awStageSvg(Y,figs,{trophy:1}):`<div class="awwin">${awPortrait(w,110)}</div>`}<p class="gecap">${esc(w.why)}${w.close?(th?' · สูสีมาก':' · a very close race'):''}</p><p class="gemc">🏆 ${who.t=='host'?(th?'พิธีกรขึ้นรับรางวัลแทน':'The host accepts the trophy on their behalf'):`${esc(who.nm)} ${th?'เดินขึ้นเวทีรับถ้วยรางวัล':'walks on stage to receive the trophy'}`}</p></div>`}
+ else if(z.k=='sp'){const w=Y.win[z.c],sp=SP[z.c]||{},who=sp.who||{t:'host'},f=awWhoFig(Y,who,w,13),mine=w.gid!=null,lost=!mine&&(Y.noms[z.c]||[]).some(x=>x.gid!=null);
+  const react=mine?(th?'สมาชิกของคุณที่นั่งอยู่ในงานลุกขึ้นปรบมือ บางคนน้ำตาซึม':'Your members in the audience jump to their feet — some are in tears.'):lost?(th?'สมาชิกของคุณปรบมือให้ผู้ชนะอย่างสง่างาม':'Your nominated members applaud the winner graciously.'):(th?'เสียงปรบมือดังกึกก้องทั่วฮอลล์':'The hall fills with applause.');
+  body=`<div class="gestage"><div class="gekicker">${esc(awCatName(z.c))} · ${th?'สุนทรพจน์':'Acceptance speech'}</div><div class="awsp">${f?`<svg viewBox="10 -2 80 200" width="120">${f}</svg>`:`<span class="awini host">🎤</span>`}<div class="awbub"><b>${esc(who.t=='host'?(th?'พิธีกร':'Host'):who.nm)}</b>${who.t!='host'?`<small>${esc(who.grp||'')}${sp.first?(th?' · รางวัลแรก':' · first award'):''}</small>`:''}<p>“${esc(th?sp.th:sp.en)}”</p></div></div><p class="gemc">👏 ${react}</p></div>`}
+ else if(z.k=='perf'){const w=Y.win.soy||Y.win.single;body=`<div class="gestage op"><div class="gekicker">${th?'การแสดงพิเศษ':'Special performance'}</div><h1 class="getitle ccshsm">${w?esc(w.nm):'Finale'}</h1><div class="gesub">${w?esc(w.sub):''}</div>${w?awStageSvg(Y,awGroupFigs(Y,w,6),{y:122}):''}<p class="gemc">${w?(th?'เพลงแห่งปีปิดท้ายค่ำคืนด้วยการแสดงสด':'The Song of the Year is performed live to close the night.'):(th?'ผู้ชนะทุกคนกลับขึ้นเวที':'All winners return to the stage.')}</p></div>`}
+ else body=`<div class="gestage op"><div class="gekicker">${th?'ขอบคุณ!':'Thank you!'}</div><h1 class="getitle">${AW_NAME} ${Y.y}</h1><p class="gemc">${Object.keys(Y.mw||{}).length?(th?`สมาชิกของคุณได้รับ ${Object.values(Y.mw).reduce((a,b)=>a+b,0)} รางวัลในคืนนี้`:`Your members won ${Object.values(Y.mw).reduce((a,b)=>a+b,0)} award(s) tonight.`):(th?'พบกันใหม่ในงานปีหน้า':'See you at next year\'s ceremony.')}</p></div>`;
+ const last=i==St.length-1,prog=Math.round(100*i/Math.max(1,St.length-1));
+ return`<div class="gecer ccsh awsh" role="dialog"><div class="gebg"><i></i><i></i><i></i><i></i></div><div class="getop"><div><b>${AW_NAME} ${Y.y}</b><span>${longDate(Y.cerDay)}</span></div><div class="geprog"><i style="width:${prog}%"></i></div><div class="getopb">${last?'':btn('SKIP','awShowEnd()','s')}</div></div><div class="gebody">${body}</div><div class="geact">${i>0?btn('BACK','awShowGo(-1)','s'):''}${last?btn('CLOSE','awShowEnd()'):btn('NEXT','awShowGo(1)')}</div></div>`};
+// ---- awards page: attendance, representatives, winners' speakers -----------------------------------------------------------------------------
+{const f=V.awards;V.awards=function(){let h=f.apply(this,arguments);try{const A=awS(),ys=Object.keys(A.years).map(Number).sort((a,b)=>b-a),sel=ui.awy&&A.years[ui.awy]?ui.awy:ys[0],Y=sel?A.years[sel]:null;if(!Y)return h;const th=awTh();
+  if(!Y.win){const att=awAtt(Y),must=new Set(awMust(Y)),L=S.members.filter(m=>isAct(m)||m.status=='trainee').sort((a,b)=>must.has(b.id)-must.has(a.id)||b.pop-a.pop);
+   const repRows=Object.entries(Y.noms).flatMap(([k,N])=>N.filter(x=>x.gid!=null||x.k=='cc').filter(x=>!['m','duo'].includes(x.k)).map(x=>{const E=(awElig(x)||[]).filter(id=>att.includes(id)),key=awRepKey(k,x),cur=(Y.prep.reps||{})[key];
+    return`<div class="row awrep"><span><b>${esc(awCatName(k))}</b> <small class="st">${esc(x.nm)}${x.k=='r'||x.k=='song'?(th?' · เฉพาะเซ็มบัตสึของเพลงนี้':' · this song\'s Senbatsu only'):''}</small></span>${E.length?`<select onchange="awSetRep2('${key}',this.value)"><option value="">${th?'อัตโนมัติ':'Automatic'}</option>${E.map(id=>get(id)).map(m=>`<option value="${m.id}" ${cur==m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select>`:`<small class="st thwarn">${th?'ไม่มีผู้มีสิทธิ์ในงาน — พิธีกรจะรับแทน':'No eligible attendee — the host would accept'}</small>`}</div>`})).join('');
+   const prep=`<div class="c awprep"><h3>${th?'การเตรียมตัว':'Preparation'} · ${longDate(Y.cerDay)}</h3><p class="st">${th?'พรมแดง 17:00 · พิธี 18:00 – 21:30 · สมาชิกสวมชุดของตัวเองจากซิงเกิลล่าสุด (พร้อมทรงผมของเพลงนั้น)':'Red carpet 17:00 · Ceremony 18:00 – 21:30 · Members wear their own costume of the latest single (with that song\'s hairstyle).'}</p>
+   <p class="st"><b>${att.length}/${AW_CAP}</b> ${th?'คนเข้าร่วม':'attending'} · 🔒 ${must.size} ${th?'ผู้เข้าชิง (ต้องเข้าร่วม)':'nominee(s) (must attend)'}</p>
+   <div class="awatt">${L.map(m=>{const on=att.includes(m.id),lk=must.has(m.id),cats=awNomCats(Y,m.id);return`<button class="c awa ${on?'on':''} ${lk?'lk':''}" onclick="awTog(${m.id})">${on?`<svg viewBox="10 -2 80 200" width="56">${awWhoFig(Y,{t:'m',mid:m.id},null,0)}</svg>`:ptc(m,44)}<b>${esc(m.name)}</b><small>${lk?`🔒 ${esc(cats.join(', '))}`:on?(th?'✔ เข้าร่วม':'✔ Attends'):'—'}</small></button>`}).join('')}</div>
+   ${repRows?`<h3>${th?'ผู้แทนรับรางวัล (ถ้าชนะ)':'Representatives (if you win)'}</h3>${repRows}`:''}</div>`;
+   const i0=h.indexOf('<div class="c awprep">');if(i0>=0){let i1=h.indexOf('<div class="c awcat">',i0);if(i1<0)i1=h.length;h=h.slice(0,i0)+prep+h.slice(i1)}else h+=prep}
+  else{const SP=awSpeechesFor(Y);h=h.replace(/<div class="c awcat"><div class="row"><span class="tag">([^<]*)<\/span><b>([^<]*)<\/b><\/div>/g,(a,c,n)=>{const k=(AW_CAT.find(x=>x[1]==n)||[])[0],sp=k&&SP[k];return sp?a+`<p class="st awspk">🎤 ${esc(sp.who.t=='host'?(th?'พิธีกร':'Host'):sp.who.nm)}${sp.who.grp?` · ${esc(sp.who.grp)}`:''}</p>`:a})}}catch(e){console.error(e)}return h}}
 
 </script>
 <script>

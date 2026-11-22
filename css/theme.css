@@ -1408,3 +1408,14 @@ button.gcd:hover{background:#fde6f0}.gcd.we{color:#c45b8e}.gcd.td{box-shadow:ins
 .g.edcv>.c.m{content-visibility:visible;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;min-height:0}
 .g.edcv>.c.m>svg,.g.edcv>.c.m>img{width:100%!important;height:auto!important;max-width:none;border-radius:10px;box-shadow:0 3px 10px rgba(80,40,100,.18)}
 .g.edcv>.c.m>.st{font-weight:800;color:#6b5a86}
+/* industry ranking */
+.rvrk td,.rvrk th{white-space:nowrap;font-size:12px}.rvrk tr.pl{background:rgba(255,143,192,.14)}.rvrk tr.boss td:nth-child(2){color:#c2458a}
+.rvbar{display:block;height:4px;border-radius:3px;background:rgba(0,0,0,.08);margin-top:2px;min-width:38px}.rvbar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#f58fb9,#a58df0)}
+.rvme{margin:6px 0}
+/* awards ceremony v3 */
+.awstage{width:min(760px,100%);height:auto;aspect-ratio:16/9;border-radius:14px;display:block;margin:8px auto;box-shadow:0 0 28px #f3c35c33}
+.awcarpet span b{font-size:12px}.awcarpet span small{font-size:10px;opacity:.8}.awcarpet.npc{background:linear-gradient(#0000 70%,#6a0d22 70%)}
+.awsp{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;margin:10px auto;max-width:720px}.awsp svg{filter:drop-shadow(0 0 16px #ffe08a88)}
+.awbub{flex:1;min-width:200px;background:#fff;color:#3b2a4a;border-radius:16px;padding:12px 14px;position:relative;text-align:left}.awbub b{display:block;font-size:15px}.awbub small{display:block;opacity:.7;font-size:11px;margin-bottom:4px}.awbub p{margin:4px 0 0;line-height:1.5}
+.awini.host{width:90px;height:90px;font-size:44px}
+.awa.lk{outline:2px solid #e9b949}.awrep{justify-content:space-between;gap:8px;margin:4px 0;flex-wrap:wrap}.awspk{margin:2px 0 6px}
