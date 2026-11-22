@@ -53,7 +53,7 @@ function czxTf(P,D,svg){const s=czxC(P.s??1,D.sc[0],D.sc[1]),dx=czxC(P.dx,-D.mv,
 const czxSides=(P,D)=>!D.lr?[0]:P.sd=='R'?[1]:P.sd=='L'||D.one?[0]:[0,1];
 const czxMir=s=>`<g transform="translate(100 0) scale(-1 1)">${s}</g>`;
 function czxLayer(P,D){const z=P.z&&(D.zs||[D.z]).includes(P.z)?P.z:D.z;return z}
-function czxApply(cd,id,O,sk){const L=czxPieces(cd);if(!L.length)return;const defs=[],G={hem:O.topHem||71,sk:O.hemY||0,skin:sk[0],bot:O.bot};G.hw=G.sk?Math.min(30,13+(G.sk-69)*.42):0;O.armx=[];
+function czxApply(cd,id,O,sk){const L=czxPieces(cd);if(!L.length)return;const defs=[],G={hem:O.topHem||71,sk:O.hemY||0,skin:sk[0],bot:O.bot};G.hw=G.sk?Math.min(30,13+(G.sk-69)*.42):0;if(O.skB&&O.skB.w>4&&O.skB.y>72){G.sk=(O.skB.y+69*.18)/1.18;G.hw=O.skB.w/1.18}O.armx=[];
  L.forEach(([P,D,key])=>{if(D.z=='head')return;const E=czxE(P,D,id,key,defs),sides=czxSides(P,D);
   if(D.z=='arm'||(D.armAr&&D.armAr.includes(E.ar))){O.armx.push({D,E,sides});return}
   let g='';try{const one=D.draw(E,G);if(!one)return;sides.forEach(sd=>{const t=czxTf(P,D,one);g+=sd?czxMir(t):t})}catch(e){console.error(e);return}

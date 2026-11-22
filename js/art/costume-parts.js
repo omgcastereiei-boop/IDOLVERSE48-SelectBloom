@@ -80,14 +80,14 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
  const fT=pat('top',T),lT=czLine(T.c1),sx=T.t=='tee'?1.1:1.05;
  const clip=`<clipPath id="${id}tc"><path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)"/></clipPath>`;
  const hem=T.t=='crop'?62:T.t=='tee'?73:71;
- let top=clip+`<g clip-path="url(#${id}tc)"><rect x="20" y="${T.t=='offshoulder'?51.4:T.t=='tube'?50.4:38}" width="60" height="${hem-(T.t=='offshoulder'?51.4:T.t=='tube'?50.4:38)}" fill="${fT}"/><path d="M57 44L66 48L64 ${hem}L57 ${hem}Z" fill="#2e2038" opacity=".07"/>`;
+ let top=clip+`<g clip-path="url(#${id}tc)"><rect x="20" y="${T.t=='offshoulder'?51.4:T.t=='tube'?50.4:38}" width="60" height="${hem-(T.t=='offshoulder'?51.4:T.t=='tube'?50.4:38)}" fill="${fT}"/><defs><linearGradient id="${id}shd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2e2038" stop-opacity="0"/><stop offset="1" stop-color="#2e2038" stop-opacity=".11"/></linearGradient></defs><path d="M55 ${czFy(T)+1}L66 ${czFy(T)+1}L64 ${hem}L55 ${hem}Z" fill="url(#${id}shd)"/>`;
  if(T.t=='blouse'){if(T.v==1)top+=`<path d="M50 47V${hem}" stroke="${T.dc}" stroke-width="1.6"/>`+[50,54,58,62,66].map(y=>`<path d="M48.6 ${y}q1.4 1.2 2.8 0" stroke="${czLine(T.dc)}" stroke-width=".25" fill="none"/>`).join('');else if(T.v==2)top+=`<path d="M41 46H59L58 55Q50 58 42 55Z" fill="${T.dc}" opacity=".9"/><path d="M42 55Q50 58 58 55" stroke="${czLine(T.dc)}" stroke-width=".3" fill="none" stroke-dasharray=".6 .5"/>`;else top+=`<path d="M50 46V${hem}" stroke="${lT}" stroke-width=".3" opacity=".6"/>`+[52,57,62,67].map(y=>`<circle cx="50.8" cy="${y}" r=".5" fill="${T.c3}"/>`).join('')}
  if(T.t=='shirt'){top+=`<path d="M49 46V${hem}M51 46V${hem}" stroke="${lT}" stroke-width=".3" opacity=".6"/>`+[52,57,62,67].map(y=>`<circle cx="50" cy="${y}" r=".5" fill="${T.c3}"/>`).join('')+(T.v?`<path d="M53.4 54h4.4v4Q55.6 59.4 53.4 58Z" fill="none" stroke="${lT}" stroke-width=".3"/>`:'')}
  if(T.t=='crop'&&!T.v)top+='';
  if(T.t=='tee')top+=`<path d="M45 52Q50 56 55 52Q54 60 50 60Q46 60 45 52Z" fill="${T.c2}" opacity=".9"/><path d="M47 55l1.4-1.4 1.6 1.6 1.6-1.6 1.4 1.4-3 3z" fill="${T.c3}"/>`;
  if(typeof CZX_TOP!='undefined'&&CZX_TOP[T._x||T.t])top+=CZX_TOP[T._x||T.t](T,fT,lT,hem,sk,id);
- top+=`<path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)" fill="none" stroke="${lT}" stroke-width=".7" clip-path="url(#${id}hm)"/></g><clipPath id="${id}hm"><rect width="100" height="${hem}"/></clipPath>`;
- if(T.t=='sleeveless')top+=`<path d="M34 46L44 45L44.6 50L39 56L34 54ZM66 46L56 45L55.4 50L61 56L66 54Z" fill="${sk[0]}"/><path d="M44.4 45.6L44.8 50.4L39.6 55.6M55.6 45.6L55.2 50.4L60.4 55.6" stroke="${lT}" stroke-width=".35" fill="none"/>`;
+ top+=`<path d="${torsoD}" transform="translate(50 0) scale(${sx} 1) translate(-50 0)" fill="none" stroke="${lT}" stroke-width=".7" clip-path="url(#${id}hm)"/></g><clipPath id="${id}hm"><rect y="${czFy(T)>46?czFy(T)-.4:0}" width="100" height="${hem-(czFy(T)>46?czFy(T)-.4:0)}"/></clipPath>`;
+ if(T.t=='sleeveless')top+=`<path d="M34 46L44 45L44.6 50L39 56L34 54ZM66 46L56 45L55.4 50L61 56L66 54Z" fill="${sk[0]}" clip-path="url(#${id}tc)"/><path d="M44.4 45.6L44.8 50.4L39.6 55.6M55.6 45.6L55.2 50.4L60.4 55.6" stroke="${lT}" stroke-width=".35" fill="none"/>`;
  if(T.t=='tube')top+=`<path d="M37.4 50.6Q50 49.2 62.6 50.6" stroke="${lT}" stroke-width=".5" fill="none"/><path d="M37.6 51.6Q50 50.2 62.4 51.6" stroke="${T.c2}" stroke-width=".7" fill="none" opacity=".8"/>`;
  if(T.t=='offshoulder')top+=`<path d="${skirtD(50.4,12.6,52.6,12.6,14,.9,0).replace(/wT\*=/,'')}" fill="${T.c2}" stroke="${czLine(T.c2)}" stroke-width=".3"/>`;
  if(T.t=='crop')top+=T.v?`<path d="M40.6 ${hem}Q50 ${hem+1.2} 59.4 ${hem}" stroke="${lT}" stroke-width=".35" fill="none"/>`:`<path d="${skirtD(hem-1.4,9.2,hem+.4,9,9,1,0)}" fill="${T.dc}" stroke="${czLine(T.dc)}" stroke-width=".3"/>`;
@@ -135,7 +135,7 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
   if(CO.t=='sailor')collar+=`<path d="M43.2 45.4L50 57L56.8 45.4L63.8 49.4L60 55.4L50 60L40 55.4L36.2 49.4Z" fill="${f}" stroke="${l}" stroke-width=".35"/><path d="M37.6 50.2L41 54.4L50 58.6L59 54.4L62.4 50.2" stroke="${CO.c2}" stroke-width=".5" fill="none"/>`;
   if(CO.t=='frill')collar+=`<path d="${skirtD(45.4,5.2,49.6,7.6,9,1.4,1.6)}" fill="${f}" stroke="${l}" stroke-width=".3"/>`;
   if(CO.t=='high')collar+=`<path d="M46.6 42.4H53.4L54 46.6Q50 47.6 46 46.6Z" fill="${f}" stroke="${l}" stroke-width=".35"/><circle cx="50" cy="45" r=".55" fill="${CO.c3}"/>`;
-  if(CO.t=='vneck')collar+=`<path d="M45.2 44.4L50 53.6L54.8 44.4Z" fill="${sk[0]}"/><path d="M45.2 44.4L50 53.6L54.8 44.4" fill="none" stroke="${CO.c1}" stroke-width=".9" stroke-linejoin="round"/><path d="M45.2 44.4L50 53.6L54.8 44.4" fill="none" stroke="${l}" stroke-width=".25"/>`;
+  if(CO.t=='vneck'){const fy=czFy(T),lo=fy>46,y0=lo?fy+.3:44.4,y1=lo?fy+6.8:53.6,xa=lo?46.4:45.2,xb=lo?53.6:54.8,V=`M${xa} ${y0}L50 ${y1}L${xb} ${y0}`;collar+=`<path d="${V}Z" fill="${sk[0]}"/><path d="${V}" fill="none" stroke="${CO.c1}" stroke-width=".9" stroke-linejoin="round"/><path d="${V}" fill="none" stroke="${l}" stroke-width=".25"/>`}
   if(CO.t=='boat')collar+=`<path d="M41.6 44.2H58.4V45.6Q50 49.8 41.6 45.6Z" fill="${sk[0]}"/><path d="M41.6 45.6Q50 49.8 58.4 45.6" stroke="${CO.c1}" stroke-width="1" fill="none"/><path d="M41.6 46.3Q50 50.5 58.4 46.3" stroke="${l}" stroke-width=".25" fill="none"/>`;
   if(CO.t=='shirtc')collar+=`<path d="M45.6 44.2L50 48L47 51.6L43.2 46.6ZM54.4 44.2L50 48L53 51.6L56.8 46.6Z" fill="${f}" stroke="${l}" stroke-width=".35" stroke-linejoin="round"/><circle cx="50" cy="49.6" r=".5" fill="${CO.c3}"/>`;
   if(CO.t=='crew')collar+=`<path d="M45.4 44.4Q50 48.6 54.6 44.4" stroke="${CO.c1}" stroke-width="1.5" fill="none"/><path d="M45.2 45.4Q50 49.6 54.8 45.4" stroke="${l}" stroke-width=".25" fill="none"/>`;
@@ -159,7 +159,7 @@ function modOutfit(cd,id,D,sk){const W='#fffefc';let defs='';const F={},pat=(k,P
  O.leg=leg||{};O.shoe={t:{boots:'boot',ankle:'boot',heels:'heel',mary:'mary',sneakers:'sneaker',loafers:'loafer'}[SH.t]||'sneaker',c:SH.c1,a:SH.c2,deco:A.sdeco?A.sdeco.c1:null};
  if(A.legacc)O.garter=A.legacc.c1;
  O.top=top;O.vestL='';O.skirt=bottom+over;O.cover=0;O.mid=mid;O.outer=outer;O.collar=collar+front;O.back=back;O.pantsFn=pantsFn;
- O.defs=defs;O.hemY=hemY;O.topHem=hem;O.bot=BO.t;return O}
+ O.defs=defs;O.hemY=hemY;O.topHem=hem;O.bot=BO.t;try{O.skB=hemY?czSkB(bottom):null}catch(e){O.skB=null}return O}
 
 // ---- costume presets: starting points only (every piece stays editable) --------------
 const CZ_PRESETS=(()=>{const P=czPiece,x=(o)=>o;const mk=(top,sleeve,collar,outer,bottom,over,shoes,legs,X={},A={})=>({top,sleeve,collar,outer,bottom,over,shoes,legs,x:X,a:A});
@@ -178,3 +178,16 @@ const CZ_PRESETS=(()=>{const P=czPiece,x=(o)=>o;const mk=(top,sleeve,collar,oute
  ['Futuristic',mk(P('crop','#e8f4ff','#9fd3ff','#7cf2ff',{v:1}),P('long','#c9d6ea','#7cf2ff',0,{pat:'geo',pc:'#9fd3ff',pd:.5}),P('high','#e8f4ff',0,'#7cf2ff'),P('bolero','#c9d6ea','#7cf2ff','#7cf2ff',{pat:'gradient',pc:'#9fb4ff'}),P('mini','#c9d6ea','#7cf2ff','#7cf2ff',{pat:'gradient',pc:'#8a9cff'}),P('sheer','#9fd3ff'),P('boots','#e8f4ff','#7cf2ff'),P('none','#fff'),{belt:P('belt','#7cf2ff','#fff','#ffffff')},{headband:P('headband','#c9d6ea',0,'#7cf2ff'),earrings:P('earrings','#7cf2ff','#c9d6ea')})],
  ['Summer Festival',mk(P('sleeveless','#fff7d6','#ffb46e','#ff8fb7',{pat:'floral',pc:'#ffb46e',dc:'#ff8fb7'}),P('none','#fff'),{t:'none'},{t:'none'},P('flared','#ffb46e','#ffffff','#ff8fb7',{v:0,pat:'stripe',pc:'#ffe2b8',pd:.6}),P('frillhem','#ffffff'),P('sneakers','#ffffff','#ffb46e'),P('socks','#ffffff',0,0,{v:1}),{sash:P('sash','#ff8fb7')},{hat:P('hat','#fff2c8','#ff8fb7','#ffb46e',{v:1}),armband:P('armband','#ff8fb7','#fff','#fff')})]]})();
 const czClone=o=>JSON.parse(JSON.stringify(o));
+
+// top edge of the top's fabric (strapless / off-shoulder tops start lower)
+function czFy(T){return T&&T.t=='offshoulder'?51.4:T&&T.t=='tube'?50.4:38}
+// the real hem of the drawn skirt: the outermost point of its outline (half width from the centre line) and its height
+function czSkB(svg){const m=/<path d="([^"]+)"/.exec(svg||'');if(!m)return null;const t=m[1].match(/[MLHVQCSTZmlhvqcstz]|-?\d*\.?\d+(?:e-?\d+)?/g)||[];let i=0,c='',x=0,y=0,sx=0,sy=0;const P=[],num=()=>+t[i++],isN=()=>i<t.length&&!/[A-Za-z]/.test(t[i]);
+ while(i<t.length){if(/[A-Za-z]/.test(t[i]))c=t[i++];const rel=c==c.toLowerCase(),C=c.toUpperCase();
+  if(C=='Z'){x=sx;y=sy;continue}if(!isN()){i++;continue}
+  if(C=='M'||C=='L'||C=='T'){const a=num(),b=num();x=rel?x+a:a;y=rel?y+b:b;if(C=='M'){sx=x;sy=y}P.push([x,y])}
+  else if(C=='H'){const a=num();x=rel?x+a:a;P.push([x,y])}else if(C=='V'){const b=num();y=rel?y+b:b;P.push([x,y])}
+  else if(C=='Q'||C=='S'){num();num();const a=num(),b=num();x=rel?x+a:a;y=rel?y+b:b;P.push([x,y])}
+  else if(C=='C'){num();num();num();num();const a=num(),b=num();x=rel?x+a:a;y=rel?y+b:b;P.push([x,y])}else i++}
+ if(P.length<3)return null;const maxY=Math.max(...P.map(p=>p[1]));const low=P.filter(p=>p[1]>=69+(maxY-69)*.5);if(!low.length)return null;let best=low[0];low.forEach(p=>{if(Math.abs(p[0]-50)>Math.abs(best[0]-50))best=p});
+ return{y:best[1],w:Math.abs(best[0]-50)}}
