@@ -19926,6 +19926,21 @@ xmTog=function(id){const P=ui.xmP;if(!P)return;const i=P.sel.indexOf(id);if(i>=0
 // ---- ranking groups and participants: shown as locked once the election single is in production ----------------------------
 {const f=geSetupHtml;geSetupHtml=function(e){let h=f.apply(this,arguments);try{if(e&&e.st=='producing'){const L=` <span class="tag">🔒 ${g2T('Locked','ล็อกแล้ว')}</span>`;h=h.replace('<h3>1 · Election</h3>',`<h3>1 · Election${L}</h3>`).replace('<h3>2 · Ranking groups</h3>',`<h3>2 · Ranking groups${L}</h3>`).replace('<h3>3 · Participants ',`<h3>3 · Participants${L} `);
  h=h.replace('<h3>2 · Ranking groups',`<p class="c geerr" style="margin-bottom:8px">${g2T('The election single is in production: the ranking groups and the participants can no longer change.','ซิงเกิลเลือกตั้งเริ่มผลิตแล้ว: แก้ไขกลุ่มอันดับและผู้เข้าร่วมไม่ได้แล้ว')}</p><h3>2 · Ranking groups`)}}catch(x){console.error(x)}return h}}
+// ---- the Pre-ceremony Concert: every election participant takes part (sister groups included) ------------------------------
+function geCcWant(e){return[...new Set(e&&e.parts||[])].filter(id=>{const m=get(id);return m&&m.status!='graduated'})}
+function geCcParts(e){const C=geCcOf(e);if(!C||['done','cancel','live'].includes(C.status))return;const add=geCcWant(e).filter(id=>!C.parts.includes(id));if(!add.length)return;
+ C.parts.push(...add);const A=new Set(add);
+ Object.values(C.sets||{}).forEach(s=>(s.items||[]).forEach(it=>{if(it.k=='song')(it.pos||[]).forEach(z=>{if(z.m==null&&z.o!=null&&A.has(z.o)){z.m=z.o;z.why=''}})}));
+ // still planning: the latest main songs of each sister group that takes part join the setlist
+ if(C.status=='plan'){const set=C.sets[(C.pf[0]||{}).set]||Object.values(C.sets)[0];if(set){const gids=[...new Set(add.map(id=>gsGid(get(id))).filter(g=>g!=null&&g!=C.host))];
+  gids.forEach(gid=>{if(set.items.some(it=>it.gid==gid))return;geCcSongs(gid).slice(-3).forEach(sg=>{const o=ccSong(gid,sg);if(!o)return;set.items.push({id:ccIid(),k:'song',gid,song:sg,title:o.title,pos:ccCopyPos(C,o),orig:ccOrigPos(o).map(z=>({m:z.m,r:z.r,c:z.c})),cz:{mode:'orig'}})})});try{ccRenum(C)}catch(x){}}}
+ try{ccSnap(C)}catch(x){}}
+function geCcPartsAll(){try{gsAllGE().forEach(({g,G})=>(G.list||[]).forEach(e=>{if(e&&e.cc&&e.st!='done')try{gsWith(g.id,()=>geCcParts(e))}catch(x){console.error(x)}}))}catch(x){}}
+{const f=geCcSync;geCcSync=function(e){try{geCcParts(e)}catch(x){console.error(x)}return f.apply(this,arguments)}}
+{const f=geCcAutoConfirm;geCcAutoConfirm=function(e){try{geCcParts(e)}catch(x){console.error(x)}return f.apply(this,arguments)}}
+{const f=geMakeCc;geMakeCc=function(e){const had=geCcOf(e),C=f.apply(this,arguments);try{if(C&&!had)geCcParts(e)}catch(x){console.error(x)}return C}}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);geCcPartsAll();return r}}
+{const f=V.concert;if(f)V.concert=function(){geCcPartsAll();return f.apply(this,arguments)}}
 
 </script>
 <script>
