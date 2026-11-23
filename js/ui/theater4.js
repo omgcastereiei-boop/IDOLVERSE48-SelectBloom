@@ -17,7 +17,7 @@
 //  · Reschedule: any scheduled performance (automatic or manual) can be moved to another
 //    date / slot after validation; it keeps its id and history (no duplicate).
 // =====================================================================================
-const TH_EDT=s=>!!s&&s.status!='retired'&&s.status!='archived';
+const TH_EDT=s=>!!s&&s.status!='retired'&&s.status!='archived'&&!(s.gst&&s.gst.early); // an early graduate's stage: the team Setlist is read-only (Extra Shows are edited in their own card)
 // ---- 1. song management -----------------------------------------------------------------
 thGuardEdit=function(s){if(!s)return false;if(s.status=='retired'||s.status=='archived'){toast('This Stage is retired. Reuse it from the Stage Archive to perform it again.','err');return false}return true};
 {const f=thSongsTab;thSongsTab=function(s,tr,lk){return f.call(this,s,tr,!TH_EDT(s))}}

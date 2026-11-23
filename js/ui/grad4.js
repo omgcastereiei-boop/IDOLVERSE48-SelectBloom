@@ -109,7 +109,7 @@ try{Object.assign(I18N_TH,{'Graduation Stages':'สเตจจบการศ�
 const G4_XMAX=3;
 const g4Early=s=>!!(s&&s.gst&&s.gst.early);
 const g4Locked=(s,it)=>!!(g4Early(s)&&it&&(s.gst.lock||[]).includes(it.id));
-const g4Extras=s=>thEncSeq(s).filter(it=>it.k=='song'&&!(s.gst.lock||[]).includes(it.id));
+const g4Extras=s=>thEncSeq(s).filter(it=>it.k=='song'&&(it.xs||!(s.gst.lock||[]).includes(it.id)));
 function g4MakeEarly(x,mid){const H=thS(),m=get(mid),T=thOf(x.k);let base=null;{const g=x.gst;delete x.gst;try{base=thStageFor(T,x)}finally{if(g)x.gst=g}}
  if(!base)return;const s=JSON.parse(JSON.stringify(base)),id='stg'+(++H.seq);['debut','orig','origUnits','runs','perfs','prefs','prefH','debutPics','final','lastDay','reuse','cfgEd','revOf','adopted','srcNo','srcK'].forEach(k=>delete s[k]);
  Object.assign(s,{id,tpl:id,name:g4San(`${m?m.stage||m.name:''} Graduation Stage`),status:'gradst',no:null,created:S.day,gst:{mid,xid:x.id,early:1,base:base.id,lock:[]}});
@@ -117,7 +117,7 @@ function g4MakeEarly(x,mid){const H=thS(),m=get(mid),T=thOf(x.k);let base=null;{
  // farewell songs: the plan's songs if there was one, otherwise her graduation songs / farewell songs (her as Center)
  const pool=thPool(x.k).map(z=>z.id),gd=m&&m.grad&&czD(m.grad.cz);let picks=(x.sp.songs||[]).filter(z=>z.song).slice(-G4_XMAX);
  if(picks.length<G4_XMAX)try{const have=new Set([...picks.map(z=>z.song),...thAll(base).map(it=>it.song)]);spPickSongs(x.k,G4_XMAX*3,mid,true).filter(song=>!have.has(song)).slice(0,G4_XMAX-picks.length).forEach(song=>picks.push({song,ids:pool,center:mid}))}catch(e){}
- picks.forEach(z=>{const ids=(z.ids||pool).filter(i=>pool.includes(i)),it={k:'song',id:thUid(),song:z.song,pt:'team',unit:null,center:mid,cz:null};
+ picks.forEach(z=>{const ids=(z.ids||pool).filter(i=>pool.includes(i)),it={k:'song',id:thUid(),song:z.song,pt:'team',unit:null,center:mid,cz:null,xs:1};
   if(ids.length&&ids.length<pool.length){const u={id:'u'+thUid(),name:g4San(z.unit)||`Farewell Unit ${(s.units||[]).length+1}`,desc:'',ids:ids.includes(mid)?ids:[mid,...ids]};s.units=s.units||[];s.units.push(u);it.pt='unit';it.unit=u.id}
   s.enc.items.push(it)});
  H.st[id]=s;x.gst=id;x.sp.gst=id;x.sp.songs=[];
@@ -130,11 +130,33 @@ const g4Msg=()=>toast('Early graduation: the team\'s current Setlist is performe
  ['thEncTog',(s)=>g4Early(s)],['thMcAdd',(s)=>g4Early(s)],['thOvTog',(s)=>g4Early(s)],['thSongNew',(s)=>g4Early(s)],['thSongMake',(s)=>g4Early(s)],['thSongRand',(s)=>g4Early(s)],
  ['thSwapSong',(s,a)=>g4Locked(s,thAll(s).find(i=>i.id==a[0])||s.items.find(i=>i.id==a[0]))],['thSongDelAsk',(s,a)=>g4Locked(s,thAll(s).find(i=>i.id==a[0])||s.items.find(i=>i.id==a[0]))]].forEach(([n,bad])=>{try{const f=window[n];if(typeof f!='function')return;window[n]=function(){const s=thEd();if(s&&g4Early(s)&&bad(s,[...arguments]))return g4Msg();return f.apply(this,arguments)}}catch(e){}});
 function g4AddExtra(songId){const s=thEd();if(!s||!g4Early(s)||!thGuardEdit(s))return;if(g4Extras(s).length>=G4_XMAX)return toast(`At most ${G4_XMAX} farewell songs.`,'err');const o=S.songs[songId];if(!thSongOk(o,s.k))return toast('That song is not available to this theater.','err');if(g4Extras(s).some(i=>i.song==songId))return toast('This song is already a farewell song.','err');
- const mid=s.gst.mid,it={k:'song',id:thUid(),song:songId,pt:'team',unit:null,center:mid,cz:null};thEncO(s).items.push(it);try{const m=get(mid),gd=m&&m.grad&&czD(m.grad.cz),last=[...thAll(s)].reverse().slice(1);thMem(s,it).forEach(i=>{let p=i==mid&&gd?gd.p:null;if(!p)for(const q of last){const c=thCzOf(q,i);if(c){p=c;break}}if(p)thSetOwn(it,i,p)})}catch(e){}toast(`“${o.title}” added as farewell song ${g4Extras(s).length}.`);render()}
+ const mid=s.gst.mid,it={k:'song',id:thUid(),song:songId,pt:'team',unit:null,center:mid,cz:null,xs:1};thEncO(s).items.push(it);try{const m=get(mid),gd=m&&m.grad&&czD(m.grad.cz),last=[...thAll(s)].reverse().slice(1);thMem(s,it).forEach(i=>{let p=i==mid&&gd?gd.p:null;if(!p)for(const q of last){const c=thCzOf(q,i);if(c){p=c;break}}if(p)thSetOwn(it,i,p)})}catch(e){}toast(`“${o.title}” added to the Extra Shows (${g4Extras(s).length}/${G4_XMAX}).`);render()}
 {const f=thSongAdd;thSongAdd=function(songId){const s=thEd();if(s&&g4Early(s))return g4AddExtra(songId);return f.apply(this,arguments)}}
 {const f=thEncAdd;thEncAdd=function(songId){const s=thEd();if(s&&g4Early(s))return g4AddExtra(songId);return f.apply(this,arguments)}}
 // the song limit does not apply to the farewell songs; at least one farewell song is needed
 {const f=thErr;thErr=function(s){const E=f.apply(this,arguments);if(!g4Early(s))return E;const out=E.filter(e=>!/at most \d+ songs/i.test(e));if(!g4Extras(s).length)out.push('Add at least 1 farewell song after the Encore.');return out}}
 {const f=spErr;spErr=function(x){const E=f.apply(this,arguments);try{const s=x&&x.gst&&thStage(x.gst);if(g4Early(s))return E.filter(e=>!/must be the Center/.test(e)||!g4Extras(s).some(it=>thCen(s,it)==s.gst.mid))}catch(e){}return E}}
 // the editor tells which part is fixed
-{const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{const s=thEd();if(g4Early(s)){const n=g4Extras(s).length;h=h.replace('<div class="c thed">',`<div class="c g4ban"><b>🎓 Early graduation — farewell songs ${n}/${G4_XMAX}</b><div class="st">The team's current Setlist (🔒) is performed unchanged. Add up to ${G4_XMAX} farewell songs after the Encore (use “Add song”) — their members, Center, formation and costumes can be edited like any song.</div></div><div class="c thed">`)}}catch(e){console.error(e)}return h}}
+{const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{const s=thEd();if(g4Early(s)){const n=g4Extras(s).length;h=h.replace('<div class="c thed">',`<div class="c g4ban"><b>🎓 Early graduation — farewell songs ${n}/${G4_XMAX}</b><div class="st">The team's current Setlist (🔒) is performed unchanged. Add up to ${G4_XMAX} farewell songs in “Extra Shows” (after the Encore, not part of it) — their members, Center, formation and costumes can be edited.</div></div><div class="c thed">`)}}catch(e){console.error(e)}return h}}
+
+// ---- Extra Shows: the farewell songs of an early graduate are not Encore songs; they follow the Encore in their own section ----
+const g4T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+function g4XMark(){try{(S.groups||[]).forEach(g=>gsWith(g.id,()=>{Object.values((S.th&&S.th.st)||{}).forEach(s=>{if(g4Early(s))thEncSeq(s).forEach(it=>{if(it.k=='song'&&!(s.gst.lock||[]).includes(it.id))it.xs=1})})}))}catch(e){console.error(e)}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{g4XMark()}catch(e){}return r}}
+function g4XDel(id){const s=thEd();if(!s||!g4Early(s)||!thGuardEdit(s))return;const L=thEncO(s).items,i=L.findIndex(it=>it.id==id&&it.xs);if(i<0)return;const t=(S.songs[L[i].song]||{}).title||'';
+ ask(g4T(`Remove “${t}” from the Extra Shows? The song stays in the Song Library.`,`ลบ “${t}” ออกจาก Extra Shows? เพลงยังอยู่ในคลังเพลง`),()=>{L.splice(i,1);render()},g4T('Remove','ลบ'))}
+function g4XMv(id,d){const s=thEd();if(!s||!g4Early(s)||!thGuardEdit(s))return;const L=thEncO(s).items,X=L.filter(it=>it.xs),k=X.findIndex(it=>it.id==id),j=k+d;if(k<0||j<0||j>=X.length)return;const a=L.indexOf(X[k]),b=L.indexOf(X[j]);[L[a],L[b]]=[L[b],L[a]];render()}
+function g4XHtml(s){const X=g4Extras(s),ro=s.status=='gradone',A=(typeof thAvail=='function'?thAvail(s.k):[]).filter(z=>!X.some(it=>it.song==z.id));
+ return`<div class="c g4xs"><div class="row"><h3>✦ Extra Shows <small class="st">${g4T('after the Encore · not part of the Encore','ต่อจากอังกอร์ · ไม่นับเป็นอังกอร์')}</small></h3><span class="tag">${X.length}/${G4_XMAX}</span></div>
+ <p class="st">${g4T('Farewell songs for the graduating member, performed after the team\'s Setlist and Encore. Members, Center, formation and costumes can be edited.','เพลงอำลาของเมมที่จบการศึกษา แสดงต่อจากเซ็ตลิสต์และอังกอร์ของทีม แก้เมมเบอร์ เซ็นเตอร์ ฟอร์เมชัน และชุดได้')}</p>
+ <ol class="thtl">${X.map((it,i)=>{const c=get(thCen(s,it)),M=thMem(s,it);return`<li class="thsg xs"><span class="thnum">X${String(i+1).padStart(2,'0')}</span><div class="thsgm"><b>${esc((S.songs[it.song]||{}).title||'')}</b><small>${M.length} ${g4T('performer(s)','คน')} · Center ${esc(c?c.name:'—')}</small><span class="thmcm">${M.slice(0,8).map(id=>thMini(id,20)).join('')}${M.length>8?`<i>+${M.length-8}</i>`:''}</span></div>
+  ${ro?'':`<div class="row"><button class="b s" onclick="g4XMv('${it.id}',-1)">▲</button><button class="b s" onclick="g4XMv('${it.id}',1)">▼</button><button class="b s" onclick="thSongEditOpen('${it.id}')">✎ Edit</button><button class="b s" onclick="g4XDel('${it.id}')">✕ ${g4T('Remove','ลบ')}</button></div>`}</li>`}).join('')||`<p class="st">${g4T('No Extra Show song yet.','ยังไม่มีเพลง Extra Shows')}</p>`}</ol>
+ ${ro||X.length>=G4_XMAX?'':`<label class="st">${g4T('Add a song','เพิ่มเพลง')} <select onchange="if(this.value)g4AddExtra(this.value)"><option value="">${g4T('Choose…','เลือก…')}</option>${A.map(z=>`<option value="${z.id}">${esc(z.title)}</option>`).join('')}</select></label>`}</div>`}
+// the Encore list shows only the team's Encore; the Extra Shows card follows it
+{const f=thEncHtml;thEncHtml=function(s){if(!g4Early(s))return f.apply(this,arguments);const E=thEncO(s),items=E.items,on=E.on;E.items=items.filter(it=>!it.xs);E.on=E.items.length>0;let h;try{h=f.apply(this,arguments)}finally{E.items=items;E.on=on}return h+g4XHtml(s)}}
+// the team's songs keep their performers (Team / Unit) and MC corners: read-only in an early graduate's stage
+const g4LockedId=(s,id)=>{const it=s&&(s.items.find(i=>i.id==id)||thEncO(s).items.find(i=>i.id==id));return g4Locked(s,it)};
+['thSongPt','thMcSet'].forEach(n=>{const f=window[n];if(typeof f!='function')return;window[n]=function(id){const s=thEd();if(s&&g4Early(s)&&g4LockedId(s,id)){g4Msg();return render()}return f.apply(this,arguments)}});
+{const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{const s=thEd();if(g4Early(s))h=h.replace(/<(select|input)([^>]*?)on(change|input)="(thSongPt|thMcSet)\('([^']+)'/g,(a,tag,mid,ev,fn,id)=>g4LockedId(s,id)?`<${tag} disabled${mid}on${ev}="${fn}('${id}'`:a)}catch(e){console.error(e)}return h}}
+// song counter: the team's songs + Encore, then the Extra Shows
+{const f=V.thset;V.thset=function(){let h=f.apply(this,arguments);try{const s=thEd();if(g4Early(s)){const x=g4Extras(s).length,e=thEnc(s).length-x,n=thSongs(s).length;h=h.replace(new RegExp(`${thAll(s).length}/${TH_MAXS} songs \\(${n} \\+ ${thEnc(s).length} Encore\\)`),`${n+e} songs${e?` (${n} + ${e} Encore)`:''} + ${x} Extra Show${x==1?'':'s'}`)}}catch(e){console.error(e)}return h}}
