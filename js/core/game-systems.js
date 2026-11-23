@@ -601,8 +601,8 @@ function rsRun(ev,part){const k='d'+part;if(ev[k])return;if(part==2&&!ev.d1)rsRu
  if(typeof rsPEApply=='function')rsPEApply(ev,part,ids,rows,sl); // Performance Efficiency (rs-planner.js): skills + readiness at event time
  const Q=Math.round(avg(rows.map(r=>r.q))),A=rsDay(l,ev.day+part-1,ids,x,part==2&&ev.d1?ev.d1.Q:null),pop=avg(ids.map(id=>get(id).pop)),g=rsG(l.id),gb=gb0;
  const buyers=Math.round(A.att*(.12+.1*pop/100+.05*Math.min(g/100,2)+.05*gb/100)),merch=Math.round(buyers*CFG.rs.merch*rnd(85,115)/100),ht=Math.round(A.att*(.03+.06*pop/100+.01*Math.min(g/100,3))),htRev=ht*CFG.rs.ht,htc=Math.min(25,4+Math.ceil(ht/150));
- // new group fans from one Roadshow (both days together) never exceed 1,000
- const newG=Math.min(Math.round(A.local*(.03+.04*Q/100)+A.trav*.01),Math.max(0,RS_NEWMAX-(part==2&&ev.d1?ev.d1.newG||0:0)));
+ // new group fans: at most 1,000 per Roadshow day
+ const newG0=Math.round(A.local*(.03+.04*Q/100)+A.trav*.01),newG=newG0>RS_NEWMAX?rnd(RS_NEWMAX-50,RS_NEWMAX):newG0; // at most 1,000 new group fans per day; a capped day lands between 950 and 1,000
  // the day's new fans are shared by the members: the members' new fans add up exactly to the new group fans,
  // split unevenly by skill — performance quality of her songs (vocal / dance / performance), variety (MC, Hi-Touch talk) and stage presence
  const FW=rows.map(r=>{const m=get(r.mid);return Math.pow(.25+(r.q||0)/100,2)*(.55+.45*(m.variety||0)/100)*(.75+.5*(m.cha||0)/100)*(.85+.3*(m.pop||0)/100)*rnd(90,110)/100}),FT=FW.reduce((a,v)=>a+v,0)||1;
