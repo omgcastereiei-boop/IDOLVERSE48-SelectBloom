@@ -27,7 +27,7 @@ const geCcOf=e=>{if(!e||!e.cc)return null;const C=ccGet(e.cc);return C&&C.status
 function geCcSongs(gid){const out=[];try{gsWith(gid,()=>{(S.singles||[]).slice().reverse().forEach(x=>{if(out.length<8&&x.mainId&&S.songs[x.mainId])out.push(x.mainId)})})}catch(e){}return out.reverse()}
 function geMakeCc(e,day){if(!e||geCcOf(e))return geCcOf(e);const X=ccS(),id='cc'+(++X.seq),gid=e.gid!=null?e.gid:gsAg();
  const act=S.members.filter(m=>m.status!='graduated'&&(isAct(m)||m.status=='trainee')&&(typeof gsGid=='function'?gsGid(m):m.group)==gid).map(m=>m.id);
- const C={id,name:`${e.name} — ${gpT('Pre-ceremony Concert','คอนเสิร์ตก่อนประกาศผล')}`.slice(0,60),type:'ge',host:gid,anni:null,grad:[],vid:null,vcfg:'seat',start:day,pf:[],parts:act,sets:{},snap:{},status:'plan',created:S.day,log:[],ge:{gid,eid:e.id}};
+ const C={id,name:`${e.name} — ${gpT('Pre-ceremony Concert','คอนเสิร์ตก่อนประกาศผล')}`.slice(0,100),type:'ge',host:gid,anni:null,grad:[],vid:null,vcfg:'seat',start:day,pf:[],parts:act,sets:{},snap:{},status:'plan',created:S.day,log:[],ge:{gid,eid:e.id}};
  const sid='s1_'+Date.now().toString(36).slice(-4),items=[];
  geCcSongs(gid).forEach(sg=>{const o=ccSong(gid,sg);if(!o)return;items.push({id:ccIid(),k:'song',gid,song:sg,title:o.title,pos:ccCopyPos(C,o),orig:ccOrigPos(o).map(z=>({m:z.m,r:z.r,c:z.c})),cz:{mode:'orig'}})});
  C.sets[sid]={id:sid,name:gpT('Election Concert setlist','เซ็ตลิสต์คอนเสิร์ตเลือกตั้ง'),items};C.pf.push(ccPfNew(C,0,'a'));C.pf[0].set=sid;try{ccRenum(C)}catch(x){}

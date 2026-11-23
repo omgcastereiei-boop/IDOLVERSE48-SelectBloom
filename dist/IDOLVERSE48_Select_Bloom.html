@@ -1713,6 +1713,7 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 /* preliminary results: hosts and member reactions */
 .gv3talk{margin:8px 0 12px}.gv3talk .gxmcs{max-width:none}.gv3talk .gxmc{background:linear-gradient(90deg,rgba(150,110,200,.12),rgba(150,110,200,.03));border-color:rgba(150,110,200,.25)}.gv3talk .gxmc b{color:#8a5a12}.gv3talk .gxmc small{color:#8a6bb0}.gv3talk .gxmc p{color:inherit}
 .gv3re{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:8px}.gv3rc{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:10px;background:rgba(255,215,122,.12)}.gv3rc q{display:block;font-size:13px;font-style:italic;margin-top:2px}.gv3tag{font-size:11px;font-weight:800;color:#b8406e}
+.ccnm,.cchead h2,.ccsh .getitle,.ccsh .getop b{overflow-wrap:anywhere;word-break:break-word}.ccsh .getitle{font-size:clamp(22px,5vw,54px)}
 
 </style>
 </head><body>
@@ -11945,7 +11946,7 @@ function ccSnap(C){C.snap=C.snap||{};C.parts.forEach(id=>{const m=ccMem(id);if(!
 function ccNew(){const X=ccS(),id='cc'+(++X.seq),host=gsAg();const C={id,name:`${(grp(host)||{}).name||'Concert'} Live ${X.seq}`,type:'reg',host,anni:null,grad:[],vid:null,vcfg:'seat',start:S.day+60,pf:[],parts:[],sets:{},snap:{},status:'plan',created:S.day,log:[]};
  C.pf.push(ccPfNew(C,0,'e'));X.list.push(C);ui.cc=id;ui.cct='setup';view='concert';render();return C}
 function ccPfNew(C,d,sl){const n=C.pf.length+1;return{id:'p'+(C.pf.reduce((a,p)=>Math.max(a,+String(p.id).slice(1)||0),0)+1),d,sl,set:Object.keys(C.sets||{})[0]||null,no:n}}
-function ccSet(k,v){const C=ccCur();if(!ccEdit(C))return toast('Only concerts in planning can be edited.','err');if(k=='name')v=String(v||'').replace(/[<>]/g,'').trim().slice(0,60)||C.name;if(k=='start'){v=+v;if(!(v>S.day))return toast('Choose a future date.','err')}
+function ccSet(k,v){const C=ccCur();if(!ccEdit(C))return toast('Only concerts in planning can be edited.','err');if(k=='name')v=String(v||'').replace(/[<>]/g,'').trim().slice(0,100)||C.name;if(k=='start'){v=+v;if(!(v>S.day))return toast('Choose a future date.','err')}
  if(k=='host'){v=+v;C.host=v;if(C.type=='anni')C.anni=null}else C[k]=v;if(k=='type'){C.anni=v=='anni'?{cat:'group'}:null;if(v!='grad')C.grad=[]}if(k=='vid'){const V=ccV(v);if(V&&!V.cap[C.vcfg])C.vcfg=V.cap.seat?'seat':'stand'}render()}
 function ccDateIn(s){const t=new Date(s+'T00:00:00');if(isNaN(t))return null;return Math.round((t-new Date(2026,3,1))/864e5)}
 const ccDateStr=d=>{const t=ccDate(d);return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`};
@@ -12319,7 +12320,7 @@ function ccSetupHtml(C){const A=C.anni||{},op=(L,v)=>L.map(([k,n])=>`<option val
   ${A.cat=='gen'&&A.gid?`<label class="st">Generation <select onchange="ccAnni('gen',this.value)"><option value="">Choose…</option>${op(gensOf([...S.members,...(S.alumni||[])].filter(m=>gsGid(m)==+A.gid)).map(x=>[x,ord(x)+' Generation']),A.gen)}</select></label>`:''}</div>
   <p class="st">${ccAnniBase(A)?'🎉 '+esc(ccAnniTxt(C)):'Choose the group, team or generation being celebrated. Dates come from the game (group debut / founding, team founding, generation join).'}</p>`}
  let gr='';if(C.type=='grad'){const L=S.members.filter(ccGradOk);gr=`<h3>Graduating member(s)</h3><p class="st">Individual (one member) or Joint (several) Graduation Concert. Only members whose graduation is announced can be chosen; the concert does not graduate anyone — the graduation system does.</p><div class="ccmg">${L.map(m=>`<label class="ccmc ${C.grad.includes(m.id)?'on':''}"><input type="checkbox" ${C.grad.includes(m.id)?'checked':''} onchange="ccGradTog(${m.id})">${ptc(m,34)}<span>${esc(m.name)}<small>${esc((grp(gsGid(m))||{}).name||'')} · graduation ${m.grad&&m.grad.target!=null?jd(m.grad.target):'announced'}</small></span></label>`).join('')||'<p class="st">No member has announced her graduation.</p>'}</div><p class="st">${C.grad.length>1?'Joint Graduation Concert':C.grad.length?'Individual Graduation Concert':''}</p>`}
- return`<div class="c"><h3>Concert</h3><div class="row"><label class="st">Name <input value="${esc(C.name)}" maxlength="60" onchange="ccSet('name',this.value)"></label></div>
+ return`<div class="c"><h3>Concert</h3><div class="row"><label class="st">Name <input value="${esc(C.name)}" maxlength="100" style="width:min(100%,520px)" onchange="ccSet('name',this.value)"></label></div>
  <div class="row"><label class="st">Host group <select onchange="ccSet('host',this.value)">${op(G.map(g=>[g.id,g.name]),C.host)}</select></label><label class="st">Concert type <select onchange="ccSet('type',this.value)">${op(Object.entries(CC_TYPE),C.type)}</select></label><label class="st">First performance <input type="date" value="${ccDateStr(C.start)}" min="${ccDateStr(S.day+3)}" onchange="const d=ccDateIn(this.value);if(d!=null)ccSet('start',d)"></label></div>
  <p class="st">${C.type=='reg'?'Regular Concert: any members of any groups, a team, a unit or a theme — no restrictions.':C.type=='anni'?'Anniversary Concert: celebrates a group, sister group, team or generation.':'Graduation Concert: the graduating member(s) are the focus of the concert.'}</p>${an}${gr}</div>`}
 function ccAnni(k,v){const C=ccCur();if(!ccEdit(C))return;C.anni=C.anni||{cat:'group'};if(k=='cat')C.anni={cat:v};else C.anni[k]=v===''?null:k=='tid'?v:+v;if(k=='gid'){delete C.anni.tid;delete C.anni.gen}render()}
@@ -19234,7 +19235,7 @@ const geCcOf=e=>{if(!e||!e.cc)return null;const C=ccGet(e.cc);return C&&C.status
 function geCcSongs(gid){const out=[];try{gsWith(gid,()=>{(S.singles||[]).slice().reverse().forEach(x=>{if(out.length<8&&x.mainId&&S.songs[x.mainId])out.push(x.mainId)})})}catch(e){}return out.reverse()}
 function geMakeCc(e,day){if(!e||geCcOf(e))return geCcOf(e);const X=ccS(),id='cc'+(++X.seq),gid=e.gid!=null?e.gid:gsAg();
  const act=S.members.filter(m=>m.status!='graduated'&&(isAct(m)||m.status=='trainee')&&(typeof gsGid=='function'?gsGid(m):m.group)==gid).map(m=>m.id);
- const C={id,name:`${e.name} — ${gpT('Pre-ceremony Concert','คอนเสิร์ตก่อนประกาศผล')}`.slice(0,60),type:'ge',host:gid,anni:null,grad:[],vid:null,vcfg:'seat',start:day,pf:[],parts:act,sets:{},snap:{},status:'plan',created:S.day,log:[],ge:{gid,eid:e.id}};
+ const C={id,name:`${e.name} — ${gpT('Pre-ceremony Concert','คอนเสิร์ตก่อนประกาศผล')}`.slice(0,100),type:'ge',host:gid,anni:null,grad:[],vid:null,vcfg:'seat',start:day,pf:[],parts:act,sets:{},snap:{},status:'plan',created:S.day,log:[],ge:{gid,eid:e.id}};
  const sid='s1_'+Date.now().toString(36).slice(-4),items=[];
  geCcSongs(gid).forEach(sg=>{const o=ccSong(gid,sg);if(!o)return;items.push({id:ccIid(),k:'song',gid,song:sg,title:o.title,pos:ccCopyPos(C,o),orig:ccOrigPos(o).map(z=>({m:z.m,r:z.r,c:z.c})),cz:{mode:'orig'}})});
  C.sets[sid]={id:sid,name:gpT('Election Concert setlist','เซ็ตลิสต์คอนเสิร์ตเลือกตั้ง'),items};C.pf.push(ccPfNew(C,0,'a'));C.pf[0].set=sid;try{ccRenum(C)}catch(x){}

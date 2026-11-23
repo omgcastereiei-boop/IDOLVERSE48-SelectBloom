@@ -72,7 +72,7 @@ function ccSnap(C){C.snap=C.snap||{};C.parts.forEach(id=>{const m=ccMem(id);if(!
 function ccNew(){const X=ccS(),id='cc'+(++X.seq),host=gsAg();const C={id,name:`${(grp(host)||{}).name||'Concert'} Live ${X.seq}`,type:'reg',host,anni:null,grad:[],vid:null,vcfg:'seat',start:S.day+60,pf:[],parts:[],sets:{},snap:{},status:'plan',created:S.day,log:[]};
  C.pf.push(ccPfNew(C,0,'e'));X.list.push(C);ui.cc=id;ui.cct='setup';view='concert';render();return C}
 function ccPfNew(C,d,sl){const n=C.pf.length+1;return{id:'p'+(C.pf.reduce((a,p)=>Math.max(a,+String(p.id).slice(1)||0),0)+1),d,sl,set:Object.keys(C.sets||{})[0]||null,no:n}}
-function ccSet(k,v){const C=ccCur();if(!ccEdit(C))return toast('Only concerts in planning can be edited.','err');if(k=='name')v=String(v||'').replace(/[<>]/g,'').trim().slice(0,60)||C.name;if(k=='start'){v=+v;if(!(v>S.day))return toast('Choose a future date.','err')}
+function ccSet(k,v){const C=ccCur();if(!ccEdit(C))return toast('Only concerts in planning can be edited.','err');if(k=='name')v=String(v||'').replace(/[<>]/g,'').trim().slice(0,100)||C.name;if(k=='start'){v=+v;if(!(v>S.day))return toast('Choose a future date.','err')}
  if(k=='host'){v=+v;C.host=v;if(C.type=='anni')C.anni=null}else C[k]=v;if(k=='type'){C.anni=v=='anni'?{cat:'group'}:null;if(v!='grad')C.grad=[]}if(k=='vid'){const V=ccV(v);if(V&&!V.cap[C.vcfg])C.vcfg=V.cap.seat?'seat':'stand'}render()}
 function ccDateIn(s){const t=new Date(s+'T00:00:00');if(isNaN(t))return null;return Math.round((t-new Date(2026,3,1))/864e5)}
 const ccDateStr=d=>{const t=ccDate(d);return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`};

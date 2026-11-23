@@ -1631,3 +1631,4 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 /* preliminary results: hosts and member reactions */
 .gv3talk{margin:8px 0 12px}.gv3talk .gxmcs{max-width:none}.gv3talk .gxmc{background:linear-gradient(90deg,rgba(150,110,200,.12),rgba(150,110,200,.03));border-color:rgba(150,110,200,.25)}.gv3talk .gxmc b{color:#8a5a12}.gv3talk .gxmc small{color:#8a6bb0}.gv3talk .gxmc p{color:inherit}
 .gv3re{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:8px}.gv3rc{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:10px;background:rgba(255,215,122,.12)}.gv3rc q{display:block;font-size:13px;font-style:italic;margin-top:2px}.gv3tag{font-size:11px;font-weight:800;color:#b8406e}
+.ccnm,.cchead h2,.ccsh .getitle,.ccsh .getop b{overflow-wrap:anywhere;word-break:break-word}.ccsh .getitle{font-size:clamp(22px,5vw,54px)}
