@@ -29,7 +29,13 @@ const _mxCover=V.cover;V.cover=function(){const h=_mxCover.call(V),i=h.indexOf('
 
 // ---- 3. profile outfit follows the latest released single ------------------------------------------
 function profSync(x){if(!x||!x.mainId)return 0;const mn=S.songs[x.mainId];if(!mn)return 0;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean)),sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},any=Object.values(sc).find(v=>v&&v.own&&v.own.p&&v.ok);let n=0;
- S.members.forEach(m=>{if(m.profCz&&m.profCz.rid==x.rid)return;let p=null,kind;if(tt.has(m.id)){p=(typeof hzStrip=='function'?hzStrip(czFor(mn,m.id)):czFor(mn,m.id));kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
+ const rd=x.relDay??x.day??S.day,oth=[...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))].filter(i=>i!=x.mainId&&S.songs[i]);
+ S.members.forEach(m=>{if(m.profCz&&m.profCz.rid==x.rid)return;if(m.profCz&&(m.profCz.kind=='grad'||m.profCz.kind=='hon'))return;let p=null,kind;if(tt.has(m.id)){p=(typeof hzStrip=='function'?hzStrip(czFor(mn,m.id)):czFor(mn,m.id));kind='title'}else{const v=sc[m.id];if(v&&v.own&&v.ok)p=v.own.p;
+  // no Single Costume (Under Girls) of her own: her costume in another song of this single she sings (e.g. an election single's ranking-group song)
+  if(!p)for(const i of oth){const o=S.songs[i];if((o.slots||[]).includes(m.id)){try{const q=czFor(o,m.id);if(q){p=typeof hzStrip=='function'?hzStrip(q):q;break}}catch(e){}}}
+  if(!p&&any)p=any.own.p;kind='single'}
+  // nothing of this single for her: she does not keep the previous single's costume (her regular outfit is shown)
+  if(!p){if(m.profCz&&(m.joined==null||m.joined<=rd)&&m.profCz.rid&&m.profCz.rid!=x.rid&&(m.profCz.day??0)<rd){m.czHist=m.czHist||[];m.czHist.push(m.profCz);if(m.czHist.length>30)m.czHist.shift();m.profCz=null;n++}return}
   m.czHist=m.czHist||[];if(m.profCz)m.czHist.push(m.profCz);if(m.czHist.length>30)m.czHist.shift();m.profCz={p:czClone(p),title:x.title,rid:x.rid,pk:x.pkey||null,day:x.relDay??x.day??S.day,kind};n++});return n}
 const _mxRelease=doRelease;doRelease=function(){const n=S.singles.length;const r=_mxRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)try{profSync(x)}catch(e){console.error(e)}return r};
 const _mxMig=migrate;migrate=function(){const r=_mxMig.apply(this,arguments);try{auDefaults();if(S.uiPref&&S.uiPref.gcol){UIP.gcol={...S.uiPref.gcol,...(UIP.gcol||{})}}const x=typeof latestSingle=='function'?latestSingle():null;if(x)profSync(x)}catch(e){console.error(e)}return r};
@@ -95,3 +101,5 @@ histHtml=function(m){const H=(m.hist||[]).slice(),rel=h=>S.singles.find(x=>x.rid
  const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':h.pt?` <span class="tag">${h.pt=='solo'?'Solo':'Duet'}</span>`:''}</li>`};
  const A=H.filter(isA),B=H.filter(h=>!isA(h));
  return`<div class="row"><span class="pill">Title Tracks ${A.length}</span><span class="pill">Coupling Songs ${B.length}</span><span class="pill">Center ×${H.filter(h=>h.center).length}</span></div><div class="shist"><h3>Title Tracks <span class="st">(A-Sides)</span></h3><ul>${A.map(h=>li(h,0)).join('')||'<li class="st">None yet.</li>'}</ul><h3>Coupling Songs <span class="st">(B-Sides)</span></h3><ul>${B.map(h=>li(h,1)).join('')||'<li class="st">None yet.</li>'}</ul></div>`};
+// repair saves: every group's latest single sets the profile outfit (members outside the Title Track no longer keep an older single's costume)
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.groups&&S.groups.length>1)S.groups.forEach(g=>gsWith(g.id,()=>{const x=latestSingle();if(x)profSync(x)}))}catch(e){console.error(e)}return r}}

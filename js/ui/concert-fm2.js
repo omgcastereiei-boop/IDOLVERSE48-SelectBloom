@@ -51,3 +51,5 @@ function ccFmBySort(iid){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)re
   h=h.replace(/(<div class="row"><h3 style="margin:0">Participants<\/h3>)/,`$1${b}`).replace(/(<button class="b s" onclick="ccPosFill\()/,`${b}$1`)}}catch(e){console.error(e)}return h}}
 {const f=ccFmBySort;ccFmBySort=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
 {const f=ccFormPage;ccFormPage=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
+// the "Number of members / Number of centers" controls are not used in concerts: the formation is built position by position
+{const f=ccFormPage;ccFormPage=function(){return f.apply(this,arguments).replace(/<div class="ccfmctl">[\s\S]*?<\/div>/,'')}}

@@ -37,7 +37,7 @@ function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
 function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;let c=I18N.cache.get(s);if(c!=null)return c;
  let out;try{out=s.replace(k,trCore(k))}catch(e){out=s}
  if(I18N.cache.size>20000)I18N.cache.clear();I18N.cache.set(s,out);return out}
-function i18nApply(root){const th=i18nLang()=='th';document.documentElement.lang=th?'th':'en';document.body.classList.toggle('lang-th',th);if(!th)return;root=root||document.getElementById('app');if(!root)return;
+function i18nApply(root){const th=i18nLang()=='th',lg=th?'th':'en';if(document.documentElement.lang!==lg)document.documentElement.lang=lg;if(document.body.classList.contains('lang-th')!==th)document.body.classList.toggle('lang-th',th);if(!th)return;root=root||document.getElementById('app');if(!root)return;
  const W=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;if(!p||p.closest('svg,script,style,textarea,[data-notr]'))return NodeFilter.FILTER_REJECT;return/[A-Za-z]/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});
  const L=[];while(W.nextNode())L.push(W.currentNode);L.forEach(n=>{const v=tr(n.nodeValue);if(v!==n.nodeValue){const o=n.parentElement;if(o&&o.tagName=='OPTION'&&!o.hasAttribute('value'))o.setAttribute('value',o.textContent);n.nodeValue=v}});
  root.querySelectorAll('[placeholder],[title],[aria-label]').forEach(e=>{if(e.closest('svg'))return;['placeholder','title','aria-label'].forEach(a=>{const v=e.getAttribute(a);if(v&&/[A-Za-z]/.test(v)){const t=tr(v);if(t!==v)e.setAttribute(a,t)}})})}

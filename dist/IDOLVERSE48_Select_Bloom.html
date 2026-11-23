@@ -5835,7 +5835,13 @@ const _mxCover=V.cover;V.cover=function(){const h=_mxCover.call(V),i=h.indexOf('
 
 // ---- 3. profile outfit follows the latest released single ------------------------------------------
 function profSync(x){if(!x||!x.mainId)return 0;const mn=S.songs[x.mainId];if(!mn)return 0;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean)),sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},any=Object.values(sc).find(v=>v&&v.own&&v.own.p&&v.ok);let n=0;
- S.members.forEach(m=>{if(m.profCz&&m.profCz.rid==x.rid)return;let p=null,kind;if(tt.has(m.id)){p=(typeof hzStrip=='function'?hzStrip(czFor(mn,m.id)):czFor(mn,m.id));kind='title'}else{const v=sc[m.id];p=v&&v.own&&v.ok?v.own.p:(any?any.own.p:null);kind='single'}if(!p)return;
+ const rd=x.relDay??x.day??S.day,oth=[...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))].filter(i=>i!=x.mainId&&S.songs[i]);
+ S.members.forEach(m=>{if(m.profCz&&m.profCz.rid==x.rid)return;if(m.profCz&&(m.profCz.kind=='grad'||m.profCz.kind=='hon'))return;let p=null,kind;if(tt.has(m.id)){p=(typeof hzStrip=='function'?hzStrip(czFor(mn,m.id)):czFor(mn,m.id));kind='title'}else{const v=sc[m.id];if(v&&v.own&&v.ok)p=v.own.p;
+  // no Single Costume (Under Girls) of her own: her costume in another song of this single she sings (e.g. an election single's ranking-group song)
+  if(!p)for(const i of oth){const o=S.songs[i];if((o.slots||[]).includes(m.id)){try{const q=czFor(o,m.id);if(q){p=typeof hzStrip=='function'?hzStrip(q):q;break}}catch(e){}}}
+  if(!p&&any)p=any.own.p;kind='single'}
+  // nothing of this single for her: she does not keep the previous single's costume (her regular outfit is shown)
+  if(!p){if(m.profCz&&(m.joined==null||m.joined<=rd)&&m.profCz.rid&&m.profCz.rid!=x.rid&&(m.profCz.day??0)<rd){m.czHist=m.czHist||[];m.czHist.push(m.profCz);if(m.czHist.length>30)m.czHist.shift();m.profCz=null;n++}return}
   m.czHist=m.czHist||[];if(m.profCz)m.czHist.push(m.profCz);if(m.czHist.length>30)m.czHist.shift();m.profCz={p:czClone(p),title:x.title,rid:x.rid,pk:x.pkey||null,day:x.relDay??x.day??S.day,kind};n++});return n}
 const _mxRelease=doRelease;doRelease=function(){const n=S.singles.length;const r=_mxRelease.apply(this,arguments);const x=S.singles[n];if(x&&S.singles.length>n)try{profSync(x)}catch(e){console.error(e)}return r};
 const _mxMig=migrate;migrate=function(){const r=_mxMig.apply(this,arguments);try{auDefaults();if(S.uiPref&&S.uiPref.gcol){UIP.gcol={...S.uiPref.gcol,...(UIP.gcol||{})}}const x=typeof latestSingle=='function'?latestSingle():null;if(x)profSync(x)}catch(e){console.error(e)}return r};
@@ -5901,6 +5907,8 @@ histHtml=function(m){const H=(m.hist||[]).slice(),rel=h=>S.singles.find(x=>x.rid
  const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':h.pt?` <span class="tag">${h.pt=='solo'?'Solo':'Duet'}</span>`:''}</li>`};
  const A=H.filter(isA),B=H.filter(h=>!isA(h));
  return`<div class="row"><span class="pill">Title Tracks ${A.length}</span><span class="pill">Coupling Songs ${B.length}</span><span class="pill">Center ×${H.filter(h=>h.center).length}</span></div><div class="shist"><h3>Title Tracks <span class="st">(A-Sides)</span></h3><ul>${A.map(h=>li(h,0)).join('')||'<li class="st">None yet.</li>'}</ul><h3>Coupling Songs <span class="st">(B-Sides)</span></h3><ul>${B.map(h=>li(h,1)).join('')||'<li class="st">None yet.</li>'}</ul></div>`};
+// repair saves: every group's latest single sets the profile outfit (members outside the Title Track no longer keep an older single's costume)
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.groups&&S.groups.length>1)S.groups.forEach(g=>gsWith(g.id,()=>{const x=latestSingle();if(x)profSync(x)}))}catch(e){console.error(e)}return r}}
 
 </script>
 <script>
@@ -16070,6 +16078,25 @@ function ccLibOpen(iid){const C=ccCur(),gi=C?S.groups.findIndex(g=>g.id==C.host)
 // a confirmed concert keeps its setlist editable (like the other setlist actions): the picture pickers and the dressing page too
 ['ccDzOpen','ccDzHtml','ccDzPick','ccDrOpen','ccDrMem','ccDrSave','ccDrRevert','ccDrRandom','ccDrRandAll','ccDrCopyRest','ccDrLib','ccDrLibOpen','ccDrLibHtml','ccDrLibPick','ccLibOpen'].forEach(n=>{const f=window[n];if(typeof f!='function')return;window[n]=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}});
 {const f=V.cccz;V.cccz=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
+// ---- 6. "Single costumes": the costumes of one single — Title Track members wear their own Title Track costume,
+//         everyone else her Single Costume (Under Girls) of that single ------------------------------------------------------
+function ccSglOf(C,z){let gid=z.sg&&z.sg.gid,rid=z.sg&&z.sg.rid;if(gid==null){gid=C.host;try{gsWith(gid,()=>{const x=latestSingle();rid=x&&x.rid})}catch(e){}}return{gid,rid}}
+function ccSglCz(C,z,mid){const{gid,rid}=ccSglOf(C,z);if(gid==null||rid==null)return null;let p=null;
+ try{gsWith(gid,()=>{const x=(S.singles||[]).find(s=>s.rid==rid);if(!x)return;const mn=S.songs[x.mainId];if(!mn)return;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean));
+  if(tt.has(mid)){p=czFor(mn,mid);return}
+  const sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},v=sc[mid];if(v&&v.own&&v.ok){p=v.own.p;return}
+  for(const i of [...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))]){const o=S.songs[i];if(o&&i!=x.mainId&&(o.slots||[]).includes(mid)){try{p=czFor(o,mid)}catch(e){}if(p)return}}
+  const any=Object.values(sc).find(q=>q&&q.own&&q.own.p&&q.ok);if(any)p=any.own.p})}catch(e){console.error(e)}return p}
+{const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx],z=it&&it.cz;if(!it||it.k!='song'||!z||z.mode!='sgl')return f.apply(this,arguments);
+  const p=ccSglCz(C,z,mid);if(p)return p;const keep=it.cz;it.cz={mode:'orig'};try{return f.apply(this,arguments)}finally{it.cz=keep}}}
+function ccSglList(){const L=[];S.groups.forEach(g=>{try{gsWith(g.id,()=>{(S.singles||[]).slice().sort((a,b)=>(b.relDay??b.day??0)-(a.relDay??a.day??0)).forEach(x=>{if(x.mainId&&S.songs[x.mainId])L.push({gid:g.id,g:g.name,rid:x.rid,t:x.title})})})}catch(e){}});return L}
+function ccCzSgl(iid,v){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;const[g,rid]=String(v).split('|');r.it.cz={mode:'sgl',sg:{gid:isNaN(+g)?g:+g,rid}};render()}
+{const f=ccCzSet;ccCzSet=function(iid,k,v){if(k=='mode'&&v=='sgl'){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;const s=ccSglOf(C,{});r.it.cz={mode:'sgl',sg:{gid:s.gid,rid:s.rid}};return render()}return f.apply(this,arguments)}}
+{const f=ccCzHtml;ccCzHtml=function(C,s,it,i){let h=f.apply(this,arguments);try{const z=it.cz||{},on=z.mode=='sgl',ed=ccEdit(C);
+  h=h.replace('<option value="one"',`<option value="sgl" ${on?'selected':''}>Single costumes (Title Track + Under Girls)</option><option value="one"`);
+  if(on){const cur=ccSglOf(C,z),L=ccSglList(),G=[...new Set(L.map(x=>x.g))];
+   const sel=`<label class="st">Single <select ${ed?'':'disabled'} onchange="ccCzSgl('${it.id}',this.value)">${G.map(g=>`<optgroup label="${esc(g)}">${L.filter(x=>x.g==g).map(x=>`<option value="${x.gid}|${esc(x.rid)}" ${x.gid==cur.gid&&x.rid==cur.rid?'selected':''}>${esc(x.t)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
+   h=h.replace(/(<label class="st">Costume <select[\s\S]*?<\/select><\/label>)/,`$1${sel}<p class="st">Title Track Senbatsu of that single wear their own Title Track costume; everyone else wears her Under Girls costume of that single.</p>`)}}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -16496,6 +16523,8 @@ function ccFmBySort(iid){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)re
   h=h.replace(/(<div class="row"><h3 style="margin:0">Participants<\/h3>)/,`$1${b}`).replace(/(<button class="b s" onclick="ccPosFill\()/,`${b}$1`)}}catch(e){console.error(e)}return h}}
 {const f=ccFmBySort;ccFmBySort=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
 {const f=ccFormPage;ccFormPage=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
+// the "Number of members / Number of centers" controls are not used in concerts: the formation is built position by position
+{const f=ccFormPage;ccFormPage=function(){return f.apply(this,arguments).replace(/<div class="ccfmctl">[\s\S]*?<\/div>/,'')}}
 
 </script>
 <script>
@@ -19053,7 +19082,7 @@ function rhSpeechFor(C,p,set,idx){const used=new Set(),R=set.items[idx].rh.r;let
 //  that permission (e.g. Reset to original of a Theater song fell back to the empty single formation). Loaded after
 //  every concert file, this puts the permission around the final version of each setlist action.
 // =====================================================================================
-['ccAddAt','ccAddMC','ccAddSong','ccCzCopyAll','ccCzHtml','ccCzMemAll','ccCzMemNo','ccCzMemSet','ccCzNew','ccCzOpen','ccCzPickHtml','ccCzRandom','ccCzSet','ccCzEdit','ccCzMem',
+['ccAddAt','ccAddMC','ccAddSong','ccCzCopyAll','ccCzHtml','ccCzMemAll','ccCzMemNo','ccCzMemSet','ccCzNew','ccCzOpen','ccCzPickHtml','ccCzRandom','ccCzSet','ccCzEdit','ccCzMem','ccCzSgl',
  'ccDrCopyOpen','ccDrCopyGo','ccDrCopyRest','ccDrLib','ccDrLibHtml','ccDrLibOpen','ccDrLibPick','ccDrMem','ccDrOpen','ccDrRandAll','ccDrRandom','ccDrRevert','ccDrSave','ccDzHtml','ccDzOpen','ccDzPick',
  'ccEncTog','ccFmDefault','ccFmNcSet','ccFmSize','ccFmBySort','ccFormAddShown','ccFormCopy','ccFormClear','ccFormMove','ccFormPage','ccFormPick','ccItemDel','ccItemMove','ccLibOpen','ccLibUse',
  'ccMcAfter','ccMcOpen','ccMcPickHtml','ccMcRow','ccMcSet','ccOvName','ccOvTog','ccPickAdd','ccPickAddSt','ccPickHtml','ccPickOpen','ccPosAdd','ccPosAll','ccPosCen','ccPosDel','ccPosFill','ccPosReset',
@@ -20739,6 +20768,7 @@ Object.assign(I18N_TH,{"Not set — every member can go to events": "ยัง�
 Object.assign(I18N_TH,{"The members who perform at festivals and live events while this single is the latest one (other events draw members by skill). Optional — without a Media Senbatsu, the Title Track Senbatsu represents the group. Events take members in this order; busy members are replaced by General Election rank (or fanbase).": "เมมเบอร์ที่ขึ้นแสดงงานเฟสติวัลและไลฟ์ระหว่างที่ซิงเกิลนี้เป็นซิงเกิลล่าสุด (งานอื่นสุ่มคนตามทักษะ) ไม่ตั้งก็ได้ — ถ้าไม่ตั้ง เซ็มบัตสึเพลงหลักจะเป็นตัวแทน งานจะเลือกคนตามลำดับนี้ ถ้าใครไม่ว่างจะใช้อันดับเลือกตั้ง (หรือฐานแฟน) แทน"});
 Object.assign(I18N_TH,{"🖼 Costume from library":"🖼 ชุดจากคลัง","Costume from library":"ชุดจากคลัง","🖼 Costume from library · ":"🖼 ชุดจากคลัง · ","The chosen costume is worn by every performer of this song. To dress members one by one, tap a member below the song.":"ทุกคนที่ร้องเพลงนี้จะใส่ชุดที่เลือก ถ้าจะแต่งทีละคน ให้แตะที่เมมด้านล่างเพลง","No design in this category.":"ไม่มีชุดในหมวดนี้","Single":"ซิงเกิ้ล","Stage":"สเตจ"});
 Object.assign(I18N_TH,{"⇅ Arrange by sort":"⇅ จัดตำแหน่งตาม sort","Put at least two members in this song first.":"ใส่เมมในเพลงนี้อย่างน้อย 2 คนก่อน","Positions arranged in the order of the Participants list: the first is the center, then the front row from the middle outwards.":"จัดตำแหน่งตามลำดับรายชื่อแล้ว: คนแรกเป็นเซ็นเตอร์ ต่อด้วยแถวหน้าจากกลางออกข้าง"});
+Object.assign(I18N_TH,{"Single costumes (Title Track + Under Girls)":"ชุดซิงเกิ้ล (เพลงหลัก + Under Girls)","Single":"ซิงเกิ้ล","Title Track Senbatsu of that single wear their own Title Track costume; everyone else wears her Under Girls costume of that single.":"เมมเซ็มบัตสึเพลงหลักของซิงนั้นใส่ชุดเพลงหลักของตัวเอง ส่วนคนอื่นใส่ชุด Under Girls ของซิงนั้น"});
 
 </script>
 <script>
@@ -25689,7 +25719,7 @@ function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
 function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;let c=I18N.cache.get(s);if(c!=null)return c;
  let out;try{out=s.replace(k,trCore(k))}catch(e){out=s}
  if(I18N.cache.size>20000)I18N.cache.clear();I18N.cache.set(s,out);return out}
-function i18nApply(root){const th=i18nLang()=='th';document.documentElement.lang=th?'th':'en';document.body.classList.toggle('lang-th',th);if(!th)return;root=root||document.getElementById('app');if(!root)return;
+function i18nApply(root){const th=i18nLang()=='th',lg=th?'th':'en';if(document.documentElement.lang!==lg)document.documentElement.lang=lg;if(document.body.classList.contains('lang-th')!==th)document.body.classList.toggle('lang-th',th);if(!th)return;root=root||document.getElementById('app');if(!root)return;
  const W=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;if(!p||p.closest('svg,script,style,textarea,[data-notr]'))return NodeFilter.FILTER_REJECT;return/[A-Za-z]/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});
  const L=[];while(W.nextNode())L.push(W.currentNode);L.forEach(n=>{const v=tr(n.nodeValue);if(v!==n.nodeValue){const o=n.parentElement;if(o&&o.tagName=='OPTION'&&!o.hasAttribute('value'))o.setAttribute('value',o.textContent);n.nodeValue=v}});
  root.querySelectorAll('[placeholder],[title],[aria-label]').forEach(e=>{if(e.closest('svg'))return;['placeholder','title','aria-label'].forEach(a=>{const v=e.getAttribute(a);if(v&&/[A-Za-z]/.test(v)){const t=tr(v);if(t!==v)e.setAttribute(a,t)}})})}
@@ -25701,6 +25731,47 @@ const langSwitch=()=>`<div class="langsw" data-notr role="group" aria-label="Lan
 const _i18nTitle=titleScreen;titleScreen=function(ok){return _i18nTitle(ok).replace('<div class="title">','<div class="title">'+langSwitch())};
 const _i18nManage=V.manage;V.manage=function(){return _i18nManage.call(V).replace('<h3 style="margin-top:8px">Display</h3>','<h3 style="margin-top:8px">Display</h3><div class="row"><span class="lbl">Language / ภาษา</span>'+langSwitch()+'</div>')};
 render();
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Concert formation page: fast taps
+// -------------------------------------------------------------------------------------
+//  Every tap on the formation page (pick a member, select a position, move, center, row) used to rebuild the whole
+//  page: about 90 portraits that point into the shared portrait store, which phones redraw slowly. A tap now updates
+//  only the stage, the page header, the position bar and the member cards whose state changed. Anything else
+//  (a dialog, another page, a toast-only action) still uses the normal full render.
+//  Loaded last, so it runs before every other render hook.
+// =====================================================================================
+let CC_FAST=0;
+function ccFastOk(){return S&&!ui.t&&!ui.mod&&view=='concert'&&ui.ccfp&&ui.cct=='set'&&document.querySelector('#app .ccfstage')&&typeof ccCur=='function'&&ccCur()}
+// keep every node that did not change (portraits are the expensive part); replace only what differs
+function ccMorph(a,b){if(a.isEqualNode(b))return;
+ if(a.nodeType!==1||a.nodeName!==b.nodeName||a.childNodes.length!==b.childNodes.length||a.nodeName.toLowerCase()=='svg'){a.replaceWith(document.importNode(b,true));return}
+ [...a.attributes].forEach(x=>{if(!b.hasAttribute(x.name))a.removeAttribute(x.name)});[...b.attributes].forEach(x=>{if(a.getAttribute(x.name)!==x.value)a.setAttribute(x.name,x.value)});
+ const A=[...a.childNodes],B=[...b.childNodes];A.forEach((c,i)=>ccMorph(c,B[i]))}
+// translate the replaced text only (the full i18n pass also touches <html>/<body>, which restyles the whole page)
+function ccTr(root){if(typeof i18nLang!='function'||i18nLang()!='th')return;const W=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;if(!p||p.closest('svg,script,style,textarea,[data-notr]'))return NodeFilter.FILTER_REJECT;return/[A-Za-z]/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});
+ const L=[];while(W.nextNode())L.push(W.currentNode);L.forEach(n=>{const v=tr(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v});
+ root.querySelectorAll('[title],[aria-label],[placeholder]').forEach(e=>{if(e.closest('svg'))return;['title','aria-label','placeholder'].forEach(a=>{const v=e.getAttribute(a);if(v&&/[A-Za-z]/.test(v)){const t=tr(v);if(t!==v)e.setAttribute(a,t)}})})}
+function ccFastPatch(){const C=ccCur(),T=document.createElement('template');T.innerHTML=ccFormPage(C);const tmp=T.content,app=document.getElementById('app'),roots=[];
+ const pair=k=>[app.querySelector(k),tmp.querySelector(k)];
+ for(const k of ['.ccfhead','.ccfstage']){const[a,b]=pair(k);if(!a||!b)return false;ccMorph(a,b);roots.push(k)}
+ // the position bar comes and goes with the selection
+ {const[a,b]=pair('.ccfbar');if(a&&b)ccMorph(a,b);else if(a)a.remove();else if(b)app.querySelector('.ccfstage').after(document.importNode(b,true));if(b)roots.push('.ccfbar')}
+ // participants: hint, buttons and the cards whose state changed (the sort / filter order and visibility stay)
+ const grid=app.querySelector('.ccmg3'),ng=tmp.querySelector('.ccmg3');if(!grid||!ng)return false;const sec=grid.closest('.c'),nsec=ng.closest('.c');
+ if(sec&&nsec){const q=':scope > p.st, :scope > .row button',ps=[...sec.querySelectorAll(q)],nps=[...nsec.querySelectorAll(q)];if(ps.length==nps.length)ps.forEach((x,i)=>ccMorph(x,nps[i]))}
+ const N=new Map([...ng.querySelectorAll('.ccm3[data-mid]')].map(e=>[e.dataset.mid,e])),L=[...grid.querySelectorAll('.ccm3[data-mid]')];if(L.length!=N.size)return false;
+ for(const el of L){const n=N.get(el.dataset.mid);if(!n)return false;const hid=el.classList.contains('mlhide');if(hid)n.classList.add('mlhide');ccMorph(el,n)}
+ try{['.ccfhead','.ccfstage','.ccfbar'].forEach(k=>{const r=app.querySelector(k);if(r)ccTr(r)});if(sec)ccTr(sec)}catch(e){}
+ clearTimeout(ccFastPatch.sv);ccFastPatch.sv=setTimeout(()=>{try{if(typeof svAuto=='function')svAuto();else save()}catch(e){}},400);return true}
+{const f=render;render=function(){if(CC_FAST&&ccFastOk()){let ok=false;try{ok=ccFastPatch()}catch(e){console.error(e)}if(ok)return}return f.apply(this,arguments)}}
+const ccFast=fn=>function(){const p=CC_FAST;CC_FAST=1;try{return fn.apply(this,arguments)}finally{CC_FAST=p}};
+['ccFormPick','ccPosSet','ccPosCen','ccFormMove','ccPosRow','ccPosDel','ccPosAdd','ccFormRowSel','ccRowClear','ccFmBySort'].forEach(n=>{const f=window[n];if(typeof f=='function')window[n]=ccFast(f)});
+function ccFmSel(k,r){ui.ccfs=k;ui.ccfr=r;ccFast(render)()}
+// the position buttons on the stage select through the fast path
+{const f=ccFormPage;ccFormPage=function(){return f.apply(this,arguments).replace(/onclick="ui\.ccfs=([^;"]+);ui\.ccfr=(\d+);render\(\)"/g,'onclick="ccFmSel($1,$2)"')}}
 
 </script>
 </body></html>

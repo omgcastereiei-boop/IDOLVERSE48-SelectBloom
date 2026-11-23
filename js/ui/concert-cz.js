@@ -93,3 +93,22 @@ function ccLibOpen(iid){const C=ccCur(),gi=C?S.groups.findIndex(g=>g.id==C.host)
 // a confirmed concert keeps its setlist editable (like the other setlist actions): the picture pickers and the dressing page too
 ['ccDzOpen','ccDzHtml','ccDzPick','ccDrOpen','ccDrMem','ccDrSave','ccDrRevert','ccDrRandom','ccDrRandAll','ccDrCopyRest','ccDrLib','ccDrLibOpen','ccDrLibHtml','ccDrLibPick','ccLibOpen'].forEach(n=>{const f=window[n];if(typeof f!='function')return;window[n]=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}});
 {const f=V.cccz;V.cccz=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
+// ---- 6. "Single costumes": the costumes of one single — Title Track members wear their own Title Track costume,
+//         everyone else her Single Costume (Under Girls) of that single ------------------------------------------------------
+function ccSglOf(C,z){let gid=z.sg&&z.sg.gid,rid=z.sg&&z.sg.rid;if(gid==null){gid=C.host;try{gsWith(gid,()=>{const x=latestSingle();rid=x&&x.rid})}catch(e){}}return{gid,rid}}
+function ccSglCz(C,z,mid){const{gid,rid}=ccSglOf(C,z);if(gid==null||rid==null)return null;let p=null;
+ try{gsWith(gid,()=>{const x=(S.singles||[]).find(s=>s.rid==rid);if(!x)return;const mn=S.songs[x.mainId];if(!mn)return;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean));
+  if(tt.has(mid)){p=czFor(mn,mid);return}
+  const sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},v=sc[mid];if(v&&v.own&&v.ok){p=v.own.p;return}
+  for(const i of [...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))]){const o=S.songs[i];if(o&&i!=x.mainId&&(o.slots||[]).includes(mid)){try{p=czFor(o,mid)}catch(e){}if(p)return}}
+  const any=Object.values(sc).find(q=>q&&q.own&&q.own.p&&q.ok);if(any)p=any.own.p})}catch(e){console.error(e)}return p}
+{const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx],z=it&&it.cz;if(!it||it.k!='song'||!z||z.mode!='sgl')return f.apply(this,arguments);
+  const p=ccSglCz(C,z,mid);if(p)return p;const keep=it.cz;it.cz={mode:'orig'};try{return f.apply(this,arguments)}finally{it.cz=keep}}}
+function ccSglList(){const L=[];S.groups.forEach(g=>{try{gsWith(g.id,()=>{(S.singles||[]).slice().sort((a,b)=>(b.relDay??b.day??0)-(a.relDay??a.day??0)).forEach(x=>{if(x.mainId&&S.songs[x.mainId])L.push({gid:g.id,g:g.name,rid:x.rid,t:x.title})})})}catch(e){}});return L}
+function ccCzSgl(iid,v){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;const[g,rid]=String(v).split('|');r.it.cz={mode:'sgl',sg:{gid:isNaN(+g)?g:+g,rid}};render()}
+{const f=ccCzSet;ccCzSet=function(iid,k,v){if(k=='mode'&&v=='sgl'){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;const s=ccSglOf(C,{});r.it.cz={mode:'sgl',sg:{gid:s.gid,rid:s.rid}};return render()}return f.apply(this,arguments)}}
+{const f=ccCzHtml;ccCzHtml=function(C,s,it,i){let h=f.apply(this,arguments);try{const z=it.cz||{},on=z.mode=='sgl',ed=ccEdit(C);
+  h=h.replace('<option value="one"',`<option value="sgl" ${on?'selected':''}>Single costumes (Title Track + Under Girls)</option><option value="one"`);
+  if(on){const cur=ccSglOf(C,z),L=ccSglList(),G=[...new Set(L.map(x=>x.g))];
+   const sel=`<label class="st">Single <select ${ed?'':'disabled'} onchange="ccCzSgl('${it.id}',this.value)">${G.map(g=>`<optgroup label="${esc(g)}">${L.filter(x=>x.g==g).map(x=>`<option value="${x.gid}|${esc(x.rid)}" ${x.gid==cur.gid&&x.rid==cur.rid?'selected':''}>${esc(x.t)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
+   h=h.replace(/(<label class="st">Costume <select[\s\S]*?<\/select><\/label>)/,`$1${sel}<p class="st">Title Track Senbatsu of that single wear their own Title Track costume; everyone else wears her Under Girls costume of that single.</p>`)}}catch(e){console.error(e)}return h}}
