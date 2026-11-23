@@ -17,7 +17,7 @@ stRowLay=function(n,back,RN,W,front,depth,maxFw){const C=ST_ROWS&&ST_ROWS.length
  if(!C){const sc=1-back*.1,av=avail*(1-back*.05),fw=Math.min(maxFw*sc,av/Math.max(1,n)*1.12),step=Math.min(av/Math.max(1,n),fw*1.32),dy=RN>1?Math.min(40,depth/(RN-1)):0;return{fw,step,feet:front-back*dy}}
  let fw=Math.min(maxFw,...C.map(k=>avail/Math.max(1,k)*1.12));
  if(RN>1)fw=Math.min(fw,(front-24)/(2.3+.4*(RN-1)));
- const dy=RN>1?Math.max(Math.min(fw*.5,depth/(RN-1)),Math.min(fw*.4,(front-fw*2.3-24)/(RN-1))):0,step=Math.min(avail/Math.max(1,n),fw*1.32);
+ const dy=RN>1?Math.max(Math.min(fw*.5,depth/(RN-1)),Math.min(fw*.75,(front-fw*2.3-24)/(RN-1))):0,step=Math.min(avail/Math.max(1,n),fw*1.32);
  return{fw,step,feet:front-back*dy,off:stOff(C,back,step)}};
 // Theater-style pictures (Theater, Studio Recording, debut pictures…)
 {const f=thStageSvg;thStageSvg=function(o,ids,rows,nc,cdOf,poseOf,mic,hue,w,deco){const L=(ids||[]).map(get).filter(Boolean);let R=(rows||[]).slice();const tot=R.reduce((a,b)=>a+b,0);if(tot!=L.length)R=L.length?[L.length]:[];
@@ -25,7 +25,10 @@ stRowLay=function(n,back,RN,W,front,depth,maxFw){const C=ST_ROWS&&ST_ROWS.length
 // Concert pictures
 {const f=ccStageSvg;ccStageSvg=function(C,p,set,idx,W,H){try{const it=set&&set.items[idx];if(!it||!Array.isArray(it.pos))return f.apply(this,arguments);const out=((p&&p.res)||{}).out||{};
   const pos=it.pos.filter(z=>z.m!=null&&ccMem(z.m)&&!out[z.m]),Rk=[...new Set(pos.map(z=>z.r))].sort((a,b)=>a-b);const np=[];let r=0;const C2=[];
-  Rk.forEach(rr=>{const row=pos.filter(z=>z.r==rr),parts=stSplitN(row.length,ST_MAX.cc);let a=0;const chunks=parts.map(k=>{const c=row.slice(a,a+k);a+=k;return c});const ci=chunks.findIndex(c=>c.some(z=>z.c));if(ci>0)chunks.unshift(...chunks.splice(ci,1));chunks.forEach(c=>{c.forEach(z=>np.push({...z,r}));C2.push(c.length);r++})});
+  // the rows stay exactly as the player arranged them (members just get smaller); a row is split only when its members
+  // would become too small to see on the stage (it really overflows)
+  const avail=(W||1200)-150,FWMIN=30,cap=Math.max(ST_MAX.cc,Math.floor(avail*1.12/FWMIN));
+  Rk.forEach(rr=>{const row=pos.filter(z=>z.r==rr),parts=stSplitN(row.length,cap);let a=0;const chunks=parts.map(k=>{const c=row.slice(a,a+k);a+=k;return c});const ci=chunks.findIndex(c=>c.some(z=>z.c));if(ci>0)chunks.unshift(...chunks.splice(ci,1));chunks.forEach(c=>{c.forEach(z=>np.push({...z,r}));C2.push(c.length);r++})});
   const set2={...set,items:set.items.map((x,i)=>i==idx?{...x,pos:np}:x)},prev=ST_ROWS;ST_ROWS=C2;try{return f.call(this,C,p,set2,idx,W,H)}finally{ST_ROWS=prev}}catch(e){console.error(e);return f.apply(this,arguments)}}}
 // External events / roadshow pictures: same size for everyone, rows of at most 9, staggered
 evStageRows=function(sp,G,seed){const ord=evOrder(sp),N=ord.length;if(!N)return'';const r=mulb(seed);
