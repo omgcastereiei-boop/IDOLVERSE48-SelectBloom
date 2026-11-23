@@ -38,7 +38,7 @@ function geProf(e,s,PS){if(!s||!(s.n>0))return null;const kc=s.k!=null&&PS.has(s
 function geStyle(e,s){const h=geH2(e.id+':'+s.id),b=s.ft=='hardcore'||s.ft=='collector'?.15:0;return h<.3+b?'early':h<.72?'steady':'late'}
 function geTw(st,t,T){const x=t/T;return st=='early'?1.5*Math.exp(-t/10)+.3+.6*x**4:st=='late'?.2+2.4*x**3:.65+.7*x*x}
 const GE_Z={};function geZ(st,T){const k=st+T;if(GE_Z[k])return GE_Z[k];let z=GE2.R0*geR0f(st);for(let t=1;t<=T;t++)z+=geTw(st,t,T);return GE_Z[k]=z}
-const geR0f=st=>st=='early'?1.4:st=='late'?.5:1;
+function geR0f(st){return st=='early'?1.4:st=='late'?.5:1}
 // split an integer number of CDs between weighted keys (exact sum)
 function geSplit(u,W){const K=Object.keys(W).filter(k=>W[k]>0),tot=K.reduce((a,k)=>a+W[k],0),out={};if(!u||!K.length)return out;let used=0;const fr=[];
  K.forEach(k=>{const q=u*W[k]/tot,f=Math.floor(q);out[k]=f;used+=f;fr.push([k,q-f+Math.random()*1e-6])});fr.sort((a,b)=>b[1]-a[1]);for(let i=0;used<u;i=(i+1)%fr.length){out[fr[i][0]]++;used++}return out}
