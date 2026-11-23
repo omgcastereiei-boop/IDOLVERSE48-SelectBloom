@@ -603,7 +603,11 @@ function rsRun(ev,part){const k='d'+part;if(ev[k])return;if(part==2&&!ev.d1)rsRu
  const buyers=Math.round(A.att*(.12+.1*pop/100+.05*Math.min(g/100,2)+.05*gb/100)),merch=Math.round(buyers*CFG.rs.merch*rnd(85,115)/100),ht=Math.round(A.att*(.03+.06*pop/100+.01*Math.min(g/100,3))),htRev=ht*CFG.rs.ht,htc=Math.min(25,4+Math.ceil(ht/150));
  // new group fans from one Roadshow (both days together) never exceed 1,000
  const newG=Math.min(Math.round(A.local*(.03+.04*Q/100)+A.trav*.01),Math.max(0,RS_NEWMAX-(part==2&&ev.d1?ev.d1.newG||0:0)));
- rows.forEach(r=>{const m=get(r.mid),h=Math.min(htc,r.en);r.ht=h;r.en-=h;const f=Math.max(0,Math.round(A.att*(.002+.006*m.variety/100+.004*r.q/100)*(.7+.6*m.pop/100)*rnd(90,110)/100)),b=Math.max(1,Math.round(1+r.q/40+A.att/3000));r.fans=f;r.buzz=b;m.en=Math.max(0,r.en);m.fans+=f;m.buzz=cl(m.buzz+b);m.pop=popOf(m);m.mor=cl(m.mor+2);r.f1=m.fans;r.b1=m.buzz});
+ // the day's new fans are shared by the members: the members' new fans add up exactly to the new group fans,
+ // split unevenly by skill — performance quality of her songs (vocal / dance / performance), variety (MC, Hi-Touch talk) and stage presence
+ const FW=rows.map(r=>{const m=get(r.mid);return Math.pow(.25+(r.q||0)/100,2)*(.55+.45*(m.variety||0)/100)*(.75+.5*(m.cha||0)/100)*(.85+.3*(m.pop||0)/100)*rnd(90,110)/100}),FT=FW.reduce((a,v)=>a+v,0)||1;
+ const FS=FW.map(w=>newG*w/FT),FI=FS.map(Math.floor);let rest=newG-FI.reduce((a,v)=>a+v,0);FS.map((v,i)=>[v-FI[i],i]).sort((a,b)=>b[0]-a[0]).forEach(([_,i])=>{if(rest>0){FI[i]++;rest--}});
+ rows.forEach((r,ri)=>{const m=get(r.mid),h=Math.min(htc,r.en);r.ht=h;r.en-=h;const f=FI[ri]||0,b=Math.max(1,Math.round(1+r.q/40+A.att/3000));r.fans=f;r.buzz=b;m.en=Math.max(0,r.en);m.fans+=f;m.buzz=cl(m.buzz+b);m.pop=popOf(m);m.mor=cl(m.mor+2);r.f1=m.fans;r.b1=m.buzz});
  earn(merch,`Roadshow merchandise: ${l.n} day ${part}`);earn(htRev,`Roadshow Hi-Touch tickets: ${l.n} day ${part}`);S.fans+=newG;
  ev[k]={day:S.day,Q,local:A.local,trav:A.trav,att:A.att,dw:A.dw,buyers,merch,ht,htRev,rev:merch+htRev,exp:Math.round(ev.cost/2),fb,fa:S.fans,newG,gb0,gb1:rsGBuzz(ids),rows,sl:JSON.parse(JSON.stringify(sl))};(ui.rsDone=ui.rsDone||[]).push({id:ev.id,part});
  if(part==2)rsFinish(ev,x,l)}
