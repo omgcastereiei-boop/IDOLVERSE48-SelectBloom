@@ -23,7 +23,8 @@ const geRn=n=>ordN(n)+' Place';
 function geS(){let G=S.ge;if(!G||typeof G!='object')G=S.ge={seq:0,cur:null,list:[]};G.list=Array.isArray(G.list)?G.list:[];G.seq=+G.seq||0;return G}
 const geGet=id=>geS().list.find(e=>e.id==id)||null,geCur=()=>{const G=geS();return geGet(G.cur)};
 const geActive=()=>{const e=geCur();return e&&e.st!='done'?e:null};
-const geEditable=e=>e&&(e.st=='setup'||e.st=='producing');
+// the ranking structure and the participants are fixed once the election single goes into production
+const geEditable=e=>e&&e.st=='setup';
 const geRanges=e=>{let a=1;return e.groups.map(g=>{const r=[a,a+g.size-1];a+=g.size;return r})};
 const geTotal=e=>e.groups.reduce((a,g)=>a+(+g.size||0),0);
 const geGroupOf=(e,rank)=>{const R=geRanges(e);return R.findIndex(([a,b])=>rank>=a&&rank<=b)};
@@ -36,7 +37,7 @@ function geErr(e){const r=[];if(!e)return['No election.'];if(!String(e.name||'')
  const nm=e.groups.map(g=>String(g.name||'').trim().toLowerCase());if(nm.some((x,i)=>x&&nm.indexOf(x)!=i))r.push('Ranking group names must be different.');
  if(geTotal(e)>GE_MAXP)r.push(`At most ${GE_MAXP} ranked positions in total (now ${geTotal(e)}).`);
  const P=e.parts.filter(id=>{const m=get(id);return m&&m.status!='graduated'});if(!P.length)r.push('Register at least one participant.');if(P.length!=e.parts.length)r.push('Some registered members have left; update the participant list.');return r}
-const geLockMsg=()=>toast('The ranking structure and participants are locked once voting has started.','err');
+const geLockMsg=()=>toast((typeof UIP!='undefined'&&UIP.lang=='th')?'กลุ่มอันดับและผู้เข้าร่วมถูกล็อกแล้ว ตั้งแต่เริ่มผลิตซิงเกิลเลือกตั้ง':'The ranking groups and participants are locked once the election single goes into production.','err');
 function geSet(k,v){const e=geActive();if(!geEditable(e))return geLockMsg();if(k=='name')e.name=String(v).replace(/[<>]/g,'').slice(0,100);if(k=='year')e.year=Math.max(1,Math.min(9999,Math.round(+v)||e.year));if(k=='ed')e.ed=Math.max(1,Math.min(999,Math.round(+v)||e.ed));render()}
 function geGrp(i,k,v){const e=geActive();if(!geEditable(e))return geLockMsg();const g=e.groups[i];if(!g)return;if(k=='name')g.name=String(v).replace(/[<>]/g,'').slice(0,30);if(k=='size'){const n=Math.round(+v);if(!(n>=1))return toast('Each ranking group needs at least 1 position.','err'),render();if(n>CFG.maxSen)return toast(`At most ${CFG.maxSen} positions per group.`,'err'),render();if(geTotal(e)-g.size+n>GE_MAXP)return toast(`At most ${GE_MAXP} ranked positions in total.`,'err'),render();g.size=n}render()}
 function geGrpAdd(){const e=geActive();if(!geEditable(e))return geLockMsg();if(e.groups.length>=GE_MAXG)return toast(`At most ${GE_MAXG} ranking groups.`,'err');const left=GE_MAXP-geTotal(e);if(left<1)return toast(`All ${GE_MAXP} positions are used.`,'err');const N=['Senbatsu','Under Girls','Next Girls','Future Girls','Upcoming Girls','Theater Girls','Rising Girls','Dream Girls','Bloom Girls'];const nm=N.find(n=>!e.groups.some(g=>g.name==n))||'Group '+(e.groups.length+1);e.groups.push({name:nm,size:Math.min(16,left)});render()}
@@ -297,7 +298,7 @@ function geSchedHtml(e){const D=geDates(e);if(ui.gecd==null||!D.includes(+ui.gec
 V.ge=function(){const e=geCur();if(ui.gec&&(!e||e.st!='ceremony'))ui.gec=null;
  if(!e||e.st=='done'){const D=geS().list.filter(z=>z.st=='done'),last=D.at(-1),w=last&&last.final.rows.find(r=>r.rank==1);
   return`${geHero(null,'Fans decide the next Senbatsu with the votes in the General Election Single.')}<div class="c gestart"><div><h3>Organize a General Election</h3><ol class="st"><li>Set the edition, ranking groups and participants.</li><li>Produce the General Election Single (existing Single Production).</li><li>Voting runs 2 months from its release; CD sales become tokens.</li><li>Hold the ranking ceremony on a weekend after voting closes.</li><li>The ranking groups become the locked lineups of the next single.</li></ol><button class="b p" onclick="geNew()">✦ Organize the ${ordN(geS().list.length+1)} General Election</button></div>${w?`<div class="gelast">${gePor(last.snap[w.id],1,120,last)}<div><small>Last winner · ${esc(last.name)}</small><b>${esc(w.stage)}</b><button class="b s" onclick="ui.gea='${last.id}';goView('gearch')">Open archive</button></div></div>`:''}</div>`}
- if(geEditable(e))return geSetupHtml(e);
+ if(geEditable(e)||e.st=='producing')return geSetupHtml(e);
  if(e.st=='voting')return geHero(e,`Voting is open until ${longDate(e.vEnd)}.`)+geDashHtml(e)+geCosHtml(e)+geStruct(e);
  if(e.st=='closed')return geHero(e,'Voting has closed. Book the ceremony to reveal the results.')+geSchedHtml(e)+geCosHtml(e)+geDashHtml(e);
  if(e.st=='scheduled')return geHero(e,`Ceremony: ${longDate(e.cer.day)} at ${esc(e.cer.vn)} · in ${e.cer.day-S.day} day${e.cer.day-S.day!=1?'s':''}.`)+geCosHtml(e)+geDashHtml(e);

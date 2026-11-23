@@ -55,3 +55,10 @@ const GE_RKV=P=>({valueOf(){return P?1000-P.row.rank:0},toString(){return P?'TOP
 STATS.push(['geRk','Election Rank']);
 function geRkDef(m){if(!m||Object.getOwnPropertyDescriptor(m,'geRk'))return;Object.defineProperty(m,'geRk',{get(){return GE_RKV(geRankC(this))},enumerable:false,configurable:true})}
 {const f=render;render=function(){try{if(S&&S.members)S.members.forEach(geRkDef)}catch(e){}return f.apply(this,arguments)}}
+// ---- graduation announced: a "GRAD" badge on the portrait (top-left), every portrait ≥ 30 px ---------------------------
+const gradOn=m=>{const x=m&&m.id!=null?(get(m.id)||m):null;return!!(x&&x.grad&&x.status!='graduated'&&x.grad.kind!='dismiss')};
+function gradSvg(svg,s){if(!svg||(s&&s<30))return svg;const v=/viewBox="([-\d.]+)[ ,]+([-\d.]+)[ ,]+([\d.]+)[ ,]+([\d.]+)"/.exec(svg);if(!v)return svg;const[x,y,w,h]=v.slice(1).map(Number),u=Math.min(w,h),small=s&&s<46;
+ const rw=u*(small?.62:.46),rh=u*(small?.2:.15),rx=x+u*.05,ry=y+u*.05;
+ const o=`<g class="gradb"><rect x="${rx.toFixed(2)}" y="${ry.toFixed(2)}" width="${rw.toFixed(2)}" height="${rh.toFixed(2)}" rx="${(rh*.3).toFixed(2)}" fill="#22285e" stroke="#f3cf6a" stroke-width="${(u*.012).toFixed(2)}"/><text x="${(rx+rw/2).toFixed(2)}" y="${(ry+rh*.74).toFixed(2)}" text-anchor="middle" font-family="Quicksand,sans-serif" font-weight="900" font-size="${(rh*.64).toFixed(2)}" fill="#ffe7a3" letter-spacing="${(rh*.04).toFixed(2)}">GRAD</text></g>`;
+ const i=svg.lastIndexOf('</svg>');return i<0?svg:svg.slice(0,i)+o+svg.slice(i)}
+{const f=pt;pt=function(m,s){const r=f.apply(this,arguments);try{if(typeof view!='undefined'&&view=='creator')return r;return gradOn(m)?gradSvg(r,s):r}catch(e){return r}}}

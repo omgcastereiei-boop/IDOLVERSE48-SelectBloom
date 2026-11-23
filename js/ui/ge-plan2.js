@@ -126,3 +126,6 @@ xmTog=function(id){const P=ui.xmP;if(!P)return;const i=P.sel.indexOf(id);if(i>=0
  const c=document.getElementById('xmcnt');if(c)c.textContent=P.sel.length;
  // keep the modal's stored HTML in step without re-rendering the page
  clearTimeout(xmTog.t);xmTog.t=setTimeout(()=>{try{if(ui.xmP&&ui.mod&&ui.mod.xm)ui.mod.h=xmHtml()}catch(x){}},400)};
+// ---- ranking groups and participants: shown as locked once the election single is in production ----------------------------
+{const f=geSetupHtml;geSetupHtml=function(e){let h=f.apply(this,arguments);try{if(e&&e.st=='producing'){const L=` <span class="tag">🔒 ${g2T('Locked','ล็อกแล้ว')}</span>`;h=h.replace('<h3>1 · Election</h3>',`<h3>1 · Election${L}</h3>`).replace('<h3>2 · Ranking groups</h3>',`<h3>2 · Ranking groups${L}</h3>`).replace('<h3>3 · Participants ',`<h3>3 · Participants${L} `);
+ h=h.replace('<h3>2 · Ranking groups',`<p class="c geerr" style="margin-bottom:8px">${g2T('The election single is in production: the ranking groups and the participants can no longer change.','ซิงเกิลเลือกตั้งเริ่มผลิตแล้ว: แก้ไขกลุ่มอันดับและผู้เข้าร่วมไม่ได้แล้ว')}</p><h3>2 · Ranking groups`)}}catch(x){console.error(x)}return h}}
