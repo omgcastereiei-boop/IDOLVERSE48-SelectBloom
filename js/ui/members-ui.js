@@ -26,7 +26,8 @@ function mlDecorate(){const app=document.getElementById('app');if(!app||!S||ui.t
  HS.forEach(([host,sv0])=>{sv0.classList.add('mpf');sv0.setAttribute('role','button');sv0.setAttribute('aria-label','Member profile')}); // tap the face → profile
  // sort / filter bars on member lists
  const seen=new Set(),conts=[];P.forEach(sv0=>{const ms=+sv0.dataset.ms;if(ms&&ms<28)return;let el=sv0;while(el&&el.parentElement&&el.parentElement!==app){const par=el.parentElement;if(par.children.length>=4&&!seen.has(par)){const kids=[...par.children].filter(ch=>ch.matches('svg[data-mid]')?false:ch.querySelectorAll('svg[data-mid]').length==1);if(kids.length>=4&&kids.length>=par.children.length*.6){seen.add(par);conts.push([par,kids]);break}}el=par}});
- let idx=0;conts.forEach(([par,kids])=>{if(par.closest(ML_SKIP)||kids.some(k=>k.matches('.slot,.thpos')||k.querySelector('.slot,.thpos')))return;if(view=='members'&&!ui.mod&&kids.every(k=>k.matches('.mc')))return;
+ let idx=0;const ownSort=par=>{let h=par.parentElement;for(let n=0;h&&n<2;n++,h=h.parentElement){if([...h.querySelectorAll('select')].some(x=>!x.closest('.mlbar')&&/\.(sort|sk|attr)=this\.value/.test(x.getAttribute('onchange')||'')&&!par.contains(x)))return true}return false};
+ conts.forEach(([par,kids])=>{if(par.closest(ML_SKIP)||ownSort(par)||kids.some(k=>k.matches('.slot,.thpos')||k.querySelector('.slot,.thpos')))return;if(view=='members'&&!ui.mod&&kids.every(k=>k.matches('.mc')))return;
   // only lists the player picks from get the bar; announcements and results (faces only) do not
   const act=k=>k.matches('button,a,label,[onclick]')||!!k.querySelector('button,a,label,input,select,[onclick]');if(kids.filter(act).length<kids.length*.5)return;
   const items=kids.map(k=>{const s=k.querySelector('svg[data-mid]'),r=s&&mlGet(s.dataset.mid);return r?{el:k,m:r.m}:null}).filter(Boolean);if(items.length<4)return;
