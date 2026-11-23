@@ -1621,3 +1621,10 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .gxlt2.t3{border-color:#c07a3a;box-shadow:0 0 0 4px rgba(20,10,30,.55),0 0 0 6px #e8a66a,0 12px 34px rgba(0,0,0,.55)}.gxlt2.t3 .gxl2r b{background:linear-gradient(180deg,#ffe0c2,#d08a4a 50%,#7a3f12);-webkit-background-clip:text;background-clip:text}.gxlt2.t3 .gxl2r small,.gxlt2.t3 .gxl2v b,.gxlt2.t3 .gxl2v small{color:#7a3f12}
 .gxlt2.t1{box-shadow:0 0 0 4px rgba(20,10,30,.55),0 0 0 6px #f0c040,0 0 40px rgba(240,192,64,.5)}
 @media(max-width:700px){.gxlt2{padding:12px 22px 9px;gap:0 12px}.gxl2a{padding-right:12px}.gxo{width:14px;height:44px}.gxo.l{left:3px}.gxo.r{right:3px}.gxl2h{gap:4px 12px}.gxl2h>div{font-size:12px}}
+/* plate v2.1: marks and tags as plain text in the plate's colours */
+.gxa{padding:0;border-radius:0;background:none!important;font:900 14px/1.2 sans-serif;gap:3px}
+.gxa.up{color:#178a4a}.gxa.up i{border-bottom-color:#178a4a}.gxa.dn{color:#c0264a}.gxa.dn i{border-top-color:#c0264a}
+.gxa.eq{color:#8a8fa0}.gxa.new{color:#c98a00;letter-spacing:1px}.gxa.cb{color:#6a6f80}
+.gxl2r .gxa{font-size:17px}.gxl2r .gxa.new{font-family:serif;font-size:18px}
+.gxl2m{gap:6px;align-items:center}.gxl2m span{padding:0;border-radius:0;background:none!important;font-size:13px;font-weight:800;color:#6b5a7c}
+.gxl2m .gxl2k{color:#8a5a12}.gxl2m .gxl2c{color:#9e1838}.gxl2m i{font-style:normal;color:#cfa64a}

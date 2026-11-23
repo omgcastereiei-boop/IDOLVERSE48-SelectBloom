@@ -191,11 +191,10 @@ function gxAff(r){const m=get(r.id)||(S.alumni||[]).find(a=>a.id==r.id);if(!m)re
  return{aff:L,gen:`${esc(g?g.name:'')} ${gxTh()?'รุ่น':'Gen'} ${m.gen||1}`}}
 function gxLower(e,r,o){o=o||{};const g=e.groups[r.gi],fx=(e.fx||{})[r.id]||{},cl=r.top?'t'+r.top:r.center?'cen':'',H=geHistOf(e,r),A=gxAff(r),rk=x=>x?`TOP ${x}`:`<span class="nr">${gpT('Not ranked','ไม่ติดอันดับ')}</span>`;
  const main=H.prevE?gxMark(H.prevRank??null,r.rank,{isNew:!H.everRanked,cb:H.everRanked&&H.prevRank==null}):`<span class="gxa new">NEW</span>`;
- const p1m=H.hasP1&&H.p1?gxMark(H.prevE?(H.prevRank??null):null,H.p1,{isNew:!H.everRanked,cb:H.everRanked&&H.prevRank==null}):'';
- const rows=[H.hasP1?[gpT('Preliminary 01','ผลด่วนรอบ 1'),rk(H.p1),p1m]:null,H.hasP2?[gpT('Preliminary 02','ผลด่วนรอบ 2'),rk(H.p2),H.p2&&H.p1?gxMark(H.p1,H.p2):H.p2&&!H.p1?'<span class="gxa new">NEW</span>':'']:null,[gpT('Last election','เลือกตั้งครั้งก่อน'),H.prevE?rk(H.prevRank):`<span class="nr">${gpT('First election','ครั้งแรก')}</span>`,'']].filter(Boolean);
+  const rows=[H.hasP1?[gpT('Preliminary 01','ผลด่วนรอบ 1'),rk(H.p1),'']:null,H.hasP2?[gpT('Preliminary 02','ผลด่วนรอบ 2'),rk(H.p2),H.p2&&H.p1?gxMark(H.p1,H.p2):H.p2&&!H.p1?'<span class="gxa new">NEW</span>':'']:null,[gpT('Last election','เลือกตั้งครั้งก่อน'),H.prevE?rk(H.prevRank):`<span class="nr">${gpT('First election','ครั้งแรก')}</span>`,'']].filter(Boolean);
  return`<div class="gxlt2 ${cl}"><span class="gxo l"></span><span class="gxo r"></span>
  <div class="gxl2a"><div class="gxl2r"><small>TOP</small><b>${r.rank}</b>${main}</div><div class="gxl2v"><b>${r.votes.toLocaleString()}</b><small>${gpT('votes','คะแนน')}</small></div></div>
- <div class="gxl2b"><div class="gxl2g">${A.aff.join('<em>/</em>')}</div><div class="gxl2n">${esc(r.stage)}</div><div class="gxl2m"><span>${A.gen}</span><span class="gxl2k">${esc(g?g.name:'')}${r.center?' · Center':''}</span>${r.top?`<span class="gxl2c">${esc(GE_CAPE[r.top].n)}</span>`:''}</div></div>
+ <div class="gxl2b"><div class="gxl2g">${A.aff.join('<em>/</em>')}</div><div class="gxl2n">${esc(r.stage)}</div><div class="gxl2m"><span>${A.gen}</span><i>·</i><span class="gxl2k">${esc(g?g.name:'')}${r.center?' · Center':''}</span>${r.top?`<i>·</i><span class="gxl2c">${esc(GE_CAPE[r.top].n)}</span>`:''}</div></div>
  <div class="gxl2h">${rows.map(([a,b,c])=>`<div><small>${a}</small><b>${b}</b>${c}</div>`).join('')}</div></div>
  ${!o.noSp&&fx.speech?`<div class="gxsp"><blockquote class="gesp">${esc(fx.speech)}</blockquote><div class="gemood">${WL.mood[fx.mood]?WL.mood[fx.mood][0]:''} ${esc(fx.mood||'')} · ${esc(fx.sitTxt||'')}</div></div>`:''}`}
 // ---- ceremony screen -------------------------------------------------------------------------------------------------------
