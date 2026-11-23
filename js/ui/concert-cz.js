@@ -82,3 +82,11 @@ function ccDrLibHtml(){const X=ccDrCtx(),P=ui.ccdl;if(!X||!P)return'';const m=ge
  <input class="ccpkq" placeholder="Search costume name" value="${esc(P.q||'')}" onchange="ui.ccdl.q=this.value;ui.mod.h=ccDrLibHtml();render()">
  <div class="czps ccdz3">${L.map(d=>`<button class="czpsi" onclick="ccDrLibPick('${d.id}')"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:d.p})}</svg><b>${esc(d.name)}</b><small class="st">${esc(inf(d).hd||'')}</small></button>`).join('')||'<p class="st">No design in this category.</p>'}</div>`}
 function ccDrLibPick(did){ui.mod=null;ui.ccdl=null;ccDrLib(did);toast('Design applied — press 💾 Save costume to keep it.')}
+// ---- 5. "Costume from library" on the song card: pictures by group, then Single / Stage / Other ---------------------------------
+function ccLibOpen(iid){const C=ccCur(),gi=C?S.groups.findIndex(g=>g.id==C.host):-1;ui.ccdz={iid,ty:'single',g:gi>=0?S.groups[gi].id:'all',q:'',lib:1};ui.mod={t:'html',h:ccDzHtml()};render()}
+{const f=ccDzHtml;ccDzHtml=function(){let h=f.apply(this,arguments);try{const P=ui.ccdz;if(!P||!P.lib)return h;
+  // the group row first (วง), then the type row; the heading names the picker
+  h=h.replace(/<h2 class="ht">👗 Design · /,'<h2 class="ht">🖼 Costume from library · ').replace(/(<div class="row cctabs">[\s\S]*?<\/div>)(<div class="row">[\s\S]*?<\/div>)/,'$2$1')
+   .replace('<div class="czps ccdz3">','<p class="st">The chosen costume is worn by every performer of this song. To dress members one by one, tap a member below the song.</p><div class="czps ccdz3">')}catch(e){console.error(e)}return h}}
+{const f=ccCzHtml;ccCzHtml=function(C,s,it,i){let h=f.apply(this,arguments);try{if(ccEdit(C)){const b=`<button class="b s p" onclick="ccLibOpen('${it.id}')">🖼 Costume from library</button>`;
+  h=h.includes(`onclick="ccCzRandom('${it.id}')"`)?h.replace(`<button class="b s" onclick="ccCzRandom('${it.id}')"`,`${b}<button class="b s" onclick="ccCzRandom('${it.id}')"`):h.replace(/(<div class="ccczb"><div class="row">)/,`$1${b}`)}}catch(e){console.error(e)}return h}}
