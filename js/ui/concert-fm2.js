@@ -36,3 +36,18 @@ function ccFmDefault(iid){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)r
   const ctl=`<div class="ccfmctl"><label class="st">Number of members <select ${ed?'':'disabled'} aria-label="Members" onchange="ccFmSize('${it.id}',this.value)">${n?'':'<option value="">Choose…</option>'}${Array.from({length:mx},(_,i)=>i+1).map(k=>`<option value="${k}" ${k==n?'selected':''}>${k}</option>`).join('')}</select></label><label class="st">Number of centers <select ${ed&&n?'':'disabled'} aria-label="Centers" onchange="ccFmNcSet('${it.id}',this.value)">${Array.from({length:Math.min(5,Math.max(1,n))+1},(_,i)=>i).map(k=>`<option value="${k}" ${k==nc?'selected':''}>${k?k:'No center'}</option>`).join('')}</select></label><span class="st">Rows (front → back): <b>${rc}</b></span>${ed&&n?`<button class="b s" onclick="ccFmDefault('${it.id}')">Default rows</button>`:''}</div>`;
   h=h.replace(/(<div class="c ccfhead">[\s\S]*?<\/h2><\/div>)/,`$1${ctl}`)}catch(e){console.error(e)}return h}}
 ['ccFmSize','ccFmNcSet','ccFmDefault'].forEach(n=>{const f=window[n];if(typeof ccOK=='function')window[n]=ccOK(f)});
+// ---- arrange the song's members over the positions in the order of the chosen sort --------------------------------------------
+//  The members already in the song keep the song; who stands where follows the Participants list as it is sorted now:
+//  the first goes to the Center position(s), then Row 1 (front) from the middle outwards, then Row 2 … Empty positions stay empty.
+function ccFmSortOrder(){return[...document.querySelectorAll('.ccmg3 .ccm3[data-mid]')].map(e=>+e.dataset.mid).filter(Boolean)}
+function ccFmBySort(iid){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;const P=r.it.pos||[],occ=P.map((z,i)=>[z,i]).filter(([z])=>z.m!=null);if(occ.length<2)return toast('Put at least two members in this song first.','err');
+ const ord=ccFmSortOrder(),rk=new Map(ord.map((id,i)=>[id,i])),mem=occ.map(([z])=>z.m).sort((a,b)=>(rk.has(a)?rk.get(a):1e6)-(rk.has(b)?rk.get(b):1e6));
+ const pr=new Map();[...new Set(occ.map(([z])=>z.r))].forEach(row=>{const L=occ.filter(([z])=>z.r==row).map(([,i])=>i),A=thArr(L.map((_,k)=>k));L.forEach((i,j)=>pr.set(i,A[j]))});
+ const slots=occ.map(([z,i])=>i).sort((a,b)=>(P[b].c?1:0)-(P[a].c?1:0)||P[a].r-P[b].r||pr.get(a)-pr.get(b));
+ slots.forEach((i,k)=>{P[i].m=mem[k]});ui.ccfs=null;
+ const g=document.querySelector('.ccmg3'),bar=g&&g.parentElement&&g.parentElement.querySelector('.mlbar'),sel=bar&&bar.querySelector('select'),lb=sel&&sel.value?sel.options[sel.selectedIndex].text:'';
+ const th=typeof UIP!='undefined'&&UIP.lang=='th';toast(th?`จัดตำแหน่งตาม${lb?' '+lb:'ลำดับรายชื่อ'}แล้ว: คนแรกเป็นเซ็นเตอร์ ต่อด้วยแถวหน้าจากกลางออกข้าง แล้วแถวถัดไป`:`Positions arranged by ${lb||'the Participants list order'}: the first is the center, then the front row from the middle outwards, then the next rows.`);render()}
+{const f=ccFormPage;ccFormPage=function(C){let h=f.apply(this,arguments);try{const r=ccItem(C,ui.ccfp);if(r&&ccEdit(C)){const b=`<button class="b s p" onclick="ccFmBySort('${r.it.id}')">⇅ Arrange by sort</button>`;
+  h=h.replace(/(<div class="row"><h3 style="margin:0">Participants<\/h3>)/,`$1${b}`).replace(/(<button class="b s" onclick="ccPosFill\()/,`${b}$1`)}}catch(e){console.error(e)}return h}}
+{const f=ccFmBySort;ccFmBySort=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
+{const f=ccFormPage;ccFormPage=function(){const p=CC_SETOK;CC_SETOK=1;try{return f.apply(this,arguments)}finally{CC_SETOK=p}}}
