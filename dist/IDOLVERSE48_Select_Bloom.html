@@ -19659,7 +19659,7 @@ geCast2=function(e,d){const t=d-e.vStart,T=Math.max(1,e.vEnd-e.vStart),x=t/T,las
 // the graduation turning point in the final rows and in the member's election record
 {const f=geClose;geClose=function(e){const was=e&&e.st;const r=f.apply(this,arguments);try{if(was=='voting'&&e.final&&e.gs)e.final.rows.forEach(row=>{const g=e.gs[row.id];if(g){g.fin=row.rank||null;const p2=gePre2(e).find(p=>p.n2==2);g.after=p2&&g.day<e.p2?(p2.rows.find(z=>z.id==row.id)||{}).rank||null:null;row.gs={...g}}})}catch(x){console.error(x)}return r}}
 {const f=geReact;geReact=function(e,r){const fx=f.apply(this,arguments);try{const m=get(r.id);if(m&&r.gs&&m.geRec){const h=m.geRec.find(z=>z.eid==e.id);if(h&&!h.gs)h.gs={day:r.gs.day,pre:r.gs.preRank,after:r.gs.after,fin:r.rank||null,surge:!!r.gs.surge}}}catch(x){}return fx}}
-// ---- preliminary announcements: the hosts' commentary and the members' reactions ----------------------------------------------
+// ---- preliminary announcements: the members' reactions (the hosts speak only at the ceremony; gv3Talk is kept unused) ----------------------------------------------
 const GV3_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
 function gv3Story(e,P){const R=P.rows.filter(r=>r.rank),rk=new Map(R.map(r=>[r.id,r.rank])),prevP=gePre2(e).filter(z=>z.n2<P.n2).at(-1),P0=prevP?new Map(prevP.rows.filter(r=>r.rank).map(r=>[r.id,r.rank])):null,cap=geTotal(e),sen=(e.groups[0]||{size:16}).size;
  const pe=gePrevDone(e),peR=pe?new Map(pe.final.rows.filter(r=>r.rank).map(r=>[r.id,r.rank])):new Map(),champ=pe?(pe.final.rows.find(r=>r.rank==1)||{}).id:null;
@@ -19669,7 +19669,7 @@ function gv3Story(e,P){const R=P.rows.filter(r=>r.rank),rk=new Map(R.map(r=>[r.i
  st.lead0=prevP?(prevP.rows.find(r=>r.rank==1)||{}).id:null;
  st.moves=P0?R.map(r=>({id:r.id,d:(P0.get(r.id)||cap+10)-r.rank,from:P0.get(r.id)||null,to:r.rank})).filter(z=>z.from):[];
  st.riser=st.moves.slice().sort((a,b)=>b.d-a.d)[0];st.faller=P0?[...P0.entries()].map(([id,f])=>({id,from:f,to:rk.get(id)||null,d:f-(rk.get(id)||cap+5)})).sort((a,b)=>a.d-b.d)[0]:null;
- st.newIn=R.filter(r=>r.rank<=sen&&(!P0||!P0.get(r.id)||P0.get(r.id)>sen)).map(r=>r.id);
+ st.newIn=P0?R.filter(r=>r.rank<=sen&&(!P0.get(r.id)||P0.get(r.id)>sen)).map(r=>r.id):pe?R.filter(r=>r.rank<=sen&&(peR.get(r.id)||999)>sen).map(r=>r.id):[];
  st.dark=R.filter(r=>r.rank<=10&&(fanRk.get(r.id)||99)>=r.rank+8).sort((a,b)=>a.rank-b.rank)[0];
  st.slow=live.filter(m=>(fanRk.get(m.id)||99)<=3&&(rk.get(m.id)||999)>Math.max(8,(fanRk.get(m.id)||1)+6)).map(m=>m.id)[0];
  st.trainee=R.find(r=>r.rank<=sen&&(get(r.id)||{}).status=='trainee');st.firstTime=R.find(r=>r.rank<=sen&&!ever(r.id)&&pe);
@@ -19699,11 +19699,28 @@ const GV3_RE={up:[['I can\'t believe it… thank you! Let\'s keep climbing toget
  lead:[['First?! It\'s too early to celebrate — I want to be first on the real day!','ที่ 1 เหรอ?! ยังเร็วไปที่จะดีใจ อยากเป็นที่ 1 ในวันจริงค่ะ!'],['Being on top is scary. I\'ll work even harder.','อยู่บนสุดมันน่ากลัวนะ จะพยายามให้มากกว่าเดิม']],
  dark:[['Me…? In the top ten? I have to check again…','หนู…? ติดท็อป 10? ขอดูอีกรอบได้ไหม…'],['My fans are few, but they are the strongest in the world.','แฟนหนูไม่เยอะ แต่แข็งแกร่งที่สุดในโลกเลยค่ะ']],
  grad:[['This is my last election. I want to see the best view with everyone.','นี่คือเลือกตั้งครั้งสุดท้ายของหนู อยากเห็นวิวที่สวยที่สุดไปพร้อมทุกคน']]};
-function gv3Reacts(e,P){const st=gv3Story(e,P),seed=gv3H(e.id+'r'+P.n2),out=[],used=new Set(),add=(id,k,tag)=>{if(!id||used.has(id)||!get(id))return;used.add(id);const L=GV3_RE[k];const q=L[(seed+out.length*3+id)%L.length];out.push({id,q:GV3_T(q[0],q[1]),tag})};
+GV3_RE.newin=[['Senbatsu… me? I want to protect this place until the final day.','เซ็มบัตสึ… หนูเหรอ? อยากรักษาที่นี่ไว้จนวันสุดท้าย'],['I heard my name in the Senbatsu zone and cried right away.','ได้ยินชื่อตัวเองในโซนเซ็มบัตสึแล้วร้องไห้เลยค่ะ'],['It\'s only the preliminary, but this is a dream I\'ve had for so long.','แค่ผลด่วนก็จริง แต่เป็นความฝันที่หนูรอมานานมาก']];
+GV3_RE.back=[['I promised I would come back. Please let me keep that promise.','สัญญาไว้ว่าจะกลับมา ช่วยให้หนูรักษาสัญญานี้ได้นะคะ'],['Last time I fell out… this time I\'m not letting go.','ครั้งก่อนหลุดไป… ครั้งนี้จะไม่ปล่อยมือแล้ว']];
+GV3_RE.champ=[['A title isn\'t something you keep — you win it again. I\'m ready.','ตำแหน่งไม่ใช่สิ่งที่รักษาไว้ได้เฉยๆ ต้องชนะใหม่อีกครั้ง หนูพร้อมแล้ว'],['Everyone is chasing me. I\'ll keep running.','ทุกคนกำลังไล่ตามหนู หนูจะวิ่งต่อไปค่ะ']];
+GV3_RE.slow=[['My fans always come at the end. I trust them.','แฟนหนูมาตอนท้ายเสมอ หนูเชื่อใจพวกเขาค่ะ'],['I won\'t panic. The real result is what matters.','จะไม่ตื่นตูม ผลจริงต่างหากที่สำคัญ']];
+GV3_RE.trainee=[['I\'m still a trainee… but I want to show what we can do!','หนูยังเป็นเด็กฝึกอยู่เลย… แต่อยากแสดงให้เห็นว่าพวกเราก็ทำได้!']];
+GV3_RE.first=[['My name was called for the first time… I can\'t stop smiling.','ได้ยินชื่อตัวเองครั้งแรก… หยุดยิ้มไม่ได้เลยค่ะ']];
+GV3_RE.up.push(['I didn\'t expect this at all. Let\'s go even higher!','ไม่คิดเลยจริงๆ ไปให้สูงกว่านี้อีกนะ!'],['Every handshake, every show… it\'s paying off.','ทุกงานจับมือ ทุกการแสดง… มันเริ่มได้ผลแล้ว'],['I\'m happy, but I\'m not satisfied yet!','ดีใจนะ แต่ยังไม่พอใจหรอก!'],['Thank you for believing in me when I didn\'t.','ขอบคุณที่เชื่อในตัวหนู ตอนที่หนูยังไม่เชื่อตัวเอง']);
+GV3_RE.down.push(['I\'ll turn this frustration into my next stage.','จะเปลี่ยนความเจ็บใจนี้เป็นแรงบนเวทีต่อไป'],['Don\'t worry about me — just watch the final day.','ไม่ต้องห่วงหนูนะ รอดูวันสุดท้ายก็พอ']);
+GV3_RE.newin.push(['Is this really happening? I keep reading my name.','เรื่องจริงเหรอเนี่ย? อ่านชื่อตัวเองซ้ำไปซ้ำมาเลย'],['I want to stand in the front row of a single with everyone.','อยากยืนแถวหน้าในซิงเกิลไปพร้อมทุกคน']);
+GV3_RE.steady=[['Staying here isn\'t easy. Thank you for holding me up.','การอยู่ตรงนี้ไม่ง่ายเลย ขอบคุณที่คอยประคองหนูไว้'],['Same place as before — so now I aim one step higher.','ตำแหน่งเดิม… งั้นครั้งนี้ขอเล็งสูงขึ้นอีกขั้น'],['Calm on the outside, nervous on the inside!','ภายนอกนิ่ง แต่ข้างในตื่นเต้นมาก!'],['I\'ll keep doing what I always do — one show at a time.','จะทำแบบที่ทำมาตลอด ทีละการแสดง']];
+function gv3Reacts(e,P){const st=gv3Story(e,P),seed=gv3H(e.id+'r'+P.n2),out=[],used=new Set(),cnt={},
+ add=(id,k,tag)=>{if(id==null||used.has(id)||!get(id)||out.length>=10)return;used.add(id);const L=GV3_RE[k];const n=(cnt[k]||0)+1;if(n>L.length){used.delete(id);return}cnt[k]=n;const q=L[(seed+n-1)%L.length];out.push({id,q:GV3_T(q[0],q[1]),tag})};
  if(st.leader)add(st.leader,'lead',GV3_T('1st','อันดับ 1'));if(st.grad)add(st.grad.id,'grad',GV3_T('Graduating','ประกาศจบการศึกษา'));if(st.dark)add(st.dark.id,'dark',GV3_T('Dark horse','ม้ามืด'));
- if(P.n2==2&&st.riser&&st.riser.d>=4)add(st.riser.id,'up','▲'+st.riser.d);if(P.n2==2&&st.faller&&st.faller.d<=-4)add(st.faller.id,'down',st.faller.to?'▼'+(-st.faller.d):'OUT');
- return out.slice(0,4)}
-function gv3TalkHtml(e,P){try{if(!P||!P.v2)return'';const L=gv3Talk(e,P),Rc=gv3Reacts(e,P);return`<div class="gv3talk">${typeof gehSay=='function'?gehSay(L):''}${Rc.length?`<div class="gv3re">${Rc.map(x=>{const m=get(x.id);return`<div class="gv3rc">${ptc(m,40)}<div><b>${esc(m.stage||m.name)}</b> <span class="gv3tag">${esc(x.tag)}</span><q>${esc(x.q)}</q></div></div>`}).join('')}</div>`:''}</div>`}catch(x){console.error(x);return''}}
+ if(st.champ)add(st.champ.id,'champ',GV3_T('Defending champion','แชมป์เก่า'));
+ const up=st.moves.filter(z=>z.d>=4).sort((a,b)=>b.d-a.d),dn=P.n2==2&&st.P0?[...st.P0.entries()].map(([id,f])=>({id,from:f,to:st.rk.get(id)||null,d:f-(st.rk.get(id)||geTotal(e)+5)})).filter(z=>z.d<=-4).sort((a,b)=>a.d-b.d):[];
+ if(up[0])add(up[0].id,'up','▲'+up[0].d);if(dn[0])add(dn[0].id,'down',dn[0].to?'▼'+(-dn[0].d):'OUT');
+ if(st.trainee)add(st.trainee.id,'trainee',GV3_T('Trainee','เด็กฝึก'));if(st.firstTime)add(st.firstTime.id,'first',GV3_T('First ranking','ติดอันดับครั้งแรก'));if(st.back)add(st.back.id,'back',GV3_T('Back to Senbatsu','กลับสู่เซ็มบัตสึ'));if(st.slow)add(st.slow,'slow',GV3_T('Slow start','ออกตัวช้า'));
+ st.newIn.forEach(id=>add(id,'newin','TOP '+st.rk.get(id)));
+ for(let k=1;k<Math.max(up.length,dn.length);k++){if(up[k])add(up[k].id,'up','▲'+up[k].d);if(dn[k])add(dn[k].id,'down',dn[k].to?'▼'+(-dn[k].d):'OUT')}
+ P.rows.filter(r=>r.rank&&r.rank<=10).forEach(r=>{const o=st.P0?st.P0.get(r.id):st.peR.get(r.id);add(r.id,o&&o==r.rank?'steady':o&&o<r.rank?'down':'up','TOP '+r.rank)});
+ return out.slice(0,10)}
+function gv3TalkHtml(e,P){try{if(!P||!P.v2)return'';const Rc=gv3Reacts(e,P);return`<div class="gv3talk">${Rc.length?`<div class="gv3re">${Rc.map(x=>{const m=get(x.id);return`<div class="gv3rc">${ptc(m,40)}<div><b>${esc(m.stage||m.name)}</b> <span class="gv3tag">${esc(x.tag)}</span><q>${esc(x.q)}</q></div></div>`}).join('')}</div>`:''}</div>`}catch(x){console.error(x);return''}}
 {const f=gePrelimHtml;gePrelimHtml=function(e){let h=f.apply(this,arguments);try{const PL=e.prelim||[];if(e.v2&&PL.length){const k=Math.min(PL.length-1,ui.gep==null?PL.length-1:ui.gep),P=PL[k];const t=gv3TalkHtml(e,P);if(t){const i=h.indexOf('<div class="geprg">');h=i>=0?h.slice(0,i)+t+h.slice(i):h+t}}}catch(x){console.error(x)}return h}}
 
 </script>
