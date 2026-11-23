@@ -38,7 +38,7 @@ const geCcVen=C=>C&&ccV(C.vid)?ccV(C.vid):null;
 function geCcSync(e){try{if(!e||!e.cer||!e.cer.cc||e.st=='ceremony'||e.st=='done')return;const C=geCcOf(e),V=geCcVen(C);if(V){e.cer.vn=V.n;e.cer.cap=ccCap(C)||e.cer.cap}else e.cer.vn=gpT('Pre-ceremony Concert venue (choose it in Concert)','สถานที่คอนเสิร์ตก่อนประกาศผล (เลือกในหน้าคอนเสิร์ต)')}catch(x){}}
 const geCcBusy=C=>C&&C.status!='plan';
 // date picked for the ceremony (stored in the election's plan; the concert follows it)
-function geCerPick(v){const e=geCur(),p=gePj(e);if(!e||!(e.st=='setup'||e.st=='producing'))return toast(gpT('The ceremony date is fixed once the election single is released.','วันประกาศผลล็อกแล้วหลังปล่อยซิงเกิลเลือกตั้ง'),'err');
+function geCerPick(v){const e=geCur(),p=gePj(e);if(!e||e.st!='setup')return toast(gpT('The ceremony date is fixed once the election single goes into production.','วันประกาศผลล็อกแล้วตั้งแต่เริ่มผลิตซิงเกิลเลือกตั้ง'),'err');
  const d=+v||null,C=geCcOf(e);if(C&&geCcBusy(C)&&d!=C.start)return toast(gpT('The Pre-ceremony Concert is already confirmed — its date can no longer change.','คอนเสิร์ตก่อนประกาศผลยืนยันแล้ว เปลี่ยนวันไม่ได้'),'err');
  e.cerPlan=e.cerPlan||{};e.cerPlan.day=d;e.cerPlan.ven='cc';if(d){const K=C||geMakeCc(e,d);if(K&&K.status=='plan')K.start=d}else if(C&&C.status=='plan')geCcDrop(e);render()}
 // ---- step 5 for the election single ----------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ function geEdCardHtml(p){const SL=seSale(p);if(!SL)return'';const dis=p.status==
  return`<div class="c sesale"><h3>${gpT('Editions','เอดิชัน')}</h3><p class="st">${gpT('Every Type is sold as a Regular Edition and, if you like, a Limited Edition with its own CD cover. All editions are one single and every copy is a vote.','ทุก Type ขายเป็น Regular Edition และเพิ่ม Limited Edition ที่มีปกของตัวเองได้ ทุกเอดิชันคือซิงเกิลเดียวกัน และทุกแผ่นคือคะแนนโหวต')}</p>
  ${p.types.map((t,i)=>`<div class="setype"><h4>${esc(t.name)}</h4>${SL.eds.filter(e=>e.ti==i).map(ed).join('')}${SL.eds.some(e=>e.ti==i&&e.kind=='lim')?'':`<button class="b s" ${dis} onclick="seLimTog(${i})">+ ${gpT('Add a Limited Edition','เพิ่ม Limited Edition')}</button>`}</div>`).join('')}
  ${seErrs(p).filter(x=>!/pre-order/i.test(x)).map(x=>`<div class="st thwarn">✗ ${esc(x)}</div>`).join('')}</div>`}
-function geSchedCardHtml(e,p){const rel=geRelOf(e,p),vE=geEnd(rel),D=geCerDaysFor(rel),P=e.cerPlan||{},fix=!(e.st=='setup'||e.st=='producing'),C=geCcOf(e),V=geCcVen(C);
+function geSchedCardHtml(e,p){const rel=geRelOf(e,p),vE=geEnd(rel),D=geCerDaysFor(rel),P=e.cerPlan||{},fix=e.st!='setup',C=geCcOf(e),V=geCcVen(C);
  return`<div class="c gesched geplan"><h3>🗳 ${gpT('Election schedule','กำหนดการเลือกตั้ง')}</h3>
  <div class="geplt"><div><small>${gpT('Release Day · voting opens','วันวางขาย · เปิดโหวตวันแรก')}</small><b>${jd(rel)}</b></div><div><small>${gpT('Voting closes','ปิดโหวต')}</small><b>${jd(vE)}</b><span class="st">${gpT('2 months','2 เดือน')}</span></div><div><small>${gpT('Concert + ceremony','คอนเสิร์ต + ประกาศผล')}</small><b>${P.day?jd(P.day):'—'}</b></div></div>
  <label class="st">${gpT('Ranking Announcement Ceremony','วันจัดงานประกาศผล')} <select ${fix?'disabled':''} onchange="geCerPick(this.value)"><option value="">${gpT('Choose…','เลือก…')}</option>${(P.day&&!D.includes(P.day)?[P.day,...D]:D).map(d=>`<option value="${d}" ${d==P.day?'selected':''}>${dayDate(d).toLocaleDateString('en-US',{weekday:'short'})}, ${longDate(d)}</option>`).join('')}</select></label>

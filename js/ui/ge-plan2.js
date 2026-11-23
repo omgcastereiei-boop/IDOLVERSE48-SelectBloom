@@ -20,7 +20,7 @@ function gcalEvents(d0,d1){const M={},add=(d,t,c)=>{if(d<d0||d>d1)return;(M[d]=M
  try{thKeys().filter(K=>K.gid==gsAg()).forEach(K=>thShowsOf(K.key).forEach(x=>{if(x.st=='sched')add(x.day,`🎭 ${K.label} · ${TH_SLOT[x.sl]||''}`,'th')}))}catch(x){}
  try{const p=S.pj;if(p&&p.releaseDay!=null&&p.status=='producing')add(p.releaseDay,`💿 ${g2T('Release','วางขาย')}: ${p.title}`,'rel')}catch(x){}
  return M}
-function gcalOpen(kind){const p=S.pj;if(!p)return;const cur=kind=='rel'?seRel(p):((geGet(p.ge)||{}).cerPlan||{}).day;const base=cur||(kind=='rel'?seRelMin():(geCerDaysFor(seRel(p))[0]||S.day));const t=dayDate(base);
+function gcalOpen(kind){const p=S.pj;if(!p)return;if(kind=='cer'){const e=geGet(p.ge);if(e&&e.st!='setup')return toast(g2T('The ceremony date is fixed once the election single goes into production.','วันประกาศผลล็อกแล้วตั้งแต่เริ่มผลิตซิงเกิลเลือกตั้ง'),'err')}const cur=kind=='rel'?seRel(p):((geGet(p.ge)||{}).cerPlan||{}).day;const base=cur||(kind=='rel'?seRelMin():(geCerDaysFor(seRel(p))[0]||S.day));const t=dayDate(base);
  ui.gcal={kind,y:t.getFullYear(),m:t.getMonth(),sel:base};ui.mod={t:'html',gcal:1,h:gcalHtml()};render()}
 function gcalOk(kind,d){const p=S.pj;if(!p)return false;if(kind=='rel')return d>=seRelMin();return geCerDaysFor(seRel(p)).includes(d)}
 function gcalHtml(){const G=ui.gcal,p=S.pj;if(!G||!p)return'';const first=dateDay(new Date(G.y,G.m,1)),dim=new Date(G.y,G.m+1,0).getDate(),dow=new Date(G.y,G.m,1).getDay(),last=first+dim-1,EV=gcalEvents(first,last),cur=G.kind=='rel'?seRel(p):((geGet(p.ge)||{}).cerPlan||{}).day;
@@ -47,11 +47,11 @@ const gcalBtn=(kind,d)=>`<button type="button" class="b s gcbtn" onclick="gcalOp
 // ---- 4. the concert switch and its venue ---------------------------------------------------------------------------------------
 const geCcWanted=e=>e&&e.ccOn!==false;
 {const f=geMakeCc;geMakeCc=function(e){if(e&&e.ccOn===false)return null;return f.apply(this,arguments)}}
-function geCcTog(on){const e=geCur();if(!e||!(e.st=='setup'||e.st=='producing'))return toast(g2T('The concert is fixed once the election single is released.','คอนเสิร์ตล็อกแล้วหลังปล่อยซิงเกิลเลือกตั้ง'),'err');
+function geCcTog(on){const e=geCur();if(!e||e.st!='setup')return toast(g2T('The concert is fixed once the election single is released.','คอนเสิร์ตล็อกแล้วหลังปล่อยซิงเกิลเลือกตั้ง'),'err');
  const C=e.cc?ccGet(e.cc):null;if(!on&&C&&C.status!='plan')return toast(g2T('The concert is already confirmed. Cancel it in Concert if you really want to.','คอนเสิร์ตยืนยันแล้ว ถ้าต้องการยกเลิกให้ไปที่หน้าคอนเสิร์ต'),'err');
  e.ccOn=!!on;if(on){const d=e.cerPlan&&e.cerPlan.day;if(d){const K=geMakeCc(e,d);if(K&&K.status=='plan')K.start=d}}else geCcDrop(e);render()}
 function geCcVenueSet(v){const e=geCur(),C=geCcOf(e);if(!C)return;if(C.status!='plan')return toast(g2T('The venue is fixed once the concert is confirmed.','สถานที่ล็อกแล้วหลังยืนยันคอนเสิร์ต'),'err');const V=ccV(v);C.vid=V?V.id:null;if(V&&!V.cap[C.vcfg])C.vcfg=V.cap.seat?'seat':'stand';geCcSync(e);render()}
-function geCcCardHtml(e){const fix=!(e.st=='setup'||e.st=='producing'),C=geCcOf(e),V=geCcVen(C),on=geCcWanted(e),dis=fix?'disabled':'';
+function geCcCardHtml(e){const fix=e.st!='setup',C=geCcOf(e),V=geCcVen(C),on=geCcWanted(e),dis=fix?'disabled':'';
  const L=(typeof CC_V!='undefined'?CC_V:[]).slice().sort((a,b)=>(b.cap.seat||b.cap.stand||0)-(a.cap.seat||a.cap.stand||0));let rent='';try{if(C&&V)rent=yen(ccCost(C).rent.total)}catch(x){}
  return`<div class="c geccc"><div class="row"><span class="geprb">CONCERT</span><b>${g2T('Pre-ceremony Concert','คอนเสิร์ตก่อนประกาศผล')}</b></div>
  <div class="row"><label class="plnm"><input type="radio" name="gecc${e.id}" ${on?'checked':''} ${dis} onchange="geCcTog(1)"> ${g2T('Hold a concert','จัดคอนเสิร์ต')}</label><label class="plnm"><input type="radio" name="gecc${e.id}" ${on?'':'checked'} ${dis} onchange="geCcTog(0)"> ${g2T('No concert','ไม่จัด')}</label></div>
@@ -63,7 +63,7 @@ function geCcCardHtml(e){const fix=!(e.st=='setup'||e.st=='producing'),C=geCcOf(
   :`<p class="st">${g2T('Choose the ceremony date — the concert is created on that day.','เลือกวันประกาศผลก่อน แล้วคอนเสิร์ตจะถูกสร้างในวันนั้น')}</p>`)
  :`<p class="st">${g2T(`No concert: the ceremony is held at ${GE_CC_FALLBACK.n} (${GE_CC_FALLBACK.cap.toLocaleString()} seats, ${yen(GE_CC_FALLBACK.cost)} paid when it is booked).`,`ไม่จัดคอนเสิร์ต: งานประกาศผลจัดที่ ${GE_CC_FALLBACK.n} (${GE_CC_FALLBACK.cap.toLocaleString()} ที่นั่ง จ่าย ${yen(GE_CC_FALLBACK.cost)} ตอนจอง)`)}</p>`}</div>`}
 // the schedule card: calendar for the ceremony, the concert switch
-{const f=geSchedCardHtml;geSchedCardHtml=function(e,p){let h=f.apply(this,arguments);try{const P=e.cerPlan||{},fix=!(e.st=='setup'||e.st=='producing');
+{const f=geSchedCardHtml;geSchedCardHtml=function(e,p){let h=f.apply(this,arguments);try{const P=e.cerPlan||{},fix=e.st!='setup';
  h=h.replace(/<select [^>]*onchange="geCerPick\(this\.value\)">[\s\S]*?<\/select>/,fix?`<b>${P.day?jd(P.day):'—'}</b>`:gcalBtn('cer',P.day));
  const i=h.indexOf('<div class="c geccc">');if(i>=0){h=h.slice(0,i)+geCcCardHtml(e)+'</div>'}else h=h.replace(/<\/div>$/,geCcCardHtml(e)+'</div>')}catch(x){console.error(x)}return h}}
 // election page (setup with a linked single): the schedule card is shown there too
