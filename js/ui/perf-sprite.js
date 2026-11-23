@@ -10,8 +10,8 @@
 let PT_PRUNE=0;
 function ptPrune(){PT_PRUNE=0;try{const el=document.getElementById('ptspr');if(!el||PT_SPR.size<=40)return;const used=new Set();document.querySelectorAll('use[href^="#ps"]').forEach(u=>used.add(u.getAttribute('href').slice(1)));
  // pop-ups kept for "Back" (and the open pop-up's stored html) still need their faces
- try{const keep=[ui&&ui.mod&&ui.mod.h,...((typeof MB!='undefined'&&MB.stack)||[]).map(z=>z&&z.m&&z.m.h)];keep.forEach(h=>{if(typeof h!='string')return;const re=/href="#(ps\d+)"/g;let m;while((m=re.exec(h)))used.add(m[1])})}catch(e){}
- for(const [k,y]of PT_SPR){const id=(y.u.match(/href="#([^"]+)"/)||[])[1];if(id&&!used.has(id)){PT_SPR.delete(k);const s=document.getElementById(id);if(s&&s.parentNode==el)s.remove()}}}catch(e){console.error(e)}}
+ try{const keep=[ui&&ui.mod&&ui.mod.h,ui&&ui.modNext&&ui.modNext.h,...((typeof MB!='undefined'&&MB.stack)||[]).map(z=>z&&z.m&&z.m.h)];keep.forEach(h=>{if(typeof h!='string')return;const re=/href="#(ps\d+)"/g;let m;while((m=re.exec(h)))used.add(m[1])})}catch(e){}
+ for(const [k,y]of PT_SPR){const id=(y.u.match(/href="#([^"]+)"/)||[])[1];if(id&&!used.has(id)){PT_SPR.delete(k);const s=document.getElementById(id);if(s&&s.parentNode==el){try{if(typeof PT_GONE!='undefined')PT_GONE.set(id,{k,y,html:s.outerHTML})}catch(e){}s.remove()}}}}catch(e){console.error(e)}}
 {const f=render;render=function(){const r=f.apply(this,arguments);if(!PT_PRUNE){PT_PRUNE=1;(window.requestIdleCallback||(c=>setTimeout(c,200)))(ptPrune,{timeout:1500})}return r}}
 // ---- iPhone / iPad / Safari (WebKit): portraits as images ------------------------------------------------------------
 //  WebKit re-creates every <use> reference of the sprite as live SVG (with its masks, clip paths and gradients), which
