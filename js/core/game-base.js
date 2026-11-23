@@ -19,6 +19,8 @@ const fd=()=>dt().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'
 function toast(t,k='ok'){const e=$('#toast');e.textContent=t;e.className='show '+k;clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',2600)}
 function mk(g,team,rr,age,namer){let name,t=0;do{name=namer?namer():pick(FN)+' '+pick(LN)}while((S.members.some(m=>m.name==name||m.real==name)||(S.auds||[]).some(a=>a.cands.some(c=>c.m&&c.m.name==name)))&&t++<99);const m={id:++S.nid,name,real:name,stage:name,nat:'JP',nat2:null,natOther:null,heritage:null,bg:'jp',age:age==null?rnd(14,23):age,team,group:g,mor:rnd(55,90),hue:rnd(0,360),hair:rnd(0,5)};genStats(m,rr||rollRar(),mulb((Math.random()*2147483647)|0));return m}
 const cleanName=v=>String(v||'').replace(/[<>"'`\\]/g,'').replace(/\s+/g,' ').trim().slice(0,30);
+// song titles may be longer (up to 100 characters)
+const cleanTitle=v=>String(v||'').replace(/[<>"`\\]/g,'').replace(/\s+/g,' ').trim().slice(0,100);
 function newGame(o){S={cov:{},songs:{},albums:[],sid:0,producer:o.pn,co:o.cn,day:0,money:3000000,fans:0,nid:0,gid:1,members:[],groups:[{id:1,name:o.gn,active:false,founded:0,debutDay:null}],singles:[],cur:null,prod:null,sen:{slots:Array(16).fill(null),center:null},saved:null,led:[],inc:0,exp:0};
  migrate();ui.g=1;ui.t=false;ui.ng=null;ui.au=null;ui.asid=null;AU().gid=1;view='audition';toast(`Welcome, Producer ${o.pn}! ${o.cn} is open. Hold your first audition to find members for ${o.gn}.`);render()}
 function startNew(){const f=ui.ng||{},o={pn:cleanName(f.pn),cn:cleanName(f.cn),gn:cleanName(f.gn)},miss=[['pn','Producer Name'],['cn','Company Name'],['gn','First Idol Group Name']].filter(([k])=>!o[k]).map(x=>x[1]);
