@@ -1643,3 +1643,6 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .gxshot img.gxwimg{display:block;width:100%;height:auto;max-height:66vh;object-fit:contain;margin:0 auto}
 @media(max-width:700px){.gxshot img.gxwimg{max-height:52vh}}
 .gescn .gegal img.gxsimg,.gxscene img.gxsimg{display:block;width:100%;height:auto;border-radius:10px;background:#07051a}
+.gmlist{display:grid;gap:8px}.gmrow{display:flex;gap:8px;align-items:center}.gmrow p{margin:0}.gmchips{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0}
+.gmchip{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--pk2,#ffe3ef);color:#8a2a55;font-weight:700}.gmchip.soft{background:#ece9f3;color:#5b5670;font-weight:600}
+.gmchip.k-last,.gmchip.k-gap{background:#ffe1e6;color:#b4233c}.gmchip.k-crown,.gmchip.k-top3{background:#fff3cf;color:#8a6200}.gmchip.k-firstRank,.gmchip.k-firstSen{background:#e2f6ea;color:#1f7a45}.gmchip.k-rival{background:#e6ecff;color:#2c3a8a}
