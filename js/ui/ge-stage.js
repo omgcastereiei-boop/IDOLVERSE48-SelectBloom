@@ -82,14 +82,14 @@ function gxWide(e,o){const id='gx'+(++PTC[0]),Lo=gxLayout(e),{rows,T,floorY,H,wi
  s+=`<path d="M${GX_CX-34} ${ty}H${GX_CX+34}L${GX_CX+52} ${floorY}H${GX_CX-52}Z" fill="url(#${id}carp)" opacity=".92"/><path d="M${GX_CX-96} ${ty}L${GX_CX-sb} ${floorY}M${GX_CX+96} ${ty}L${GX_CX+sb} ${floorY}" stroke="url(#${id}gold)" stroke-width="5"/>`;
  // throne platform + throne
  s+=`<rect x="${GX_CX-150}" y="${T+40}" width="300" height="14" rx="4" fill="url(#${id}gold)"/><rect x="${GX_CX-130}" y="${T+28}" width="260" height="14" rx="4" fill="url(#${id}gold)" opacity=".9"/>`+gxThrone(id,GX_CX,T-6,1);
- if(o.throne&&win){const fw=78;s+=`<ellipse cx="${GX_CX}" cy="${T-40}" rx="160" ry="120" fill="url(#${id}spot)"/><g transform="translate(${GX_CX-fw/2} ${gxR(T-6-84*fw/80+8)})">${gxFig(e,win.id,1,10,fw,3)}</g>`}
+ if(o.throne&&win){const fw=78;s+=`<ellipse cx="${GX_CX}" cy="${T-40}" rx="160" ry="120" fill="url(#${id}spot)"/><g transform="translate(${GX_CX-fw/2} ${gxR(T-6-84*fw/80-2)})">${gxFig(e,win.id,1,10,fw,3)}</g>`}
  else s+=`<text x="${GX_CX}" y="${T-60}" text-anchor="middle" font-size="26" font-weight="900" fill="#fff2b8" font-family="serif">1</text>`;
  // ranking-group LED labels on the stairs
  rows.filter(r=>r.first).forEach(row=>{const c=gxGC(row.gi),g=e.groups[row.gi],Rg=geRanges(e)[row.gi],w=176*row.sc,h=26*row.sc,yy=row.y-46*row.sc;
   s+=`<rect x="${gxR(GX_CX-w/2)}" y="${gxR(yy)}" width="${gxR(w)}" height="${gxR(h)}" rx="${4*row.sc}" fill="#0d0a18" stroke="${c[0]}" stroke-width="${2*row.sc}"/>${gxTxt(GX_CX,gxR(yy+h*.48),gxR(11.5*row.sc),String(g?g.name:'').toUpperCase().slice(0,22),{f:c[0],ls:1})}${gxTxt(GX_CX,gxR(yy+h*.88),gxR(8.5*row.sc),`TOP ${Rg[0]} – ${Rg[1]}`,{f:'#fff',w:700})}`});
  // seats (back rows first)
  rows.forEach(row=>{const c=gxGC(row.gi);row.seats.forEach(st=>{s+=gxChair(gxR(st.x),gxR(row.y),row.sc,c[1])});
-  row.seats.forEach(st=>{if(seated.has(st.id)){const fw=46*row.sc,top=e.final.rows.find(r=>r.id==st.id);s+=`<g transform="translate(${gxR(st.x-fw/2)} ${gxR(row.y-84*fw/80+6*row.sc)})">${gxFig(e,st.id,top&&top.top,10,fw,2)}</g>`}s+=gxPlate(gxR(st.x),gxR(row.y),row.sc,st.rank,c[0])})});
+  row.seats.forEach(st=>{if(seated.has(st.id)){const fw=46*row.sc,top=e.final.rows.find(r=>r.id==st.id);s+=`<g transform="translate(${gxR(st.x-fw/2)} ${gxR(row.y-84*fw/80-2*row.sc)})">${gxFig(e,st.id,top&&top.top,10,fw,2)}</g>`}s+=gxPlate(gxR(st.x),gxR(row.y),row.sc,st.rank,c[0])})});
  // front stage
  const fy=floorY;s+=`<rect x="0" y="${fy}" width="${GX_W}" height="190" fill="url(#${id}floor)"/><rect x="0" y="${fy}" width="${GX_W}" height="5" fill="url(#${id}gold)"/><ellipse cx="${GX_CX}" cy="${fy+100}" rx="520" ry="50" fill="#fff" opacity=".04"/>${Array.from({length:40},(_,i)=>`<circle cx="${20+i*40}" cy="${fy+184}" r="3" fill="${['#ff7eb6','#ffe066','#7ee8ff'][i%3]}" opacity=".85"/>`).join('')}`;
  // beams
@@ -119,7 +119,7 @@ function gxThroneShot(e,r){const id='gt'+(++PTC[0]),W=1000,H=700,fw=230;let s=gx
  s+=`<rect width="${W}" height="${H}" fill="url(#${id}bg)"/><ellipse cx="500" cy="300" rx="480" ry="330" fill="url(#${id}halo)" opacity=".7"/>`;
  s+=`<g opacity=".75">${Array.from({length:36},(_,i)=>{const a=Math.PI*2*(i/36),x2=500+Math.cos(a)*700,y2=300+Math.sin(a)*700;return`<line x1="500" y1="300" x2="${gxR(x2)}" y2="${gxR(y2)}" stroke="#f3c85a" stroke-width="${i%2?3:8}" opacity="${i%2?.3:.55}"/>`}).join('')}</g>`;
  s+=`${gxColumn(id,70,0,H-60,70)}${gxColumn(id,930,0,H-60,70)}<rect x="250" y="${H-120}" width="500" height="30" rx="6" fill="url(#${id}gold)"/><rect x="200" y="${H-90}" width="600" height="30" rx="6" fill="url(#${id}gold)" opacity=".9"/><rect y="${H-60}" width="${W}" height="60" fill="url(#${id}floor)"/>`;
- s+=gxThrone(id,500,H-196,2.2)+`<g transform="translate(${500-fw/2} ${gxR(H-196-84*fw/80+16)})">${gxFig(e,r.id,1,10,fw,3)}</g>`;
+ s+=gxThrone(id,500,H-196,2.2)+`<g transform="translate(${500-fw/2} ${gxR(H-196-84*fw/80-6)})">${gxFig(e,r.id,1,10,fw,3)}</g>`;
  s+=`<path d="M380 0H620L760 ${H}H240Z" fill="url(#${id}beam)" opacity=".5"/>`+gxConfetti(W,H,gxH(e.id+'w'));
  s+=gxTxt(500,64,40,'WINNER',{f:`url(#${id}gold)`,ff:'serif',ls:10});
  return`<svg class="gxclose gxthr" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(r.stage)}">${s}</svg>`}

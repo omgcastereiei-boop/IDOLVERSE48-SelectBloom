@@ -2067,7 +2067,7 @@ function legJ(st,lf){const k=v=>80+(v-80)*lf;switch(st){
  case 1:return[[[45.6,80],[43,k(127)],[40,k(174)]],[[54.4,80],[57,k(127)],[60,k(174)]]];
  case 2:return[[[45.8,80],[47.6,k(127)],[51.6,k(174)]],[[54.2,80],[54.6,k(127)],[55.4,k(174)]]];
  case 3:return[[[45.8,80],[45,124],[42,136]],[[54.2,80],[55,124],[58,136]]];
- case 4:return[[[45.8,80],[45.2,96],[44.2,142]],[[54.2,80],[54.8,96],[55.8,142]]];
+ case 4:return[[[45.8,80],[44.4,90.5],[43.8,128]],[[54.2,80],[55.6,90.5],[56.2,128]]];// seated, front view: thighs foreshortened toward the viewer, shins down to the floor
  case 5:return[[[45.6,80],[45.6,k(127)],[45.8,k(174)]],[[54.4,80],[62,108],[71,126]]];
  default:return[[[45.8,80],[46.2,k(127)],[46.6,k(174)]],[[54.2,80],[53.8,k(127)],[53.4,k(174)]]]}}
 const NPOSE=[[0,[-6,-3],[6,3],0],[4,[-10,-5],[118,172],0,'wave'],[0,[-10,-5],[30,200],0,'peace'],[0,[-16,108],[16,-108],0,'heart'],[0,[-10,-5],[60,92],1,'point'],[0,[-38,52],[38,-52],1],[0,[-10,-5],[152,178],0],[-8,[-8,52],[8,-52],2],[4,[-10,-2],[22,-38],2],[8,[-6,28],[22,-34],2],[0,[-6,18],[6,-18],4],[0,[-8,22],[8,-22],3],[-6,[-128,-160],[58,28],5],[0,[-10,-5],[26,-158],0,'',1],[3,[-28,-20],[30,-150],2,'kiss'],[0,[-118,-122],[118,122],1]];
@@ -6774,7 +6774,7 @@ function geFig(s,rank,opt={}){if(!s)return'';const c=rank&&rank<=3?GE_CAPE[rank]
  const back=c?`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.l}"/><stop offset=".25" stop-color="${c.c}"/><stop offset="1" stop-color="${c.d}"/></linearGradient></defs><path d="M38 45Q28 92 19 156Q34 163 50 160Q66 163 81 156Q72 92 62 45Z" fill="url(#${id})" stroke="${c.d}" stroke-width=".5"/><path d="M27 128Q33 140 30 156M73 128Q67 140 70 156M50 70V160" stroke="${c.d}" stroke-width=".5" opacity=".45" fill="none"/>`:'';
  const front=c?`<path d="M36.2 46.4Q50 55 63.8 46.4L65.6 51Q50 60.5 34.4 51Z" fill="${c.crown?'#fffaf2':c.l}" stroke="${c.crown?'#d8c9a8':c.d}" stroke-width=".45"/>${c.crown?[39,44,50,56,61].map(x=>`<path d="M${x} ${x==50?54.5:52.4}l.6 1.4l-.6 .5l-.6 -.5z" fill="#2b2230"/>`).join(''):''}<circle cx="50" cy="54.2" r="1.6" fill="#ffd45a" stroke="#b98a1c" stroke-width=".35"/>`:'';
  const crown=c&&c.crown?`<g transform="translate(${HTX} ${HTY}) scale(${HK})"><path d="M35 19L38 4L44.5 13L50 1L55.5 13L62 4L65 19Z" fill="#ffd34d" stroke="#a87810" stroke-width="1"/><rect x="34.5" y="17.5" width="31" height="5" rx="1.5" fill="#f2b71f" stroke="#a87810" stroke-width="1"/><circle cx="50" cy="20" r="2" fill="#e8213b"/><circle cx="41" cy="20" r="1.4" fill="#2f7fe0"/><circle cx="59" cy="20" r="1.4" fill="#2f7fe0"/><circle cx="38" cy="4" r="1.5" fill="#fff4b8"/><circle cx="50" cy="1" r="1.7" fill="#fff4b8"/><circle cx="62" cy="4" r="1.5" fill="#fff4b8"/></g>`:'';
- const vb=opt.vb||'10 -4 80 202',q=vb.split(' ').map(Number);return`<svg class="gefig${c?' top'+rank:''}" viewBox="${vb}" ${opt.w?`width="${opt.w}" height="${(opt.w*q[3]/q[2]).toFixed(1)}"`:''} role="img" aria-label="${esc(s.name)}" xmlns="http://www.w3.org/2000/svg">${back}${inner}${front}${crown}</svg>`}
+ const vb=opt.vb||'10 -4 80 202',bk=back&&opt.pose==10?`<g transform="translate(0 45) scale(1 .72) translate(0 -45)">${back}</g>`:back,q=vb.split(' ').map(Number);return`<svg class="gefig${c?' top'+rank:''}" viewBox="${vb}" ${opt.w?`width="${opt.w}" height="${(opt.w*q[3]/q[2]).toFixed(1)}"`:''} role="img" aria-label="${esc(s.name)}" xmlns="http://www.w3.org/2000/svg">${bk}${inner}${front}${crown}</svg>`}
 const gePor=(s,rank,w,e)=>geFig(s,rank,{w,vb:'24 -3 52 70',e});
 // arrangement: balanced rows, smallest row in front, group Center front-middle
 function geArrange(ids){const n=ids.length,sizes=typeof fxRows=='function'?fxRows(n,1):[n];let k=0;const rows=sizes.map(sz=>{const r=ids.slice(k,k+sz);k+=sz;return r});
@@ -19391,7 +19391,7 @@ function rhStageSvg(C,p,set,idx,W=1400,H=760){const it=set.items[idx],E=rhOfC(C)
  const seated=stt.seated.slice().sort((a,b)=>b.seat[1]-a.seat[1]),bySeat=new Map(seated.map(z=>[z.seat.join(','),z]));let pens='';
  for(let row=RH_ROWS-1;row>=0;row--)for(let side=0;side<2;side++)for(let col=0;col<RH_COLS;col++){const[x,y]=seatXY([side,row,col]),sy=seatY(y);s+=gxChair(+x.toFixed(1),+sy.toFixed(1),RSC,P.a);
   const z=bySeat.get([side,row,col].join(','));if(!z)continue;const m=ccMem(z.m);if(!m)continue;const cd=ccCzFor(C,set,z.czIdx,m.id),a=ap(m),R=rhReact(C,it,m,stt.perf,rank??99),fw=46*RSC,fh=fw*202/80,F=pose=>`<svg viewBox="10 -4 80 202" width="${fw.toFixed(1)}" height="${fh.toFixed(1)}" overflow="visible">${fig(m,{pose,of:a.of,oh:a.oh,ac:a.ac,ex:R.ex,...(cd?{cd}:{})})}</svg>`;
-  let top;if(R.stand){top=sy+24*RSC-196*fw/80;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(R.pose)}</g>`}else{top=sy-84*fw/80+6*RSC;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(10)}</g>`}
+  let top;if(R.stand){top=sy+24*RSC-196*fw/80;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(R.pose)}</g>`}else{top=sy-84*fw/80-2*RSC;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(10)}</g>`}
   const hy=top+18*fw/80;
   if(R.pen)pens+=`<line x1="${(x+7).toFixed(1)}" y1="${(hy+20).toFixed(1)}" x2="${(x+12).toFixed(1)}" y2="${(hy+2).toFixed(1)}" stroke="${P.c}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${(x+12).toFixed(1)}" cy="${(hy+2).toFixed(1)}" r="3.4" fill="${P.c}" opacity=".6" filter="url(#gl${id})"/>`;
   if(R.ic)pens+=`<text x="${(x+8).toFixed(1)}" y="${(hy-4).toFixed(1)}" font-size="11">${R.ic}</text>`}
@@ -19962,14 +19962,14 @@ function gxWide(e,o){const id='gx'+(++PTC[0]),Lo=gxLayout(e),{rows,T,floorY,H,wi
  s+=`<path d="M${GX_CX-34} ${ty}H${GX_CX+34}L${GX_CX+52} ${floorY}H${GX_CX-52}Z" fill="url(#${id}carp)" opacity=".92"/><path d="M${GX_CX-96} ${ty}L${GX_CX-sb} ${floorY}M${GX_CX+96} ${ty}L${GX_CX+sb} ${floorY}" stroke="url(#${id}gold)" stroke-width="5"/>`;
  // throne platform + throne
  s+=`<rect x="${GX_CX-150}" y="${T+40}" width="300" height="14" rx="4" fill="url(#${id}gold)"/><rect x="${GX_CX-130}" y="${T+28}" width="260" height="14" rx="4" fill="url(#${id}gold)" opacity=".9"/>`+gxThrone(id,GX_CX,T-6,1);
- if(o.throne&&win){const fw=78;s+=`<ellipse cx="${GX_CX}" cy="${T-40}" rx="160" ry="120" fill="url(#${id}spot)"/><g transform="translate(${GX_CX-fw/2} ${gxR(T-6-84*fw/80+8)})">${gxFig(e,win.id,1,10,fw,3)}</g>`}
+ if(o.throne&&win){const fw=78;s+=`<ellipse cx="${GX_CX}" cy="${T-40}" rx="160" ry="120" fill="url(#${id}spot)"/><g transform="translate(${GX_CX-fw/2} ${gxR(T-6-84*fw/80-2)})">${gxFig(e,win.id,1,10,fw,3)}</g>`}
  else s+=`<text x="${GX_CX}" y="${T-60}" text-anchor="middle" font-size="26" font-weight="900" fill="#fff2b8" font-family="serif">1</text>`;
  // ranking-group LED labels on the stairs
  rows.filter(r=>r.first).forEach(row=>{const c=gxGC(row.gi),g=e.groups[row.gi],Rg=geRanges(e)[row.gi],w=176*row.sc,h=26*row.sc,yy=row.y-46*row.sc;
   s+=`<rect x="${gxR(GX_CX-w/2)}" y="${gxR(yy)}" width="${gxR(w)}" height="${gxR(h)}" rx="${4*row.sc}" fill="#0d0a18" stroke="${c[0]}" stroke-width="${2*row.sc}"/>${gxTxt(GX_CX,gxR(yy+h*.48),gxR(11.5*row.sc),String(g?g.name:'').toUpperCase().slice(0,22),{f:c[0],ls:1})}${gxTxt(GX_CX,gxR(yy+h*.88),gxR(8.5*row.sc),`TOP ${Rg[0]} – ${Rg[1]}`,{f:'#fff',w:700})}`});
  // seats (back rows first)
  rows.forEach(row=>{const c=gxGC(row.gi);row.seats.forEach(st=>{s+=gxChair(gxR(st.x),gxR(row.y),row.sc,c[1])});
-  row.seats.forEach(st=>{if(seated.has(st.id)){const fw=46*row.sc,top=e.final.rows.find(r=>r.id==st.id);s+=`<g transform="translate(${gxR(st.x-fw/2)} ${gxR(row.y-84*fw/80+6*row.sc)})">${gxFig(e,st.id,top&&top.top,10,fw,2)}</g>`}s+=gxPlate(gxR(st.x),gxR(row.y),row.sc,st.rank,c[0])})});
+  row.seats.forEach(st=>{if(seated.has(st.id)){const fw=46*row.sc,top=e.final.rows.find(r=>r.id==st.id);s+=`<g transform="translate(${gxR(st.x-fw/2)} ${gxR(row.y-84*fw/80-2*row.sc)})">${gxFig(e,st.id,top&&top.top,10,fw,2)}</g>`}s+=gxPlate(gxR(st.x),gxR(row.y),row.sc,st.rank,c[0])})});
  // front stage
  const fy=floorY;s+=`<rect x="0" y="${fy}" width="${GX_W}" height="190" fill="url(#${id}floor)"/><rect x="0" y="${fy}" width="${GX_W}" height="5" fill="url(#${id}gold)"/><ellipse cx="${GX_CX}" cy="${fy+100}" rx="520" ry="50" fill="#fff" opacity=".04"/>${Array.from({length:40},(_,i)=>`<circle cx="${20+i*40}" cy="${fy+184}" r="3" fill="${['#ff7eb6','#ffe066','#7ee8ff'][i%3]}" opacity=".85"/>`).join('')}`;
  // beams
@@ -19999,7 +19999,7 @@ function gxThroneShot(e,r){const id='gt'+(++PTC[0]),W=1000,H=700,fw=230;let s=gx
  s+=`<rect width="${W}" height="${H}" fill="url(#${id}bg)"/><ellipse cx="500" cy="300" rx="480" ry="330" fill="url(#${id}halo)" opacity=".7"/>`;
  s+=`<g opacity=".75">${Array.from({length:36},(_,i)=>{const a=Math.PI*2*(i/36),x2=500+Math.cos(a)*700,y2=300+Math.sin(a)*700;return`<line x1="500" y1="300" x2="${gxR(x2)}" y2="${gxR(y2)}" stroke="#f3c85a" stroke-width="${i%2?3:8}" opacity="${i%2?.3:.55}"/>`}).join('')}</g>`;
  s+=`${gxColumn(id,70,0,H-60,70)}${gxColumn(id,930,0,H-60,70)}<rect x="250" y="${H-120}" width="500" height="30" rx="6" fill="url(#${id}gold)"/><rect x="200" y="${H-90}" width="600" height="30" rx="6" fill="url(#${id}gold)" opacity=".9"/><rect y="${H-60}" width="${W}" height="60" fill="url(#${id}floor)"/>`;
- s+=gxThrone(id,500,H-196,2.2)+`<g transform="translate(${500-fw/2} ${gxR(H-196-84*fw/80+16)})">${gxFig(e,r.id,1,10,fw,3)}</g>`;
+ s+=gxThrone(id,500,H-196,2.2)+`<g transform="translate(${500-fw/2} ${gxR(H-196-84*fw/80-6)})">${gxFig(e,r.id,1,10,fw,3)}</g>`;
  s+=`<path d="M380 0H620L760 ${H}H240Z" fill="url(#${id}beam)" opacity=".5"/>`+gxConfetti(W,H,gxH(e.id+'w'));
  s+=gxTxt(500,64,40,'WINNER',{f:`url(#${id}gold)`,ff:'serif',ls:10});
  return`<svg class="gxclose gxthr" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(r.stage)}">${s}</svg>`}

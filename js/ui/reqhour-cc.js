@@ -113,7 +113,7 @@ function rhStageSvg(C,p,set,idx,W=1400,H=760){const it=set.items[idx],E=rhOfC(C)
  const seated=stt.seated.slice().sort((a,b)=>b.seat[1]-a.seat[1]),bySeat=new Map(seated.map(z=>[z.seat.join(','),z]));let pens='';
  for(let row=RH_ROWS-1;row>=0;row--)for(let side=0;side<2;side++)for(let col=0;col<RH_COLS;col++){const[x,y]=seatXY([side,row,col]),sy=seatY(y);s+=gxChair(+x.toFixed(1),+sy.toFixed(1),RSC,P.a);
   const z=bySeat.get([side,row,col].join(','));if(!z)continue;const m=ccMem(z.m);if(!m)continue;const cd=ccCzFor(C,set,z.czIdx,m.id),a=ap(m),R=rhReact(C,it,m,stt.perf,rank??99),fw=46*RSC,fh=fw*202/80,F=pose=>`<svg viewBox="10 -4 80 202" width="${fw.toFixed(1)}" height="${fh.toFixed(1)}" overflow="visible">${fig(m,{pose,of:a.of,oh:a.oh,ac:a.ac,ex:R.ex,...(cd?{cd}:{})})}</svg>`;
-  let top;if(R.stand){top=sy+24*RSC-196*fw/80;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(R.pose)}</g>`}else{top=sy-84*fw/80+6*RSC;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(10)}</g>`}
+  let top;if(R.stand){top=sy+24*RSC-196*fw/80;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(R.pose)}</g>`}else{top=sy-84*fw/80-2*RSC;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(10)}</g>`}
   const hy=top+18*fw/80;
   if(R.pen)pens+=`<line x1="${(x+7).toFixed(1)}" y1="${(hy+20).toFixed(1)}" x2="${(x+12).toFixed(1)}" y2="${(hy+2).toFixed(1)}" stroke="${P.c}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${(x+12).toFixed(1)}" cy="${(hy+2).toFixed(1)}" r="3.4" fill="${P.c}" opacity=".6" filter="url(#gl${id})"/>`;
   if(R.ic)pens+=`<text x="${(x+8).toFixed(1)}" y="${(hy-4).toFixed(1)}" font-size="11">${R.ic}</text>`}
