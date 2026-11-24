@@ -19452,17 +19452,18 @@ function rhStageSvg(C,p,set,idx,W=1400,H=760){const it=set.items[idx],E=rhOfC(C)
  [[26,120],[W-110,120]].forEach(([x,y],k)=>{s+=`<rect x="${x-4}" y="${y-4}" width="92" height="148" rx="4" fill="#2b2740"/><rect x="${x}" y="${y}" width="84" height="140" fill="url(#lg${id})"/>`;if(lm){const a=ap(lm);s+=`<svg x="${x}" y="${y}" width="84" height="140" viewBox="22 4 56 96" preserveAspectRatio="xMidYMid slice">${fig(lm,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:k?3:2,...(cds[lm.id]?{cd:cds[lm.id]}:{})})}</svg>`}});
  // Hina-dan: two tiered blocks behind the stage, 5 tiers × 10 seats each
  const HX=[[130,500],[900,1270]],TY=r0=>396-r0*46,cw=37;
- HX.forEach(([x0,x1],side)=>{for(let row=RH_ROWS-1;row>=0;row--){const y=TY(row);s+=`<path d="M${x0-8+row*(side?-6:6)} ${y+8}H${x1+8-row*(side?6:-6)}V${y+40}H${x0-8+row*(side?-6:6)}Z" fill="${row%2?'#2d2347':'#342a52'}" stroke="${P.a}" stroke-opacity=".35"/>`}});
  const seatXY=([side,row,col])=>{const[x0,x1]=HX[side];return[x0+(x1-x0)*(col+.5)/RH_COLS+(side?-1:1)*row*3,TY(row)]};
- // seats like the General Election ceremony: a chair on every seat, members sit on them (sitting pose), back tier first
- const RSC=.8,seatY=y=>y+32;
+ // bleachers (stands): one long bench step per tier, back tier first; members sit with their hips on the step (same sitting pose as the election)
+ const RSC=.8,seatY=y=>y+32,stepX=(side,row)=>{const[x0,x1]=HX[side],d=(side?-1:1)*row*3;return[x0-16+d,x1+16+d]};
  const seated=stt.seated.slice().sort((a,b)=>b.seat[1]-a.seat[1]),bySeat=new Map(seated.map(z=>[z.seat.join(','),z]));let pens='';
- for(let row=RH_ROWS-1;row>=0;row--)for(let side=0;side<2;side++)for(let col=0;col<RH_COLS;col++){const[x,y]=seatXY([side,row,col]),sy=seatY(y);s+=gxChair(+x.toFixed(1),+sy.toFixed(1),RSC,P.a);
-  const z=bySeat.get([side,row,col].join(','));if(!z)continue;const m=ccMem(z.m);if(!m)continue;const cd=ccCzFor(C,set,z.czIdx,m.id),a=ap(m),R=rhReact(C,it,m,stt.perf,rank??99),fw=46*RSC,fh=fw*202/80,F=pose=>`<svg viewBox="10 -4 80 202" width="${fw.toFixed(1)}" height="${fh.toFixed(1)}" overflow="visible">${fig(m,{pose,of:a.of,oh:a.oh,ac:a.ac,ex:R.ex,...(cd?{cd}:{})})}</svg>`;
-  let top;if(R.stand){top=sy+24*RSC-196*fw/80;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(R.pose)}</g>`}else{top=sy-84*fw/80-2*RSC;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(10)}</g>`}
-  const hy=top+18*fw/80;
-  if(R.pen)pens+=`<line x1="${(x+7).toFixed(1)}" y1="${(hy+20).toFixed(1)}" x2="${(x+12).toFixed(1)}" y2="${(hy+2).toFixed(1)}" stroke="${P.c}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${(x+12).toFixed(1)}" cy="${(hy+2).toFixed(1)}" r="3.4" fill="${P.c}" opacity=".6" filter="url(#gl${id})"/>`;
-  if(R.ic)pens+=`<text x="${(x+8).toFixed(1)}" y="${(hy-4).toFixed(1)}" font-size="11">${R.ic}</text>`}
+ for(let row=RH_ROWS-1;row>=0;row--){
+  for(let side=0;side<2;side++){const sy=seatY(TY(row)),[a0,a1]=stepX(side,row);
+   s+=`<path d="M${a0+4} ${sy-7}H${a1-4}L${a1} ${sy}H${a0}Z" fill="${row%2?'#5a4c80':'#62548a'}"/><rect x="${a0}" y="${sy}" width="${a1-a0}" height="46" fill="${row%2?'#2d2347':'#342a52'}"/><path d="M${a0} ${sy}H${a1}" stroke="${P.a}" stroke-opacity=".55" stroke-width="2"/><path d="M${a0} ${sy+3}H${a1}" stroke="#000" stroke-opacity=".25" stroke-width="2"/>`+Array.from({length:RH_COLS+1},(_,c)=>{const x=a0+16+(a1-a0-32)*c/RH_COLS;return`<path d="M${x.toFixed(1)} ${sy+6}V${sy+44}" stroke="#000" stroke-opacity=".12" stroke-width="1.5"/>`}).join('')}
+  for(let side=0;side<2;side++)for(let col=0;col<RH_COLS;col++){const[x,y]=seatXY([side,row,col]),sy=seatY(y);
+   const z=bySeat.get([side,row,col].join(','));if(!z)continue;const m=ccMem(z.m);if(!m)continue;const cd=ccCzFor(C,set,z.czIdx,m.id),a=ap(m),R=rhReact(C,it,m,stt.perf,rank??99),fw=46*RSC,fh=fw*202/80,F=pose=>`<svg viewBox="10 -4 80 202" width="${fw.toFixed(1)}" height="${fh.toFixed(1)}" overflow="visible">${fig(m,{pose,of:a.of,oh:a.oh,ac:a.ac,ex:R.ex,...(cd?{cd}:{})})}</svg>`;
+   let top;if(R.stand){top=sy+2-196*fw/80;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(R.pose)}</g>`}else{top=sy-84*fw/80-2*RSC;s+=`<g transform="translate(${(x-fw/2).toFixed(1)} ${top.toFixed(1)})">${F(10)}</g>`}
+   const hy=top+18*fw/80;
+   if(R.pen)pens+=`<line x1="${(x+7).toFixed(1)}" y1="${(hy+20).toFixed(1)}" x2="${(x+12).toFixed(1)}" y2="${(hy+2).toFixed(1)}" stroke="${P.c}" stroke-width="2.4" stroke-linecap="round"/><circle cx="${(x+12).toFixed(1)}" cy="${(hy+2).toFixed(1)}" r="3.4" fill="${P.c}" opacity=".6" filter="url(#gl${id})"/>`}}
  s+=pens;
  // main LED wall + top banner + rank screen
  s+=`<rect x="482" y="52" width="436" height="266" rx="22" fill="${P.a}" opacity=".25" filter="url(#gl${id})"/><rect x="492" y="62" width="416" height="246" rx="6" fill="#1a1726"/><g clip-path="url(#cl${id})">${ccLed(style,P,500,70,400,230,r,id,it.title)}</g>
