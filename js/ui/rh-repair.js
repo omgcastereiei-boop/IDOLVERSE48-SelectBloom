@@ -28,3 +28,6 @@ function rhRepairAll(){if(!S||!S.rh)return;(rhS().list||[]).forEach(E=>{if(E.sta
 {const f=V.rh;if(f)V.rh=function(){try{rhRepairAll()}catch(e){}return f.apply(this,arguments)}}
 // a Request Hour single cannot become an album (the album release would drop the voting link)
 {const f=plSetKind;plSetKind=function(k){const p=S.pj;if(k=='album'&&p&&p.rh)return toast(rhT('This single carries Request Hour voting codes. Unlink it from the Request Hour first.','ซิงเกิลนี้มีรหัสโหวต Request Hour อยู่ ยกเลิกการเชื่อมกับ Request Hour ก่อน'),'err');return f.apply(this,arguments)}}
+// releasing a single must never fail silently (phones have no console): report the error on screen
+{const f=release;release=function(){try{return f.apply(this,arguments)}catch(e){try{window.__errAdd&&__errAdd('release(): '+(e&&e.message),(e&&e.stack||'').split('\n')[1]||'',0,0,'release')}catch(_){}toast('ออกซิงเกิลไม่สำเร็จ: '+(e&&e.message||e)+' — แตะแถบสีแดงเพื่อดูรายละเอียด','err');try{render()}catch(_){}}}}
+{const f=doRelease;doRelease=function(){try{return f.apply(this,arguments)}catch(e){try{window.__errAdd&&__errAdd('doRelease(): '+(e&&e.message),(e&&e.stack||'').split('\n')[1]||'',0,0,'release')}catch(_){}toast('ออกซิงเกิลไม่สำเร็จ: '+(e&&e.message||e),'err')}}}

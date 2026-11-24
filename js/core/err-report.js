@@ -1,0 +1,27 @@
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — on-screen error report (loaded before every other script)
+//  Phones have no developer console, so a failing script just looks like "the button does nothing".
+//  Every uncaught error, failed promise and console.error is recorded here (deduplicated) and a small
+//  banner lets the player open the list, see the device / browser, and copy it to send to the developer.
+//  Script files that the browser cannot even parse (unsupported syntax on an older iPhone) are caught too.
+// =====================================================================================
+(function(){const L=window.__errs=[],seen={};let el=null;
+ const add=(m,f,l,c,k)=>{m=String(m||'Unknown error').slice(0,300);f=String(f||'').split('/').pop().split('?')[0];const key=m+'|'+f+'|'+l;if(seen[key]){seen[key].n++;draw();return}const x={m,f,l:l||0,c:c||0,k:k||'error',n:1,t:new Date().toLocaleTimeString()};seen[key]=x;L.push(x);if(L.length>30)L.shift();draw()};
+ window.__errAdd=add;
+ window.addEventListener('error',e=>{if(e&&e.target&&e.target!==window&&e.target.tagName){add('Could not load '+(e.target.src||e.target.href||e.target.tagName),e.target.src||'',0,0,'load');return}add(e.message||(e.error&&e.error.message),e.filename,e.lineno,e.colno,'error')},true);
+ window.addEventListener('unhandledrejection',e=>{const r=e&&e.reason;add(r&&(r.message||r)||'Promise rejected',r&&r.stack?(r.stack.split('\n')[1]||''):'',0,0,'promise')});
+ const ce=console.error;console.error=function(){try{const a=[...arguments],er=a.find(x=>x&&x.stack);const m=a.map(x=>x&&x.message?x.message:typeof x=='object'?(()=>{try{return JSON.stringify(x).slice(0,120)}catch(_){return String(x)}})():String(x)).join(' ');
+  let f='',l=0;if(er){const s=(er.stack.split('\n').find(z=>/\.js/.test(z))||'');const mm=s.match(/([^\/\s(]+\.js)[^:]*:(\d+)/);if(mm){f=mm[1];l=+mm[2]}}add(m,f,l,0,'logged')}catch(_){}return ce.apply(console,arguments)};
+ function esc(t){return String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+ function txt(){return['IDOLVERSE48 error report',navigator.userAgent,location.href,...L.map(x=>`[${x.t}] ${x.k}${x.n>1?' ×'+x.n:''}: ${x.m} @ ${x.f}:${x.l}:${x.c}`)].join('\n')}
+ function draw(){if(!document.body){document.addEventListener('DOMContentLoaded',draw,{once:true});return}if(!L.length)return;if(!el){el=document.createElement('div');el.id='errpill';el.setAttribute('data-notr','');document.body.appendChild(el)}
+  el.innerHTML=`<button type="button" style="position:fixed;left:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);z-index:99998;background:#d9577f;color:#fff;border:0;border-radius:999px;padding:8px 14px;font:700 13px sans-serif;box-shadow:0 4px 14px rgba(0,0,0,.25)">⚠ เกิดข้อผิดพลาด (${L.length}) — แตะเพื่อดู</button>`;el.firstChild.onclick=open}
+ function open(){const o=document.createElement('div');o.setAttribute('data-notr','');o.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(20,10,30,.55);display:flex;align-items:flex-end;justify-content:center';
+  o.innerHTML=`<div style="background:#fff;width:min(560px,100%);max-height:80vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));font:13px sans-serif;color:#3a2a4a">
+  <b style="font-size:15px">⚠ ข้อผิดพลาดในเกม</b><p style="margin:6px 0;color:#7a6a8a">ถ่ายภาพหน้าจอนี้หรือกด “คัดลอก” แล้วส่งให้ผู้พัฒนา — ช่วยให้แก้ปัญหาได้ตรงจุด</p>
+  <div style="font:11px monospace;background:#f6f0f8;border-radius:10px;padding:8px;white-space:pre-wrap;word-break:break-word">${esc(txt())}</div>
+  <div style="display:flex;gap:8px;margin-top:10px"><button type="button" id="errcp" style="flex:1;min-height:42px;border-radius:12px;border:0;background:#a993e0;color:#fff;font:700 14px sans-serif">คัดลอก</button><button type="button" id="errx" style="flex:1;min-height:42px;border-radius:12px;border:1px solid #ddd;background:#fff;font:700 14px sans-serif">ปิด</button><button type="button" id="errcl" style="min-height:42px;border-radius:12px;border:1px solid #ddd;background:#fff;font:700 13px sans-serif;padding:0 10px">ล้าง</button></div></div>`;
+  document.body.appendChild(o);o.onclick=e=>{if(e.target===o)o.remove()};o.querySelector('#errx').onclick=()=>o.remove();o.querySelector('#errcl').onclick=()=>{L.length=0;for(const k in seen)delete seen[k];o.remove();if(el)el.innerHTML=''};
+  o.querySelector('#errcp').onclick=()=>{const t=txt();const done=()=>{o.querySelector('#errcp').textContent='คัดลอกแล้ว ✓'};try{navigator.clipboard.writeText(t).then(done,()=>{fallback(t);done()})}catch(_){fallback(t);done()}}}
+ function fallback(t){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(a);a.focus();a.select();try{document.execCommand('copy')}catch(_){}a.remove()}
+})();
