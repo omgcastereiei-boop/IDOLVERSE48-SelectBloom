@@ -1801,3 +1801,4 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .bgvar{border:2px solid transparent;border-radius:10px;background:#fffdf8;padding:3px;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:var(--ink)}.bgvar.on{border-color:#ef6fa8}.bgvar small{font:700 10px Quicksand;color:var(--mut)}
 .bgcur .bgcurrow{display:flex;gap:10px;align-items:center}.bgcur .bgth.cur{width:84px;flex:none}.bgcur .bgcurrow>div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .mvxfr{margin-top:6px}
+.gevgrp{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:8px 0}.gevgrp>div{background:#fffdf8;border:1px solid var(--line);border-radius:12px;padding:6px 10px;display:flex;flex-direction:column}.gevgrp small{color:var(--mut);font:700 10.5px Quicksand}.gevgrp b{font:800 16px Quicksand}
