@@ -1140,3 +1140,11 @@ Extends the existing character art engine and Character Creator; no separate sys
 - **Member Stats tab**: Birthday Stage history shows the date, age and the photos button only; “Recent emotional events” is removed.
 - **External event participant picker**: 3–5 cards per row (3 on phones); each card shows name, group · team · generation, availability and “⭐ Latest Senbatsu · group” when she is in the latest Title Track Senbatsu of her group (or of another group she sang for). Sorting and filters use the shared member sort bar like every other member list.
 - **Age** is now a sort option in the shared member sort bar (every member list) and in the restructuring sort.
+
+## BLOOM: THE IDOL PROJECT (js/ui/bloom.js) — annual survival show
+- One season per in-game year (`S.bloom.seasons[year]`). March: members apply by themselves; the player only approves/rejects (company quota 10, shared by all groups). Any company commitment between April 1 and EP.13 (`gsCommits`) makes a member ineligible, with the reasons listed.
+- April 1: 60 contestants (approved members + generated trainees of other agencies, saved). Contestants are busy for company work until EP.13 (`gsCommits`, Senbatsu pool, roadshow selection).
+- 13 Sunday episodes: EP.01/02 grades (A–F) and the Theme Song Center (EP.02 Grade A only; special re-evaluation if nobody has A), rankings with eliminations at EP.03/06/09/12 (48/36/30/20), Group Battle, Position Battle (Vocal/Dance/Rap), Concept Mission and Battle, Grand Finale. Skill and vote scores are stored separately.
+- Every company contestant gets saved episode stills (scene recipes, drawn from her own character art).
+- Finale: 7–12 debut members form a Project Group (a real company group, type `project`) for two years. Original contracts: A (ends later) → simply return; B (ends earlier) → extended to the project end, renewal talk after return; C (same day) → renewal talk after return. No renewal talk during the project. Generated members return to their agencies at the end.
+- Fans for all company contestants through `fbAcquire` (new unique fans, domestic and worldwide); profile shows Survival Show History and the Episode Gallery.
