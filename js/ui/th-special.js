@@ -231,3 +231,15 @@ let SPX_OV=0;
 {const fo=thCzOpen;thCzOpen=function(id){try{ui.thczY={id,y:window.scrollY||document.documentElement.scrollTop||0}}catch(e){}return fo.apply(this,arguments)}}
 {const fb=thCzBack;thCzBack=function(){if(ui.thczY)ui.thczRet=ui.thczY;return fb.apply(this,arguments)}}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{const R=ui.thczRet;if(R&&view=='thset'&&!ui.czE){ui.thczRet=null;const go=()=>{try{window.scrollTo(0,R.y||0)}catch(e){}};go();requestAnimationFrame(go);setTimeout(go,80)}}catch(e){}return r}}
+// Units tab: adding / removing a Unit member updates the tapped card at once instead of redrawing the whole page
+// (the page holds the member grid, the song list and the member × song table: a full redraw took about a second on phones);
+// the Unit cards, the song list and the table are refreshed in place a moment after the last tap
+let TH_UREF=0;
+function thUnitRefresh(){TH_UREF=0;try{if(view!='thset'||ui.thst!='mem'||ui.mod)return;const s=thEd();if(!s)return;const t=document.createElement('template');t.innerHTML=thMemTab(s);
+ const swap=(sel,card)=>{const n=t.content.querySelector(sel),o=document.querySelector('#app '+sel);if(!n||!o)return;const N=card?n.closest('.c'):n,O=card?o.closest('.c'):o;if(!N||!O)return;O.replaceWith(N);try{if(typeof i18nApply=='function')i18nApply(N)}catch(e){}};
+ swap('.thucs');swap('.thptl',1);swap('table.thmx',1)}catch(e){console.error(e);render()}}
+{const f=thUnitTog;thUnitTog=function(uid,mid){if(view!='thset'||ui.thst!='mem')return f.apply(this,arguments);const s=thEd(),u=s&&thUnitOf(s,uid),before=u?u.ids.join():null;
+ const R=render;let asked=false;render=function(){asked=true};let r;try{r=f.apply(this,arguments)}finally{render=R}
+ if(!asked)return r;if(!u||before==u.ids.join()){render();return r}
+ try{const b=document.querySelector(`#app [onclick="thUnitTog('${uid}',${mid})"]`);if(!b)throw 0;const on=u.ids.includes(mid),tx=on?'✓ In this Unit':'Add',th=typeof UIP!='undefined'&&UIP.lang=='th'&&typeof I18N_TH!='undefined';
+  b.classList.toggle('on',on);const i=b.querySelector('i');if(i)i.textContent=th&&I18N_TH[tx]||tx;clearTimeout(TH_UREF);TH_UREF=setTimeout(thUnitRefresh,650)}catch(e){render()}return r}}
