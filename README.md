@@ -1158,3 +1158,10 @@ Extends the existing character art engine and Character Creator; no separate sys
 - History of a single shows each member with her profile costume of that single and her election rank from the last election held by its release day.
 - iPhone/iPad: pictures that would be turned into image files keep their characters (inline SVG / plain-SVG drawing).
 - Songs set to "Music Video" always get their MV on release; released ones that were missed are repaired on load.
+
+## Request Hour: long-term song life (rh-life.js, extends reqhour.js)
+- Every released song (all categories, sister groups included) keeps Awareness and Affection in S.rhs.s["gid:songId"]. Awareness: set at release, raised by exposure (active theater stages, player-chosen concerts/roadshows, Request Hour placings, news), fading weekly. Affection: release reception (song evaluation, stage preference, MV, a hidden-gem factor), well-received stages (capped), graduation announcements of its center/members, Request Hour concerts; almost permanent. Player-chosen performances never raise Affection.
+- Performance memory per song: concerts (once per concert, Request Hour concerts excluded), roadshow performances and unique roadshow locations kept apart, last date and a log; random roadshow setlists are not counted.
+- Voting: one choice per fan combining group support, center (Kami Oshi) support — spread over every song she centers and smaller for full-team songs — and song affection gated by awareness; new-release interest (first-time center, generation debut), events, previous ranking. No sales/popularity bonus for title tracks.
+- Annual edition: if no Request Hour is prepared for the next year by December 1, fan-club voting runs in December (Top 25, sister songs included) and closes on Dec 31. New player-made events default to Top 25 with sister songs.
+- Per-song history (previous, best, years, streak, #1 / Top 3 / Top 10 / Top 25 years, years not ranked) in the results and in the song info pop-up; NEW / RETURN / movement badges.
