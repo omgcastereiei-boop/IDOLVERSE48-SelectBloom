@@ -1148,3 +1148,6 @@ Extends the existing character art engine and Character Creator; no separate sys
 - Every company contestant gets saved episode stills (scene recipes, drawn from her own character art).
 - Finale: 7–12 debut members form a Project Group (a real company group, type `project`) for two years. Original contracts: A (ends later) → simply return; B (ends earlier) → extended to the project end, renewal talk after return; C (same day) → renewal talk after return. No renewal talk during the project. Generated members return to their agencies at the end.
 - Fans for all company contestants through `fbAcquire` (new unique fans, domestic and worldwide); profile shows Survival Show History and the Episode Gallery.
+
+## Forced stay (grad3.js)
+- A member who announced her graduation (not a dismissal) can be kept: profile → Contract box → "Force her to stay". Cost = max(¥200M, 60 months of her value + ¥500 per fan, 5% of company money). The announcement is cancelled, her Graduation Stage becomes a regular performance, the contract runs at least 2 more years, morale −25 / loyalty −20, and new graduation requests are less likely for a year.
