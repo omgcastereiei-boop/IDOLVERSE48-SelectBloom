@@ -22378,6 +22378,9 @@ function czzSize(){const z=document.querySelector('.czz');if(!z)return;const vv=
  const r=f.apply(this,arguments);try{if(view=='costume'&&czzBuild()){czzApply();const pn=document.querySelector('.czzpanel');if(pn&&keep){pn.scrollTop=keep.cat==(ui.czE&&ui.czE.cat)?keep.t:0;const sb=document.querySelector('.czzsub');if(sb)sb.scrollLeft=keep.sub}
   if(ui.czzVisit!==1){ui.czzVisit=1;const al=()=>{const z=document.querySelector('.czz'),hd=document.querySelector('.hd');if(!z)return;window.scrollTo(0,Math.max(0,window.scrollY+z.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0)));czzSize()};al();setTimeout(al,60);setTimeout(al,250)}}else if(view!='costume')ui.czzVisit=0}catch(e){console.error(e)}return r}}
 window.addEventListener('resize',()=>{if(view!='costume')return;const z=!!document.querySelector('.czz');if(z!==czzMob())render();else czzSize()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(view=='costume')czzSize()});
+// ---- Group page: member cards no longer carry the "Actions…" menu (team moves, transfers, promotions
+// go through Team Restructuring; graduation / dismissal stay in the member profile). Only "Open profile".
+{const f=mcardT;mcardT=function(m){let h=f.apply(this,arguments);try{h=h.replace(/<select class="act"[\s\S]*?<\/select>/,`<button class="b s mprof" onclick="memAct(${m.id},'prof')">${(typeof UIP!='undefined'&&UIP.lang=='th')?'เปิดโปรไฟล์':'Open profile'}</button>`)}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
