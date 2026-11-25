@@ -2010,6 +2010,7 @@ body.czfs{overflow:hidden}
 .blpgc .row{gap:6px;align-items:center;flex-wrap:wrap}
 body.czfs .mod{z-index:80}
 .ctqhd{font-weight:800;color:#c0392b;margin:2px 0 4px}.ctbd.ctimp{background:#fff4e8;border-left:4px solid #e67e22;padding:6px 8px;border-radius:8px}
+.rgwhy{flex-basis:100%;margin-top:4px}.rgoff{opacity:.5;cursor:not-allowed}
 
 </style>
 </head><body>
@@ -23683,6 +23684,26 @@ if(typeof geRankC=='function'){const f=geRankC,C=new Map();geRankC=function(m){t
 </script>
 <script>
 // =====================================================================================
+//  IDOLVERSE48: Select Bloom! — nothing is released before everything is ready
+// -------------------------------------------------------------------------------------
+//  Every way a single can be released (Release button, automatic release on its Release Day, election / album
+//  singles…) goes through doRelease(). It now refuses while readiness() still lists something (CD covers not
+//  completed, Senbatsu not saved, costumes or videos unfinished, election ceremony not planned…) and shows the list
+//  instead. A confirmed CD cover must still hold at least one member. The Release buttons are disabled while
+//  anything is missing, with the reasons next to them.
+// =====================================================================================
+{const f=readiness;readiness=function(p){const r=f.apply(this,arguments);try{if(p&&Array.isArray(p.types))p.types.forEach(t=>{const c=S.cov&&S.cov[t.name];if(c&&c.status=='confirmed'&&!(c.layers||[]).some(l=>l.t=='m'))r.push(`CD cover for ${t.name} has no member — add the members and confirm it again.`)})}catch(e){console.error(e)}return r}}
+{const f=doRelease;doRelease=function(){const p=S.pj;if(p&&p.status=='producing'){let pr=[];try{pr=readiness(p)}catch(e){console.error(e)}if(pr.length){ui.mod={t:'rel',pr};toast(`Not released: ${pr.length} item(s) are not finished.`,'err');render();return}}return f.apply(this,arguments)}}
+// disable the Release buttons while something is missing
+let RG_C=null;
+function rgMissing(){const p=S&&S.pj;if(!p||p.status!='producing')return null;if(RG_C&&RG_C.day==S.day&&RG_C.t==Date.now()>>9)return RG_C.r;let r=[];try{r=readiness(p)}catch(e){}RG_C={day:S.day,t:Date.now()>>9,r};return r}
+function rgApply(){try{const B=document.querySelectorAll('[onclick="release()"]:not([data-rg])');if(!B.length)return;RG_C=null;const M=rgMissing();B.forEach(b=>{b.setAttribute('data-rg','1');if(!M||!M.length)return;b.disabled=true;b.classList.add('rgoff');b.title=M.join('\n');
+  if(!b.nextElementSibling||!b.nextElementSibling.classList.contains('rgwhy')){const d=document.createElement('div');d.className='st rgwhy';d.innerHTML=`<b>${M.length} ${M.length==1?'item':'items'} before release:</b><ul class="ms">${M.slice(0,6).map(x=>`<li style="color:var(--err)">✗ ${esc(x)}</li>`).join('')}</ul>`;b.after(d);try{if(typeof i18nApply=='function')i18nApply(d)}catch(e){}}})}catch(e){console.error(e)}}
+let RG_RAF=0;try{new MutationObserver(()=>{if(RG_RAF)return;RG_RAF=requestAnimationFrame(()=>{RG_RAF=0;rgApply()})}).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom!  —  Thai translation (ภาษาไทย)
 //  English text -> Thai. Used by js/i18n/i18n.js. Proper nouns (idol names, cities,
 //  countries, generated song titles) are intentionally kept as they are.
@@ -28812,6 +28833,8 @@ I18N_TH_TPL.unshift(["💇 Hairstyle — {0}","💇 ทรงผม — {0}"],["
 Object.assign(I18N_TH,{"Solo":"โซโล่","Duet":"ดูเอ็ท","Choose a design…":"เลือกดีไซน์…","Single":"ซิงเกิ้ล","Stage":"สเตจ","Other":"อื่น ๆ","All":"ทั้งหมด","All groups":"ทุกวง","No design in this category.":"ไม่มีดีไซน์ในหมวดนี้","👗 Dress members one by one":"👗 แต่งชุดทีละคน","Tap a member to dress her (Costume Designer). Every member can wear her own costume.":"แตะเมมเบอร์เพื่อแต่งชุด (Costume Designer) เมมแต่ละคนใส่ชุดต่างกันได้",
  "✔ Own costume":"✔ ชุดของตัวเอง","Original costume":"ชุดต้นฉบับ","🎲 Randomize Costume":"🎲 สุ่มชุด","🎲 Random for every member (same)":"🎲 สุ่มให้ทุกคน (ชุดเดียวกัน)","🎲 Random for every member (each different)":"🎲 สุ่มให้ทุกคน (คนละชุด)","Start from a library design…":"เริ่มจากดีไซน์ในคลัง…","Her costumes…":"ชุดของเธอ…","Copy to members without their own costume":"คัดลอกให้เมมที่ยังไม่มีชุดของตัวเอง","◀ Back to Setlist":"◀ กลับไปเซ็ตลิสต์","💾 Save costume":"💾 บันทึกชุด","Not saved yet":"ยังไม่ได้บันทึก","🔒 This concert can no longer be edited":"🔒 คอนเสิร์ตนี้แก้ไขไม่ได้แล้ว"});
 I18N_TH_TPL.unshift(["Concert Costumes · {0}","ชุดคอนเสิร์ต · {0}"],["{0} / {1} members in their own costume","{0} / {1} คนใส่ชุดของตัวเอง"],["👗 Design · {0}","👗 ดีไซน์ · {0}"],["Design: {0}","ดีไซน์: {0}"],["Costume for {0} in “{1}” saved.","บันทึกชุดของ {0} ในเพลง “{1}” แล้ว"],["{0} · {1}. Each member can wear her own costume — saved for this concert song only.","{0} · {1} เมมแต่ละคนใส่ชุดของตัวเองได้ — บันทึกเฉพาะเพลงนี้ในคอนเสิร์ตนี้"]);
+I18N_TH_TPL.unshift(["Not released: {0} item(s) are not finished.","ยังไม่ปล่อยซิงเกิ้ล: ยังมีอีก {0} รายการที่ไม่เสร็จ"],["CD cover for {0} has no member — add the members and confirm it again.","ปกซีดี {0} ยังไม่มีเมมเบอร์ — ใส่เมมเบอร์แล้วยืนยันปกอีกครั้ง"],["{0} items before release:","ต้องทำอีก {0} รายการก่อนปล่อย:"],["{0} item before release:","ต้องทำอีก {0} รายการก่อนปล่อย:"]);
+I18N_TH_TPL.unshift(["CD cover for {0} is not completed (locked until costumes are finished).","ปกซีดี {0} ยังทำไม่เสร็จ (ล็อกไว้จนกว่าชุดจะผลิตเสร็จ)"],["CD cover for {0} is not completed.","ปกซีดี {0} ยังทำไม่เสร็จ"]);
 
 </script>
 <script>
