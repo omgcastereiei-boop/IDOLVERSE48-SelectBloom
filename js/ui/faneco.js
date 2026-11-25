@@ -47,7 +47,7 @@ const fxGrpOk=(s,gid)=>typeof fxGrpOkCached=='function'?fxGrpOkCached(s,gid):fxG
 const fxGrpOk0=(s,gid)=>{if(!S||S.groups.length<2||gid==null)return 1;try{const w=gsSupW(s,gid,gsAffMap(gid));return w||(s.k==null&&s.gs==null&&gid==(gsMain()||{}).id?1:0)}catch(e){return 1}};
 // budget fullness of the fans who would pay for this (1 = fresh month, → 0 = spent)
 function fxFull(kind,gid){let a=0,b=0;try{S.fb.segs.forEach(s=>{fxSeg(s);const w=s.n*(FX_PREF[kind]||FX_PREF.other)[s.ft]*fxGrpOk(s,gid);if(!w)return;a+=w*Math.max(0,s.bl);b+=w*fxBud(s)})}catch(e){}return b?a/b:1}
-let FX_DC={d:-1,m:{}};const fxDem=(kind,gid)=>{if(FX_DC.d!==S.day||FX_DC.s!==S)FX_DC={d:S.day,s:S,m:{}};const k=kind+'|'+gid;if(FX_DC.m[k]==null)FX_DC.m[k]=fbCl(.6+.42*fxFull(kind,gid),.6,1.05);return FX_DC.m[k]};
+let FX_DC={d:-1,m:{}};const fxDem=(kind,gid)=>{if(FX_DC.d!==S.day||FX_DC.s!==S)FX_DC={d:S.day,s:S,m:{}};const k=kind+'|'+gid;if(FX_DC.m[k]==null){const v=fbCl(.6+.42*fxFull(kind,gid),.6,1.05);FX_DC.m[k]=isFinite(v)?v:1}return FX_DC.m[k]};
 // charge a purchase to the fans: weights by remaining budget, category, preferred activity and the members involved
 let FX_Q=null;
 function fxPay(kind,yen,units,ctx){if(FX_Q&&yen>0){FX_Q.push([kind,yen,units,ctx||{}]);return 0}return fxPayNow(kind,yen,units,ctx)}
@@ -69,7 +69,7 @@ function fxBuyersAny(){let n=0;S.fb.segs.forEach(s=>{if(!s.bx)return;let p=1;for
  let tot;try{tot=f.apply(this,arguments)}finally{try{if(SL)SL.eds.forEach(e=>{if(e._F!=null){e.F=e._F;delete e._F}if(e._P!==undefined){e.P=e._P;delete e._P}})}catch(e){}}
  try{if(tot>0&&!x.ge){const o=S.songs[x.mainId],ids=uniq([x.mainId,...(x.coup||[])].flatMap(i=>(S.songs[i]&&S.songs[i].slots||[]).filter(Boolean)));fxPay('cd',tot*SE_PRICE,tot,{mids:ids,price:SE_PRICE});fxAct('cd',tot,null)}}catch(e){console.error(e)}return tot}}
 let FX_NOPAY=0;
-{const f=earn;earn=function(a,l){try{const L=String(l||'');if(a>0&&!FX_NOPAY&&S&&S.fb){if(L=='Merch & streaming'){const r=fxDem('merch');a=Math.round(a*r);fxPay('merch',a,Math.round(a/250),{price:250})}
+{const f=earn;earn=function(a,l){try{const L=String(l||'');if(a>0&&!FX_NOPAY&&S&&S.fb){if(L=='Merch & streaming'){let r=fxDem('merch');if(!isFinite(r))r=1;a=Math.round(a*r);fxPay('merch',a,Math.round(a/250),{price:250})}
   else if(/^Theater tickets/.test(L)){fxPay('th',a,FX_TH?FX_TH.sold:Math.round(a/3000),{mids:FX_TH?FX_TH.mem:null,price:FX_TH?FX_TH.price:3000,gid:FX_TH?FX_TH.gid:null})}
   else if(/^Sales: /.test(L)){if(!(S.pj&&S.pj.ge))fxPay('cd',a,Math.round(a/SE_PRICE),{price:SE_PRICE})} // election single: its CDs are charged as tokens (geGive)
   else if(/Online membership|membership/i.test(L)){fxPay('th',a,0,{price:980})}
