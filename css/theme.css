@@ -1892,3 +1892,10 @@ body.czfs{overflow:hidden}
  body.czfs .czz .czzgr{grid-column:2;grid-row:2}body.czfs .czz .czzsub{grid-column:2;grid-row:3}body.czfs .czz .czzpanel{grid-column:2;grid-row:4}}
 .pczcard .pczrow{align-items:flex-start;gap:10px;flex-wrap:nowrap}.pczfig{width:74px;height:auto;flex:none;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:12px}.pczfig.pczoff{opacity:.55}
 .pczbtn{display:flex;flex-direction:column;gap:6px;min-width:0}.pczbtn .b{align-self:flex-start}.pczlk{display:inline-flex;align-items:center;gap:6px;font-weight:700}.pczlk input{width:18px;height:18px}
+/* ---- Theater: Stage categories, All-Team & Special Stages ---- */
+.thcats{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.thcats button{border:1px solid var(--line);background:#fffdf8;color:var(--ink);border-radius:999px;padding:6px 13px;font:800 12.5px Quicksand;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.thcats button.on{background:linear-gradient(135deg,#ff9ac8,#b89aff);color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(220,110,170,.3)}.thcats button i{font-style:normal;font:800 10px Quicksand;background:#ff5a9a;color:#fff;border-radius:999px;padding:0 6px}.thcats button.on i{background:#fff;color:#d6457f}
+.spxlist .thsth{display:flex;flex-wrap:wrap;gap:6px}.spxst{cursor:pointer;text-align:left}
+.spxpan .fbkv{margin:6px 0}.spxpan h3{margin:10px 0 4px}.spxnm{font-size:16px}
+.spxsh{border:1px solid var(--line);border-radius:12px;padding:6px 8px;margin:5px 0;background:#fffdf8}.spxsh.done{background:#f4fbf6}.spxsh.cancel{opacity:.7}.spxsh .row{gap:6px;align-items:center;flex-wrap:wrap}
+.spxadd{align-items:flex-end;gap:8px;flex-wrap:wrap}.spxteams{gap:10px;flex-wrap:wrap}.spxrec{margin:6px 0;background:#fff6fb}.spxrepl{background:#fff8ee}

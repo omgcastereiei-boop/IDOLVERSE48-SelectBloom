@@ -7,7 +7,7 @@
 let TH_PC=null;
 {const f=thPerform;thPerform=function(){const outer=TH_PC;if(!outer)TH_PC=new Map();try{return f.apply(this,arguments)}finally{if(!outer)TH_PC=null}}}
 {const f=thPool;thPool=function(key){if(!TH_PC)return f.apply(this,arguments);const k='p|'+key;let v=TH_PC.get(k);if(!v){v=f.apply(this,arguments);TH_PC.set(k,v)}return v.slice()}}
-{const f=thBase;thBase=function(s){if(!TH_PC||!s)return f.apply(this,arguments);const x=(typeof ORG_X!='undefined'&&ORG_X)||null,y=(typeof TH5_X!='undefined'&&TH5_X)||null,k='b|'+s.id+'|'+(x?x.id:'')+'|'+(y?y.id:'')+'|'+(s.lineup?s.lineup.length:'');let v=TH_PC.get(k);if(!v){v=f.apply(this,arguments);TH_PC.set(k,v)}return v.slice()}}
+{const f=thBase;thBase=function(s){if(!TH_PC||!s)return f.apply(this,arguments);const x=(typeof ORG_X!='undefined'&&ORG_X)||null,y=(typeof TH5_X!='undefined'&&TH5_X)||null,k='b|'+s.id+'|'+(x?x.id:'')+'|'+(y?y.id:'')+'|'+(s.lineup?s.lineup.join(','):'');let v=TH_PC.get(k);if(!v){v=f.apply(this,arguments);TH_PC.set(k,v)}return v.slice()}}
 // fan cohort clean-up: the full pass (dropping graduated members from every cohort) only when the active roster
 // changed; otherwise only empty cohorts are removed and counts are kept whole
 let FB_CL={sig:null,s:null};
