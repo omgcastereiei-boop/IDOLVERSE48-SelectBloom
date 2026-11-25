@@ -1944,6 +1944,34 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .sptw{overflow-x:auto}.spt{width:100%;border-collapse:collapse;font:600 12px Quicksand}.spt th,.spt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.spt .up,.gevgrp .up,.spmons .up{color:#1f8a4c}.spt .dn,.gevgrp .dn,.spmons .dn{color:#c2406e}
 .spsb{border:0;background:none;font:800 12px Quicksand;color:var(--ink);cursor:pointer;padding:0}.spsb.on{color:#c2407e}
 .spmons{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin:4px 0 8px}.spmons>div{display:flex;flex-direction:column;background:#fffdf8;border:1px solid var(--line);border-radius:10px;padding:6px 8px;font:700 12px Quicksand}
+/* ---- Costume Studio: unified workspace, icons, 5-column grid, fullscreen ---- */
+.czic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
+.czicw{display:inline-flex;align-items:center;margin-right:.25em}
+.czzgr .czzic .czic{width:22px;height:22px;stroke-width:1.7}.czzgr button .czzic{font-size:0;line-height:0;color:#b0407a}.czzgr button.on .czzic{color:#fff}
+.czzback{display:flex;align-items:center;justify-content:center}.czzback .czic{width:18px;height:18px}
+.czzfs{flex:none;display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 11px;border-radius:12px;border:1px solid #efb7d4;background:linear-gradient(135deg,#fff0f7,#f1eaff);color:#a8407a;font:800 12px Quicksand;cursor:pointer}
+.czzfs .czic{width:17px;height:17px}
+.czfsbar{display:flex;justify-content:flex-end;margin:0 0 6px}
+/* five items per row on phones / in the fullscreen studio, square thumbnails, compact labels */
+.czz .czzpanel .czitems,.czz .czzpanel .czpats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px}
+.czz .czzpanel .czitem{min-height:0;padding:2px;border-radius:11px;border-width:2px;width:auto;min-width:0}
+.czz .czzpanel .czitem svg{width:100%;height:auto;aspect-ratio:1;border-radius:8px}
+.czz .czzpanel .czitem small{font-size:8.6px;line-height:1.1;max-width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;min-height:2.2em}
+.czz .czzpanel .czpat{min-width:0;padding:2px}.czz .czzpanel .czpat small{font-size:8.6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+@media (max-width:340px){.czz .czzpanel .czitem small{display:none}}
+/* drag the selected accessory on the preview */
+.czstage.czdrag{touch-action:none;cursor:grab}.czstage.czdrag:active{cursor:grabbing}
+/* fullscreen studio: the editor fills the screen, game chrome hidden */
+body.czfs .hd,body.czfs .nav,body.czfs .side,body.czfs aside.sb,body.czfs .gssw,body.czfs .locb,body.czfs .gebanner,body.czfs .sbar{display:none!important}
+body.czfs .czz{position:fixed!important;inset:0!important;top:0!important;height:100dvh!important;margin:0!important;border-radius:0;z-index:60;padding:max(5px,env(safe-area-inset-top)) max(5px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left))}
+body.czfs{overflow:hidden}
+@media (min-width:720px){body.czfs .czz{max-width:none}body.czfs .czz .czzst{flex-basis:46%}body.czfs .czz .czzpanel .czitems,body.czfs .czz .czzpanel .czpats{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+.czicw svg.czic,svg.czic{width:1.1em!important;height:1.1em!important;aspect-ratio:auto!important;background:none!important;border-radius:0!important;max-width:none}
+.czitem .czicw{margin:0 0 0 .15em;color:#d6457f}.czitem small .czicw{display:inline-flex;vertical-align:-.1em}
+.czzgr .czzic svg.czic{width:22px!important;height:22px!important}.czzback svg.czic{width:18px!important;height:18px!important}.czzfs svg.czic{width:17px!important;height:17px!important}
+@media (min-width:900px){body.czfs .czz{display:grid;grid-template-columns:minmax(300px,38%) 1fr;grid-template-rows:auto auto auto minmax(0,1fr);column-gap:10px}
+ body.czfs .czz .czztop{grid-column:1/-1}body.czfs .czz .czzst{grid-column:1;grid-row:2/5;height:auto;flex:none}
+ body.czfs .czz .czzgr{grid-column:2;grid-row:2}body.czfs .czz .czzsub{grid-column:2;grid-row:3}body.czfs .czz .czzpanel{grid-column:2;grid-row:4}}
 
 </style>
 </head><body>
@@ -6167,7 +6195,7 @@ const _rpSen=V.senbatsu;V.senbatsu=function(){const o=S.songs[ui.es];let h=_rpSe
 function plCzMigrate(o){if(!o||o.czMig)return;const z=o.cdz;if(z&&(z.main||Object.values(z.mem||{}).some(m=>m.d))){czMembers(o).forEach(m=>{const mm=z.mem[m.id]=z.mem[m.id]||{};if(!mm.own){const p=czFor(o,m.id);if(p){mm.own={name:`${o.title} — ${m.name}`,p:czClone(p)};mm.ok=true}}})}o.czMig=1}
 function plCzOpen(id,mid){const o=S.songs[id];if(!o)return;const mem=czMembers(o);if(!mem.length)return toast('Select this song\'s Senbatsu first.','err');if(plReused(S.pj,o))return toast('This released song keeps its original costumes.','err');czLib();
  const same=ui.scz&&ui.scz.song==id&&ui.scz.mid==mid;if(same&&view=='songcz')return;const go=()=>{ui.scz={song:id,mid:mid&&mem.some(m=>m.id==mid)?mid:mem[0].id};plCzLoad();view='songcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='songcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
-function plCzLoad(){const{song,mid}=ui.scz,o=S.songs[song],mm=czSongZ(o).mem[mid]||{},id=`mz~${song}~${mid}`,src=mm.own?mm.own.p:(czFor(o,mid)||CZ_PRESETS[0][1]),prev=ui.czE||{};
+function plCzLoad(){const{song,mid}=ui.scz,o=S.songs[song],mm=czSongZ(o).mem[mid]||{},id=`mz~${song}~${mid}`,src=mm.own?mm.own.p:(czFor(o,mid)||czStarter()),prev=ui.czE||{};
  ui.czE={did:mm.own?id:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1}}
 function plCzMem(mid){if(!ui.scz)return;plCzOpen(ui.scz.song,mid)}
 function plCzSave(){const{song,mid}=ui.scz||{},o=S.songs[song],m=get(mid);if(!o||!m)return;if(lockedSong(song))return toast('The release is in production: costumes are locked.','err');const z=czSongZ(o),mm=z.mem[mid]=z.mem[mid]||{};
@@ -6293,7 +6321,7 @@ function plCzPos(o){const sl=(o&&o.fm&&o.fm.sl)||[],out={};let n=1;try{n=nRows(s
 function plCzHost(key){const p=S.pj;if(!p)return null;if(key=='__single'){return{o:plSczHost(p),mem:plSczMembers(p),single:1,locked:false}}const o=S.songs[key];return o?{o,mem:czMembers(o),locked:lockedSong(key)}:null}
 plCzOpen=function(id,mid){const H=plCzHost(id);if(!H)return;const mem=H.mem;if(!mem.length)return toast(H.single?'Every eligible member is in the Title Track Senbatsu, so nobody needs a Single Costume.':'Select this song\'s Senbatsu first.','err');if(!H.single&&plReused(S.pj,H.o))return toast('This released song keeps its original costumes.','err');czLib();
  const same=ui.scz&&ui.scz.song==id&&ui.scz.mid==mid;if(same&&view=='songcz')return;const go=()=>{ui.scz={song:id,mid:mid&&mem.some(m=>m.id==mid)?mid:mem[0].id};plCzLoad();view='songcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='songcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()};
-plCzLoad=function(){const{song,mid}=ui.scz,H=plCzHost(song),o=H.o,m=get(mid),mm=czSongZ(o).mem[mid]||{},src=mm.own?mm.own.p:(czFor(o,mid)||(H.single&&m&&m.profCz&&m.profCz.p)||CZ_PRESETS[0][1]),prev=ui.czE||{};
+plCzLoad=function(){const{song,mid}=ui.scz,H=plCzHost(song),o=H.o,m=get(mid),mm=czSongZ(o).mem[mid]||{},src=mm.own?mm.own.p:(czFor(o,mid)||(H.single&&m&&m.profCz&&m.profCz.p)||czStarter()),prev=ui.czE||{};
  ui.czE={did:mm.own?`mz~${song}~${mid}`:null,p:czClone(src),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1}};
 plCzSave=function(){const{song,mid}=ui.scz||{},H=plCzHost(song),m=get(mid);if(!H||!m)return;if(H.locked)return toast('The release is in production: costumes are locked.','err');const o=H.o,z=czSongZ(o),mm=z.mem[mid]=z.mem[mid]||{};
  if(!mm.own)mm.own={name:`${H.single?'Single Costume':o.title} — ${m.name}`,p:czClone(ui.czE.p)};mm.own.p=czClone(ui.czE.p);mm.own.updated=S.day;mm.ok=true;ui.czE.did=`mz~${song}~${mid}`;ui.czE.dirty=0;if(!H.single)czSync(o);toast(`${H.single?'Single Costume':'Costume'} for ${m.name}${H.single?'':` in "${o.title}"`} saved.`);render()};
@@ -8071,7 +8099,7 @@ function thCzCtx(){const c=ui.thcz;if(!c)return null;const s=thStage(c.sid);if(!
 function thCzOpen(id,mid){const s=thEd(),it=thItem(id);if(!s||!it)return;const M=thMem(s,it);if(!M.length)return toast('This song has no performers yet.','err');
  const go=()=>{ui.thcz={sid:s.id,item:id,mid:M.includes(+mid)?+mid:M[0]};thCzLoad();view='thcz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='thcz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function thCzMem(mid){if(ui.thcz)thCzOpen(ui.thcz.item,mid)}
-function thCzLoad(){const X=thCzCtx();if(!X)return;const p=thCzOf(X.it,X.c.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.c.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,thz:1}}
+function thCzLoad(){const X=thCzCtx();if(!X)return;const p=thCzOf(X.it,X.c.mid)||czStarter(),prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.c.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,thz:1}}
 const thCzG=X=>X&&thGuardEdit(X.s);
 const thCzNoTr=X=>{if(X.tr){toast('Trainee Theater cannot produce new costumes. Choose an existing costume.','err');return false}return true};
 function thCzSave(){const X=thCzCtx();if(!thCzG(X)||!thCzNoTr(X))return;const m=get(X.c.mid);thSetOwn(X.it,m.id,ui.czE.p);ui.czE.dirty=0;toast(`Costume for ${m.name} in “${(S.songs[X.it.song]||{}).title||''}” saved.`);render()}
@@ -8266,7 +8294,7 @@ function czPickUse(k,id,all){const c=ui.czpk,e=czPickP(k,id);if(!c||!e||!e.p)ret
   else if(X.tr){thSetOwn(X.it,X.c.mid,e.it?(thCzOf(e.it,X.c.mid)||e.p):e.p);thCzLoad();toast(`${get(X.c.mid).name} wears “${e.name}”.`)}else{ui.czE.p=czClone(e.it?(thCzOf(e.it,X.c.mid)||e.p):e.p);ui.czE.dirty=1;toast(`“${e.name}” loaded for ${get(X.c.mid).name}. Edit it if you like, then save.`)}}
  else{const H=ui.scz&&plCzHost(ui.scz.song);if(!H)return;if(H.locked)return toast('The release is in production: costumes are locked.','err');if(all){const z=czSongZ(H.o);H.mem.forEach(m=>{const mm=z.mem[m.id]=z.mem[m.id]||{};mm.own={name:`${H.single?'Single Costume':H.o.title} — ${m.name}`,p:czClone(e.p),updated:S.day};mm.ok=true});if(!H.single)czSync(H.o);plCzLoad();toast(`“${e.name}” assigned to all ${H.mem.length} member(s).`)}else{ui.czE.p=czClone(e.p);ui.czE.dirty=1;toast(`“${e.name}” loaded into the editor. Save to keep it.`)}}
  ui.mod=null;ui.czpk=null;render()}
-function thCzNewOne(){const X=thCzCtx();if(!thCzG(X)||!thCzNoTr(X))return;ui.czE.p=czClone(CZ_PRESETS[0][1]);ui.czE.dirty=1;toast('New costume started from a basic preset. Design it, then save.');render()}
+function thCzNewOne(){const X=thCzCtx();if(!thCzG(X)||!thCzNoTr(X))return;ui.czE.p=czClone(czStarter());ui.czE.dirty=1;toast('New costume started from a basic T-shirt, shorts and sneakers. Design it, then save.');render()}
 // saved Stage costumes also go to the Costume Library so they can be reused anywhere
 {const f=thCzSave;thCzSave=function(){const X=thCzCtx();const r=f.apply(this,arguments);try{if(X&&!X.tr&&ui.czE&&!ui.czE.dirty){const m=get(X.c.mid),o=S.songs[X.it.song],p=thCzOf(X.it,X.c.mid);if(p&&fxLibAdd(p,`${o?o.title:'Stage'} — ${m.name}`)){const d=czLib().ds.at(-1);d.stg=X.s.id;d.from=`${thLbl(X.s,X.it)} ${o?o.title:''}`.trim()}}}catch(e){console.error(e)}return r}}
 {const f=V.thcz;V.thcz=function(){let h=f.apply(this,arguments);const X=thCzCtx();if(!X)return h;const ro=X.s.status=='retired'||X.s.status=='archived';if(ro)return h;
@@ -15658,7 +15686,7 @@ function ccDrCtx(){const C=ccCur(),D=ui.ccdr,r=C&&D&&ccItem(C,D.iid);if(!r)retur
 function ccDrOpen(iid,mid){const C=ccCur(),r=C&&ccItem(C,iid);if(!r)return;const M=ccPerf(r.it);if(!M.length)return toast('Nobody performs this song yet — set the formation first.','err');
  const go=()=>{ui.ccSetY=ui.ccSetY??window.scrollY;ui.ccdr={iid,mid:M.includes(+mid)?+mid:M[0]};ccDrLoad();view='cccz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='cccz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function ccDrMem(mid){if(ui.ccdr)ccDrOpen(ui.ccdr.iid,mid)}
-function ccDrLoad(){const X=ccDrCtx();if(!X)return;const p=ccCzFor(X.C,X.s,X.idx,X.D.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.D.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,ccz:1}}
+function ccDrLoad(){const X=ccDrCtx();if(!X)return;const p=ccCzFor(X.C,X.s,X.idx,X.D.mid)||czStarter(),prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.D.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,ccz:1}}
 // switch the song to member-by-member costumes, keeping what everyone wears now
 function ccDrMemMode(X){const z=X.it.cz=X.it.cz||{mode:'orig'};if(z.mode!='mem'){const cur={};X.M.forEach(id=>{const p=ccCzFor(X.C,X.s,X.idx,id);if(p)cur[id]=czClone(p)});X.it.cz={mode:'mem',mem:{},memP:cur}}return X.it.cz}
 function ccDrSet(X,id,p){const z=ccDrMemMode(X);z.memP=z.memP||{};z.memP[id]=czClone(p);if(z.mem)delete z.mem[id];z.done=z.done||{};z.done[id]=1}
@@ -21347,47 +21375,146 @@ window.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});if(window.v
 //     · category groups (icons) · categories of the group · scrolling panel
 //  The panel shows the selected category's items + the full editor and colour tools, or the
 //  "Closet" (design library, rename / duplicate / delete / presets) or "Songs" (assignment) tabs.
-//  Desktop keeps the existing layout. No data, logic or rendering is changed.
+//  Every costume screen (Costume Designer, Single Production, Theater, Concert, Graduation) uses this workspace on
+//  phones and in the fullscreen studio; their own workflow controls move into the "Members" tab unchanged.
+//  Desktop keeps the existing layout (plus a fullscreen button). No data, logic or rendering is changed.
 // =====================================================================================
-const czzMob=()=>window.innerWidth<720;
-const CZZ_IC={'Clothing':'👗','Details':'🎀','Accessories':'💍','Festival & seasonal':'🎐','Traditional ornaments':'🏮','Graduation':'🎓'};
+const CZZ_VIEWS=new Set(['costume','songcz','thcz','cccz','gradcz']); // every screen that edits a costume (shared czGridHtml editor)
+const czzFs=()=>document.body.classList.contains('czfs');
+const czzMob=()=>window.innerWidth<720||czzFs();
 const CZZ_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
-function czzBack(){const b=[...document.querySelectorAll('.gebanner button,.plback button,.c.gebanner button')].find(x=>/^\s*[←◀]/.test(x.textContent));if(b){b.click();return}ui.czE=null;goView('music')}
+// ---- interface icons (no emoji anywhere in the studio) ---------------------------------------------------------------------
+const CZI={hanger:'<path d="M12 7.5a2 2 0 1 1 2-2"/><path d="M12 7.5v1.2L3.6 15.2c-.9.7-.4 2.1.7 2.1h15.4c1.1 0 1.6-1.4.7-2.1L12 8.7"/>',
+ bow:'<path d="M12 12 5 7.5v9zM12 12l7-4.5v9z"/><circle cx="12" cy="12" r="1.6"/>',gem:'<path d="M7 4h10l4 5-9 11L3 9z"/><path d="M3 9h18M9 4l3 16 3-16"/>',
+ lantern:'<path d="M12 2v2M9 4h6M7.5 7.5c0-2 9-2 9 0v9c0 2-9 2-9 0z"/><path d="M9 20h6M12 20v2M7.5 12h9"/>',fan:'<path d="M12 20 3.5 9.5a11 11 0 0 1 17 0z"/><path d="M12 20 8 6.6M12 20V6M12 20l4-13.4"/>',
+ cap:'<path d="M12 4 2 9l10 5 10-5z"/><path d="M6 11.2V16c0 1.6 12 1.6 12 0v-4.8M21 9v5"/>',closet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/>',
+ music:'<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',users:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.4 2.8-5 5.5-5s4.9 1.6 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.2c2.4-.4 4.4 1 4.9 4.8"/>',
+ spark:'<path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/>',save:'<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h8V4M8 20v-6h8v6"/>',
+ dice:'<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.2"/><circle cx="15" cy="15" r="1.2"/><circle cx="15" cy="9" r="1.2"/><circle cx="9" cy="15" r="1.2"/>',
+ warn:'<path d="M12 4 2.8 19.5h18.4z"/><path d="M12 10v4.5M12 17v.4"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',back:'<path d="M15 5 8 12l7 7"/>',undo:'<path d="M9 7 4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 0 12"/>',
+ copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',hair:'<path d="M5 20c0-9 2.5-15 7-15s7 6 7 15"/><path d="M8.5 9.5c2 1.4 5 1.4 7 0"/>',
+ star:'<path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/>',trash:'<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>',photo:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-8 8"/>',
+ cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
+ fsOn:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',fsOff:'<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>',move:'<path d="M12 3v18M3 12h18M12 3l-2.5 2.5M12 3l2.5 2.5M12 21l-2.5-2.5M12 21l2.5-2.5M3 12l2.5-2.5M3 12l2.5 2.5M21 12l-2.5-2.5M21 12l-2.5 2.5"/>',
+ pin:'<path d="M12 21s-6-6.2-6-11a6 6 0 0 1 12 0c0 4.8-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.4"/>'};
+const czIco=k=>`<svg class="czic" viewBox="0 0 24 24" aria-hidden="true">${CZI[k]||CZI.spark}</svg>`;
+const CZZ_IC={'Clothing':'hanger','Basics':'hanger','Details':'bow','Accessories':'gem','Festival & seasonal':'lantern','Festival & Graduation':'lantern','Traditional ornaments':'fan','Traditional':'fan','Graduation':'cap'};
+// emoji found in the studio screens -> interface icon (anything else is simply removed)
+const CZ_EMO={'💾':'save','🎲':'dice','👗':'hanger','👘':'hanger','🎓':'cap','⚠':'warn','🔒':'lock','🔓':'lock','✓':'check','✔':'check','✅':'check','✕':'x','✖':'x','❌':'x','✎':'edit','✏':'edit','◀':'back','←':'back','↺':'undo','🔄':'undo','📋':'copy','💇':'hair','✨':'spark','⭐':'star','★':'star','🗑':'trash','📸':'cam','📷':'cam','🖼':'photo','💖':'heart','❤':'heart','🎵':'music','🎶':'music','🗂':'closet','🎀':'bow','💍':'gem','🏮':'lantern','🎐':'lantern','👑':'star','👥':'users','📍':'pin','ℹ':'info','🎂':'star','🎭':'star','🌸':'spark','💡':'info'};
+const CZ_EMO_RE=/(?:\p{Extended_Pictographic}|[✓✔✕✖✎◀←↺★])️?/gu;
+function czzDeEmoji(root){if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),L=[];let n;while(n=w.nextNode())if(CZ_EMO_RE.test(n.nodeValue))L.push(n),CZ_EMO_RE.lastIndex=0;else CZ_EMO_RE.lastIndex=0;
+ L.forEach(t=>{const pa=t.parentElement;if(!pa)return;if(/^(OPTION|TEXTAREA|TITLE|STYLE|SCRIPT)$/.test(pa.tagName)||pa.closest('svg')){t.nodeValue=t.nodeValue.replace(CZ_EMO_RE,'').replace(/^\s+/,'');return}
+  const parts=t.nodeValue.split(CZ_EMO_RE),ms=t.nodeValue.match(CZ_EMO_RE)||[],fr=document.createDocumentFragment();parts.forEach((p,i)=>{if(p)fr.appendChild(document.createTextNode(i&&!ms[i-1]?p:p));const m=ms[i];if(m){const k=CZ_EMO[m.replace('️','')];if(k){const sp=document.createElement('span');sp.className='czicw';sp.innerHTML=czIco(k);fr.appendChild(sp)}}});pa.replaceChild(fr,t)});
+ root.querySelectorAll('option').forEach(o=>{if(CZ_EMO_RE.test(o.textContent)){CZ_EMO_RE.lastIndex=0;o.textContent=o.textContent.replace(CZ_EMO_RE,'').trim()}CZ_EMO_RE.lastIndex=0});
+ root.querySelectorAll('[title],[placeholder],[aria-label]').forEach(el=>['title','placeholder','aria-label'].forEach(a=>{const v=el.getAttribute(a);if(v&&CZ_EMO_RE.test(v)){CZ_EMO_RE.lastIndex=0;el.setAttribute(a,v.replace(CZ_EMO_RE,'').trim())}CZ_EMO_RE.lastIndex=0}))}
+// ---- navigation ----------------------------------------------------------------------------------------------------------------
+function czzBack(){const all=[...document.querySelectorAll('.gebanner button,.plback button,.c.gebanner button,.czzpanel [data-tab="setup"] button,.plczh button')];
+ const b=all.find(x=>/^\s*(?:[←◀]|Back\b|กลับ)/.test(x.textContent)||x.querySelector('.czicw svg path[d="M15 5 8 12l7 7"]')&&/Back|กลับ|Stage|Theater|Concert|Single|Election|Graduation/.test(x.textContent));
+ czzFsExit();if(b){b.click();return}ui.czE=null;goView(view=='thcz'?'thset':view=='cccz'?'concert':view=='gradcz'?'former':'music')}
 function czzTab(t,g){ui.czzT=t;if(g!=null)ui.czzG=g;czzApply();if(t=='items'&&g!=null){const row=document.querySelectorAll('.czzsub .czsr')[g];if(row&&!row.querySelector('.on')){const b=row.querySelector('button');if(b)b.click()}}}
 // show the active tab / group without re-rendering (nothing in the costume changes)
 function czzApply(){const z=document.querySelector('.czz');if(!z)return;const t=ui.czzT||'items',g=ui.czzG|0;
  z.querySelectorAll('.czzg').forEach((b,i)=>b.classList.toggle('on',t=='items'?i==g:false));z.querySelectorAll('.czzx').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
  z.querySelectorAll('.czzsub .czsr').forEach((r,i)=>r.style.display=t=='items'&&i==g?'':'none');const sub=z.querySelector('.czzsub');if(sub)sub.style.display=t=='items'?'':'none';
  z.querySelectorAll('.czzpanel [data-tab]').forEach(el=>el.style.display=el.dataset.tab==t?'':'none');czzSize()}
-function czzBuild(){const g=document.querySelector('.czgrid');if(!g||!czzMob()||g.closest('.czz'))return false;const root=g.parentElement;
- const lib=root.querySelector(':scope > .czlib'),head=root.querySelector(':scope > .czhead'),asg=root.querySelector(':scope > .czasg'),nav=g.querySelector('.czcats'),sw=g.querySelector('.czstagewrap'),panel=g.querySelector('.czpanel');if(!nav||!sw||!panel)return false;
- const stage=sw.querySelector('.czstage'),pose=sw.querySelector('.czpose'),act=sw.querySelector('.czact'),d=czEditing&&czEditing();
- const z=document.createElement('div');z.className='czz';
+// ---- fullscreen: the browser Fullscreen API where it exists, a full-window editing mode everywhere ------------------------------
+function czzFsOn(){document.body.classList.add('czfs');const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+ if(rq&&!(document.fullscreenElement||document.webkitFullscreenElement)){try{const r=rq.call(el,{navigationUI:'hide'});if(r&&r.catch)r.catch(()=>{})}catch(e){}}ui.czzFs=1;render()}
+function czzFsExit(){if(!document.body.classList.contains('czfs'))return;document.body.classList.remove('czfs');ui.czzFs=0;const ex=document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen;
+ if(ex&&(document.fullscreenElement||document.webkitFullscreenElement)){try{const r=ex.call(document);if(r&&r.catch)r.catch(()=>{})}catch(e){}}}
+function czzFsTog(){if(czzFs()){czzFsExit();render()}else czzFsOn()}
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!(document.fullscreenElement||document.webkitFullscreenElement)&&czzFs()){document.body.classList.remove('czfs');ui.czzFs=0;if(CZZ_VIEWS.has(view))render()}}));
+// ---- build the workspace from the existing editor nodes ---------------------------------------------------------------------------
+function czzBuild(){const g=document.querySelector('.czgrid');if(!g||!czzMob()||g.closest('.czz'))return false;const root=g.parentElement,cz=view=='costume';
+ const lib=cz?root.querySelector(':scope > .czlib'):null,head=cz?root.querySelector(':scope > .czhead'):null,asg=cz?root.querySelector(':scope > .czasg'):null,nav=g.querySelector('.czcats'),sw=g.querySelector('.czstagewrap'),panel=g.querySelector('.czpanel');if(!nav||!sw||!panel)return false;
+ const stage=sw.querySelector('.czstage'),pose=sw.querySelector('.czpose'),act=sw.querySelector('.czact'),d=cz&&czEditing&&czEditing(),h2=root.querySelector(':scope > h2.ht');
+ // workflow controls of the other studios (member picker, presets, random, copy to members, hairstyle ...) stay as they are
+ const setup=cz?[]:[...root.children].filter(c=>c!==g&&c!==h2&&!c.matches('.gssw,.locb,.gebanner,.czz,.czfsbar,script,style'));
+ const title=cz?CZZ_T('Costume Studio','สตูดิโอชุด'):((h2&&h2.textContent.replace(CZ_EMO_RE,'').trim())||CZZ_T('Costume Studio','สตูดิโอชุด')),subt=cz?(d?d.name:''):(ui.czE&&ui.czE.mid&&get(ui.czE.mid)?get(ui.czE.mid).name:'');
+ const z=document.createElement('div');z.className='czz';z.dataset.v=view;
  // 1 · top bar
- const top=document.createElement('div');top.className='czztop';top.innerHTML=`<div class="czztr"><button class="czzback" onclick="czzBack()" aria-label="Back">◀</button><div class="czztt"><b>${CZZ_T('Costume Studio','สตูดิโอชุด')}</b><small>${esc(d?d.name:'')}</small></div></div>`;if(act){act.classList.add('czzact');top.appendChild(act)}z.appendChild(top);
+ const top=document.createElement('div');top.className='czztop';top.innerHTML=`<div class="czztr"><button class="czzback" onclick="czzBack()" aria-label="Back">${czIco('back')}</button><div class="czztt"><b>${esc(title)}</b><small>${esc(subt)}</small></div><span style="flex:1"></span><button class="czzfs" onclick="czzFsTog()" aria-label="${czzFs()?'Exit fullscreen':'Fullscreen'}" title="${czzFs()?CZZ_T('Exit fullscreen','ออกจากโหมดเต็มจอ'):CZZ_T('Fullscreen','เต็มจอ')}">${czIco(czzFs()?'fsOff':'fsOn')}<span>${czzFs()?CZZ_T('Exit','ออก'):CZZ_T('Full screen','เต็มจอ')}</span></button></div>`;if(act){act.classList.add('czzact');top.appendChild(act)}z.appendChild(top);
  // 2 · pinned preview
  const st=document.createElement('div');st.className='czzst';if(stage)st.appendChild(stage);if(pose){pose.classList.add('czzpose');st.appendChild(pose)}z.appendChild(st);
  // 3 · category groups + categories (existing buttons)
  const sh=[...nav.querySelectorAll(':scope > .czsh')],rows=[...nav.querySelectorAll(':scope > .czsr')];let active=rows.findIndex(r=>r.querySelector('.on'));if(active<0)active=0;
- if(ui.czzG==null||ui.czzLast!==(ui.czE&&ui.czE.cat)){ui.czzG=active;ui.czzLast=ui.czE&&ui.czE.cat}
- const gr=document.createElement('div');gr.className='czzgr';gr.innerHTML=sh.map((h,i)=>{const nm=(h.childNodes[0]&&h.childNodes[0].textContent||h.textContent).trim(),cnt=h.querySelector('i');return`<button class="czzg" onclick="czzTab('items',${i})"><span class="czzic">${CZZ_IC[nm]||'✨'}</span><small>${esc(nm)}</small>${cnt?`<i>${cnt.textContent}</i>`:''}</button>`}).join('')+`<button class="czzx" data-t="closet" onclick="czzTab('closet')"><span class="czzic">🗂</span><small>${CZZ_T('Closet','ตู้เสื้อผ้า')}</small></button>`+(asg?`<button class="czzx" data-t="assign" onclick="czzTab('assign')"><span class="czzic">🎵</span><small>${CZZ_T('Songs','เพลง')}</small></button>`:'');
+ const ck=view+'|'+(ui.czE&&ui.czE.cat);if(ui.czzG==null||ui.czzLast!==ck){ui.czzG=active;ui.czzLast=ck}if(ui.czzView!==view){ui.czzView=view;ui.czzT='items'}
+ const gr=document.createElement('div');gr.className='czzgr';gr.innerHTML=(setup.length?`<button class="czzx" data-t="setup" onclick="czzTab('setup')"><span class="czzic">${czIco('users')}</span><small>${CZZ_T('Members','เมมเบอร์')}</small></button>`:'')+sh.map((h,i)=>{const nm=(h.childNodes[0]&&h.childNodes[0].textContent||h.textContent).trim(),cnt=h.querySelector('i');return`<button class="czzg" onclick="czzTab('items',${i})"><span class="czzic">${czIco(CZZ_IC[nm]||'spark')}</span><small>${esc(nm)}</small>${cnt?`<i>${cnt.textContent}</i>`:''}</button>`}).join('')
+  +(cz?`<button class="czzx" data-t="closet" onclick="czzTab('closet')"><span class="czzic">${czIco('closet')}</span><small>${CZZ_T('Closet','ตู้เสื้อผ้า')}</small></button>`:'')+(asg?`<button class="czzx" data-t="assign" onclick="czzTab('assign')"><span class="czzic">${czIco('music')}</span><small>${CZZ_T('Songs','เพลง')}</small></button>`:'');
  z.appendChild(gr);const sub=document.createElement('div');sub.className='czzsub';rows.forEach(r=>sub.appendChild(r));z.appendChild(sub);
- // 4 · scrolling panel: items + editor + colour tools (existing nodes), closet, songs
+ // 4 · scrolling panel: items + editor + colour tools (existing nodes), closet, songs / the studio's own controls
  const pn=document.createElement('div');pn.className='czzpanel';const it=document.createElement('div');it.dataset.tab='items';it.appendChild(panel);[...sw.children].forEach(c=>{if(c!==stage&&c!==pose&&c!==act)it.appendChild(c)});pn.appendChild(it);
- const cl=document.createElement('div');cl.dataset.tab='closet';if(lib)cl.appendChild(lib);if(head)cl.appendChild(head);pn.appendChild(cl);if(asg){const as=document.createElement('div');as.dataset.tab='assign';as.appendChild(asg);pn.appendChild(as)}z.appendChild(pn);
- g.replaceWith(z);return true}
+ if(cz){const cl=document.createElement('div');cl.dataset.tab='closet';if(lib)cl.appendChild(lib);if(head)cl.appendChild(head);pn.appendChild(cl);if(asg){const as=document.createElement('div');as.dataset.tab='assign';as.appendChild(asg);pn.appendChild(as)}}
+ else{const su=document.createElement('div');su.dataset.tab='setup';setup.forEach(c=>su.appendChild(c));pn.appendChild(su);if(h2)h2.style.display='none'}
+ z.appendChild(pn);g.replaceWith(z);return true}
 // ---- sizing (same principle as the CD Cover Studio workspace) -------------------------------------------------------------
-function czzSize(){const z=document.querySelector('.czz');if(!z)return;const vv=window.visualViewport,vh=vv?vv.height:window.innerHeight,hd=document.querySelector('.hd'),nav=document.querySelector('.nav'),
- hdB=hd?Math.max(0,hd.getBoundingClientRect().bottom):0,navH=nav&&getComputedStyle(nav).display!='none'&&vh>=window.innerHeight*.8?nav.getBoundingClientRect().height:0,avail=Math.max(360,vh-hdB-navH-6),kb=vv&&vv.height<window.innerHeight*.75;
- z.style.top=hdB+'px';z.style.height=avail+'px';z.style.setProperty('--czzst',Math.round(avail*(kb?.22:.36))+'px');
- const w=z.closest('main,.main,#app')||document.documentElement;void w;const cur=parseFloat(z.style.marginBottom)||0,aligned=window.scrollY+z.getBoundingClientRect().top-hdB,extra=document.documentElement.scrollHeight-(aligned+window.innerHeight);if(Math.abs(extra)>1)z.style.marginBottom=Math.min(0,cur-extra)+'px'}
-{const f=render;render=function(){let keep=null;const pn0=document.querySelector('.czzpanel');if(view=='costume'&&pn0)keep={t:pn0.scrollTop,cat:ui.czE&&ui.czE.cat,sub:(document.querySelector('.czzsub')||{}).scrollLeft||0};
- const r=f.apply(this,arguments);try{if(view=='costume'&&czzBuild()){czzApply();const pn=document.querySelector('.czzpanel');if(pn&&keep){pn.scrollTop=keep.cat==(ui.czE&&ui.czE.cat)?keep.t:0;const sb=document.querySelector('.czzsub');if(sb)sb.scrollLeft=keep.sub}
-  if(ui.czzVisit!==1){ui.czzVisit=1;const al=()=>{const z=document.querySelector('.czz'),hd=document.querySelector('.hd');if(!z)return;window.scrollTo(0,Math.max(0,window.scrollY+z.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0)));czzSize()};al();setTimeout(al,60);setTimeout(al,250)}}else if(view!='costume')ui.czzVisit=0}catch(e){console.error(e)}return r}}
-window.addEventListener('resize',()=>{if(view!='costume')return;const z=!!document.querySelector('.czz');if(z!==czzMob())render();else czzSize()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(view=='costume')czzSize()});
+function czzSize(){const z=document.querySelector('.czz');if(!z)return;const vv=window.visualViewport,vh=vv?vv.height:window.innerHeight,fs=czzFs(),hd=fs?null:document.querySelector('.hd'),nav=fs?null:document.querySelector('.nav'),
+ hdB=hd?Math.max(0,hd.getBoundingClientRect().bottom):0,navH=nav&&getComputedStyle(nav).display!='none'&&vh>=window.innerHeight*.8?nav.getBoundingClientRect().height:0,avail=Math.max(360,vh-hdB-navH-(fs?0:6)),kb=vv&&vv.height<window.innerHeight*.75;
+ z.style.top=hdB+'px';z.style.height=avail+'px';z.style.setProperty('--czzst',Math.round(avail*(kb?.22:fs?.44:.36))+'px');if(fs){z.style.marginBottom='';return}
+ const cur=parseFloat(z.style.marginBottom)||0,aligned=window.scrollY+z.getBoundingClientRect().top-hdB,extra=document.documentElement.scrollHeight-(aligned+window.innerHeight);if(Math.abs(extra)>1)z.style.marginBottom=Math.min(0,cur-extra)+'px'}
+{const f=render;render=function(){const on=CZZ_VIEWS.has(view);let keep=null;const pn0=document.querySelector('.czzpanel');if(on&&pn0)keep={t:pn0.scrollTop,cat:ui.czE&&ui.czE.cat,sub:(document.querySelector('.czzsub')||{}).scrollLeft||0,v:view};
+ const r=f.apply(this,arguments);try{if(!on&&czzFs())czzFsExit();
+  if(on){const built=czzBuild();const host=document.querySelector('.czz')||document.querySelector('.czgrid');if(host)czzDeEmoji(host.parentElement||host);const md=document.querySelector('#app .mod');if(md)czzDeEmoji(md);
+   if(built){czzApply();const pn=document.querySelector('.czzpanel');if(pn&&keep&&keep.v==view){pn.scrollTop=keep.cat==(ui.czE&&ui.czE.cat)?keep.t:0;const sb=document.querySelector('.czzsub');if(sb)sb.scrollLeft=keep.sub}
+    if(czzFs()){window.scrollTo(0,0)}else if(ui.czzVisit!==view){ui.czzVisit=view;const al=()=>{const z=document.querySelector('.czz'),hd=document.querySelector('.hd');if(!z)return;window.scrollTo(0,Math.max(0,window.scrollY+z.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0)));czzSize()};al();setTimeout(al,60);setTimeout(al,250)}}}
+  else ui.czzVisit=0}catch(e){console.error(e)}return r}}
+window.addEventListener('resize',()=>{if(!CZZ_VIEWS.has(view))return;const z=!!document.querySelector('.czz');if(z!==czzMob())render();else czzSize()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(CZZ_VIEWS.has(view))czzSize()});
+// desktop: the fullscreen button sits above the editor (the unified workspace opens in fullscreen)
+{const f=czGridHtml;czGridHtml=function(){const h=f.apply(this,arguments);try{if(window.innerWidth>=720&&!czzFs())return h.replace('<div class="czgrid">',`<div class="czfsbar"><button class="b s" onclick="czzFsOn()">${czIco('fsOn')} ${CZZ_T('Full screen studio','สตูดิโอเต็มจอ')}</button></div><div class="czgrid">`)}catch(e){}return h}}
+// ---- starter outfit for a brand-new costume: basic T-shirt, shorts and sneakers ------------------------------------------------
+function czStarter(){const P=czPiece;return{top:P('tee','#ffffff','#f7a8c8','#f3c35c'),sleeve:P('short','#ffffff','#ffffff'),collar:P('crew','#ffffff'),outer:{t:'none'},bottom:P('shorts','#7f9fcf','#ffffff','#f3c35c'),over:{t:'none'},shoes:P('sneakers','#ffffff','#f7a8c8'),legs:{t:'none'},x:{},a:{}}}
+// czNew(0 / '' / 'blank') = a new costume from scratch; czNew('3') (from the preset list) keeps the preset
+{const f=czNew;czNew=function(i){const blank=i===0||i===''||i==null||i==='blank';if(!blank)return f.apply(this,arguments);const n=czLib().ds.length;
+ const r=f.call(this,0);try{const L=czLib().ds;if(L.length>n){const d=L[L.length-1];d.p=czStarter();d.style='';d.name=d.name.replace(CZ_PRESETS[0][0],'New design');if(ui.czE&&ui.czE.did==d.id){ui.czE.p=czClone(d.p);ui.czE.style=''}}}catch(e){console.error(e)}return r}}
+{const f=V.costume;V.costume=function(){let h=f.apply(this,arguments);try{h=h.replace('<option value="">+ New design…</option>',`<option value="">+ New design…</option><option value="blank">${CZZ_T('New design (basic T-shirt, shorts, sneakers)','ชุดใหม่ (เสื้อยืด กางเกงขาสั้น รองเท้าผ้าใบ)')}</option>`)}catch(e){}return h}}
 // ---- Group page: member cards no longer carry the "Actions…" menu (team moves, transfers, promotions
 // go through Team Restructuring; graduation / dismissal stay in the member profile). Only "Open profile".
 {const f=mcardT;mcardT=function(m){let h=f.apply(this,arguments);try{h=h.replace(/<select class="act"[\s\S]*?<\/select>/,`<button class="b s mprof" onclick="memAct(${m.id},'prof')">${(typeof UIP!='undefined'&&UIP.lang=='th')?'เปิดโปรไฟล์':'Open profile'}</button>`)}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  Costume Studio — move & resize the original accessories
+//  The expansion components (cz-core.js) already carry their own size / position / rotation. The original accessory
+//  set (hair bow, headband, clips, crown, hat, hair ribbon, earrings, necklace, choker, graduation flowers / cap) now
+//  stores the same fields on its own piece:  piece.s (size), piece.dx / piece.dy (offset).  Every accessory keeps its
+//  own values, so moving one never moves another. Pieces without these fields draw exactly as before.
+//  Gloves, arm and leg accessories and shoe decorations are drawn as part of the arm / leg / shoe and follow the pose,
+//  so they keep their style options instead.
+// =====================================================================================
+const CZA_DEF={hribbon:{ax:82,ay:56},headband:{ax:50,ay:22},crown:{ax:50,ay:8},hat:{ax:64,ay:11},clip:{ax:26,ay:29},hbow:{ax:76,ay:22},earrings:{ax:50,ay:72},
+ fhair:{ax:28,ay:24},mortar:{ax:50,ay:6},necklace:{ax:50,ay:48,neck:1},choker:{ax:50,ay:42,neck:1}};
+Object.values(CZA_DEF).forEach(D=>{D.sc=[.5,1.8];D.mv=D.neck?8:14;D.rot=0});
+const czaHas=P=>!!P&&((P.s!=null&&+P.s!=1)||+P.dx||+P.dy);
+const czaV=(P,D)=>({s:czxC(P.s??1,D.sc[0],D.sc[1]),dx:czxC(P.dx,-D.mv,D.mv),dy:czxC(P.dy,-D.mv,D.mv)});
+const czaTf=(P,D,svg,ax=D.ax,ay=D.ay)=>{const v=czaV(P,D);return`<g transform="translate(${N2(v.dx+ax)} ${N2(v.dy+ay)}) scale(${N2(v.s)}) translate(${-ax} ${-ay})">${svg}</g>`};
+// head accessories: adjusted pieces are drawn one by one (each with its own transform), the rest exactly as before
+{const f=czHeadAcc;czHeadAcc=function(cd){const A=cd&&cd.a;if(!A)return f.apply(this,arguments);
+ try{const adj=Object.keys(CZA_DEF).filter(k=>!CZA_DEF[k].neck&&A[k]&&czaHas(A[k]));if(!adj.length)return f.apply(this,arguments);
+  if(adj.includes('hribbon')&&A.hbow&&!adj.includes('hbow'))adj.push('hbow'); // the bow sits beside the ribbon
+  const rest={...A};adj.forEach(k=>delete rest[k]);let s=f.call(this,{...cd,a:rest});
+  adj.forEach(k=>{const P=A[k],D=CZA_DEF[k];let one;
+   if(k=='hbow'&&A.hribbon){const two=f.call(this,{a:{hribbon:A.hribbon,hbow:P}}),rib=f.call(this,{a:{hribbon:A.hribbon}});one=two.slice(rib.length);s+=czaTf(P,D,one,24,22);return}
+   if(k=='earrings'){const v=czaV(P,D);s+=[20.6,79.4].map(x=>`<g transform="translate(${N2(v.dx+x)} ${N2(v.dy+72)}) scale(${N2(v.s)}) translate(${-x} -72)"><path d="M${x} 68v3" stroke="${P.c2}" stroke-width=".5"/><circle cx="${x}" cy="73" r="1.5" fill="${P.c1}" stroke="${czLine(P.c1)}" stroke-width=".4"/></g>`).join('');return}
+   one=f.call(this,{a:{[k]:P}});s+=czaTf(P,D,one)});return s}catch(e){console.error(e);return f.apply(this,arguments)}}}
+// neck accessories (drawn with the collar layer)
+{const f=modOutfit;modOutfit=function(cd,id,D0,sk){const A=cd&&cd.a;if(!A||!['choker','necklace'].some(k=>A[k]&&czaHas(A[k])))return f.apply(this,arguments);
+ const adj=['choker','necklace'].filter(k=>A[k]&&czaHas(A[k])),rest={...A};adj.forEach(k=>delete rest[k]);const O=f.call(this,{...cd,a:rest},id,D0,sk);
+ try{let add='';adj.forEach(k=>{const P=A[k],D=CZA_DEF[k];const svg=k=='choker'?`<path d="M47.2 40.6Q50 42 52.8 40.6V42Q50 43.4 47.2 42Z" fill="${P.c1}"/><circle cx="50" cy="43.6" r=".8" fill="${P.c3}"/>`
+   :[...Array(9)].map((_,i)=>`<circle cx="${N2(45.6+i*1.1)}" cy="${N2(46+Math.sin(i/8*Math.PI)*3)}" r=".45" fill="${P.c1}" stroke="${czLine(P.c1)}" stroke-width=".12"/>`).join('')+`<path d="M50 49.4l1 1.4-1 1.4-1-1.4z" fill="${P.c3}"/>`;add+=czaTf(P,D,svg)});O.collar=(O.collar||'')+add}catch(e){console.error(e)}return O}}
+// the placement controls in the editor (same controls as the expansion components)
+const czaKey=()=>{const E=ui.czE;if(!E||!E.sel)return null;const[c,k]=E.sel.split('.');return c=='a'&&CZA_DEF[k]&&!CZX[k]?k:null};
+{const f=czGridHtml;czGridHtml=function(E){let h=f.apply(this,arguments);try{const k=czaKey(),P=k&&czGetSlot(E.p,E.sel);if(P&&P.t){const i=h.indexOf('<div class="czsub">Pattern</div>');if(i>=0)h=h.slice(0,i)+czxPlaceHtml(CZA_DEF[k],P)+h.slice(i)}}catch(e){console.error(e)}return h}}
+// ---- drag the selected accessory on the preview (expansion components and original accessories) ---------------------------
+function czaDragDef(){const E=ui.czE;if(!E||!E.sel)return null;const P=czGetSlot(E.p,E.sel);if(!P||!P.t||P.t=='none')return null;const k=czaKey();if(k)return{P,D:CZA_DEF[k]};const D=CZX[P.t];return D&&D.mv?{P,D}:null}
+function czaDragInit(){const st=document.getElementById('czstage');if(!st||st.dataset.drag)return;st.dataset.drag=1;let g=null;
+ st.addEventListener('pointerdown',e=>{const X=czaDragDef();if(!X||!czCanEdit())return;const svg=st.querySelector('svg');if(!svg)return;const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;
+  g={x:e.clientX,y:e.clientY,dx:+X.P.dx||0,dy:+X.P.dy||0,k:vb.width/r.width,id:e.pointerId,mv:0};try{st.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()});
+ st.addEventListener('pointermove',e=>{if(!g||e.pointerId!==g.id)return;const X=czaDragDef();if(!X){g=null;return}const D=X.D,ddx=(e.clientX-g.x)*g.k,ddy=(e.clientY-g.y)*g.k;if(Math.abs(ddx)+Math.abs(ddy)>.3)g.mv=1;
+  X.P.dx=N2(czxC(g.dx+ddx,-D.mv,D.mv));X.P.dy=N2(czxC(g.dy+ddy,-D.mv,D.mv));czLive();e.preventDefault()});
+ const end=e=>{if(!g)return;const moved=g.mv;g=null;if(moved){czMark();render()}};st.addEventListener('pointerup',end);st.addEventListener('pointercancel',end)}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{if(document.getElementById('czstage')){czaDragInit();const X=czaDragDef();document.getElementById('czstage').classList.toggle('czdrag',!!X)}}catch(e){console.error(e)}return r}}
 
 </script>
 <script>

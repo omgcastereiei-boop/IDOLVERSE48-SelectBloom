@@ -1862,3 +1862,31 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .sptw{overflow-x:auto}.spt{width:100%;border-collapse:collapse;font:600 12px Quicksand}.spt th,.spt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}.spt .up,.gevgrp .up,.spmons .up{color:#1f8a4c}.spt .dn,.gevgrp .dn,.spmons .dn{color:#c2406e}
 .spsb{border:0;background:none;font:800 12px Quicksand;color:var(--ink);cursor:pointer;padding:0}.spsb.on{color:#c2407e}
 .spmons{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin:4px 0 8px}.spmons>div{display:flex;flex-direction:column;background:#fffdf8;border:1px solid var(--line);border-radius:10px;padding:6px 8px;font:700 12px Quicksand}
+/* ---- Costume Studio: unified workspace, icons, 5-column grid, fullscreen ---- */
+.czic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
+.czicw{display:inline-flex;align-items:center;margin-right:.25em}
+.czzgr .czzic .czic{width:22px;height:22px;stroke-width:1.7}.czzgr button .czzic{font-size:0;line-height:0;color:#b0407a}.czzgr button.on .czzic{color:#fff}
+.czzback{display:flex;align-items:center;justify-content:center}.czzback .czic{width:18px;height:18px}
+.czzfs{flex:none;display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 11px;border-radius:12px;border:1px solid #efb7d4;background:linear-gradient(135deg,#fff0f7,#f1eaff);color:#a8407a;font:800 12px Quicksand;cursor:pointer}
+.czzfs .czic{width:17px;height:17px}
+.czfsbar{display:flex;justify-content:flex-end;margin:0 0 6px}
+/* five items per row on phones / in the fullscreen studio, square thumbnails, compact labels */
+.czz .czzpanel .czitems,.czz .czzpanel .czpats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px}
+.czz .czzpanel .czitem{min-height:0;padding:2px;border-radius:11px;border-width:2px;width:auto;min-width:0}
+.czz .czzpanel .czitem svg{width:100%;height:auto;aspect-ratio:1;border-radius:8px}
+.czz .czzpanel .czitem small{font-size:8.6px;line-height:1.1;max-width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;min-height:2.2em}
+.czz .czzpanel .czpat{min-width:0;padding:2px}.czz .czzpanel .czpat small{font-size:8.6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+@media (max-width:340px){.czz .czzpanel .czitem small{display:none}}
+/* drag the selected accessory on the preview */
+.czstage.czdrag{touch-action:none;cursor:grab}.czstage.czdrag:active{cursor:grabbing}
+/* fullscreen studio: the editor fills the screen, game chrome hidden */
+body.czfs .hd,body.czfs .nav,body.czfs .side,body.czfs aside.sb,body.czfs .gssw,body.czfs .locb,body.czfs .gebanner,body.czfs .sbar{display:none!important}
+body.czfs .czz{position:fixed!important;inset:0!important;top:0!important;height:100dvh!important;margin:0!important;border-radius:0;z-index:60;padding:max(5px,env(safe-area-inset-top)) max(5px,env(safe-area-inset-right)) max(5px,env(safe-area-inset-bottom)) max(5px,env(safe-area-inset-left))}
+body.czfs{overflow:hidden}
+@media (min-width:720px){body.czfs .czz{max-width:none}body.czfs .czz .czzst{flex-basis:46%}body.czfs .czz .czzpanel .czitems,body.czfs .czz .czzpanel .czpats{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+.czicw svg.czic,svg.czic{width:1.1em!important;height:1.1em!important;aspect-ratio:auto!important;background:none!important;border-radius:0!important;max-width:none}
+.czitem .czicw{margin:0 0 0 .15em;color:#d6457f}.czitem small .czicw{display:inline-flex;vertical-align:-.1em}
+.czzgr .czzic svg.czic{width:22px!important;height:22px!important}.czzback svg.czic{width:18px!important;height:18px!important}.czzfs svg.czic{width:17px!important;height:17px!important}
+@media (min-width:900px){body.czfs .czz{display:grid;grid-template-columns:minmax(300px,38%) 1fr;grid-template-rows:auto auto auto minmax(0,1fr);column-gap:10px}
+ body.czfs .czz .czztop{grid-column:1/-1}body.czfs .czz .czzst{grid-column:1;grid-row:2/5;height:auto;flex:none}
+ body.czfs .czz .czzgr{grid-column:2;grid-row:2}body.czfs .czz .czzsub{grid-column:2;grid-row:3}body.czfs .czz .czzpanel{grid-column:2;grid-row:4}}

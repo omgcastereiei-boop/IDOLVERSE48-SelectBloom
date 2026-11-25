@@ -50,7 +50,7 @@ function ccDrCtx(){const C=ccCur(),D=ui.ccdr,r=C&&D&&ccItem(C,D.iid);if(!r)retur
 function ccDrOpen(iid,mid){const C=ccCur(),r=C&&ccItem(C,iid);if(!r)return;const M=ccPerf(r.it);if(!M.length)return toast('Nobody performs this song yet — set the formation first.','err');
  const go=()=>{ui.ccSetY=ui.ccSetY??window.scrollY;ui.ccdr={iid,mid:M.includes(+mid)?+mid:M[0]};ccDrLoad();view='cccz';render();try{window.scrollTo(0,0)}catch(e){}};if(view=='cccz'&&ui.czE&&ui.czE.dirty)czConfirmLeave(go);else go()}
 function ccDrMem(mid){if(ui.ccdr)ccDrOpen(ui.ccdr.iid,mid)}
-function ccDrLoad(){const X=ccDrCtx();if(!X)return;const p=ccCzFor(X.C,X.s,X.idx,X.D.mid)||CZ_PRESETS[0][1],prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.D.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,ccz:1}}
+function ccDrLoad(){const X=ccDrCtx();if(!X)return;const p=ccCzFor(X.C,X.s,X.idx,X.D.mid)||czStarter(),prev=ui.czE||{};ui.czE={did:null,p:czClone(p),style:'',dirty:0,cat:prev.cat||'top',sel:prev.sel||'top',mid:X.D.mid,pose:prev.pose??0,ex:prev.ex??2,song:null,scz:1,ccz:1}}
 // switch the song to member-by-member costumes, keeping what everyone wears now
 function ccDrMemMode(X){const z=X.it.cz=X.it.cz||{mode:'orig'};if(z.mode!='mem'){const cur={};X.M.forEach(id=>{const p=ccCzFor(X.C,X.s,X.idx,id);if(p)cur[id]=czClone(p)});X.it.cz={mode:'mem',mem:{},memP:cur}}return X.it.cz}
 function ccDrSet(X,id,p){const z=ccDrMemMode(X);z.memP=z.memP||{};z.memP[id]=czClone(p);if(z.mem)delete z.mem[id];z.done=z.done||{};z.done[id]=1}
