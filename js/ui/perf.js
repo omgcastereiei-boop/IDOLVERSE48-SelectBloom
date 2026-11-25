@@ -28,7 +28,7 @@ function svAuto(){if(!S)return;SVP.dirty=true;const big=(SVP.sz||0)>3e6;if(!big)
 {const f=adv;adv=function(){const r=f.apply(this,arguments);try{SVP.soon=1;svAuto()}catch(e){}return r}}
 // leaving the page: write now (IndexedDB too), not after a delay
 const svNow=()=>{try{if(S&&!ui.t){SVP.now=1;try{save()}finally{SVP.now=0}}}catch(e){}};
-window.addEventListener('pagehide',svNow);window.addEventListener('beforeunload',svNow);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')svNow()});
+// (no save when the page is hidden or closed: autosave runs on Next day / +7 only — save-nextday.js)
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>{if(!p)navigator.storage.persist()}).catch(()=>{})}catch(e){}
 
 // money is checked every day and on load, so an invalid amount from any calculation can never stop autosave

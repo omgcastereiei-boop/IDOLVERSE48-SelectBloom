@@ -34,7 +34,7 @@ save=function(){if(!S||!svValid(S))return;let j;try{S._ts=Date.now();S._sv=SAVE_
  let ok=true;try{localStorage.setItem(KEY,j)}catch(e){ok=false}SV.idbMain=j;clearTimeout(SV.t);SV.t=setTimeout(()=>{svPut('main',j).then(r=>{if(!r&&!ok)SV.warn='Your browser refused to store the game. Export a save file now (Management › Save & Load) to keep your progress.'})},250);
  SV.warn=ok?null:(SV.db?'Browser storage is almost full, so the game is now saved in the larger IndexedDB backup storage. To be safe, export a save file from Management › Save & Load.':'Browser storage is full and the game could not be saved. Export a save file from Management › Save & Load now.')};
 function svFlush(){if(!S)return Promise.resolve();save();clearTimeout(SV.t);return svPut('main',SV.idbMain)}
-window.addEventListener('pagehide',()=>{try{if(S&&!ui.t)save()}catch(e){}});
+// (no save on page hide: the game autosaves on Next day / +7 only — save-nextday.js)
 document.addEventListener('visibilitychange',()=>{try{if(document.visibilityState=='hidden'&&S)svFlush()}catch(e){}});
 // load an existing save: back it up first, then migrate; a migration problem never drops the save
 cont=function(){const s=load();if(!s){if(SV.bad)return svRecover();return toast('No saved game was found in this browser. Start a New Game or import a save file.','err')}
