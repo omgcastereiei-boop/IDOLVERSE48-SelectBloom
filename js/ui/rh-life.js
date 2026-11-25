@@ -15,8 +15,7 @@
 //  group support, center (Kami Oshi) support and song affection — gated by awareness, plus new-release interest,
 //  events and the previous ranking. Sales and member popularity no longer give title tracks an automatic edge, and a
 //  member who centers many songs splits her fans' votes among them (center diversity).
-//  A Request Hour is held every year: if the player has not prepared one, fan-club voting runs in December
-//  (Top 25, sister-group songs included) and the ranking is announced on the first days of January.
+//  Full-team theater songs have no Center in Request Hour (center support, center diversity and displays ignore it).
 // =====================================================================================
 const RHL_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
 function rhsS(){if(!S)return null;if(!S.rhs||typeof S.rhs!='object')S.rhs={v:1,s:{},wk:-1};const R=S.rhs;R.s=R.s||{};return R}
@@ -92,20 +91,8 @@ rhCohortPref=function(X,s,wk){const E=X.E,ft=RH_TAU[s.ft]?s.ft:'oshi',tau=RH_TAU
  return D};
 // ---- new events: Top 25 by default, sister-group songs included -------------------------------------------------------------
 {const f=rhNew;rhNew=function(){const E=f.apply(this,arguments);try{if(E&&E.status=='setup'){E.size=25;E.nperf=1;E.sis=true;if(!E.nameEd)E.name=rhAutoName(E);render()}}catch(e){console.error(e)}return E}}
-// ---- annual Request Hour: fan-club voting in December when the player has not prepared one ----------------------------------
-const RHL_SCALE=3.2;
-function rhlMainGroups(){const G=(S.groups||[]).filter(g=>!g.dis&&g.type!='project'&&g.type!='sister');return G.length?G:(S.groups||[]).slice(0,1)}
-function rhlAnnual(){const R=rhS();if(!R)return;const t=dayDate(S.day);if(t.getMonth()!=11||t.getDate()!=1)return;const Y=t.getFullYear()+1;
- rhlMainGroups().forEach(g=>{if(R.list.some(E=>E.gid==g.id&&(dayDate(E.date).getFullYear()==Y||['setup','voting'].includes(E.status))))return;
-  const E={id:'rh'+(++R.seq),gid:g.id,cats:['all'],size:25,nperf:1,date:dateDay(new Date(Y,0,20)),sis:true,name:'',nameEd:false,status:'voting',created:S.day,rid:null,auto:1,open:S.day,close:dateDay(new Date(Y-1,11,31)),
-   codes:{next:1,fanIss:0,fanUsed:0,plIss:0,plUsed:0,pl:[],vd:null},cdV:0,cdPl:{},votes:{},pv:{},trend:null,rank:null,cc:null,log:[{d:S.day,t:'auto'}]};
-  E.name=rhAutoName(E);R.list.push(E);try{if(typeof blN=='function')blN(`<li>🎤 <b>${esc(E.name)}</b> — ${RHL_T(`fan-club voting is open until ${jd(E.close)}. Every song ever released can be voted for.`,`เปิดโหวตแฟนคลับถึง ${jd(E.close)} ทุกเพลงที่เคยปล่อยมีสิทธิ์ได้รับโหวต`)}</li>`)}catch(e){}})}
-function rhlVoteDay(E){if(!E.auto||E.status!='voting'||S.day>E.close||E.codes.vd==S.day)return;E.codes.vd=S.day;const wk=Math.floor((S.day-E.open)/7);
- if(!E._X||E._X.wk!=wk){const X=rhCtx(E);X.wk=wk;E._X=X;E._C=rhCohorts(E);E._W=E._C.reduce((t,c)=>t+c.w,0);E._D={}}
- const X=E._X,C=E._C,W=E._W;if(!W)return;const days=E.close-E.open+1,tot=Math.round(W*RHL_SCALE/days*(S.day>=E.close-3?1.6:1));if(!tot)return;
- E.codes.fanIss+=tot;E.codes.fanUsed+=tot;E.codes.next+=tot;E.acc=E.acc||{};
- C.forEach(c=>{const share=tot*c.w/W;let D=E._D[c.s.id];if(!D){D=rhCohortPref(X,c.s,wk);E._D[c.s.id]=D}for(const key in D)E.acc[key]=(E.acc[key]||0)+share*D[key]})}
-{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.songs){rhlAnnual();rhS().list.forEach(E=>{if(E.auto&&E.status=='voting'){rhlVoteDay(E)}})}}catch(e){console.error('rhl',e)}return r}}
+// ---- full-team theater songs have no Center for Request Hour (the whole team performs; units, solos and duets keep theirs) ----
+{const f=rhMeta;rhMeta=function(z){const R=f.apply(this,arguments);try{if(R&&R.kind=='th'&&R.cen&&R.cen.length){R.cen0=R.cen;R.cen=[]}}catch(e){}return R}}
 // temporary voting caches are never saved
 {const f=rhClose;rhClose=function(E){const r=f.apply(this,arguments);try{if(E){delete E._X;delete E._C;delete E._W;delete E._D}}catch(e){}return r}}
 // ---- per-song Request Hour history ------------------------------------------------------------------------------------------
@@ -127,4 +114,4 @@ rhChg=function(z){if(z.prev==null)return z.re?`<span class="rhre">RETURN</span>`
   const add=` · ${RHL_T(kind[0],kind[1])}${z.prev?` · ${RHL_T('last year','ปีก่อน')} #${z.prev}`:''}${st.best&&st.years>1?` · ${RHL_T('best','สูงสุด')} #${st.best}`:''}${st.years>1?` · ${st.years} ${RHL_T('years','ปี')}${st.streak>1?` (${st.streak} ${RHL_T('in a row','ติดต่อกัน')})`:''}`:''}`;
   const mark=`<b>${esc(z.title)}</b><div class="st">`,i=h.indexOf(mark);if(i>=0){const j=h.indexOf('</div>',i+mark.length);if(j>0)h=h.slice(0,j)+add+h.slice(j)}});if(E.auto)h=h.replace(/<p class="st">[^<]*?(valid codes|รหัส)[^<]*/,`<p class="st">${RHL_T(`Fan-club voting · ${E.check.tv.toLocaleString()} votes.`,`โหวตแฟนคลับ · ${E.check.tv.toLocaleString()} โหวต`)}`)}catch(e){console.error(e)}return h}}
 // save/load: make sure the store exists
-{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S)rhsS()}catch(e){}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S){rhsS();if(S.rh&&Array.isArray(S.rh.list))S.rh.list=S.rh.list.filter(E=>!(E.auto&&E.status=='voting'))}}catch(e){}return r}}
