@@ -39,3 +39,21 @@ function czaDragInit(){const st=document.getElementById('czstage');if(!st||st.da
   X.P.dx=N2(czxC(g.dx+ddx,-D.mv,D.mv));X.P.dy=N2(czxC(g.dy+ddy,-D.mv,D.mv));czLive();e.preventDefault()});
  const end=e=>{if(!g)return;const moved=g.mv;g=null;if(moved){czMark();render()}};st.addEventListener('pointerup',end);st.addEventListener('pointercancel',end)}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{if(document.getElementById('czstage')){czaDragInit();const X=czaDragDef();document.getElementById('czstage').classList.toggle('czdrag',!!X)}}catch(e){console.error(e)}return r}}
+// ---- Random colours: many colour styles (one colour in several tones, two colours, multicolour, pastel, black & white + accent…) ----
+czRandColors=function(){const E=czEdP();if(!E)return;const R=a=>a[Math.floor(Math.random()*a.length)],rn=(a,b)=>a+Math.random()*(b-a),H=(h,s,l)=>czHsl(((h%360)+360)%360,s,l),th=typeof UIP!='undefined'&&UIP.lang=='th';
+ const st=R(['mono','mono','analog','comp','triad','duo','duo','multi','multi','pastel','pastel','neutral']),L=czPieces(E.p),shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+ const h=rn(0,360),s=rn(55,88),gold=R(['#f3c35c','#ffffff','#e9b949','#cfd4dc']);
+ if(st=='mono'||st=='analog'||st=='comp'||st=='triad'){const off=st=='comp'?180:st=='triad'?120:st=='analog'?35:0;czPaint(E.p,{base:H(h,s,rn(58,80)),light:H(h,s*.6,90),dark:H(h,s*.7,22),acc:H(h+off,s,58),acc2:H(h-(off||-20),s*.9,72),gold})}
+ else if(st=='duo'){const h2=h+R([60,120,150,180,210]),A={base:H(h,s,rn(55,75)),light:H(h,s*.5,92),acc:H(h,s,40)},B={base:H(h2,s,rn(50,72)),light:H(h2,s*.5,92),acc:H(h2,s,38)};
+  L.forEach(([k,P])=>{const X=['bottom','shoes','legs','over'].includes(k)?B:['top','outer','collar','sleeve'].includes(k)?A:R([A,B]),Y=X===A?B:A;P.c1=X.base;P.c2=R([Y.base,X.light,'#ffffff']);P.c3=R([Y.acc,X.acc,gold]);P.pc=R([Y.base,X.light,'#ffffff']);P.dc=R([gold,Y.base])})}
+ else if(st=='multi'||st=='pastel'){const n=Math.floor(rn(4,7)),pal=[...Array(n)].map((_,i)=>st=='pastel'?H(h+i*360/n+rn(-15,15),rn(55,80),rn(78,88)):H(h+i*360/n+rn(-15,15),rn(65,92),rn(50,68))),bag=shuf(pal.slice());let i=0;
+  L.forEach(([k,P])=>{const c=bag[i++%bag.length],o=pal.filter(x=>x!=c);P.c1=c;P.c2=R([...o,'#ffffff']);P.c3=R(o);P.pc=R([...o,'#ffffff']);P.dc=R([...o,gold])})}
+ else{const dk=Math.random()<.5,acc=H(h,s,rn(48,62)),base=dk?R(['#1d1b26','#2a2838','#111111']):R(['#ffffff','#f6f3ee','#eceef2']),mid=dk?'#ffffff':'#24222e';
+  L.forEach(([k,P])=>{const main=['top','bottom','outer'].includes(k);P.c1=main?base:R([acc,mid,base]);P.c2=R([acc,mid]);P.c3=R([acc,gold]);P.pc=R([acc,mid]);P.dc=R([acc,gold])})}
+ E.dirty=1;const N={mono:['one colour, several tones','สีเดียวหลายโทน'],analog:['neighbouring colours','สีใกล้เคียง'],comp:['contrasting colours','สีตัดกัน'],triad:['three colours','สามสี'],duo:['two colours','ทูโทน'],multi:['multicolour','หลากสี'],pastel:['pastel multicolour','พาสเทลหลากสี'],neutral:['black & white + accent','ขาวดำ + สีเน้น']}[st];
+ toast(th?`สีใหม่ (${N[1]}) — กดบันทึกเพื่อเก็บไว้`:`New colours (${N[0]}). Save to keep them.`);render()};
+// ---- colour picker: "Colours in this costume" (every colour the costume being edited uses) ----
+function czUsedColors(p){const S0=new Set(),walk=o=>{if(!o||typeof o!='object')return;for(const k in o){const v=o[k];if(typeof v=='string'){const h=typeof cpHex=='function'?cpHex(v):(/^#[0-9a-f]{6}$/i.test(v)?v.toLowerCase():null);if(h&&/^#[0-9a-f]{6}$/i.test(v.trim()))S0.add(h)}else if(v&&typeof v=='object')walk(v)}};walk(p);return[...S0].slice(0,36)}
+if(typeof cpDraw=='function'){const f=cpDraw;cpDraw=function(){const r=f.apply(this,arguments);try{const E=ui.czE,o=document.getElementById('cpov');if(E&&E.p&&o&&(document.getElementById('czstage')||document.querySelector('.czz'))){const L=czUsedColors(E.p);if(L.length){const th=typeof UIP!='undefined'&&UIP.lang=='th',lab=o.querySelector('.cplab');
+ const d=document.createElement('div');d.innerHTML=`<div class="cplab">${th?'สีในชุดนี้':'Colours in this costume'}</div><div class="cpgrid">${L.map(c=>`<button class="cpsw" data-c="${c}" style="background:${c}" title="${c}" onclick="cpSet('${c}')"></button>`).join('')}</div>`;
+ if(lab)lab.before(...d.childNodes);if(typeof cpPaint=='function')cpPaint()}}}catch(e){console.error(e)}return r}}

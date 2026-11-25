@@ -227,3 +227,7 @@ let SPX_OV=0;
 // switching a Stage to "Individual song Centers": songs without their own Center start with the Setlist Center 1 and 2
 {const f=thSet;thSet=function(k,v){const s=thEd(),was=s&&s.cmode,songs=s?[...s.items,...thEncO(s).items].filter(it=>it.k=='song'):[];let pre=null;try{if(k=='cmode'&&v=='song'&&s&&was!='song')pre=songs.map(it=>[it,thCen(s,it),thCen2(s,it)])}catch(e){}
  const r=f.apply(this,arguments);try{if(pre&&s.cmode=='song'){pre.forEach(([it,c,c2])=>{if(it.center==null&&c!=null)it.center=c;if(it.center2==null&&c2!=null&&c2!=it.center)it.center2=c2});render()}}catch(e){console.error(e)}return r}}
+// Stage costumes: coming back from the dressing room returns to the same song on the "Costumes per song" page
+{const fo=thCzOpen;thCzOpen=function(id){try{ui.thczY={id,y:window.scrollY||document.documentElement.scrollTop||0}}catch(e){}return fo.apply(this,arguments)}}
+{const fb=thCzBack;thCzBack=function(){if(ui.thczY)ui.thczRet=ui.thczY;return fb.apply(this,arguments)}}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{const R=ui.thczRet;if(R&&view=='thset'&&!ui.czE){ui.thczRet=null;const go=()=>{try{window.scrollTo(0,R.y||0)}catch(e){}};go();requestAnimationFrame(go);setTimeout(go,80)}}catch(e){}return r}}

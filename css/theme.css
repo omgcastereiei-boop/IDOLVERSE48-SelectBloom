@@ -1926,3 +1926,4 @@ body.czfs{overflow:hidden}
 .blcen{background:#fff9e8;border-color:#e2ad1a}
 .blhist h4{margin:10px 0 4px}.blgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}.blgal button{padding:0;border:0;background:none;cursor:pointer}
 .blpgc .row{gap:6px;align-items:center;flex-wrap:wrap}
+body.czfs .mod{z-index:80}
