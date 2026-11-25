@@ -19,6 +19,9 @@ function ptPrune(){PT_PRUNE=0;try{const el=document.getElementById('ptspr');if(!
 //  On WebKit each portrait is drawn ONCE into an SVG image (data URL) and every copy on screen is that image: the page
 //  stays tiny and the browser keeps a cached bitmap instead of thousands of SVG elements. Looks the same.
 const PT_WK=(()=>{try{const u=navigator.userAgent||'',ios=/iPad|iPhone|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),saf=/^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(u);return ios||saf||/[?&]ptimg=1/.test(location.search)}catch(e){return false}})();
+// PT_RAW: draw plain SVG (for pictures that are themselves turned into an image file: an SVG shown as an image cannot load
+// the blob images used on WebKit, so its figures would be missing)
+let PT_RAW=0;
 const PT_IMG=new Map(),FIG_IMG=new Map();
 // the image caches are trimmed while the browser is idle, oldest first, and only pictures that are NOT on screen (or in a
 // pop-up kept for "Back") are released. (The caches used to be emptied all at once at 300 / 600 pictures: on screens with
@@ -42,7 +45,7 @@ function ptPng(y,vb){PT_Q.push([y,vb]);ptPngNext()}
 function ptPngNext(){while(PT_QN<2&&PT_Q.length){const [y,vb]=PT_Q.shift();PT_QN++;let done=false;const fin=()=>{if(done)return;done=true;PT_QN--;setTimeout(ptPngNext,30)};setTimeout(fin,4000);ptPng1(y,vb,fin)}}
 function ptPng1(y,vb,fin){try{const im=new Image();im.onerror=fin;im.onload=()=>{try{const sc=3,c=document.createElement('canvas');c.width=Math.round(vb[2]*sc);c.height=Math.round(vb[3]*sc);const x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);
  c.toBlob(b=>{fin();if(!b)return;if(y.dead)return;const png=URL.createObjectURL(b),old=y.url;y.u=y.u.replace(old,png);y.url=png;PT_REPL.set(old,png);document.querySelectorAll('image[href="'+old+'"]').forEach(e=>e.setAttribute('href',png));setTimeout(()=>{try{URL.revokeObjectURL(old)}catch(e){}},3000)},'image/png')}catch(e){fin()}};im.src=y.url}catch(e){fin()}}
-if(PT_WK){const f0=ptUse;ptUse=function(k,t){let y=PT_IMG.get(k);if(y){PT_IMG.delete(k);PT_IMG.set(k,y)}if(!y){try{ptEvictSoon();const body=t.split('§').join('pi_'),mm=body.match(/^<svg([^>]*)>/);if(!mm)return f0.apply(this,arguments);
+if(PT_WK){const f0=ptUse;ptUse=function(k,t){if(PT_RAW)return f0.apply(this,arguments);let y=PT_IMG.get(k);if(y){PT_IMG.delete(k);PT_IMG.set(k,y)}if(!y){try{ptEvictSoon();const body=t.split('§').join('pi_'),mm=body.match(/^<svg([^>]*)>/);if(!mm)return f0.apply(this,arguments);
    const at=mm[1].replace(/\s(width|height)="[^"]*"/g,''),vbm=at.match(/viewBox="([^"]+)"/),vb=(vbm?vbm[1]:'0 0 100 120').split(/\s+/).map(Number),doc=body.replace(/^<svg([^>]*)>/,(x,a)=>`<svg${/xmlns=/.test(a)?a:a+' xmlns="http://www.w3.org/2000/svg"'}>`);
    const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={at:mm[1],url,u:`<image href="${url}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" preserveAspectRatio="xMidYMid meet"/>`};PT_IMG.set(k,y);ptPng(y,vb)}catch(e){return f0.apply(this,arguments)}}
   return`<svg${y.at}>${y.u}</svg>`}}
@@ -52,7 +55,7 @@ try{if(PT_WK)document.documentElement.classList.add('wk')}catch(e){}
 //  Event pictures, ceremonies, stage photos and tournament screens draw many full-body characters. On WebKit each one is
 //  drawn once into an image (then a PNG) and reused, instead of keeping thousands of live SVG elements in memory.
 if(PT_WK){const VB=[-25,-35,150,270];const hsh=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);return(h>>>0).toString(36)+t.length};
- const f0=fig;fig=function(m,l){let k;try{k=hsh(JSON.stringify([m&&m.id,m&&m.hue,m?ap(m):0,l||0]))}catch(e){return f0.apply(this,arguments)}let y=FIG_IMG.get(k);if(y){FIG_IMG.delete(k);FIG_IMG.set(k,y);return y.u}const frag=f0.apply(this,arguments);try{if(typeof frag!='string'||frag.length<400)return frag;
+ const f0=fig;fig=function(m,l){if(PT_RAW)return f0.apply(this,arguments);let k;try{k=hsh(JSON.stringify([m&&m.id,m&&m.hue,m?ap(m):0,l||0]))}catch(e){return f0.apply(this,arguments)}let y=FIG_IMG.get(k);if(y){FIG_IMG.delete(k);FIG_IMG.set(k,y);return y.u}const frag=f0.apply(this,arguments);try{if(typeof frag!='string'||frag.length<400)return frag;
   if(!y){ptEvictSoon()
    const doc=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${VB.join(' ')}" width="${VB[2]}" height="${VB[3]}">${frag}</svg>`;
    const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={url,u:`<image href="${url}" x="${VB[0]}" y="${VB[1]}" width="${VB[2]}" height="${VB[3]}" preserveAspectRatio="xMidYMid meet"/>`};FIG_IMG.set(k,y);ptPng(y,[0,0,VB[2]*2/3,VB[3]*2/3])}

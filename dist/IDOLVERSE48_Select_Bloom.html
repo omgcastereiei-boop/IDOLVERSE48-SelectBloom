@@ -2064,7 +2064,7 @@ concert:{n:'Mini Concert',cost:200000,dur:2,cap:3000,max:16,price:6000,d:'Big ha
 promo:{n:'Promotional Appearance',cost:50000,dur:1,cap:5000,max:3,fee:150000,d:'TV/radio spot paying a fee.'}};
 const ROWS=[[0,5],[5,10],[10,16]],RN=['Front','Middle','Back'];
 let S=null,view='dash',ui={f:{team:'all',rar:'all',sk:'pop'},t:true,sort:'pop',dir:-1,slot:null,g:null,mf:{title:'',genre:'Pop',concept:'Cute',costume:'Sailor',color:'#ff8fbf'},cands:[],mod:null};
-const get=id=>S.members.find(m=>m.id==id),dt=()=>new Date(2026,3,1+S.day);
+let get=id=>S.members.find(m=>m.id==id);const dt=()=>new Date(2026,3,1+S.day);
 const fd=()=>dt().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric',weekday:'short'});
 function toast(t,k='ok'){const e=$('#toast');e.textContent=t;e.className='show '+k;clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',2600)}
 function mk(g,team,rr,age,namer){let name,t=0;do{name=namer?namer():pick(FN)+' '+pick(LN)}while((S.members.some(m=>m.name==name||m.real==name)||(S.auds||[]).some(a=>a.cands.some(c=>c.m&&c.m.name==name)))&&t++<99);const m={id:++S.nid,name,real:name,stage:name,nat:'JP',nat2:null,natOther:null,heritage:null,bg:'jp',age:age==null?rnd(14,23):age,team,group:g,mor:rnd(55,90),hue:rnd(0,360),hair:rnd(0,5)};genStats(m,rr||rollRar(),mulb((Math.random()*2147483647)|0));return m}
@@ -15959,6 +15959,9 @@ function ptPrune(){PT_PRUNE=0;try{const el=document.getElementById('ptspr');if(!
 //  On WebKit each portrait is drawn ONCE into an SVG image (data URL) and every copy on screen is that image: the page
 //  stays tiny and the browser keeps a cached bitmap instead of thousands of SVG elements. Looks the same.
 const PT_WK=(()=>{try{const u=navigator.userAgent||'',ios=/iPad|iPhone|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),saf=/^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(u);return ios||saf||/[?&]ptimg=1/.test(location.search)}catch(e){return false}})();
+// PT_RAW: draw plain SVG (for pictures that are themselves turned into an image file: an SVG shown as an image cannot load
+// the blob images used on WebKit, so its figures would be missing)
+let PT_RAW=0;
 const PT_IMG=new Map(),FIG_IMG=new Map();
 // the image caches are trimmed while the browser is idle, oldest first, and only pictures that are NOT on screen (or in a
 // pop-up kept for "Back") are released. (The caches used to be emptied all at once at 300 / 600 pictures: on screens with
@@ -15982,7 +15985,7 @@ function ptPng(y,vb){PT_Q.push([y,vb]);ptPngNext()}
 function ptPngNext(){while(PT_QN<2&&PT_Q.length){const [y,vb]=PT_Q.shift();PT_QN++;let done=false;const fin=()=>{if(done)return;done=true;PT_QN--;setTimeout(ptPngNext,30)};setTimeout(fin,4000);ptPng1(y,vb,fin)}}
 function ptPng1(y,vb,fin){try{const im=new Image();im.onerror=fin;im.onload=()=>{try{const sc=3,c=document.createElement('canvas');c.width=Math.round(vb[2]*sc);c.height=Math.round(vb[3]*sc);const x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);
  c.toBlob(b=>{fin();if(!b)return;if(y.dead)return;const png=URL.createObjectURL(b),old=y.url;y.u=y.u.replace(old,png);y.url=png;PT_REPL.set(old,png);document.querySelectorAll('image[href="'+old+'"]').forEach(e=>e.setAttribute('href',png));setTimeout(()=>{try{URL.revokeObjectURL(old)}catch(e){}},3000)},'image/png')}catch(e){fin()}};im.src=y.url}catch(e){fin()}}
-if(PT_WK){const f0=ptUse;ptUse=function(k,t){let y=PT_IMG.get(k);if(y){PT_IMG.delete(k);PT_IMG.set(k,y)}if(!y){try{ptEvictSoon();const body=t.split('§').join('pi_'),mm=body.match(/^<svg([^>]*)>/);if(!mm)return f0.apply(this,arguments);
+if(PT_WK){const f0=ptUse;ptUse=function(k,t){if(PT_RAW)return f0.apply(this,arguments);let y=PT_IMG.get(k);if(y){PT_IMG.delete(k);PT_IMG.set(k,y)}if(!y){try{ptEvictSoon();const body=t.split('§').join('pi_'),mm=body.match(/^<svg([^>]*)>/);if(!mm)return f0.apply(this,arguments);
    const at=mm[1].replace(/\s(width|height)="[^"]*"/g,''),vbm=at.match(/viewBox="([^"]+)"/),vb=(vbm?vbm[1]:'0 0 100 120').split(/\s+/).map(Number),doc=body.replace(/^<svg([^>]*)>/,(x,a)=>`<svg${/xmlns=/.test(a)?a:a+' xmlns="http://www.w3.org/2000/svg"'}>`);
    const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={at:mm[1],url,u:`<image href="${url}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" preserveAspectRatio="xMidYMid meet"/>`};PT_IMG.set(k,y);ptPng(y,vb)}catch(e){return f0.apply(this,arguments)}}
   return`<svg${y.at}>${y.u}</svg>`}}
@@ -15992,7 +15995,7 @@ try{if(PT_WK)document.documentElement.classList.add('wk')}catch(e){}
 //  Event pictures, ceremonies, stage photos and tournament screens draw many full-body characters. On WebKit each one is
 //  drawn once into an image (then a PNG) and reused, instead of keeping thousands of live SVG elements in memory.
 if(PT_WK){const VB=[-25,-35,150,270];const hsh=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);return(h>>>0).toString(36)+t.length};
- const f0=fig;fig=function(m,l){let k;try{k=hsh(JSON.stringify([m&&m.id,m&&m.hue,m?ap(m):0,l||0]))}catch(e){return f0.apply(this,arguments)}let y=FIG_IMG.get(k);if(y){FIG_IMG.delete(k);FIG_IMG.set(k,y);return y.u}const frag=f0.apply(this,arguments);try{if(typeof frag!='string'||frag.length<400)return frag;
+ const f0=fig;fig=function(m,l){if(PT_RAW)return f0.apply(this,arguments);let k;try{k=hsh(JSON.stringify([m&&m.id,m&&m.hue,m?ap(m):0,l||0]))}catch(e){return f0.apply(this,arguments)}let y=FIG_IMG.get(k);if(y){FIG_IMG.delete(k);FIG_IMG.set(k,y);return y.u}const frag=f0.apply(this,arguments);try{if(typeof frag!='string'||frag.length<400)return frag;
   if(!y){ptEvictSoon()
    const doc=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${VB.join(' ')}" width="${VB[2]}" height="${VB[3]}">${frag}</svg>`;
    const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={url,u:`<image href="${url}" x="${VB[0]}" y="${VB[1]}" width="${VB[2]}" height="${VB[3]}" preserveAspectRatio="xMidYMid meet"/>`};FIG_IMG.set(k,y);ptPng(y,[0,0,VB[2]*2/3,VB[3]*2/3])}
@@ -23501,6 +23504,61 @@ function mvxFrameHtml(sc,ed){const b=bgOfMv(sc.id);if(!b)return'';const fr=sc.fr
  const rg=(lab,k,a,c,s,val)=>`<label class="cvrg"><span>${lab}<b>${Math.round(val*100)/100}</b></span><input type="range" min="${a}" max="${c}" step="${s}" value="${val}" ${dis} onchange="mvxFr('${k}',+this.value)"></label>`;
  return`<details class="cvdet mvxfr" ${sc.fr?'open':''}><summary>Background framing (this MV scene only)</summary><div class="cvchips"><button class="cvchip ${fr.fit!='fit'?'on':''}" ${dis} onclick="mvxFr('fit','fill')">Fill frame</button><button class="cvchip ${fr.fit=='fit'?'on':''}" ${dis} onclick="mvxFr('fit','fit')">Fit whole picture</button></div>
  ${rg('Zoom','z',1,3,.05,z)}${B.ox?rg('Move left / right','x',-Math.round(B.ox),Math.round(B.ox),1,+fr.x||0):''}${B.oy?rg('Move up / down','y',-Math.round(B.oy),Math.round(B.oy),1,+fr.y||0):''}<button class="b s" ${dis} onclick="mvxFr('reset')">Reset framing</button></details>`}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — history keeps graduated members
+// -------------------------------------------------------------------------------------
+//  Graduated members move to S.alumni, and get(id) only finds current members, so every past work they took part in
+//  (single details, covers, announcements, Senbatsu lists, Music Videos, election ceremonies, theater and concert
+//  history…) silently lost them. While history is drawn, get(id) also finds former members.
+//  History of a single also shows each member as she was then: her profile costume of that single (or the latest one
+//  she had by its release day) and her General Election rank from the last election held by that release day.
+// =====================================================================================
+const HX_GET0=get;let HX=0,HX_AT=null;
+const hxAny=id=>HX_GET0(id)||((S&&S.alumni)||[]).find(m=>m.id==id);
+function hxRun(at,f,self,args){const g0=get,a0=HX_AT;get=hxAny;HX++;if(at)HX_AT=at;try{return f.apply(self,args)}finally{HX--;HX_AT=a0;get=HX?hxAny:g0}}
+const hxSingleAt=x=>x?{rid:x.rid,day:x.relDay??x.day??S.day}:null;
+function hxWrap(name,atOf){const f=window[name];if(typeof f!='function')return;window[name]=function(){let at=null;try{at=atOf?atOf.apply(this,arguments):null}catch(e){}return hxRun(at,f,this,arguments)}}
+// single details, announcement, Senbatsu list, covers
+hxWrap('showEds',i=>hxSingleAt(S.singles[i]));
+hxWrap('seAnnOpen',i=>hxSingleAt(S.singles[i]));
+hxWrap('slSingleHtml',x=>hxSingleAt(x));
+hxWrap('coverSvg');
+// Music Videos: each MV as it was when it was published
+const hxMvAt=o=>{const v=o&&o.mv;return v&&v.st=='published'?{rid:v.rid,day:v.pub}:null};
+hxWrap('mvThumb',o=>hxMvAt(o));hxWrap('mvOpen',id=>hxMvAt(S.songs[id]));
+hxWrap('plSongInfo',id=>{const o=S.songs[id];if(!o)return null;const x=S.singles.find(s=>s.mainId==id||(s.coup||[]).includes(id)||(s.tracks||[]).some(t=>t.id==id));return x?hxSingleAt(x):(o.relDay!=null?{day:o.relDay}:null)});
+// election ceremony pictures
+hxWrap('geScenes',e=>e?{day:(e.cer&&e.cer.day)||e.vEnd||S.day}:null);
+// history pages
+const HX_VIEWS=new Set(['mvlib','songlib','gearch','thhist','tharch','hist','rechist','reclib','recdvd','xehist','blpg','blep','blcon']);
+{const f=render;render=function(){if(typeof view!='undefined'&&HX_VIEWS.has(view))return hxRun(null,f,this,arguments);return f.apply(this,arguments)}}
+// as she was then: profile costume of that single
+{const f=apEff;apEff=function(m){const a=f.apply(this,arguments);try{const A=HX_AT;if(!A||!m||m._x)return a;const L=[...(m.czHist||[]),...(m.profCz?[m.profCz]:[])].filter(z=>z&&z.p);
+  let z=A.rid?L.find(z=>z.rid==A.rid):null;if(!z&&A.day!=null)z=L.filter(z=>(z.day??0)<=A.day).sort((p,q)=>(q.day??0)-(p.day??0))[0];if(z)return{...a,cd:z.p};const b={...a};delete b.cd;return b}catch(e){return a}}}
+// …and her election rank of that time
+function hxRankAt(m,day){let best=null;S.groups.forEach(g=>{const G=gsCtx(g.id,'ge');const E=((G&&G.list)||[]).filter(e=>e.st=='done'&&e.final&&((e.cer&&e.cer.day)||e.vEnd||0)<=day).sort((a,b)=>(b.vEnd||0)-(a.vEnd||0))[0];if(!E)return;const row=E.final.rows.find(r=>r.id==m.id&&!r.withdrawn);if(!row)return;if(!best||(E.vEnd||0)>(best.e.vEnd||0))best={e:E,row,g}});
+ if(!best||!best.row.rank)return null;const k=best.row.rank<=3?String(best.row.rank):best.row.rank<=7?'k7':best.row.gi==0?'sen':'rk';return{...best,k}}
+if(typeof geProfRank=='function'){const f=geProfRank;geProfRank=function(m){try{if(HX_AT&&HX_AT.day!=null&&m)return hxRankAt(m,HX_AT.day)}catch(e){}return f.apply(this,arguments)}}
+// ---- Music Videos: a song set to "Music Video" always gets its MV on release (the older Video menu set only the song) -----
+{const f=doRelease;doRelease=function(){try{const p=S.pj;if(p&&p.status=='producing')usedSongs(p).forEach(i=>{const o=S.songs[i];if(o&&o.video=='mv'){const v=mvOf(o);if(v&&!v.on&&v.st!='published')v.on=true}})}catch(e){console.error(e)}return f.apply(this,arguments)}}
+// repair: released songs set to "Music Video" whose MV was never published get it (dated to their release)
+function hxMvRepair(){try{if(!S||!S.songs)return 0;let n=0;S.singles.forEach(x=>{[x.mainId,...(x.coup||[]),...((x.tracks||[]).map(t=>t.id))].filter((id,k,A)=>id&&A.indexOf(id)==k).forEach(id=>{const o=S.songs[id];if(!o||o.video!='mv')return;const v=mvOf(o);if(!v||v.st=='published')return;
+  v.on=true;if(!v.film)try{v.film=mvSnap(o);v.film.day=x.relDay??x.day}catch(e){}v.st='published';v.pub=x.relDay??x.day??S.day;v.rid=x.rid;v.single=x.title;v.track=id==x.mainId?'title':'coupling';v.v=0;v.dh=[];v.ev=[];v.bz=0;v.carry=0;try{mvInit(o,x)}catch(e){}n++})});return n}catch(e){console.error(e);return 0}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{const n=hxMvRepair();if(n)console.log('MV repair:',n)}catch(e){}return r}}
+// ---- iPhone / iPad (WebKit): pictures turned into an image file keep their characters ---------------------------------
+//  On WebKit characters are drawn as small images (perf-sprite.js). A whole picture converted to an image file (election
+//  ceremony scenes, song library covers…) cannot load those, so its characters were missing (an empty throne). Such a
+//  picture now stays an inline drawing; pictures made from a drawing function are drawn with plain characters instead.
+const hxHasBlob=s=>typeof s=='string'&&s.indexOf('href="blob:')>=0;
+const hxInl=(svg,cls)=>svg.replace(/<svg\b/,`<svg class="${cls}" role="img"`);
+if(typeof gxAsImg=='function'){const f=gxAsImg;gxAsImg=function(svg,cls){if(hxHasBlob(svg))return hxInl(svg,cls||'gxwimg');return f.apply(this,arguments)}}
+if(typeof rcImg=='function'){const f=rcImg;rcImg=function(key,svg,cls){if(hxHasBlob(svg))return hxInl(svg,cls||'rcimg');return f.apply(this,arguments)}}
+if(typeof cvImg=='function'){const f=cvImg;cvImg=function(key,mk,w,h){const g=typeof mk=='function'?function(){PT_RAW++;try{return mk.apply(this,arguments)}finally{PT_RAW--}}:mk;return f.call(this,key,g,w,h)}}
+// portrait frames / "TOP n" ribbons use a cached current rank (member-cards.js): in history, the rank of that time
+if(typeof geRankC=='function'){const f=geRankC,C=new Map();geRankC=function(m){try{const A=HX_AT;if(A&&A.day!=null&&m&&m.id!=null){const k=A.day+'|'+m.id;if(!C.has(k)){if(C.size>3000)C.clear();C.set(k,hxRankAt(m,A.day))}return C.get(k)}}catch(e){}return f.apply(this,arguments)}}
 
 </script>
 <script>

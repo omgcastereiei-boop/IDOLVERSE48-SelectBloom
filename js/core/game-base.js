@@ -14,7 +14,7 @@ concert:{n:'Mini Concert',cost:200000,dur:2,cap:3000,max:16,price:6000,d:'Big ha
 promo:{n:'Promotional Appearance',cost:50000,dur:1,cap:5000,max:3,fee:150000,d:'TV/radio spot paying a fee.'}};
 const ROWS=[[0,5],[5,10],[10,16]],RN=['Front','Middle','Back'];
 let S=null,view='dash',ui={f:{team:'all',rar:'all',sk:'pop'},t:true,sort:'pop',dir:-1,slot:null,g:null,mf:{title:'',genre:'Pop',concept:'Cute',costume:'Sailor',color:'#ff8fbf'},cands:[],mod:null};
-const get=id=>S.members.find(m=>m.id==id),dt=()=>new Date(2026,3,1+S.day);
+let get=id=>S.members.find(m=>m.id==id);const dt=()=>new Date(2026,3,1+S.day);
 const fd=()=>dt().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric',weekday:'short'});
 function toast(t,k='ok'){const e=$('#toast');e.textContent=t;e.className='show '+k;clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',2600)}
 function mk(g,team,rr,age,namer){let name,t=0;do{name=namer?namer():pick(FN)+' '+pick(LN)}while((S.members.some(m=>m.name==name||m.real==name)||(S.auds||[]).some(a=>a.cands.some(c=>c.m&&c.m.name==name)))&&t++<99);const m={id:++S.nid,name,real:name,stage:name,nat:'JP',nat2:null,natOther:null,heritage:null,bg:'jp',age:age==null?rnd(14,23):age,team,group:g,mor:rnd(55,90),hue:rnd(0,360),hair:rnd(0,5)};genStats(m,rr||rollRar(),mulb((Math.random()*2147483647)|0));return m}
