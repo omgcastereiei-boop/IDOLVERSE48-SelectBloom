@@ -1972,6 +1972,8 @@ body.czfs{overflow:hidden}
 @media (min-width:900px){body.czfs .czz{display:grid;grid-template-columns:minmax(300px,38%) 1fr;grid-template-rows:auto auto auto minmax(0,1fr);column-gap:10px}
  body.czfs .czz .czztop{grid-column:1/-1}body.czfs .czz .czzst{grid-column:1;grid-row:2/5;height:auto;flex:none}
  body.czfs .czz .czzgr{grid-column:2;grid-row:2}body.czfs .czz .czzsub{grid-column:2;grid-row:3}body.czfs .czz .czzpanel{grid-column:2;grid-row:4}}
+.pczcard .pczrow{align-items:flex-start;gap:10px;flex-wrap:nowrap}.pczfig{width:74px;height:auto;flex:none;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:12px}.pczfig.pczoff{opacity:.55}
+.pczbtn{display:flex;flex-direction:column;gap:6px;min-width:0}.pczbtn .b{align-self:flex-start}.pczlk{display:inline-flex;align-items:center;gap:6px;font-weight:700}.pczlk input{width:18px;height:18px}
 
 </style>
 </head><body>
@@ -21515,6 +21517,73 @@ function czaDragInit(){const st=document.getElementById('czstage');if(!st||st.da
   X.P.dx=N2(czxC(g.dx+ddx,-D.mv,D.mv));X.P.dy=N2(czxC(g.dy+ddy,-D.mv,D.mv));czLive();e.preventDefault()});
  const end=e=>{if(!g)return;const moved=g.mv;g=null;if(moved){czMark();render()}};st.addEventListener('pointerup',end);st.addEventListener('pointercancel',end)}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{if(document.getElementById('czstage')){czaDragInit();const X=czaDragDef();document.getElementById('czstage').classList.toggle('czdrag',!!X)}}catch(e){console.error(e)}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Profile costume from the Character Creator
+//  Members › Appearance › Outfits gets "Design costume" (the shared Costume Studio, view 'profcz') and "Copy to other
+//  members". A member's own design is stored as m.profOwn = {p, day, from?}; m.profLock decides whether the profile
+//  shows it. While the lock is on the profile keeps the player's costume — new singles still record their costume in
+//  the member's costume history (m.profCz / m.czHist) but no longer replace the profile outfit. Turning the lock off
+//  returns to the latest Single Costume. Graduation / Honorary costumes still take over as the final profile image.
+// =====================================================================================
+const PCZ_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+const pczOn=m=>!!(m&&m.profLock&&m.profOwn&&m.profOwn.p&&!(m.profCz&&(m.profCz.kind=='grad'||m.profCz.kind=='hon')));
+// the profile outfit (portraits, profile, everything drawn from the member's current look)
+{const f=apEff;apEff=function(m){const a=f.apply(this,arguments);try{if(m&&!m._x&&pczOn(m))return{...a,cd:m.profOwn.p}}catch(e){}return a}}
+// systems that dress a member in "her latest profile costume" follow the same choice
+const pczSwap=(m,r)=>{try{if(pczOn(m)&&(!r||(m.profCz&&r===m.profCz.p)))return m.profOwn.p}catch(e){}return r};
+if(typeof xeLatestCz=='function'){const f=xeLatestCz;xeLatestCz=function(m){return pczSwap(m,f.apply(this,arguments))}}
+if(typeof awCzOf=='function'){const f=awCzOf;awCzOf=function(Y,m){return pczSwap(m,f.apply(this,arguments))}}
+if(typeof geCzLive=='function'){const f=geCzLive;geCzLive=function(e,mid){const r=f.apply(this,arguments);const m=get(mid),c=e&&e.cos;return m&&r&&m.profCz&&r===m.profCz.p?pczSwap(m,r):r}}
+// ---- the dressing room ---------------------------------------------------------------------------------------------------------
+function pczOpen(mid){const m=get(mid);if(!m)return;czLib();const start=(m.profOwn&&m.profOwn.p)||(m.profCz&&m.profCz.p)||czStarter();
+ ui.pcz={mid,back:{view,mod:ui.mod}};ui.mod=null;ui.czE={did:null,p:czClone(start),style:'',dirty:m.profOwn?0:1,cat:'top',sel:'top',mid,pose:0,ex:2,song:null,scz:1};view='profcz';render();try{window.scrollTo(0,0)}catch(e){}}
+function pczSave(){const G=ui.pcz,m=G&&get(G.mid);if(!m||!ui.czE)return;const first=!m.profOwn;m.profOwn={p:czClone(ui.czE.p),day:S.day};if(first)m.profLock=true;ui.czE.dirty=0;
+ toast(m.profLock?PCZ_T(`${m.name}'s costume saved and shown on her profile.`,`บันทึกชุดของ ${m.name} แล้ว และใช้เป็นชุดในโปรไฟล์`):PCZ_T(`${m.name}'s costume saved. Turn on "Use as profile outfit" to show it on her profile.`,`บันทึกชุดของ ${m.name} แล้ว เปิด "ใช้เป็นชุดในโปรไฟล์" เพื่อแสดงในโปรไฟล์`));render()}
+function pczRevert(){const G=ui.pcz,m=G&&get(G.mid);if(!m||!ui.czE)return;ui.czE.p=czClone((m.profOwn&&m.profOwn.p)||(m.profCz&&m.profCz.p)||czStarter());ui.czE.dirty=0;render()}
+function pczLock(mid,on){const m=get(mid);if(!m)return;if(on&&!(m.profOwn&&m.profOwn.p)){if(view=='profcz'&&ui.czE){pczSave();m.profLock=true;return render()}return toast(PCZ_T('Design and save a costume first.','ออกแบบและบันทึกชุดก่อน'),'err')}
+ m.profLock=!!on;toast(on?PCZ_T(`${m.name}'s profile now keeps your costume. New singles no longer change it.`,`โปรไฟล์ของ ${m.name} ใช้ชุดที่คุณเลือกแล้ว ซิงเกิลใหม่จะไม่เปลี่ยนชุดนี้`):PCZ_T(`${m.name}'s profile follows her latest Single Costume again.`,`โปรไฟล์ของ ${m.name} กลับไปใช้ชุดซิงเกิลล่าสุด`));render()}
+function pczFrom(kind,v){const G=ui.pcz,m=G&&get(G.mid);if(!m||!ui.czE||v==='')return;let p=null;
+ if(kind=='cur')p=m.profCz&&m.profCz.p;else if(kind=='old')p=((m.czHist||[]).slice().reverse()[+v]||{}).p;else if(kind=='lib'){const d=czD(v);p=d&&d.p}else if(kind=='pre')p=(CZ_PRESETS[+v]||[])[1];else if(kind=='new')p=czStarter();
+ if(!p)return;ui.czE.p=czClone(p);ui.czE.dirty=1;toast(PCZ_T('Loaded as the starting point — edit it, then save.','โหลดเป็นต้นแบบแล้ว แก้ไขแล้วกดบันทึก'));render()}
+function pczBack(){czConfirmLeave(()=>{const G=ui.pcz||{},b=G.back||{};ui.czE=null;ui.pcz=null;view=b.view&&b.view!='profcz'?b.view:'creator';ui.mod=b.mod||null;render()})}
+V.profcz=function(){const G=ui.pcz,m=G&&get(G.mid);if(!m)return`<p class="st">${PCZ_T('No member selected.','ยังไม่ได้เลือกเมมเบอร์')}</p>`;
+ if(!ui.czE)pczOpen(m.id);const E=ui.czE;E.mid=m.id;const hist=(m.czHist||[]).slice().reverse().filter(h=>h&&h.p),lib=czLib().ds.filter(x=>x.p),T=PCZ_T;
+ const grid=czGridHtml(E,null,null,m).replace(/<label class="st">Model <select[\s\S]*?<\/select><\/label>/,'').replace('onclick="czSave()"','onclick="pczSave()"').replace('onclick="czRevert()"','onclick="pczRevert()"').replace('💾 Save design','💾 '+T('Save costume','บันทึกชุด'));
+ return`<h2 class="ht">${T('Profile Costume','ชุดโปรไฟล์')} · ${esc(m.name)}</h2><div class="c plczh"><div class="row"><span class="st">${T('Her own costume for the profile. Face and hair never change.','ชุดของเธอสำหรับโปรไฟล์ หน้าและผมไม่เปลี่ยน')}</span><span style="flex:1"></span><button class="b" onclick="pczBack()">◀ ${T('Back','กลับ')}</button></div>
+ <div class="row"><label class="pczlk"><input type="checkbox" ${m.profLock?'checked':''} onchange="pczLock(${m.id},this.checked)"> <b>${T('Use as profile outfit','ใช้เป็นชุดในโปรไฟล์')}</b></label><span class="st">${T('On: the profile keeps this costume (new singles do not replace it). Off: the profile follows her latest Single Costume.','เปิด: โปรไฟล์ใช้ชุดนี้ ซิงเกิลใหม่ไม่เปลี่ยน · ปิด: โปรไฟล์ใช้ชุดซิงเกิลล่าสุด')}</span></div>
+ <div class="row"><button class="b s p" onclick="plCzRandom()">🎲 ${T('Randomize','สุ่มชุด')}</button><button class="b s" ${m.profOwn?'':'disabled'} onclick="pczCopyOpen(${m.id})">📋 ${T('Copy to other members','คัดลอกให้เมมเบอร์อื่น')}</button>
+ <select onchange="pczFrom(this.value.split(':')[0],this.value.split(':')[1]);this.value=''"><option value="">${T('Start from…','เริ่มจาก…')}</option><option value="new:0">${T('Basic T-shirt, shorts, sneakers','เสื้อยืด กางเกงขาสั้น รองเท้าผ้าใบ')}</option>${m.profCz&&m.profCz.p?`<option value="cur:0">${T('Her current Single Costume','ชุดซิงเกิลปัจจุบันของเธอ')}</option>`:''}${hist.length?`<optgroup label="${T('Earlier costumes','ชุดก่อนหน้า')}">${hist.map((h,i)=>`<option value="old:${i}">${esc((h.title||h.name||T('Costume','ชุด')).slice(0,40))}</option>`).join('')}</optgroup>`:''}<optgroup label="${T('Presets','แบบสำเร็จรูป')}">${CZ_PRESETS.map(([n],i)=>`<option value="pre:${i}">${esc(n)}</option>`).join('')}</optgroup>${lib.length?`<optgroup label="${T('Costume library','คลังชุด')}">${lib.map(x=>`<option value="lib:${x.id}">${esc(x.name)}</option>`).join('')}</optgroup>`:''}</select></div></div>${grid}`};
+{const f=plCzRandom;plCzRandom=function(){if(view=='profcz'&&ui.czE){ui.czE.p=czRandom();ui.czE.dirty=1;toast(PCZ_T('Random costume generated — save to keep it.','สุ่มชุดแล้ว กดบันทึกเพื่อเก็บ'));return render()}return f.apply(this,arguments)}}
+if(typeof CZZ_VIEWS!='undefined')CZZ_VIEWS.add('profcz');SC_VIEW.profcz='dressing';SUBLOC.profcz='Dressing Room · Profile Costume';
+{const M=SECS.find(s=>s.k=='members');if(M){M.hid=[...(M.hid||[]),'profcz']}}
+// ---- copy to other members ---------------------------------------------------------------------------------------------------
+function pczCopyOpen(mid){const m=get(mid);if(!m)return;const p=view=='profcz'&&ui.czE&&ui.pcz&&ui.pcz.mid==mid?ui.czE.p:(m.profOwn&&m.profOwn.p);if(!p)return toast(PCZ_T('Design and save a costume first.','ออกแบบและบันทึกชุดก่อน'),'err');
+ ui.pcp={from:mid,p:czClone(p),sel:[],lock:true,grp:'all'};ui.mod={t:'html',h:pczCopyHtml()};render()}
+function pczCopyHtml(){const c=ui.pcp,src=c&&get(c.from);if(!src)return'';const T=PCZ_T,a=ap(src);
+ const L=S.members.filter(m=>m.id!=src.id&&m.status!='graduated'&&(c.grp=='all'||String(m.group)==c.grp));
+ return`<h2 class="ht">${T(`Copy ${esc(src.name)}'s costume`,`คัดลอกชุดของ ${esc(src.name)}`)}</h2><div class="row"><svg viewBox="10 -2 80 200" width="56">${fig(src,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:c.p})}</svg><p class="st">${T('Each chosen member gets her own copy of this costume (her face and hair stay hers). Their existing own costume is replaced.','เมมเบอร์ที่เลือกจะได้ชุดนี้เป็นของตัวเอง (หน้าและผมเป็นของเธอเอง) ชุดของตัวเองที่มีอยู่จะถูกแทนที่')}</p></div>
+ <div class="row"><label class="pczlk"><input type="checkbox" ${c.lock?'checked':''} onchange="ui.pcp.lock=this.checked"> ${T('Use as their profile outfit','ใช้เป็นชุดในโปรไฟล์ของพวกเธอ')}</label>${S.groups.length>1?`<select onchange="ui.pcp.grp=this.value;ui.mod.h=pczCopyHtml();render()"><option value="all">${T('All groups','ทุกวง')}</option>${S.groups.map(g=>`<option value="${g.id}" ${c.grp==String(g.id)?'selected':''}>${esc(g.name)}</option>`).join('')}</select>`:''}
+ <button class="b s" onclick="ui.pcp.sel=${JSON.stringify(L.map(m=>m.id))};ui.mod.h=pczCopyHtml();render()">${T('Select all','เลือกทั้งหมด')}</button><button class="b s" onclick="ui.pcp.sel=[];ui.mod.h=pczCopyHtml();render()">${T('Clear','ล้าง')}</button></div>
+ <div class="g msel">${L.map(m=>{const on=c.sel.includes(m.id);return`<button class="c m ${on?'msel-on':''}" onclick="pczTog(${m.id})">${on?'<i class="mselck">✔</i>':''}${ptc(m,44)}<div class="st"><b>${esc(m.name)}</b>${m.profOwn?`<br><small>${T('has own costume','มีชุดของตัวเอง')}</small>`:''}</div></button>`}).join('')}</div>
+ <div class="row"><button class="b p" ${c.sel.length?'':'disabled'} onclick="pczCopyGo()">${T(`Copy to ${c.sel.length} member(s)`,`คัดลอกให้ ${c.sel.length} คน`)}</button><button class="b" onclick="ui.mod=null;ui.pcp=null;render()">${T('Cancel','ยกเลิก')}</button></div>`}
+function pczTog(id){const c=ui.pcp;if(!c)return;const i=c.sel.indexOf(id);if(i>=0)c.sel.splice(i,1);else c.sel.push(id);ui.mod.h=pczCopyHtml();render()}
+function pczCopyGo(){const c=ui.pcp;if(!c||!c.sel.length)return;let n=0;c.sel.forEach(id=>{const m=get(id);if(!m)return;m.profOwn={p:czClone(c.p),day:S.day,from:c.from};if(c.lock)m.profLock=true;n++});
+ ui.mod=null;ui.pcp=null;toast(PCZ_T(`Costume copied to ${n} member(s).`,`คัดลอกชุดให้ ${n} คนแล้ว`));render()}
+// ---- Character Creator › Outfits: the profile costume card ----------------------------------------------------------------------
+{const f=apBody;apBody=function(cat){const h=f.apply(this,arguments);if(cat!='outfit')return h;try{const m=get(ui.cm);if(!m)return h;const T=PCZ_T,a=ap(m),own=m.profOwn&&m.profOwn.p,cur=pczOn(m)?own:(m.profCz&&m.profCz.p);
+  const card=`<div class="c pczcard"><div class="row"><b>${T('Profile costume','ชุดในโปรไฟล์')}</b><span class="tag ${pczOn(m)?'tmain':''}">${pczOn(m)?T('Your costume','ชุดที่คุณเลือก'):m.profCz&&m.profCz.p?T('Latest Single Costume','ชุดซิงเกิลล่าสุด'):T('Basic outfit','ชุดพื้นฐาน')}</span></div>
+   <div class="row pczrow">${cur?`<svg viewBox="10 -2 80 200" class="pczfig">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:cur})}</svg>`:''}${own&&!pczOn(m)?`<svg viewBox="10 -2 80 200" class="pczfig pczoff" title="${T('Your saved costume (not shown on the profile)','ชุดที่คุณบันทึกไว้ (ยังไม่แสดงในโปรไฟล์)')}">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:own})}</svg>`:''}
+   <div class="pczbtn"><button class="b p" onclick="pczOpen(${m.id})">${T(own?'Edit costume':'Design costume','ทำชุด')}</button><button class="b" ${own?'':'disabled'} onclick="pczCopyOpen(${m.id})">${T('Copy to other members','คัดลอกให้เมมเบอร์อื่น')}</button>
+   <label class="pczlk"><input type="checkbox" ${m.profLock?'checked':''} ${own?'':'disabled'} onchange="pczLock(${m.id},this.checked)"> ${T('Use as profile outfit','ใช้เป็นชุดในโปรไฟล์')}</label>
+   <p class="st">${T('On: the profile keeps your costume and new singles do not change it. Off: the profile follows her latest Single Costume.','เปิด: โปรไฟล์ใช้ชุดที่คุณเลือก ซิงเกิลใหม่จะไม่เปลี่ยน · ปิด: โปรไฟล์ใช้ชุดซิงเกิลล่าสุด')}</p></div></div></div>`;
+  return card+h}catch(e){console.error(e);return h}}}
+// profile page: say which costume the profile shows
+if(typeof plProfExtra=='function'){const f=plProfExtra;plProfExtra=function(m){const h=f.apply(this,arguments);try{if(pczOn(m)){const a=ap(m);return`<div class="c plprofcz"><h3>${PCZ_T('Profile outfit','ชุดในโปรไฟล์')}</h3><div class="row"><svg viewBox="10 -2 80 200" class="plpcz">${fig(m,{pose:2,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:m.profOwn.p})}</svg><div><b>${PCZ_T('Your costume (kept on the profile)','ชุดที่คุณเลือก (ล็อกไว้ในโปรไฟล์)')}</b><div class="st">${PCZ_T('Saved','บันทึก')} ${jd(m.profOwn.day)}</div><button class="b s" onclick="ui.mod=null;ui.cm=${m.id};ui.draft=null;ui.apCat='outfit';goView('creator')">${PCZ_T('Change in Character Creator','เปลี่ยนในหน้าปรับรูปลักษณ์')}</button></div></div></div>`+h.replace('<h3>Profile outfit</h3>',`<h3>${PCZ_T('Latest Single Costume','ชุดซิงเกิลล่าสุด')}</h3>`)}}catch(e){console.error(e)}return h}}
+// the Character Creator preview shows the costume the profile really wears while "Use as profile outfit" is on
+{const f=apPrevHtml;apPrevHtml=function(){try{const m=get(ui.cm);if(m&&ui.draft&&pczOn(m)){const pm={...apPM({})};delete pm._x;const a=pm.ap;return`<div class="approw">${pt(pm,0)}<div class="apfull"><svg class="chf" viewBox="10 -2 80 200" xmlns="http://www.w3.org/2000/svg">${fig(pm,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:m.profOwn.p})}</svg></div></div>`}}catch(e){console.error(e)}return f.apply(this,arguments)}}
 
 </script>
 <script>

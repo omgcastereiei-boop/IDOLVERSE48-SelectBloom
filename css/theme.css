@@ -1890,3 +1890,5 @@ body.czfs{overflow:hidden}
 @media (min-width:900px){body.czfs .czz{display:grid;grid-template-columns:minmax(300px,38%) 1fr;grid-template-rows:auto auto auto minmax(0,1fr);column-gap:10px}
  body.czfs .czz .czztop{grid-column:1/-1}body.czfs .czz .czzst{grid-column:1;grid-row:2/5;height:auto;flex:none}
  body.czfs .czz .czzgr{grid-column:2;grid-row:2}body.czfs .czz .czzsub{grid-column:2;grid-row:3}body.czfs .czz .czzpanel{grid-column:2;grid-row:4}}
+.pczcard .pczrow{align-items:flex-start;gap:10px;flex-wrap:nowrap}.pczfig{width:74px;height:auto;flex:none;background:linear-gradient(#fdf3f8,#eef4fd);border-radius:12px}.pczfig.pczoff{opacity:.55}
+.pczbtn{display:flex;flex-direction:column;gap:6px;min-width:0}.pczbtn .b{align-self:flex-start}.pczlk{display:inline-flex;align-items:center;gap:6px;font-weight:700}.pczlk input{width:18px;height:18px}
