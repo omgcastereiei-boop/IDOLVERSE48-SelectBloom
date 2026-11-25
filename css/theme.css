@@ -1802,3 +1802,22 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .bgcur .bgcurrow{display:flex;gap:10px;align-items:center}.bgcur .bgth.cur{width:84px;flex:none}.bgcur .bgcurrow>div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .mvxfr{margin-top:6px}
 .gevgrp{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:8px 0}.gevgrp>div{background:#fffdf8;border:1px solid var(--line);border-radius:12px;padding:6px 10px;display:flex;flex-direction:column}.gevgrp small{color:var(--mut);font:700 10.5px Quicksand}.gevgrp b{font:800 16px Quicksand}
+/* ---- CD Cover Studio: Back / Random in the toolbar, grouped tool panel, mobile workspace ---- */
+.cvpanel{display:contents}.cvx .cvprod{grid-column:1/-1;margin:0}
+.cvtb.cvback{color:#8a4a7a}.cvtb.cvrand{white-space:nowrap}
+.cvx.cvmob{display:flex;flex-direction:column;gap:6px;position:sticky;z-index:4;margin-bottom:0;overflow:hidden}
+.cvx.cvmob .cvtop{order:1;flex:none;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:4px 6px;gap:2px}.cvx.cvmob .cvtop::-webkit-scrollbar{display:none}
+.cvx.cvmob .cvtop .cvtb{flex:none;min-width:38px;min-height:38px}.cvx.cvmob .cvtop .cvtb.t{padding:0 9px}.cvx.cvmob .cvtop .cvback span,.cvx.cvmob .cvtop .cvrand span{font-size:11.5px}
+.cvx.cvmob .cvmain{order:2;flex:0 0 var(--cvmain,52%);display:flex;flex-direction:column;min-height:0}
+.cvx.cvmob .cvstage{flex:1;min-height:0;max-height:none;padding-top:8px;padding-bottom:8px}
+.cvx.cvmob .cvact{flex:none}
+.cvx.cvmob .cvrail{order:3;flex:none;padding:3px}.cvx.cvmob .cvrail button{min-height:46px;min-width:52px}
+.cvx.cvmob .cvpanel{order:4;display:block;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:16px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.cvx.cvmob .cvpanel>*{margin-bottom:6px}.cvx.cvmob .cvpanel .cvdrawer,.cvx.cvmob .cvpanel .cvprops{max-height:none;position:static}
+.cvx.cvmob .cvtop{flex-wrap:wrap;overflow:visible;row-gap:2px}.cvx.cvmob .cvtop .cvsp:last-of-type{flex-basis:100%;height:0}
+.cvx.cvmob .cvtop .cvtb{min-height:36px;min-width:36px}.cvx.cvmob .cvtop .cvtb.t{flex:1 1 auto;padding:0 8px;font-size:12px}
+.cvx.cvmob .cvact{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;padding:2px 4px}.cvx.cvmob .cvact::-webkit-scrollbar{display:none}.cvx.cvmob .cvact .cvab{flex:none;min-width:58px}
+.cvx.cvmob .cvtop{padding:3px 5px}.cvx.cvmob .cvtop .cvtb{min-height:32px;min-width:34px}.cvx.cvmob .cvtop .cvtb svg{width:19px;height:19px}
+.cvx.cvmob .cvact{min-height:0;gap:0}.cvx.cvmob .cvact .cvab{min-height:42px;padding:2px 6px;font-size:10px}.cvx.cvmob .cvact .cvab svg{width:18px;height:18px}
+.cvx.cvmob .cvrail button{min-height:42px;font-size:10px}.cvx.cvmob .cvrail button svg{width:19px;height:19px}
+.cvx.cvmob .cvtop .cvzl{display:none}.cvx.cvmob .cvtop .cvsp:first-of-type{flex:1}

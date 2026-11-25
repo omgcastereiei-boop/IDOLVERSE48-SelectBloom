@@ -1884,6 +1884,25 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .bgcur .bgcurrow{display:flex;gap:10px;align-items:center}.bgcur .bgth.cur{width:84px;flex:none}.bgcur .bgcurrow>div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .mvxfr{margin-top:6px}
 .gevgrp{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin:8px 0}.gevgrp>div{background:#fffdf8;border:1px solid var(--line);border-radius:12px;padding:6px 10px;display:flex;flex-direction:column}.gevgrp small{color:var(--mut);font:700 10.5px Quicksand}.gevgrp b{font:800 16px Quicksand}
+/* ---- CD Cover Studio: Back / Random in the toolbar, grouped tool panel, mobile workspace ---- */
+.cvpanel{display:contents}.cvx .cvprod{grid-column:1/-1;margin:0}
+.cvtb.cvback{color:#8a4a7a}.cvtb.cvrand{white-space:nowrap}
+.cvx.cvmob{display:flex;flex-direction:column;gap:6px;position:sticky;z-index:4;margin-bottom:0;overflow:hidden}
+.cvx.cvmob .cvtop{order:1;flex:none;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:4px 6px;gap:2px}.cvx.cvmob .cvtop::-webkit-scrollbar{display:none}
+.cvx.cvmob .cvtop .cvtb{flex:none;min-width:38px;min-height:38px}.cvx.cvmob .cvtop .cvtb.t{padding:0 9px}.cvx.cvmob .cvtop .cvback span,.cvx.cvmob .cvtop .cvrand span{font-size:11.5px}
+.cvx.cvmob .cvmain{order:2;flex:0 0 var(--cvmain,52%);display:flex;flex-direction:column;min-height:0}
+.cvx.cvmob .cvstage{flex:1;min-height:0;max-height:none;padding-top:8px;padding-bottom:8px}
+.cvx.cvmob .cvact{flex:none}
+.cvx.cvmob .cvrail{order:3;flex:none;padding:3px}.cvx.cvmob .cvrail button{min-height:46px;min-width:52px}
+.cvx.cvmob .cvpanel{order:4;display:block;flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:16px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.cvx.cvmob .cvpanel>*{margin-bottom:6px}.cvx.cvmob .cvpanel .cvdrawer,.cvx.cvmob .cvpanel .cvprops{max-height:none;position:static}
+.cvx.cvmob .cvtop{flex-wrap:wrap;overflow:visible;row-gap:2px}.cvx.cvmob .cvtop .cvsp:last-of-type{flex-basis:100%;height:0}
+.cvx.cvmob .cvtop .cvtb{min-height:36px;min-width:36px}.cvx.cvmob .cvtop .cvtb.t{flex:1 1 auto;padding:0 8px;font-size:12px}
+.cvx.cvmob .cvact{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;padding:2px 4px}.cvx.cvmob .cvact::-webkit-scrollbar{display:none}.cvx.cvmob .cvact .cvab{flex:none;min-width:58px}
+.cvx.cvmob .cvtop{padding:3px 5px}.cvx.cvmob .cvtop .cvtb{min-height:32px;min-width:34px}.cvx.cvmob .cvtop .cvtb svg{width:19px;height:19px}
+.cvx.cvmob .cvact{min-height:0;gap:0}.cvx.cvmob .cvact .cvab{min-height:42px;padding:2px 6px;font-size:10px}.cvx.cvmob .cvact .cvab svg{width:18px;height:18px}
+.cvx.cvmob .cvrail button{min-height:42px;font-size:10px}.cvx.cvmob .cvrail button svg{width:19px;height:19px}
+.cvx.cvmob .cvtop .cvzl{display:none}.cvx.cvmob .cvtop .cvsp:first-of-type{flex:1}
 
 </style>
 </head><body>
@@ -6156,7 +6175,7 @@ V.music=function(){if(ui.cvCtx){ui.cvCtx=null;ui.cd=null}if(!S.pj)newPj();plMigr
  // 3 · costumes
  const S4=`<div data-step="3"><h3 class="sth">3 · Costume design</h3><p class="st">Every song has its own costumes, designed member by member. Costumes are creative only: they do not change sales or stats. Manufacturing takes ${CFG.costumeDays} days after production starts.</p><div class="g2">${all.map(id=>{const o=S.songs[id];if(plReused(p,o))return`<div class="c songc"><div class="sh2">${tag(id)}<b>${esc(o.title)}</b></div><p class="st">Released song: it keeps its original costumes.</p></div>`;const D=plCzDone(o),dn=D.filter(x=>x[1]).length;return`<div class="c songc ${id==p.mainId?'main':''}"><div class="sh2">${tag(id)}<b>${esc(o.title)}</b><span class="st">${dn}/${D.length} designed</span></div><div class="plczmini">${D.map(([m,ok])=>{const cd=czFor(o,m.id),a=ap(m);return`<button class="plczt ${ok?'ok':''}" onclick="plCzOpen('${id}',${m.id})" title="${esc(m.name)}"><svg viewBox="10 -2 80 200">${fig(m,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,...(cd&&ok?{cd}:{})})}</svg><small>${ok?'✔':'✗'} ${esc(m.name.split(' ')[0])}</small></button>`}).join('')||'<span class="st">Select the Senbatsu first.</span>'}</div><div class="row"><button class="b s p" ${D.length?'':'disabled'} onclick="plCzOpen('${id}')">👗 ${lk?'View costumes':'Design costumes'}</button><span class="st">${o.cosProd?(o.cosProd.done?'✔ Manufactured':`Manufacturing: ready ${jd(o.cosProd.ready)}`):''}</span></div></div>`}).join('')}</div>${plSczCard(p,lk)}</div>`;
  // 4 · CD covers (available from the start)
- const S5=`<div data-step="6"><h3 class="sth">6 · CD cover design</h3><p class="st">Each ${alb?'track type':'edition'} has its own cover. Design it any time before Release Day; confirmed covers can be edited again later. Members on the cover wear their Title Track costumes.</p><div class="covg">${p.types.map(t=>{const cc=S.cov[t.name];return`<div class="c covc"><b>${esc(t.name)}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(t.name)}')">🎨 Design cover</button><button class="b s" onclick="plCoverRand('${esc(t.name)}')">🎲 Randomize CD Cover</button></div></div>`}).join('')}${plLimCovHtml(p)}</div></div>`;
+ const S5=`<div data-step="6"><h3 class="sth">6 · CD cover design</h3><p class="st">Each ${alb?'track type':'edition'} has its own cover. Design it any time before Release Day; confirmed covers can be edited again later. Members on the cover wear their Title Track costumes.</p><div class="covg">${p.types.map(t=>{const cc=S.cov[t.name];return`<div class="c covc"><b>${esc(t.name)}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(t.name)}')">🎨 Design cover</button></div></div>`}).join('')}${plLimCovHtml(p)}</div></div>`;
  // 5 · budget & start
  const S6=`<div data-step="7">${hsPlanHtml(p,dis)}<div class="c" style="margin-top:10px"><h3>7 · Budget &amp; start production</h3><table>${C.L.map(([n,v])=>`<tr><td>${n}</td><td>${yen(v)}</td></tr>`).join('')}<tr><td><b>Total</b></td><td><b>${yen(C.t)}</b></td></tr></table><div class="st">Funds ${yen(S.money)} · charged once when production starts · ${CFG.prodDays} days to Release Day</div>${!lk&&C.t>S.money?`<p style="color:var(--err)">Insufficient funds: short by ${yen(C.t-S.money)}.</p>`:''}${lk?'':`<ul class="ms">${rq.map(x=>`<li style="color:var(--err)">✗ ${esc(x)}</li>`).join('')||'<li class="ok">✔ The plan is complete</li>'}</ul>${rq.length?'':`<details class="psum"><summary>Preview the full plan</summary><pre>${esc(planSummary(p))}</pre></details>`}<button class="b p big" onclick="confirmProd()">Start ${alb?'Album':'Single'} Production (${yen(C.t)})</button>`}</div></div>`;
  const SMV=plMvStepHtml(p,all,dis),SSL=plSaleStepHtml(p);const body=st==0?S1+S2+S4+SMV+SSL+S5+S6:[S1,S2,S4,SMV,SSL,S5,S6][st-1]||S1;
@@ -13654,7 +13673,7 @@ function plSaleStepHtml(p){if(plAlb(p))return`<div data-step="5"><h3 class="sth"
  let h='';try{h=(p.status=='draft'?seRelCard(p):'')+seCardHtml(p)}catch(e){console.error(e)}return`<div data-step="5"><h3 class="sth">5 · Sales &amp; Editions</h3>${h}</div>`}
 const plLimEds=p=>{try{const SL=!plAlb(p)&&seSale(p);return SL?SL.eds.filter(e=>e.kind=='lim'):[]}catch(e){return[]}};
 function plLimCovDone(p){return plLimEds(p).every(e=>{const c=S.cov[seEdKey(p,e)];return c&&c.status=='confirmed'})}
-function plLimCovHtml(p){return plLimEds(p).map(e=>{const key=seEdKey(p,e),cc=S.cov[key];return`<div class="c covc"><b>${esc(seEdName(p,e))}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(key)}')">🎨 Design cover</button><button class="b s" onclick="plCoverRand('${esc(key)}')">🎲 Randomize CD Cover</button></div></div>`}).join('')}
+function plLimCovHtml(p){return plLimEds(p).map(e=>{const key=seEdKey(p,e),cc=S.cov[key];return`<div class="c covc"><b>${esc(seEdName(p,e))}</b><div class="covw">${cc?coverSvg(cc,{size:170}):'<div class="cover empty-cover">No cover yet</div>'}</div><div class="st">${cc?(cc.status=='confirmed'?'✔ Cover confirmed':'✎ Draft — confirm it in the studio'):'Not designed yet'}</div><div class="row" style="justify-content:center"><button class="b s p" onclick="openCov('${esc(key)}')">🎨 Design cover</button></div></div>`}).join('')}
 // ---- editions: Regular = Pre-order, Limited = Limited Quantity ------------------------------------------------------------
 {const f=seSale;seSale=function(p){const SL=f.apply(this,arguments);try{if(SL&&p&&p.status=='draft')SL.eds.forEach(e=>{const m=e.kind=='lim'?'qty':'pre';if(e.m!=m){e.m=m;if(m=='pre'){e.od=e.od|0;e.len=Math.max(1,Math.min(SE_MAXPRE,e.len||30))}else e.cap=e.cap||Math.max(2000,Math.round(seEst(p)*.6/1000)*1000)}})}catch(e){}return SL}}
 {const f=seEdSet;seEdSet=function(id,k,v){if(k=='m')return;return f.apply(this,arguments)}}
@@ -21641,7 +21660,7 @@ function cvProdTools(d){const stat=e=>S.cov[e]?(S.cov[e].status=='confirmed'?' �
  ${typeof cvRandMem=='function'?`<div class="cvchips"><button class="cvchip" onclick="cvRandMem()">🎲 Random members</button><button class="cvchip" onclick="cvRandPos()">🎲 Random positions</button><button class="cvchip" onclick="cvRandPose()">🎲 Random poses</button><button class="cvchip" onclick="cvRandText()">🎲 Move texts</button></div>`:''}
  <div class="cvchips"><button class="cvchip" onclick="loadDraft()">Load saved draft</button><button class="cvchip" onclick="resetCov()">Reset layout</button><button class="cvchip" onclick="doExport(512)">Export 512px</button><button class="cvchip" onclick="doExport(1024)">Export 1024px</button></div>
  ${EDS.length>1?`<div class="cvchips"><select onchange="dupTo(this.value);this.value=''"><option value="">Duplicate to…</option>${EDS.filter(e=>e!=ui.ed).map(e=>`<option>${e}</option>`).join('')}</select></div><div class="cvchips"><span class="st">Copy CD cover:</span><select id="cs1">${EDS.map(e=>`<option ${e==ui.ed?'selected':''}>${e}</option>`).join('')}</select>→<select id="cs2">${EDS.map(e=>`<option ${e!=ui.ed&&EDS.filter(x=>x!=ui.ed)[0]==e?'selected':''}>${e}</option>`).join('')}</select><button class="cvchip" onclick="copyCover($('#cs1').value,$('#cs2').value)">Copy CD Cover</button></div>`:''}
- <div class="cvchips">${rc?`<button class="cvchip" onclick="rcCvExit(1);render()">◀ Back to Studio Recording</button>`:`<button class="cvchip" onclick="view=ui.cvCtx=='album'?'albums':'music';render()">◀ Back to production</button>`}</div></details>`}
+ </details>`}
 // ---------------------------------------------------------------- the page
 V.cover=function(){if(!S.pj&&ui.cvCtx!='album')newPj();syncEds();{const LK=coverLock();if(LK)return`<h2 class="ht">Single Cover Studio</h2><div class="c"><h3>Locked</h3><p>${esc(LK)}</p><button class="b" onclick="view='music';render()">Back to the single plan</button></div>`}
  if(!ui.cd)initCov(EDS[0]);cvFontsLoad();const d=ui.cd;if(!ui.sel)ui.sel='bg';cvForceCz(d);if(!d.bg)d.bg={type:'grad',c1:'#ff8fbf',c2:'#b9a6f0',pc:'#fff',int:.5,seed:7};
@@ -22224,6 +22243,63 @@ const gv4Sup=e=>{const live=new Set(geLive(e)),M={};let all=0,el=0;geSegs().forE
    cells[4]=cells[4].replace(/<\/td>$/,'')+avgD+'</td>';cells.splice(1,0,N(r.sup),turn);return`<tr class="${cls}"><td class="gevm">${cells.join('</td><td>')}</tr>`});
   h=h.replace('Unique Voters count each fan once per member (a fan who supported several members counts once for each).','Supporters are the unique fans who support a member (Kami Oshi or Oshi); only Regular, Dedicated and Hardcore fans buy voting CDs. Unique Voters count each fan once per member (a fan who voted for several members counts once for each; the group total counts her once). Turnout = Unique Voters ÷ eligible supporters.');
  }catch(x){console.error(x)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — CD Cover Studio: mobile workspace, Back to Production, Random Cover
+//  Extends cover-canva.js (same editor, same data). Only the page structure around it changes:
+//   · toolbar gets "Back to Production" (upper left) and "Random Cover" (existing plCoverRand);
+//   · the tool drawer, object properties and cover tools are grouped in one panel (.cvpanel). On
+//     desktop it is display:contents, so the existing grid layout is unchanged. On phones the editor
+//     becomes an app-like workspace sized to the visible screen: toolbar · pinned cover · tool tabs ·
+//     independently scrolling panel. The cover never scrolls away and stays fully interactive.
+//   · Back to Production keeps unsaved work (S.cvWip, restored when the studio is reopened) without
+//     saving, confirming or changing the production status. Random Cover keeps the saved cover
+//     untouched and is one Undo away from the previous design.
+// =====================================================================================
+const CVM_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+let CVM_NOWIP=0;const cvmIsMob=()=>window.innerWidth<720;
+function cvmDirty(){if(!ui.cd)return false;const s=S.cov&&S.cov[ui.ed];try{if(!s)return(ui.cd.layers||[]).length>0&&(ui.hu||[]).length>0;return JSON.stringify({bg:s.bg,l:s.layers})!==JSON.stringify({bg:ui.cd.bg,l:ui.cd.layers})}catch(e){return true}}
+// ---- Back to Production: navigation only; unsaved work is parked, never saved or confirmed ----------------------------
+function cvBackProd(){if(typeof RCCV!='undefined'&&RCCV){rcCvExit(1);render();return}
+ try{if(cvmDirty()){S.cvWip={ed:ui.ed,ctx:ui.cvCtx||null,cd:JSON.stringify(ui.cd),day:S.day};toast(CVM_T('Your unsaved changes are kept. Reopen the cover to continue editing.','เก็บการแก้ไขที่ยังไม่บันทึกไว้แล้ว เปิดปกนี้อีกครั้งเพื่อแก้ต่อได้'))}}catch(e){console.error(e)}
+ view=ui.cvCtx=='album'?'albums':'music';render()}
+{const f=initCov;initCov=function(ed){const r=f.apply(this,arguments);try{const W=S.cvWip;if(!CVM_NOWIP&&W&&W.ed==ed&&(W.ctx||null)==(ui.cvCtx||null)){ui.cd=JSON.parse(W.cd);ui.hu=[];ui.hr=[];delete S.cvWip;toast(CVM_T('Unsaved changes restored. Save or confirm when you are ready.','กู้คืนการแก้ไขที่ยังไม่บันทึกแล้ว กดบันทึกหรือยืนยันเมื่อพร้อม'))}}catch(e){console.error(e)}return r}}
+{const f=saveDraft;saveDraft=function(){const r=f.apply(this,arguments);try{if(S.cvWip&&S.cvWip.ed==ui.ed)delete S.cvWip}catch(e){}return r}}
+{const f=confirmCov;confirmCov=function(){const ed=ui.ed,r=f.apply(this,arguments);try{if(S.cvWip&&S.cvWip.ed==ed&&S.cov[ed]&&S.cov[ed].status=='confirmed')delete S.cvWip}catch(e){}return r}}
+// ---- Random Cover inside the studio: the existing generator, undoable, the saved cover untouched ------------------------
+function cvStudioRand(){if(typeof RCCV!='undefined'&&RCCV){try{snap();ui.cd=rcCvDesign(srGet(RCCV.pid),rcS().fps[srGet(RCCV.pid).sid],true);render()}catch(e){console.error(e)}return}
+ if(!ui.cd||!S.pj)return toast(CVM_T('Open a single first.','เปิดซิงเกิลก่อน'),'err');const ed=ui.ed,ctx=ui.cvCtx,old=JSON.stringify(ui.cd),hu=(ui.hu||[]).slice(),had=Object.prototype.hasOwnProperty.call(S.cov,ed),saved=had?S.cov[ed]:undefined,ask0=window.ask;
+ let made=false;try{CVM_NOWIP=1;window.ask=(t,fn)=>fn();const before=S.cov[ed];plCoverRand(ed);made=S.cov[ed]!==before}finally{window.ask=ask0;CVM_NOWIP=0}
+ if(!made){ui.cvCtx=ctx;return}
+ // the generated design goes into the editor only; the saved cover stays as it was until Save / Confirm
+ const gen=ui.cd;if(had)S.cov[ed]=saved;else delete S.cov[ed];ui.ed=ed;ui.cvCtx=ctx;ui.cd=gen;ui.cd.status='draft';ui.hu=hu.concat([old]);if(ui.hu.length>60)ui.hu.shift();ui.hr=[];view='cover';
+ toast(CVM_T('Random cover created. Undo brings back your previous design.','สุ่มปกใหม่แล้ว กดย้อนกลับเพื่อกลับไปใช้แบบเดิมได้'));render()}
+// ---- page structure ----------------------------------------------------------------------------------------------------------
+{const f=V.cover;V.cover=function(){let h=f.apply(this,arguments);try{if(!h.includes('class="cvx"'))return h;
+  const rc=typeof RCCV!='undefined'&&RCCV,back=`<button class="cvtb t cvback" onclick="cvBackProd()" title="${rc?'Back to Studio Recording':'Back to Production'}">◀ <span>${rc?'Back to Studio Recording':'Back to Production'}</span></button>`,rnd=`<button class="cvtb t cvrand" onclick="cvStudioRand()" title="Random Cover">🎲 <span>Random Cover</span></button>`;
+  h=h.replace('<div class="cvtop">','<div class="cvtop">'+back).replace('<span class="cvsp"></span><button class="cvtb t" onclick="showPrev()">','<span class="cvsp"></span>'+rnd+'<button class="cvtb t" onclick="showPrev()">');
+  // group drawer + properties + cover tools into one scrolling panel
+  const cut=(s,a,b)=>{const i=s.indexOf(a);if(i<0)return[s,'',-1];const j=s.indexOf(b,i);if(j<0)return[s,'',-1];return[s.slice(0,i)+s.slice(j+b.length),s.slice(i,j+b.length),i]};
+  let dr,pr,pt,at;[h,dr]=cut(h,'<aside class="cvdrawer','</aside>');[h,pr,at]=cut(h,'<aside class="cvprops','</aside>');[h,pt]=cut(h,'<details class="c cvprod"','</details>');
+  if(at>=0)h=h.slice(0,at)+`<div class="cvpanel cvkeep" data-k="pn">${pr}${dr}${pt}</div>`+h.slice(at);
+  h=h.replace('<div class="cvx">',`<div class="cvx ${cvmIsMob()?'cvmob':''}">`)}catch(e){console.error(e)}return h}}
+// ---- sizing: the workspace fills the visible screen between the app header and the bottom tab bar -------------------------
+function cvmLayout(){const x=document.querySelector('.cvx');if(!x)return;const mob=cvmIsMob();x.classList.toggle('cvmob',mob);const st=document.getElementById('cvstage');
+ if(!mob){x.style.height='';x.style.top='';x.style.removeProperty('--cvmain');if(st){st.style.paddingLeft='';st.style.paddingRight=''}return}
+ const vv=window.visualViewport,vh=vv?vv.height:window.innerHeight,hd=document.querySelector('.hd'),nav=document.querySelector('.nav'),hdB=hd?Math.max(0,hd.getBoundingClientRect().bottom):0,
+  navH=nav&&getComputedStyle(nav).display!='none'&&vh>=window.innerHeight*.8?nav.getBoundingClientRect().height:0,avail=Math.max(320,vh-hdB-navH-6),kb=vv&&vv.height<window.innerHeight*.75;
+ x.style.top=hdB+'px';x.style.height=avail+'px';const top=x.querySelector('.cvtop'),rail=x.querySelector('.cvrail'),act=x.querySelector('.cvact'),tH=top?top.offsetHeight:44,rH=rail?rail.offsetHeight:56,aH=act?act.offsetHeight:0,W=x.clientWidth;
+ const ideal=W*CVH/512+aH+16,room=avail-tH-rH-18,mainH=Math.max(150,Math.min(ideal,room*(kb?.42:.72)));x.style.setProperty('--cvmain',Math.round(mainH)+'px');
+ if(st){const sh=mainH-aH-4,fitW=Math.min(W-16,(sh-16)*512/CVH),pad=Math.max(8,(W-fitW)/2);st.style.paddingLeft=pad+'px';st.style.paddingRight=pad+'px'}
+ cvmTrim(x,hdB);try{cvOverlay()}catch(e){}}
+// the page must not scroll the editor under the header: nothing is left below the aligned workspace
+function cvmTrim(x,hdB){const w=x.closest('.cvxw')||x;const cur=parseFloat(w.style.marginBottom)||0,aligned=window.scrollY+x.getBoundingClientRect().top-hdB,extra=document.documentElement.scrollHeight-(aligned+window.innerHeight);if(Math.abs(extra)>1)w.style.marginBottom=Math.min(0,cur-extra)+'px'}
+{const f=render;render=function(){const first=view=='cover'&&ui.cvmView!==ui.ed+'|'+(ui.cvCtx||'');const r=f.apply(this,arguments);
+ if(view=='cover'&&document.querySelector('.cvx')){cvmLayout();if(first&&cvmIsMob()){ui.cvmView=ui.ed+'|'+(ui.cvCtx||'');const x=document.querySelector('.cvx'),hd=document.querySelector('.hd'),y=window.scrollY+x.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0);window.scrollTo(0,Math.max(0,y))}}
+ else if(view!='cover')ui.cvmView=null;return r}}
+window.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});
 
 </script>
 <script>
@@ -29005,6 +29081,7 @@ I18N_TH_TPL.push(['{0} background(s) · shared by CD Cover Studio and MV Mode','
 'Supporters are the unique fans who support a member (Kami Oshi or Oshi); only Regular, Dedicated and Hardcore fans buy voting CDs. Unique Voters count each fan once per member (a fan who voted for several members counts once for each; the group total counts her once). Turnout = Unique Voters ÷ eligible supporters.':'ผู้สนับสนุน = แฟนไม่ซ้ำที่สนับสนุนเมมเบอร์ (คามิโอชิหรือโอชิ) มีเพียงแฟน Regular, Dedicated และ Hardcore ที่ซื้อซีดีโหวต ผู้โหวตไม่ซ้ำนับแฟนคนละครั้งต่อเมมเบอร์ (แฟนที่โหวตหลายคนนับครั้งเดียวในยอดรวมทั้งวง) สัดส่วนผู้มาโหวต = ผู้โหวตไม่ซ้ำ ÷ ผู้สนับสนุนที่ซื้อบัตรโหวตได้',
 'Bar under each name: votes from':'แถบใต้ชื่อ: คะแนนจากแฟน','fans (Casual fans do not buy voting CDs).':'(แฟน Casual ไม่ซื้อซีดีโหวต)'};for(const k in T)if(I18N_TH[k]==null)I18N_TH[k]=T[k]})();
 I18N_TH_TPL.push(['{0}% of her votes came from voters who cast 10+ votes for her','{0}% ของคะแนนมาจากผู้โหวตที่ลงให้เธอ 10 คะแนนขึ้นไป']);
+(function(){const T={'Back to Production':'กลับไปหน้าผลิตซิงเกิล','Back to Studio Recording':'กลับไปหน้าบันทึกเสียงสตูดิโอ','Random Cover':'สุ่มปก','Open a single first.':'เปิดซิงเกิลก่อน'};for(const k in T)if(I18N_TH[k]==null)I18N_TH[k]=T[k]})();
 
 </script>
 <script>
