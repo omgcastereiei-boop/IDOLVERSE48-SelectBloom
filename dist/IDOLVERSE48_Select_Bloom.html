@@ -21612,14 +21612,15 @@ if(typeof plProfExtra=='function'){const f=plProfExtra;plProfExtra=function(m){c
 //  follow the company setting, always use it or never use it.  S.autoCare = {on, th, keep};  m.wel.atr = 'on'|'off'.
 // =====================================================================================
 const ATR_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
-const atrS=()=>{if(!S.autoCare||typeof S.autoCare!='object')S.autoCare={on:false,th:40,keep:1000000};return S.autoCare};
+// on by default for every member (a save where the player never touched the switch is switched on too)
+const atrS=()=>{if(!S.autoCare||typeof S.autoCare!='object')S.autoCare={on:true,th:40,keep:1000000,set:1};if(!S.autoCare.set){S.autoCare.on=true;S.autoCare.set=1}return S.autoCare};
 const atrOn=m=>{const w=wlOf(m),o=w.atr;return o=='on'?true:o=='off'?false:!!atrS().on};
 function atrRun(){if(!S||!S.members)return;const C=atrS(),A=WLA.treat,done=[];
  S.members.filter(m=>m.status!='graduated').sort((a,b)=>wlOf(a).ph-wlOf(b).ph).forEach(m=>{try{if(!atrOn(m))return;const w=wlOf(m);if(w.ph>=C.th)return;if(wlCan(m,'treat'))return;if(S.money-A.c<(+C.keep||0))return;
   const p0=Math.round(w.ph);if(!spend(A.c,`${A.n} (automatic): ${m.name}`))return;w.cd.treat=S.day;wlAdj(m,{ph:12,load:-15});wlLog(m,{t:'care',txt:'Medical Treatment — automatic (Physical Health +12).'});done.push(`${esc(m.name)} ${p0}→${Math.round(w.ph)}`)}catch(e){console.error(e)}});
  if(done.length)try{wlN(`<li>🩺 ${ATR_T('Automatic Medical Treatment','รักษาพยาบาลอัตโนมัติ')} (${yen(done.length*A.c)}): ${done.join(' · ')}</li>`)}catch(e){}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{atrRun()}catch(e){console.error(e)}return r}}
-function atrSet(k,v){const C=atrS();if(k=='on')C.on=!!v;else if(k=='th')C.th=Math.max(10,Math.min(90,+v||40));else if(k=='keep')C.keep=Math.max(0,+v||0);render()}
+function atrSet(k,v){const C=atrS();C.set=1;if(k=='on')C.on=!!v;else if(k=='th')C.th=Math.max(10,Math.min(90,+v||40));else if(k=='keep')C.keep=Math.max(0,+v||0);render()}
 function atrMem(id,v){const m=get(id);if(!m)return;const w=wlOf(m);if(v)w.atr=v;else delete w.atr;render()}
 function atrCard(){const C=atrS(),A=WLA.treat,low=S.members.filter(m=>m.status!='graduated'&&wlOf(m).ph<C.th).length;
  return`<div class="c atrc"><div class="row"><b>${ATR_T('Automatic Medical Treatment','รักษาพยาบาลอัตโนมัติ')}</b><label class="pczlk"><input type="checkbox" ${C.on?'checked':''} onchange="atrSet('on',this.checked)"> ${C.on?ATR_T('On','เปิด'):ATR_T('Off','ปิด')}</label>
