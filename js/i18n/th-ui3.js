@@ -3413,7 +3413,7 @@ I18N_TH_TPL.unshift(["Disband {0}? Its {1} member(s) become Regular Members of {
 ["{0} is not in {1}; this song is exclusive to that team.","{0} ไม่ได้อยู่ใน {1} เพลงนี้เป็นเพลงเฉพาะของทีมนั้น"],
 ["{0} moved to {1}{2}. Generation and history are unchanged.","ย้าย {0} ไป {1}{2} แล้ว รุ่นและประวัติยังคงเดิม"],
 ["Manufacture costume (Original costume design) — {0}","ตัดเย็บชุด (ดีไซน์ออริจินัล) — {0}"],
-["{0} performer(s) · Center {1} · 👗 {2} · global formation","ผู้แสดง {0} คน · เซ็นเตอร์ {1} · 👗 {2} · ฟอร์เมชันรวม"],
+["{0} performer(s) · Center {1}","ผู้แสดง {0} คน · เซ็นเตอร์ {1}"],["{0} performer(s) · Center {1} · 👗 {2} · global formation","ผู้แสดง {0} คน · เซ็นเตอร์ {1} · 👗 {2} · ฟอร์เมชันรวม"],
 ["— you are editing {0}’s costume for this song only.","— คุณกำลังแก้ชุดของ {0} สำหรับเพลงนี้เท่านั้น"],
 ["{0} members gained far more new fans than the rest.","เมมเบอร์ {0} คนได้แฟนใหม่มากกว่าคนอื่นอย่างเห็นได้ชัด"],
 ["{0} ({1}) welcomed {2} to {3}{4}. {5} is starting to feel at home.","{0} ({1}) ต้อนรับ {2} สู่ {3}{4} {5} เริ่มรู้สึกเหมือนอยู่บ้านแล้ว"],

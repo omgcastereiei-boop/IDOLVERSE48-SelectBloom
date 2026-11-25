@@ -223,3 +223,7 @@ let SPX_OV=0;
   if(thIsSx(key)){const p=spxOf(key);h=h.replace(/(<div class="c[^"]*">)/,`<div class="c"><p class="st">${SPX_T('Book this Special Stage’s performances on its Overview (date, time, lineup and availability check).','จองรอบของสเปเชียลสเตจนี้ที่หน้า Overview (วันที่ รอบ ไลน์อัป และตรวจความว่างของเมมเบอร์)')}</p><button class="b s p" onclick="goView('thov')">${SPX_T('Open Overview','เปิด Overview')}</button></div>$1`)}}catch(e){console.error(e)}return h}}
 {const f=render;render=function(){try{if(S&&S.th&&S.th.sp&&/^th/.test(String(view)))spxSync()}catch(e){}return f.apply(this,arguments)}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.th){if(S.th.sp&&typeof S.th.sp!='object')S.th.sp={};if(S.th.ga&&typeof S.th.ga!='object')S.th.ga={}}}catch(e){}return r}}
+
+// switching a Stage to "Individual song Centers": songs without their own Center start with the Setlist Center 1 and 2
+{const f=thSet;thSet=function(k,v){const s=thEd(),was=s&&s.cmode,songs=s?[...s.items,...thEncO(s).items].filter(it=>it.k=='song'):[];let pre=null;try{if(k=='cmode'&&v=='song'&&s&&was!='song')pre=songs.map(it=>[it,thCen(s,it),thCen2(s,it)])}catch(e){}
+ const r=f.apply(this,arguments);try{if(pre&&s.cmode=='song'){pre.forEach(([it,c,c2])=>{if(it.center==null&&c!=null)it.center=c;if(it.center2==null&&c2!=null&&c2!=it.center)it.center2=c2});render()}}catch(e){console.error(e)}return r}}
