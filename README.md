@@ -1151,3 +1151,4 @@ Extends the existing character art engine and Character Creator; no separate sys
 
 ## Forced stay (grad3.js)
 - A member who announced her graduation (not a dismissal) can be kept: profile → Contract box → "Force her to stay". Cost = max(¥200M, 60 months of her value + ¥500 per fan, 5% of company money). The announcement is cancelled, her Graduation Stage becomes a regular performance, the contract runs at least 2 more years, morale −25 / loyalty −20, and new graduation requests are less likely for a year.
+- Contract talks not held by 60 days before the end: "wants to renew" → automatic renewal (same length, otherwise 3 years); "undecided" → renews with a chance from loyalty/morale, otherwise graduates; "thinking about graduating" → graduation. A reminder comes 7 days before the deadline; contract notices are listed first under "⚠ Contracts".
