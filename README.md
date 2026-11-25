@@ -1142,7 +1142,7 @@ Extends the existing character art engine and Character Creator; no separate sys
 - **Age** is now a sort option in the shared member sort bar (every member list) and in the restructuring sort.
 
 ## BLOOM: THE IDOL PROJECT (js/ui/bloom.js) — annual survival show
-- One season per in-game year (`S.bloom.seasons[year]`). March: members apply by themselves; the player only approves/rejects (company quota 10, shared by all groups). Any company commitment between April 1 and EP.13 (`gsCommits`) makes a member ineligible, with the reasons listed.
+- One season per in-game year (`S.bloom.seasons[year]`). March: members apply by themselves; the player only approves/rejects (company quota 10, shared by all groups). Any company commitment between April 1 and EP.13 (`gsCommits`, except theater shows — contestants are left out of those) makes a member ineligible, with the reasons listed. At most one company member debuts per season (not shown to the player).
 - April 1: 60 contestants (approved members + generated trainees of other agencies, saved). Contestants are busy for company work until EP.13 (`gsCommits`, Senbatsu pool, roadshow selection).
 - 13 Sunday episodes: EP.01/02 grades (A–F) and the Theme Song Center (EP.02 Grade A only; special re-evaluation if nobody has A), rankings with eliminations at EP.03/06/09/12 (48/36/30/20), Group Battle, Position Battle (Vocal/Dance/Rap), Concept Mission and Battle, Grand Finale. Skill and vote scores are stored separately.
 - Every company contestant gets saved episode stills (scene recipes, drawn from her own character art).
