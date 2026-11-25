@@ -143,7 +143,12 @@ const _evPromo=singlePromo;singlePromo=function(x){evSync();let h=_evPromo.apply
  const hs=cal.find(e=>e.type=='handshake'&&e.rid==x.rid&&e.img)||P.find(r=>r.type=='handshake'&&r.img);if(hs)items.push([hs.id,hs.img,'Handshake Event']);
  P.filter(r=>r.type=='road'&&r.img).forEach(r=>items.push([r.id,r.img,'Roadshow · '+(r.loc||'')]));
  cal.filter(e=>e.type=='road'&&e.rid==x.rid&&e.img&&!P.some(r=>r.id==e.id)).forEach(e=>items.push([e.id,e.img,'Roadshow · '+((RSL[e.loc]||{}).n||'')+' (in progress)']));
- if(!items.length)return h;const gal=`<div class="evgal">${items.map(([id,sp,n])=>`<button class="evthumb" onclick="evOpen('${id}')" title="${esc(n)}">${evImgSvg(sp)}<small>${esc(n)}</small></button>`).join('')}</div>`;
+ if(!items.length)return h;
+ // only the latest single shows its whole gallery; older singles keep the Release Day photo and fold the rest away
+ const key=String(x.rid??x.id??x.title),last=S.singles[S.singles.length-1],latest=x===last,open=latest||(ui.evGalOpen&&ui.evGalOpen[key]),T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+ let tog='';if(!latest){const rest=items.filter(z=>z!==items.find(q=>q[2]=='Release Day Mini Concert'));if(!open){const keepCC=items.filter(z=>z[2]=='Release Day Mini Concert');items.length=0;items.push(...keepCC)}
+  if(rest.length)tog=`<button class="b s evgaltog" onclick="ui.evGalOpen=ui.evGalOpen||{};ui.evGalOpen['${esc(key)}']=${open?0:1};render()">${open?T('▲ Hide event photos','▲ ซ่อนรูปกิจกรรม'):T(`▼ Show event photos (${rest.length})`,`▼ ดูรูปกิจกรรม (${rest.length})`)}</button>`}
+ const gal=`<div class="evgal">${items.map(([id,sp,n])=>`<button class="evthumb" onclick="evOpen('${id}')" title="${esc(n)}">${evImgSvg(sp)}<small>${esc(n)}</small></button>`).join('')}</div>${tog}`;
  return h.replace(/(<\/h3><div class="st">Released [^<]*<\/div>)/,'$1'+gal)};
 const _evRelease=doRelease;doRelease=function(){const n=S.singles.length;_evRelease.apply(this,arguments);evSync();if(S.singles.length>n&&ui.mod&&ui.mod.t=='html'){const x=S.singles[S.singles.length-1],cc=(x.promo||[]).find(r=>r.type=='concert');if(cc&&cc.img)ui.mod.h=ui.mod.h.replace('</h2>','</h2>'+evImgBlock(cc.img,x.title));render()}};
 
