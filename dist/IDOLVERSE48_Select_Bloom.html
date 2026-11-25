@@ -1990,7 +1990,7 @@ body.czfs{overflow:hidden}
 (function(){const L=window.__errs=[],seen={};let el=null;
  const add=(m,f,l,c,k)=>{m=String(m||'Unknown error').slice(0,300);f=String(f||'').split('/').pop().split('?')[0];const key=m+'|'+f+'|'+l;if(seen[key]){seen[key].n++;draw();return}const x={m,f,l:l||0,c:c||0,k:k||'error',n:1,t:new Date().toLocaleTimeString()};seen[key]=x;L.push(x);if(L.length>30)L.shift();draw()};
  window.__errAdd=add;
- window.addEventListener('error',e=>{if(e&&e.target&&e.target!==window&&e.target.tagName){add('Could not load '+(e.target.src||e.target.href||e.target.tagName),e.target.src||'',0,0,'load');return}add(e.message||(e.error&&e.error.message),e.filename,e.lineno,e.colno,'error')},true);
+ window.addEventListener('error',e=>{if(e&&e.target&&e.target!==window&&e.target.tagName){{const t=e.target;{const h=t.getAttribute&&(t.getAttribute('href')||t.getAttribute('src'));if(/^image$/i.test(t.tagName||'')&&/^blob:/.test(h||''))return} /* portrait image cache (perf-sprite.js) repairs itself */ const u=x=>x&&typeof x=='object'&&'baseVal' in x?x.baseVal:x,src=u(t.src)||u(t.href)||(t.getAttribute&&(t.getAttribute('href')||t.getAttribute('xlink:href')))||'';add('Could not load '+(t.tagName||'')+' '+String(src).slice(0,120),String(src).slice(0,200),0,0,'load')};return}add(e.message||(e.error&&e.error.message),e.filename,e.lineno,e.colno,'error')},true);
  window.addEventListener('unhandledrejection',e=>{const r=e&&e.reason;add(r&&(r.message||r)||'Promise rejected',r&&r.stack?(r.stack.split('\n')[1]||''):'',0,0,'promise')});
  const ce=console.error;console.error=function(){try{const a=[...arguments],er=a.find(x=>x&&x.stack);const m=a.map(x=>x&&x.message?x.message:typeof x=='object'?(()=>{try{return JSON.stringify(x).slice(0,120)}catch(_){return String(x)}})():String(x)).join(' ');
   let f='',l=0;if(er){const s=(er.stack.split('\n').find(z=>/\.js/.test(z))||'');const mm=s.match(/([^\/\s(]+\.js)[^:]*:(\d+)/);if(mm){f=mm[1];l=+mm[2]}}add(m,f,l,0,'logged')}catch(_){}return ce.apply(console,arguments)};
@@ -15888,10 +15888,14 @@ function ptPrune(){PT_PRUNE=0;try{const el=document.getElementById('ptspr');if(!
 //  stays tiny and the browser keeps a cached bitmap instead of thousands of SVG elements. Looks the same.
 const PT_WK=(()=>{try{const u=navigator.userAgent||'',ios=/iPad|iPhone|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),saf=/^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(u);return ios||saf||/[?&]ptimg=1/.test(location.search)}catch(e){return false}})();
 const PT_IMG=new Map();
+// pictures kept in stored html (pop-ups opened again, result notes) may still point at the SVG image that was replaced by
+// its PNG: such an image switches to the PNG instead of failing to load
+const PT_REPL=new Map();
+window.addEventListener('error',e=>{const t=e.target;if(!t||!t.tagName||!/^image$/i.test(t.tagName))return;const h=t.getAttribute('href');let n=PT_REPL.get(h),k=0;while(n&&PT_REPL.has(n)&&k++<4)n=PT_REPL.get(n);if(n)t.setAttribute('href',n)},true);
 // then the SVG image is turned into a PNG once (in the background): the page keeps one small bitmap per member
 // instead of a live SVG document per portrait; every portrait on screen switches to the PNG
 function ptPng(y,vb){try{const im=new Image();im.onload=()=>{try{const sc=3,c=document.createElement('canvas');c.width=Math.round(vb[2]*sc);c.height=Math.round(vb[3]*sc);const x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);
- c.toBlob(b=>{if(!b)return;const png=URL.createObjectURL(b),old=y.url;y.u=y.u.replace(old,png);y.url=png;document.querySelectorAll('image[href="'+old+'"]').forEach(e=>e.setAttribute('href',png));setTimeout(()=>{try{URL.revokeObjectURL(old)}catch(e){}},3000)},'image/png')}catch(e){}};im.src=y.url}catch(e){}}
+ c.toBlob(b=>{if(!b)return;const png=URL.createObjectURL(b),old=y.url;y.u=y.u.replace(old,png);y.url=png;PT_REPL.set(old,png);document.querySelectorAll('image[href="'+old+'"]').forEach(e=>e.setAttribute('href',png));setTimeout(()=>{try{URL.revokeObjectURL(old)}catch(e){}},3000)},'image/png')}catch(e){}};im.src=y.url}catch(e){}}
 if(PT_WK){const f0=ptUse;ptUse=function(k,t){let y=PT_IMG.get(k);if(!y){try{if(PT_IMG.size>600){PT_IMG.forEach(z=>{try{URL.revokeObjectURL(z.url)}catch(e){}});PT_IMG.clear()}const body=t.split('§').join('pi_'),mm=body.match(/^<svg([^>]*)>/);if(!mm)return f0.apply(this,arguments);
    const at=mm[1].replace(/\s(width|height)="[^"]*"/g,''),vbm=at.match(/viewBox="([^"]+)"/),vb=(vbm?vbm[1]:'0 0 100 120').split(/\s+/).map(Number),doc=body.replace(/^<svg([^>]*)>/,(x,a)=>`<svg${/xmlns=/.test(a)?a:a+' xmlns="http://www.w3.org/2000/svg"'}>`);
    const url=URL.createObjectURL(new Blob([doc],{type:'image/svg+xml'}));y={at:mm[1],url,u:`<image href="${url}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" preserveAspectRatio="xMidYMid meet"/>`};PT_IMG.set(k,y);ptPng(y,vb)}catch(e){return f0.apply(this,arguments)}}
@@ -28614,7 +28618,7 @@ const I18N={cache:new Map(),re:null};
 function i18nLang(){if(!UIP.lang)UIP.lang=/^th/i.test(navigator.language||'')?'th':'en';return UIP.lang}
 function i18nBuild(){if(I18N.re)return;const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  const keys=Object.keys(I18N_TH).filter(k=>/[^A-Za-z]/.test(k)&&/[A-Za-z]{2}/.test(k)&&k.length>3).sort((a,b)=>b.length-a.length);
- I18N.re=new RegExp('(?<![A-Za-z])('+keys.map(esc).join('|')+')(?![A-Za-z])','g');
+ I18N.re=new RegExp('(^|[^A-Za-z])('+keys.map(esc).join('|')+')(?![A-Za-z])','g'); // no lookbehind: older Safari (iOS < 16.4) cannot parse it
  I18N.tpl=(typeof I18N_TH_TPL!='undefined'?I18N_TH_TPL:[]).flatMap(([e,t])=>{const l=(e.match(I18N_SYM)||[''])[0];return l&&l.length<e.length&&t.startsWith(l)&&/[A-Za-z]{3}/.test(e.slice(l.length).replace(/\{\d\}/g,''))?[[e,t],[e.slice(l.length),t.slice(l.length)]]:[[e,t]]}).map(([e,t])=>{const raw=new Set([...e.matchAll(/[“"]\{(\d)\}[”"]/g)].map(m=>+m[1]));const num=/^\{0\} [^{}]*$/.test(e)&&e.split(' ').length<=3;const dot=e.includes(' · ');let r=esc(e).replace(/\\\{(\d)\\\}/g,dot?'(.+?)':'((?:(?! · ).)+?)');if(num)r=r.replace(/^\(\(\?:\(\?! · \)\.\)\+\?\)/,'([\\d][\\d,./%]*)');return[new RegExp('^'+r+'$'),t,dot,raw]});
  const M=Object.keys(I18N_TH_MON).join('|');I18N.dRe=[[new RegExp('\\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun), ','g'),(m,d)=>I18N_TH_DAY[d]+' '],[new RegExp('\\b('+M+') (\\d{1,2}), (\\d{4})','g'),(m,a,b,c)=>`${b} ${I18N_TH_MON[a]} ${c}`],[new RegExp('\\b('+M+') (\\d{4})\\b','g'),(m,a,b)=>`${I18N_TH_MON[a]} ${b}`],[new RegExp('\\b('+M+') (\\d{1,2})\\b','g'),(m,a,b)=>`${b} ${I18N_TH_MON[a]}`]]}
 const I18N_SYM=/^[^A-Za-z0-9"'(¥~@]+/;
@@ -28622,7 +28626,7 @@ function i18nCap(c){if(c==null)return'';c=c.replace(/^(\d+)(st|nd|rd|th)$/,'$1')
 // one sentence (or a run of sentences) found in the dictionary or matching a sentence template; a template blank never spans a sentence break
 function i18nExact(s){const D=I18N_TH;if(D[s]!=null)return D[s];i18nBuild();for(const[re,t,,raw]of I18N.tpl){const m=s.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?](?:[”"])?\s|…\s/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null}
 // speech and notes made of several sentences joined together: translate the longest known run of sentences at each point
-function i18nSent(k){if(k.length<12||!/[.!?…][”"]?\s+\S/.test(k))return null;const P=k.split(/(?<=[.!?…][”"]?)\s+/);if(P.length<2||P.length>40)return null;
+function i18nSent(k){if(k.length<12||!/[.!?…][”"]?\s+\S/.test(k))return null;const P=k.replace(/([.!?…][”"]?)\s+/g,'$1\u0001').split('\u0001');if(P.length<2||P.length>40)return null;
  const out=[];let hit=0;for(let i=0;i<P.length;){let done=0;for(let j=P.length;j>i;j--){const seg=P.slice(i,j).join(' '),q=seg.match(/^([“"]?)([\s\S]*?)([”"]?)$/),r=i18nExact(seg)??(q[1]||q[3]?i18nExact(q[2]):null);if(r!=null){out.push(I18N_TH[seg]!=null||!(q[1]||q[3])||i18nExact(seg)!=null?r:q[1]+r+q[3]);hit++;i=j;done=1;break}}if(!done){out.push(P[i]);i++}}
  if(!hit)return null;return out.map(x=>/[A-Za-z]{2}/.test(x)&&!/[\u0E00-\u0E7F]/.test(x)?trCore(x):x).join(' ')}
 function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
@@ -28635,8 +28639,8 @@ function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
  if(/^[A-Z][a-z]+( \/ [A-Z][a-z]+)+$/.test(k))return k.split(' / ').map(w=>D[w]||w).join(' / ');
  {const r=i18nSent(k);if(r!=null)return r}
  let out=k;for(const[r,v]of I18N_TH_RX)out=out.replace(r,v);for(const[r,f]of I18N.dRe)out=out.replace(r,f);
- out=out.replace(/(?<![A-Za-z])([A-Z][a-z]+(?:(?: \/ | )[A-Z][a-z]+)?)(?= [\d¥~#+×]|:? ?\d)/g,w=>D[w]??w.split(' / ').map(x=>D[x]??x).join(' / '));
- return out.replace(I18N.re,m=>D[m]??m)}
+ out=out.replace(/(^|[^A-Za-z])([A-Z][a-z]+(?:(?: \/ | )[A-Z][a-z]+)?)(?= [\d¥~#+×]|:? ?\d)/g,(m0,pre,w)=>pre+(D[w]??w.split(' / ').map(x=>D[x]??x).join(' / ')));
+ return out.replace(I18N.re,(m,pre,w)=>pre+(D[w]??w))}
 function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;let c=I18N.cache.get(s);if(c!=null)return c;
  let out;try{out=s.replace(k,trCore(k))}catch(e){out=s}
  if(I18N.cache.size>20000)I18N.cache.clear();I18N.cache.set(s,out);return out}
