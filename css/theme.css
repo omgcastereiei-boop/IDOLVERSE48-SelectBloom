@@ -1821,3 +1821,30 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .cvx.cvmob .cvact{min-height:0;gap:0}.cvx.cvmob .cvact .cvab{min-height:42px;padding:2px 6px;font-size:10px}.cvx.cvmob .cvact .cvab svg{width:18px;height:18px}
 .cvx.cvmob .cvrail button{min-height:42px;font-size:10px}.cvx.cvmob .cvrail button svg{width:19px;height:19px}
 .cvx.cvmob .cvtop .cvzl{display:none}.cvx.cvmob .cvtop .cvsp:first-of-type{flex:1}
+/* ---- Costume Studio: ZEPETO-style mobile workspace (phones only; desktop unchanged) ---- */
+.czz{display:flex;flex-direction:column;position:sticky;z-index:4;gap:5px;overflow:hidden;background:linear-gradient(180deg,#fff7fb,#f6f0ff);border:1px solid var(--line);border-radius:18px;padding:5px;box-shadow:var(--sh)}
+.czztop{flex:none;display:flex;flex-direction:column;gap:3px}.czztr{display:flex;align-items:center;gap:8px}
+.czzback{flex:none;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#fffdf8;color:#8a4a7a;font-size:16px;cursor:pointer}
+.czztt{display:flex;flex-direction:column;min-width:0}.czztt b{font:800 15px Quicksand}.czztt small{color:var(--mut);font:700 11px Quicksand;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.czz .czzact{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;scrollbar-width:none;margin:0;padding:0;align-items:center}.czz .czzact::-webkit-scrollbar{display:none}.czz .czzact>*{flex:none;margin:0}.czz .czzact .b{min-height:34px;padding:0 12px;font-size:12.5px}
+.czzst{flex:0 0 var(--czzst,40%);min-height:0;position:relative;border-radius:16px;background:radial-gradient(ellipse at 50% 92%,#ffd9ec 0 22%,transparent 23%),linear-gradient(180deg,#fdeefa,#ece6ff);display:flex;justify-content:center;overflow:hidden}
+.czz .czzst .czstage{height:100%;width:100%;display:flex;justify-content:center;align-items:flex-end;margin:0;padding:4px 0 34px;background:none;border:0;box-shadow:none;min-height:0}
+.czz .czzst .czstage svg{height:100%;width:auto;max-width:100%}
+.czz .czzpose{position:absolute;left:4px;right:4px;bottom:3px;margin:0;display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;scrollbar-width:none;justify-content:center}.czz .czzpose::-webkit-scrollbar{display:none}
+.czz .czzpose label{flex:none;background:rgba(255,255,255,.88);border-radius:999px;padding:2px 8px;font-size:10.5px;display:flex;align-items:center;gap:3px}.czz .czzpose select{max-width:96px;font-size:11px;padding:2px 4px;min-height:26px}
+.czzgr{flex:none;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:1px}.czzgr::-webkit-scrollbar{display:none}
+.czzgr button{flex:none;position:relative;min-width:62px;min-height:52px;border:0;border-radius:14px;background:#fffdf8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;color:var(--ink);padding:3px 6px;box-shadow:0 1px 0 var(--line)}
+.czzgr button .czzic{font-size:20px;line-height:1}.czzgr button small{font:800 9.5px Quicksand;white-space:nowrap}.czzgr button.on{background:linear-gradient(135deg,#ff9ac8,#b89aff);color:#fff;box-shadow:0 3px 10px rgba(220,110,170,.35)}
+.czzgr button i{position:absolute;top:2px;right:4px;font:800 9px Quicksand;font-style:normal;background:#ff5a9a;color:#fff;border-radius:999px;padding:0 5px}.czzgr button.on i{background:#fff;color:#d6457f}
+.czzsub{flex:none;overflow-x:auto;scrollbar-width:none}.czzsub::-webkit-scrollbar{display:none}
+.czz .czzsub .czsr{display:flex;flex-wrap:nowrap;gap:5px;margin:0;padding:1px}.czz .czzsub .czsr button{flex:none;min-height:36px;white-space:nowrap;padding:0 12px;border-radius:999px}
+.czzpanel{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.czz .czzpanel .czpanel{margin:0 0 6px;padding:8px}.czz .czzpanel .czpanel>h3{margin:0 0 4px;font-size:14px}
+.czz .czzpanel .czitems{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:6px}
+.czz .czzpanel .czitem{min-height:96px;border-radius:14px;width:auto}.czz .czzpanel .czitem.on{box-shadow:0 0 0 3px #ff8ac0;background:#fff0f7}.czz .czzpanel .czitem.sel{box-shadow:0 0 0 3px #b07aff}
+.czz .czzpanel [data-tab]>*{margin-bottom:6px}.czz .czzpanel .row{flex-wrap:wrap}
+.czz .czzact{justify-content:flex-start!important}
+.czz .czzsub .czsr button{background:#fffdf8;border:1px solid var(--line);color:var(--ink);font:800 12.5px Quicksand;display:inline-flex;align-items:center;gap:5px;box-shadow:none;min-height:34px}
+.czz .czzsub .czsr button b{font:inherit}.czz .czzsub .czsr button i{font-style:normal;font:800 10px Quicksand;background:#ffd6e8;color:#c2407e;border-radius:999px;padding:0 6px}
+.czz .czzsub .czsr button.on{background:linear-gradient(135deg,#ffe0ee,#ece4ff);border-color:#ef8fbf;color:#b0407a;box-shadow:0 0 0 2px #ffd6e8}
+.czz .czzsub .czsr button small{display:none}

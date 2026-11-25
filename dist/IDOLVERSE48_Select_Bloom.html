@@ -1903,6 +1903,33 @@ input[type=color].cphide{position:absolute!important;opacity:0!important;pointer
 .cvx.cvmob .cvact{min-height:0;gap:0}.cvx.cvmob .cvact .cvab{min-height:42px;padding:2px 6px;font-size:10px}.cvx.cvmob .cvact .cvab svg{width:18px;height:18px}
 .cvx.cvmob .cvrail button{min-height:42px;font-size:10px}.cvx.cvmob .cvrail button svg{width:19px;height:19px}
 .cvx.cvmob .cvtop .cvzl{display:none}.cvx.cvmob .cvtop .cvsp:first-of-type{flex:1}
+/* ---- Costume Studio: ZEPETO-style mobile workspace (phones only; desktop unchanged) ---- */
+.czz{display:flex;flex-direction:column;position:sticky;z-index:4;gap:5px;overflow:hidden;background:linear-gradient(180deg,#fff7fb,#f6f0ff);border:1px solid var(--line);border-radius:18px;padding:5px;box-shadow:var(--sh)}
+.czztop{flex:none;display:flex;flex-direction:column;gap:3px}.czztr{display:flex;align-items:center;gap:8px}
+.czzback{flex:none;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#fffdf8;color:#8a4a7a;font-size:16px;cursor:pointer}
+.czztt{display:flex;flex-direction:column;min-width:0}.czztt b{font:800 15px Quicksand}.czztt small{color:var(--mut);font:700 11px Quicksand;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.czz .czzact{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;scrollbar-width:none;margin:0;padding:0;align-items:center}.czz .czzact::-webkit-scrollbar{display:none}.czz .czzact>*{flex:none;margin:0}.czz .czzact .b{min-height:34px;padding:0 12px;font-size:12.5px}
+.czzst{flex:0 0 var(--czzst,40%);min-height:0;position:relative;border-radius:16px;background:radial-gradient(ellipse at 50% 92%,#ffd9ec 0 22%,transparent 23%),linear-gradient(180deg,#fdeefa,#ece6ff);display:flex;justify-content:center;overflow:hidden}
+.czz .czzst .czstage{height:100%;width:100%;display:flex;justify-content:center;align-items:flex-end;margin:0;padding:4px 0 34px;background:none;border:0;box-shadow:none;min-height:0}
+.czz .czzst .czstage svg{height:100%;width:auto;max-width:100%}
+.czz .czzpose{position:absolute;left:4px;right:4px;bottom:3px;margin:0;display:flex;flex-wrap:nowrap;gap:4px;overflow-x:auto;scrollbar-width:none;justify-content:center}.czz .czzpose::-webkit-scrollbar{display:none}
+.czz .czzpose label{flex:none;background:rgba(255,255,255,.88);border-radius:999px;padding:2px 8px;font-size:10.5px;display:flex;align-items:center;gap:3px}.czz .czzpose select{max-width:96px;font-size:11px;padding:2px 4px;min-height:26px}
+.czzgr{flex:none;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:1px}.czzgr::-webkit-scrollbar{display:none}
+.czzgr button{flex:none;position:relative;min-width:62px;min-height:52px;border:0;border-radius:14px;background:#fffdf8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;color:var(--ink);padding:3px 6px;box-shadow:0 1px 0 var(--line)}
+.czzgr button .czzic{font-size:20px;line-height:1}.czzgr button small{font:800 9.5px Quicksand;white-space:nowrap}.czzgr button.on{background:linear-gradient(135deg,#ff9ac8,#b89aff);color:#fff;box-shadow:0 3px 10px rgba(220,110,170,.35)}
+.czzgr button i{position:absolute;top:2px;right:4px;font:800 9px Quicksand;font-style:normal;background:#ff5a9a;color:#fff;border-radius:999px;padding:0 5px}.czzgr button.on i{background:#fff;color:#d6457f}
+.czzsub{flex:none;overflow-x:auto;scrollbar-width:none}.czzsub::-webkit-scrollbar{display:none}
+.czz .czzsub .czsr{display:flex;flex-wrap:nowrap;gap:5px;margin:0;padding:1px}.czz .czzsub .czsr button{flex:none;min-height:36px;white-space:nowrap;padding:0 12px;border-radius:999px}
+.czzpanel{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:14px;padding-bottom:env(safe-area-inset-bottom,0px)}
+.czz .czzpanel .czpanel{margin:0 0 6px;padding:8px}.czz .czzpanel .czpanel>h3{margin:0 0 4px;font-size:14px}
+.czz .czzpanel .czitems{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:6px}
+.czz .czzpanel .czitem{min-height:96px;border-radius:14px;width:auto}.czz .czzpanel .czitem.on{box-shadow:0 0 0 3px #ff8ac0;background:#fff0f7}.czz .czzpanel .czitem.sel{box-shadow:0 0 0 3px #b07aff}
+.czz .czzpanel [data-tab]>*{margin-bottom:6px}.czz .czzpanel .row{flex-wrap:wrap}
+.czz .czzact{justify-content:flex-start!important}
+.czz .czzsub .czsr button{background:#fffdf8;border:1px solid var(--line);color:var(--ink);font:800 12.5px Quicksand;display:inline-flex;align-items:center;gap:5px;box-shadow:none;min-height:34px}
+.czz .czzsub .czsr button b{font:inherit}.czz .czzsub .czsr button i{font-style:normal;font:800 10px Quicksand;background:#ffd6e8;color:#c2407e;border-radius:999px;padding:0 6px}
+.czz .czzsub .czsr button.on{background:linear-gradient(135deg,#ffe0ee,#ece4ff);border-color:#ef8fbf;color:#b0407a;box-shadow:0 0 0 2px #ffd6e8}
+.czz .czzsub .czsr button small{display:none}
 
 </style>
 </head><body>
@@ -22297,9 +22324,60 @@ function cvmLayout(){const x=document.querySelector('.cvx');if(!x)return;const m
 // the page must not scroll the editor under the header: nothing is left below the aligned workspace
 function cvmTrim(x,hdB){const w=x.closest('.cvxw')||x;const cur=parseFloat(w.style.marginBottom)||0,aligned=window.scrollY+x.getBoundingClientRect().top-hdB,extra=document.documentElement.scrollHeight-(aligned+window.innerHeight);if(Math.abs(extra)>1)w.style.marginBottom=Math.min(0,cur-extra)+'px'}
 {const f=render;render=function(){const first=view=='cover'&&ui.cvmView!==ui.ed+'|'+(ui.cvCtx||'');const r=f.apply(this,arguments);
- if(view=='cover'&&document.querySelector('.cvx')){cvmLayout();if(first&&cvmIsMob()){ui.cvmView=ui.ed+'|'+(ui.cvCtx||'');const x=document.querySelector('.cvx'),hd=document.querySelector('.hd'),y=window.scrollY+x.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0);window.scrollTo(0,Math.max(0,y))}}
+ if(view=='cover'&&document.querySelector('.cvx')){cvmLayout();if(first&&cvmIsMob()){ui.cvmView=ui.ed+'|'+(ui.cvCtx||'');const x=document.querySelector('.cvx'),hd=document.querySelector('.hd'),y=window.scrollY+x.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0);window.scrollTo(0,Math.max(0,y));setTimeout(()=>{const x2=document.querySelector('.cvx');if(!x2)return;const hd2=document.querySelector('.hd');window.scrollTo(0,Math.max(0,window.scrollY+x2.getBoundingClientRect().top-(hd2?hd2.getBoundingClientRect().height:0)));cvmLayout()},120)}}
  else if(view!='cover')ui.cvmView=null;return r}}
 window.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Costume Studio: ZEPETO-style mobile avatar editor (UI only)
+//  The existing Costume Designer renders exactly as before (every wrapper, category, item, colour,
+//  HEX field, slider, pattern, fabric, randomizer, undo/redo, save, library and song assignment). On
+//  phones its nodes are MOVED (never copied or rebuilt, so every handler keeps working) into a
+//  workspace sized to the visible screen:
+//     top bar (Back · title · save actions) · pinned full-body preview (model / pose / expression)
+//     · category groups (icons) · categories of the group · scrolling panel
+//  The panel shows the selected category's items + the full editor and colour tools, or the
+//  "Closet" (design library, rename / duplicate / delete / presets) or "Songs" (assignment) tabs.
+//  Desktop keeps the existing layout. No data, logic or rendering is changed.
+// =====================================================================================
+const czzMob=()=>window.innerWidth<720;
+const CZZ_IC={'Clothing':'👗','Details':'🎀','Accessories':'💍','Festival & seasonal':'🎐','Traditional ornaments':'🏮','Graduation':'🎓'};
+const CZZ_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+function czzBack(){const b=[...document.querySelectorAll('.gebanner button,.plback button,.c.gebanner button')].find(x=>/^\s*[←◀]/.test(x.textContent));if(b){b.click();return}ui.czE=null;goView('music')}
+function czzTab(t,g){ui.czzT=t;if(g!=null)ui.czzG=g;czzApply();if(t=='items'&&g!=null){const row=document.querySelectorAll('.czzsub .czsr')[g];if(row&&!row.querySelector('.on')){const b=row.querySelector('button');if(b)b.click()}}}
+// show the active tab / group without re-rendering (nothing in the costume changes)
+function czzApply(){const z=document.querySelector('.czz');if(!z)return;const t=ui.czzT||'items',g=ui.czzG|0;
+ z.querySelectorAll('.czzg').forEach((b,i)=>b.classList.toggle('on',t=='items'?i==g:false));z.querySelectorAll('.czzx').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
+ z.querySelectorAll('.czzsub .czsr').forEach((r,i)=>r.style.display=t=='items'&&i==g?'':'none');const sub=z.querySelector('.czzsub');if(sub)sub.style.display=t=='items'?'':'none';
+ z.querySelectorAll('.czzpanel [data-tab]').forEach(el=>el.style.display=el.dataset.tab==t?'':'none');czzSize()}
+function czzBuild(){const g=document.querySelector('.czgrid');if(!g||!czzMob()||g.closest('.czz'))return false;const root=g.parentElement;
+ const lib=root.querySelector(':scope > .czlib'),head=root.querySelector(':scope > .czhead'),asg=root.querySelector(':scope > .czasg'),nav=g.querySelector('.czcats'),sw=g.querySelector('.czstagewrap'),panel=g.querySelector('.czpanel');if(!nav||!sw||!panel)return false;
+ const stage=sw.querySelector('.czstage'),pose=sw.querySelector('.czpose'),act=sw.querySelector('.czact'),d=czEditing&&czEditing();
+ const z=document.createElement('div');z.className='czz';
+ // 1 · top bar
+ const top=document.createElement('div');top.className='czztop';top.innerHTML=`<div class="czztr"><button class="czzback" onclick="czzBack()" aria-label="Back">◀</button><div class="czztt"><b>${CZZ_T('Costume Studio','สตูดิโอชุด')}</b><small>${esc(d?d.name:'')}</small></div></div>`;if(act){act.classList.add('czzact');top.appendChild(act)}z.appendChild(top);
+ // 2 · pinned preview
+ const st=document.createElement('div');st.className='czzst';if(stage)st.appendChild(stage);if(pose){pose.classList.add('czzpose');st.appendChild(pose)}z.appendChild(st);
+ // 3 · category groups + categories (existing buttons)
+ const sh=[...nav.querySelectorAll(':scope > .czsh')],rows=[...nav.querySelectorAll(':scope > .czsr')];let active=rows.findIndex(r=>r.querySelector('.on'));if(active<0)active=0;
+ if(ui.czzG==null||ui.czzLast!==(ui.czE&&ui.czE.cat)){ui.czzG=active;ui.czzLast=ui.czE&&ui.czE.cat}
+ const gr=document.createElement('div');gr.className='czzgr';gr.innerHTML=sh.map((h,i)=>{const nm=(h.childNodes[0]&&h.childNodes[0].textContent||h.textContent).trim(),cnt=h.querySelector('i');return`<button class="czzg" onclick="czzTab('items',${i})"><span class="czzic">${CZZ_IC[nm]||'✨'}</span><small>${esc(nm)}</small>${cnt?`<i>${cnt.textContent}</i>`:''}</button>`}).join('')+`<button class="czzx" data-t="closet" onclick="czzTab('closet')"><span class="czzic">🗂</span><small>${CZZ_T('Closet','ตู้เสื้อผ้า')}</small></button>`+(asg?`<button class="czzx" data-t="assign" onclick="czzTab('assign')"><span class="czzic">🎵</span><small>${CZZ_T('Songs','เพลง')}</small></button>`:'');
+ z.appendChild(gr);const sub=document.createElement('div');sub.className='czzsub';rows.forEach(r=>sub.appendChild(r));z.appendChild(sub);
+ // 4 · scrolling panel: items + editor + colour tools (existing nodes), closet, songs
+ const pn=document.createElement('div');pn.className='czzpanel';const it=document.createElement('div');it.dataset.tab='items';it.appendChild(panel);[...sw.children].forEach(c=>{if(c!==stage&&c!==pose&&c!==act)it.appendChild(c)});pn.appendChild(it);
+ const cl=document.createElement('div');cl.dataset.tab='closet';if(lib)cl.appendChild(lib);if(head)cl.appendChild(head);pn.appendChild(cl);if(asg){const as=document.createElement('div');as.dataset.tab='assign';as.appendChild(asg);pn.appendChild(as)}z.appendChild(pn);
+ g.replaceWith(z);return true}
+// ---- sizing (same principle as the CD Cover Studio workspace) -------------------------------------------------------------
+function czzSize(){const z=document.querySelector('.czz');if(!z)return;const vv=window.visualViewport,vh=vv?vv.height:window.innerHeight,hd=document.querySelector('.hd'),nav=document.querySelector('.nav'),
+ hdB=hd?Math.max(0,hd.getBoundingClientRect().bottom):0,navH=nav&&getComputedStyle(nav).display!='none'&&vh>=window.innerHeight*.8?nav.getBoundingClientRect().height:0,avail=Math.max(360,vh-hdB-navH-6),kb=vv&&vv.height<window.innerHeight*.75;
+ z.style.top=hdB+'px';z.style.height=avail+'px';z.style.setProperty('--czzst',Math.round(avail*(kb?.22:.36))+'px');
+ const w=z.closest('main,.main,#app')||document.documentElement;void w;const cur=parseFloat(z.style.marginBottom)||0,aligned=window.scrollY+z.getBoundingClientRect().top-hdB,extra=document.documentElement.scrollHeight-(aligned+window.innerHeight);if(Math.abs(extra)>1)z.style.marginBottom=Math.min(0,cur-extra)+'px'}
+{const f=render;render=function(){let keep=null;const pn0=document.querySelector('.czzpanel');if(view=='costume'&&pn0)keep={t:pn0.scrollTop,cat:ui.czE&&ui.czE.cat,sub:(document.querySelector('.czzsub')||{}).scrollLeft||0};
+ const r=f.apply(this,arguments);try{if(view=='costume'&&czzBuild()){czzApply();const pn=document.querySelector('.czzpanel');if(pn&&keep){pn.scrollTop=keep.cat==(ui.czE&&ui.czE.cat)?keep.t:0;const sb=document.querySelector('.czzsub');if(sb)sb.scrollLeft=keep.sub}
+  if(ui.czzVisit!==1){ui.czzVisit=1;const al=()=>{const z=document.querySelector('.czz'),hd=document.querySelector('.hd');if(!z)return;window.scrollTo(0,Math.max(0,window.scrollY+z.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0)));czzSize()};al();setTimeout(al,60);setTimeout(al,250)}}else if(view!='costume')ui.czzVisit=0}catch(e){console.error(e)}return r}}
+window.addEventListener('resize',()=>{if(view!='costume')return;const z=!!document.querySelector('.czz');if(z!==czzMob())render();else czzSize()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(view=='costume')czzSize()});
 
 </script>
 <script>
