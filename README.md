@@ -1166,3 +1166,5 @@ Extends the existing character art engine and Character Creator; no separate sys
 - Request Hour is held only when the player creates it (no automatic edition). New events default to Top 25 with sister songs.
 - Full-team theater songs have no Center in Request Hour (no center support, not counted for center diversity, no center shown); units, solos and duets keep theirs.
 - Per-song history (previous, best, years, streak, #1 / Top 3 / Top 10 / Top 25 years, years not ranked) in the results and in the song info pop-up; NEW / RETURN / movement badges.
+- Any single can be the Request Hour single, including General Election singles (CDs carry a ballot and a Request Hour code; the election's daily sales feed the voting codes), election-results singles and Janken singles; albums cannot (rh-ui.js).
+- Request Hour presentation: stage poster, five-step event timeline, launch card and a banner on the Concerts page (rh-ui.js).
