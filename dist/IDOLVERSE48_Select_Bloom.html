@@ -23951,8 +23951,10 @@ function tfRedoHtml(s){if(!s||!(s.debutPics||[]).length||s.status!='active')retu
 const TAP_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
 const tapOpen=k=>!(ui.tapz||{})[k];
 function tapTog(el,k){const Z=ui.tapz=ui.tapz||{};if(el.open)delete Z[k];else Z[k]=1}
-function tapData(s){const K=thK(s.k),gid=K?K.gid:null,run=f=>(typeof gsWith=='function'&&gid!=null&&typeof gsAg=='function'&&gid!=gsAg())?gsWith(gid,f):f();
- return run(()=>{const A=new Map(thAvail(s.k).map(o=>[o.id,o])),used=new Set(),take=id=>{const o=A.get(id);if(o)used.add(id);return o};
+// songs of a group for Stage s: its own group uses the theater's available songs; another group offers its released songs
+// and debuted Stage songs, which are added as Theater versions (copies that keep their original: song.xFrom)
+function tapData(s,gid){const K=thK(s.k),own=K?K.gid:null;gid=gid??own;const run=f=>(typeof gsWith=='function'&&gid!=null&&typeof gsAg=='function'&&gid!=gsAg())?gsWith(gid,f):f();
+ return run(()=>{const pool=gid==own?thAvail(s.k):Object.values(S.songs||{}).filter(o=>o&&!o.xFrom&&(o.rel||o.relDay!=null||(o.th&&o.th.deb!=null)));const A=new Map(pool.map(o=>[o.id,o])),used=new Set();
   const sing=(S.singles||[]).slice().sort((a,b)=>(b.relDay??b.day??0)-(a.relDay??a.day??0)).map(x=>{const ids=[x.mainId,...(x.coup||[]),...((x.tracks||[]).map(t=>t.id))].filter((id,i,L)=>id&&L.indexOf(id)==i);
    const L=ids.map(id=>A.get(id)).filter(Boolean);return L.length?{h:x.title||(S.songs[x.mainId]||{}).title||'Single',sub:[x.no?ordN(x.no)+' Single':'',(x.relDay??x.day)!=null?jd(x.relDay??x.day):''].filter(Boolean).join(' · '),L,role:id=>id==x.mainId?TAP_T('Title track','เพลงหลัก'):TAP_T('Coupling','เพลงรอง')}:null}).filter(Boolean);
   sing.forEach(b=>b.L.forEach(o=>used.add(o.id)));
@@ -23961,16 +23963,22 @@ function tapData(s){const K=thK(s.k),gid=K?K.gid:null,run=f=>(typeof gsWith=='fu
    return L.length?{h:`${thLabel(t.k)} ${t.no?ordN(t.no)+' Stage':'Stage'} “${t.name}”`,sub:t.debut!=null?jd(t.debut):'',L}:null}).filter(Boolean);
   stg.forEach(b=>b.L.forEach(o=>used.add(o.id)));
   const oth=[...A.values()].filter(o=>!used.has(o.id)).sort((a,b)=>thSongPop(b)-thSongPop(a));return{sing,stg,oth}})}
-function tapHtml(){const s=thEd();if(!s)return'';const q=String(ui.tapq||'').toLowerCase(),have=new Set(thAll(s).map(i=>i.song)),D=tapData(s),ok=o=>!q||String(o.title).toLowerCase().includes(q),full=thAll(s).length>=TH_MAXS;
- const row=(o,role)=>{const n=have.has(o.id);return`<div class="row ccpki"><div style="flex:1;min-width:0"><b>${esc(o.title)}</b><small class="st">${esc(role||thCat(o))}${o.genre?' · '+esc(o.genre):''}${o.concept?' · '+esc(o.concept):''} · ≈${thDur(o)}</small></div>${n?`<span class="tag">${TAP_T('In setlist','อยู่ในเซ็ตลิสต์แล้ว')}</span>`:`<button class="b s p" ${full?'disabled':''} onclick="tapAdd('${o.id}')">+ Add</button>`}</div>`};
- const blk=(b,pre)=>{const L=b.L.filter(ok);if(!L.length)return'';const k=pre+b.h;return`<details ${tapOpen(k)?'open':''} class="ccpkb" ontoggle="tapTog(this,'${esc(k).replace(/'/g,'')}')"><summary><b>${esc(b.h)}</b> <small class="st">${esc(b.sub||'')}</small></summary>${L.map(o=>row(o,b.role?b.role(o.id):'')).join('')}</details>`};
- const sec=(id,title,body,n)=>{const k='sec'+id;return n?`<details ${tapOpen(k)?'open':''} class="ccpks" ontoggle="tapTog(this,'${k}')"><summary><b>${title}</b> <small class="st">${n}</small></summary>${body}</details>`:''};
+function tapHtml(){const s=thEd();if(!s)return'';const K=thK(s.k),own=K?K.gid:null,G=(S.groups||[]).filter(g=>!g.dis);if(!G.some(g=>g.id==ui.tapg))ui.tapg=own;const gid=ui.tapg,xg=gid!=own;
+ const q=String(ui.tapq||'').toLowerCase(),inSet=thAll(s).map(i=>S.songs[i.song]).filter(Boolean),have=new Set(inSet.map(o=>o.id)),haveX=new Set(inSet.filter(o=>o.xFrom).map(o=>o.xFrom.gid+':'+o.xFrom.id)),D=tapData(s,gid),ok=o=>!q||String(o.title).toLowerCase().includes(q),full=thAll(s).length>=TH_MAXS;
+ const row=(o,role)=>{const n=xg?haveX.has(gid+':'+o.id):have.has(o.id);return`<div class="row ccpki"><div style="flex:1;min-width:0"><b>${esc(o.title)}</b><small class="st">${esc(role||thCat(o))}${o.genre?' · '+esc(o.genre):''}${o.concept?' · '+esc(o.concept):''} · ≈${thDur(o)}</small></div>${n?`<span class="tag">${TAP_T('In setlist','อยู่ในเซ็ตลิสต์แล้ว')}</span>`:`<button class="b s p" ${full?'disabled':''} onclick="${xg?`tapAddX(${gid},'${o.id}')`:`tapAdd('${o.id}')`}">+ Add</button>`}</div>`};
+ const blk=(b,pre)=>{const L=b.L.filter(ok);if(!L.length)return'';const k=gid+pre+b.h;return`<details ${tapOpen(k)?'open':''} class="ccpkb" ontoggle="tapTog(this,'${esc(k).replace(/'/g,'')}')"><summary><b>${esc(b.h)}</b> <small class="st">${esc(b.sub||'')}</small></summary>${L.map(o=>row(o,b.role?b.role(o.id):'')).join('')}</details>`};
+ const sec=(id,title,body,n)=>{const k=gid+'sec'+id;return n?`<details ${tapOpen(k)?'open':''} class="ccpks" ontoggle="tapTog(this,'${k}')"><summary><b>${title}</b> <small class="st">${n}</small></summary>${body}</details>`:''};
  const si=D.sing.map(b=>blk(b,'s')).filter(Boolean),st=D.stg.map(b=>blk(b,'t')).filter(Boolean),ot=D.oth.filter(ok);
  return`<h2 class="ht">${TAP_T('Add songs','เพิ่มเพลง')}</h2><p class="st">“${esc(s.name)}” · ${thAll(s).length}/${TH_MAXS} ${TAP_T('songs','เพลง')}${full?' · '+TAP_T('the setlist is full','เซ็ตลิสต์เต็มแล้ว'):''}</p>
+ ${G.length>1?`<div class="row cctabs">${G.map(g=>`<button class="b s ${g.id==gid?'p':''}" onclick="ui.tapg=${g.id};ui.mod.h=tapHtml();render()">${esc(g.name)}</button>`).join('')}</div>`:''}
+ ${xg?`<p class="st">${TAP_T(`Songs of ${esc((grp(gid)||{}).name||'')} are added as Theater versions for this Stage (the original stays with its group).`,`เพลงของวง ${esc((grp(gid)||{}).name||'')} จะเพิ่มเป็นเวอร์ชันเธียเตอร์ของสเตจนี้ (ต้นฉบับยังเป็นของวงเดิม)`)}</p>`:''}
  <input class="ccpkq" placeholder="${TAP_T('Search songs','ค้นหาเพลง')}" value="${esc(ui.tapq||'')}" onchange="ui.tapq=this.value;ui.mod.h=tapHtml();render()">
  <div class="ccpk">${sec('single','💿 '+TAP_T('Singles','ซิงเกิล'),si.join(''),si.length?`${si.length} ${TAP_T('single(s)','ซิงเกิล')}`:'')}${sec('stage','🎭 '+TAP_T('Stages','สเตจ'),st.join(''),st.length?`${st.length} ${TAP_T('stage(s)','สเตจ')}`:'')}${sec('other','🎵 '+TAP_T('Other songs','เพลงอื่น ๆ'),ot.map(o=>row(o)).join(''),ot.length?`${ot.length} ${TAP_T('song(s)','เพลง')}`:'')}
  ${!si.length&&!st.length&&!ot.length?`<p class="st">${TAP_T('No songs match.','ไม่พบเพลง')}</p>`:''}</div>
  <div class="row"><button class="b" onclick="ui.mod=null;render()">${TAP_T('Done','เสร็จ')}</button></div>`}
+// a song of another group: its Theater version in this Stage's group, then added like any song
+function tapAddX(gid,id){const s=thEd();if(!s)return;const K=thK(s.k),own=K?K.gid:null;if(thAll(s).length>=TH_MAXS)return toast(TAP_T(`A Stage can have at most ${TH_MAXS} songs.`,`สเตจมีได้สูงสุด ${TH_MAXS} เพลง`),'err');
+ const run=f=>(own!=null&&typeof gsAg=='function'&&own!=gsAg())?gsWith(own,f):f();let n=null;try{n=run(()=>thXgSong(+gid,id,s.k))}catch(e){console.error(e)}if(!n)return toast(TAP_T('That song could not be added.','เพิ่มเพลงนี้ไม่ได้'),'err');tapAdd(n.id)}
 function tapPick(){if(!thEd())return;ui.mod={t:'html',h:tapHtml(),tap:1};render()}
 function tapAdd(id){const y=(document.querySelector('.mod .ccpk')||{}).scrollTop||0;thSongAdd(id);if(ui.mod&&ui.mod.tap){ui.mod.h=tapHtml();render();try{const el=document.querySelector('.mod .ccpk');if(el)el.scrollTop=y}catch(e){}}}
 // the Stage editor: compact card with the button, Random and New original song (the replacement list stays as it was)
