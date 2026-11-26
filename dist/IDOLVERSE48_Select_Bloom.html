@@ -15589,7 +15589,7 @@ function apBody(cat){const d=ui.draft,m=get(ui.cm),D=dz(m);
   case'back':return`<div class="c"><b>Back Hair</b><p class="st">Chosen independently of the bangs.</p>${apGrid('bk',BKN,null)}</div>`;
   case'ahoge':{const cur=d.ah!=null?d.ah:D.ahoge;return`<div class="c"><b>Ahoge</b><p class="st">A hair lock growing out of the crown at the bangs' attachment point — same colour and shading as the bangs, and it follows the bangs style.</p><div class="th apth">${AP_AHN.map((n,i)=>`<button class="tb ${cur==i?'on':''}" onclick="apPick('ah',${i})">${pt(apPM({ah:i}),64,0,'14 -18 72 62')}<small>${n}</small></button>`).join('')}</div></div>`}
   case'brows':return`<div class="c"><b>Eyebrows</b><p class="st">Independent of the eye shape. (Shown without bangs so the shape is visible.)</p>${apGrid('br',BRN,'18 34 64 26',{ft:0})}</div>${apPicker('bcx')}`;
-  case'eyes':return`<div class="c"><b>Eyes</b>${apGrid('ey',EYN,'18 40 64 36')}</div>${apPicker('ecx')}${ui.apEyeK=='lcx'?apPicker('lcx'):`<button class="b s" onclick="ui.apEyeK='lcx';render()">Eyelash color…</button>`}`;
+  case'eyes':return`<div class="c"><b>Resting expression</b><p class="st">Her everyday face (open or closed eyes). Event expressions still change it for the moment.</p>${apGrid('mo',['Gentle smile','Happy (eyes closed)','Calm','Pout','Sparkle'],'18 40 64 46')}</div><div class="c"><b>Eyes</b>${apGrid('ey',EYN,'18 40 64 36')}</div>${apPicker('ecx')}${ui.apEyeK=='lcx'?apPicker('lcx'):`<button class="b s" onclick="ui.apEyeK='lcx';render()">Eyelash color…</button>`}`;
   case'mouth':return`<div class="c"><b>Mouth</b><p class="st">The resting mouth. Event expressions (surprised, sad…) still change it for the moment.</p>${apGrid('mt',APMT.map(x=>x[0]),'34 68 32 16',{},'Original')}</div>`;
   case'hair':return apPicker('hcx')+(ui.apHairK=='hc2x'?apPicker('hc2x'):`<button class="b s" onclick="ui.apHairK='hc2x';render()">Hair shadow color…</button>`);
   case'outfit':return`<div class="c"><b>Outfit</b>${apGrid('of',OFN,'0 62 100 58')}</div><div class="c"><b>Outfit color</b><div class="th">${OHS.map(h=>`<button class="sw ${d.oh==h?'on':''}" style="background:hsl(${h} 75% 78%)" onclick="setAp('oh',${h})"></button>`).join('')}</div></div>`;
@@ -26911,6 +26911,13 @@ Object.assign(I18N_TH,{"Lai Kanok (Thai)":"ลายกนก (ไทย)",
 "＋ Save this color":"＋ บันทึกสีนี้",
 "No saved colors yet.":"ยังไม่มีสีที่บันทึกไว้",
 "Eyelash color…":"สีขนตา…",
+"Resting expression":"สีหน้าปกติ",
+"Her everyday face (open or closed eyes). Event expressions still change it for the moment.":"สีหน้าประจำวันของเธอ (ลืมตาหรือหลับตา) สีหน้าตามเหตุการณ์ยังเปลี่ยนได้ชั่วคราว",
+"Gentle smile":"ยิ้มอ่อน ๆ",
+"Happy (eyes closed)":"ยิ้มหลับตา",
+"Calm":"นิ่ง ๆ",
+"Pout":"ทำปากยื่น",
+"Sparkle":"ตาเป็นประกาย",
 "Hair shadow color…":"สีเงาผม…",
 "Bangs / Front Hair":"หน้าม้า / ผมด้านหน้า",
 "Chosen independently of the back hair.":"เลือกแยกจากผมด้านหลัง",
