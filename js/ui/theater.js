@@ -133,7 +133,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const L=[...used].map(get).filter(Boolean);if(!L.length){x.st='cancel';x.why='No available performers';thN(`<li>🎭 ${esc(thLabel(x.k))} — no member could perform on ${jd(x.day)}; the performance was cancelled.</li>`);return}
  // energy & quality: existing setlist rules (per-song intensity, MC recovery, low-energy performance factor)
  const rows=new Map(L.map(m=>[m.id,{m,en0:m.en,en:m.en,q:[]}]));thSeq(s).forEach(it=>{if(it.k=='mc'){rows.forEach(r=>{const g=Math.min(CFG.rs.mc,100-r.en);r.en+=g});return}if(it.k!='song')return;const o=S.songs[it.song],R=res[it.id];if(!o||!R)return;const sk=GEN[plG(o.genre)]||['sing','dance'],conc=CONC[plC(o.concept)]||[];
-  R.ids.forEach((id,pi)=>{const r=rows.get(id);if(!r)return;const m=r.m,w=wlOf(m),ef=r.en>=40?1:.55+.45*r.en/40,hf=(w.ph<40?.9:1)*(w.mh<40?.9:1)*(WL.mood[w.mood][1]=='pos'?1.04:WL.mood[w.mood][1]=='neg'?.95:1),suit=conc.includes(m.pers)?1.05:1;r.q.push(avg(sk.map(k=>m[k]))*ef*hf*suit*(pi==0?1.08:1));const c=Math.round((CFG.rs.INT[plG(o.genre)]||6)*(1.25-m.dance/200)*.55);r.en=Math.max(-100,r.en-c)})});
+  R.ids.forEach((id,pi)=>{const r=rows.get(id);if(!r)return;const m=r.m,w=wlOf(m),ef=r.en>=40?1:.55+.45*r.en/40,hf=(w.ph<40?.9:1)*(w.mh<40?.9:1)*(WL.mood[w.mood][1]=='pos'?1.04:WL.mood[w.mood][1]=='neg'?.95:1),suit=conc.includes(m.pers)?1.05:1;r.q.push(avg(sk.map(k=>m[k]))*ef*hf*suit*(pi==0?1.08:1));const c=Math.round((CFG.rs.INT[plG(o.genre)]||6)*(1.25-m.dance/200)*.55);r.en=Math.max(0,r.en-c)})});
  const RW=[...rows.values()],Q=avg(RW.map(r=>r.q.length?avg(r.q):0)),cen=get(res[thSongs(s)[0].id]&&res[thSongs(s)[0].id].c),coord=Math.min(1,.8+.2*Math.min(1,L.length/10))*(notes.some(t=>/replaced/.test(t))?.97:1),sat=cl(Math.round((Q*.85+((cen&&cen.pop)||0)*.15)*coord*1.08+rnd(-4,4)));
  // audience
  const pop=avg(L.map(m=>m.pop)),songPop=avg(thAll(s).map(it=>thSongPop(S.songs[it.song]))),recent=H.pf.filter(p=>p.k==x.k&&p.day>=x.day-28),rs=recent.length?avg(recent.map(p=>p.sat)):55,week=H.pf.filter(p=>p.k==x.k&&p.day>x.day-7).length;
@@ -143,7 +143,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=typeof thOnlineN=='function'?thOnlineN(subs,sat):Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
  earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);S.money-=cost;S.exp+=cost;S.led.unshift({d:S.day,l:`Theater operating cost: ${thLabel(x.k)}`,a:-cost});S.led.length=Math.min(S.led.length,80);
  const AUD=thAud(x,s,T,L,res,att,online,sat),nf=AUD.nf; // audience: existing fans vs newcomers (Theater update)
- const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(-100,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
+ const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(0,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
   if(Math.random()<.12){const k=pick(['sing','dance','cha','variety']);if(m[k]<100)m[k]++}wlAdj(m,{load:6+Math.round(r.q.length/3),str:sat<40?4:1},'theater performance');if(sat>=80&&Math.random()<.25&&WL.mood[wlOf(m).mood][1]!='neg')wlMood(m,'Happy',3);
   fx.push([m.id,m.pop-p0,m.fans-f0,m.buzz-b0,r.en0-m.en,m.status=='trainee'&&out.size&&Object.values(sub).includes(m.id)?1:0])});
  thAudApply(x,AUD);

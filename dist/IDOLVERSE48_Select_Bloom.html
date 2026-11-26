@@ -2115,7 +2115,7 @@ function cont(){const s=load();if(!s)return toast('No valid save found. Start a 
 function moneyOk(){if(!S)return;if(typeof S.money!='number'||!isFinite(S.money)){console.error('Company funds were invalid ('+S.money+'); restored to the last valid balance.');S.money=typeof S.mOk=='number'&&isFinite(S.mOk)?S.mOk:0}S.mOk=S.money;['inc','exp'].forEach(k=>{if(typeof S[k]!='number'||!isFinite(S[k]))S[k]=0})}
 function earn(a,l){a=+a;if(!isFinite(a)){console.error('earn: invalid amount for "'+l+'":',a);return}moneyOk();S.money+=a;S.inc+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a});S.led.length=Math.min(S.led.length,80)}
 function spend(a,l){a=+a;if(!isFinite(a)||a<0){console.error('spend: invalid amount for "'+l+'":',a);toast('That cost could not be calculated, so nothing was charged or bought.','err');return false}moneyOk();if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
-function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.en=Math.max(-100,Math.min(100,(+m.en||0)+15));m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
+function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
  earn(Math.round(S.fans*3),'Merch & streaming');
  if(dt().getDate()==1){const s=S.members.length*25000,p=Math.min(s,S.money);S.money-=p;S.exp+=p;S.led.unshift({d:S.day,l:'Monthly salaries',a:-p});
   if(p<s){S.members.forEach(m=>m.mor=cl(m.mor-10));toast('Salaries not fully paid! Morale dropped.','err')}}
@@ -4633,12 +4633,12 @@ function evOut(e,L,focus,mul){const cap=Math.round(e.cap*(mul||1)),q=(avg(L.map(
 const promoAdd=(x,rec)=>{if(!x)return;x.promo=x.promo||[];if(!x.promo.some(r=>r.id==rec.id))x.promo.push(rec)},resNote=h=>{if(ui.newRes)ui.newRes.push(h)};
 function hsRun(ev,part){const k='r'+part;if(ev[k])return;const all=ev.members.filter(id=>get(id)),L=all.map(get).filter(m=>m.en>=20),x=S.singles.find(s=>s.rid==ev.rid);let r;
  if(!L.length)r={day:S.day,att:0,cap:0,rev:0,cost:0,fans:0,gr:'—',present:[],absent:all,note:'No member had enough Stamina, so the day was cancelled.'};
- else{const o=evOut(EV.handshake,L,'variety',Math.max(1,all.length/EV.handshake.max));earn(o.rev,`Handshake Event day ${part}: ${ev.st}`);const pay=Math.min(EV.handshake.cost,S.money);S.money-=pay;S.exp+=pay;S.led.unshift({d:S.day,l:`Handshake Event day ${part} cost: ${ev.st}`,a:-pay});S.led.length=Math.min(S.led.length,80);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(-100,m.en-20)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,cost:pay,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
+ else{const o=evOut(EV.handshake,L,'variety',Math.max(1,all.length/EV.handshake.max));earn(o.rev,`Handshake Event day ${part}: ${ev.st}`);const pay=Math.min(EV.handshake.cost,S.money);S.money-=pay;S.exp+=pay;S.led.unshift({d:S.day,l:`Handshake Event day ${part} cost: ${ev.st}`,a:-pay});S.led.length=Math.min(S.led.length,80);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(0,m.en-20)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,cost:pay,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
  ev[k]=r;resNote(`<div class="c"><b>${esc(ev.title)} — Day ${part} (${part==1?'Sat':'Sun'})</b><div class="st">${r.note||`Grade ${r.gr} · ${r.att.toLocaleString()} fans attended · revenue ${yen(r.rev)} (cost ${yen(r.cost)}) · +${r.fans} fans`} · ${r.present.length} member(s) present${r.absent.length?`, ${r.absent.length} resting`:''}</div></div>`);
  if(part==2){ev.done=true;promoAdd(x,{id:ev.id,type:'handshake',title:ev.title,day:ev.day,day2:ev.day2,members:ev.members.slice(),r1:ev.r1,r2:ev.r2})}}
 function roadRun(ev){if(ev.res)return;const all=ev.members.filter(id=>get(id)),need=20*(ev.dur||1),L=all.map(get).filter(m=>m.en>=need),x=S.singles.find(s=>s.rid==ev.rid);let r;
  if(!L.length)r={day:S.day,cancelled:true,att:0,rev:0,fans:0,present:[],absent:all,note:'Cancelled: no participating member had enough Stamina.'};
- else{const o=evOut(EV.concert,L,'cha',1);earn(o.rev,`Road Show: ${ev.loc} (${ev.st})`);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(-100,m.en-need)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
+ else{const o=evOut(EV.concert,L,'cha',1);earn(o.rev,`Road Show: ${ev.loc} (${ev.st})`);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(0,m.en-need)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
  ev.res=r;promoAdd(x,{id:ev.id,type:'road',title:ev.title,loc:ev.loc,day:ev.day,dur:ev.dur,members:ev.members.slice(),cost:ev.cost,res:r});resNote(`<div class="c"><b>${esc(ev.title)}</b><div class="st">${r.note||`Grade ${r.gr} · ${r.att.toLocaleString()} / ${r.cap.toLocaleString()} attended · revenue ${yen(r.rev)} (paid ${yen(ev.cost)} when booked) · +${r.fans} fans`} · ${r.present.length} performed${r.absent.length?`, ${r.absent.length} too tired`:''}</div></div>`)}
 function promoDay(){(S.cal||[]).forEach(ev=>{if(ev.done)return;if(ev.type=='handshake'){if(!ev.rid)return;const fn=ev.v==2?hsRun2:hsRun;if(S.day>=ev.day&&!ev.r1)fn(ev,1);if(S.day>=ev.day2&&!ev.r2)fn(ev,2)}else if(ev.type=='road'){if(ev.v==2){if(S.day>=ev.day&&!ev.d1)rsRun(ev,1);if(S.day>=ev.day+1&&!ev.d2)rsRun(ev,2);return}if(S.day>=ev.day&&!ev.res)roadRun(ev);if(S.day>=ev.day+(ev.dur||1)-1&&ev.res)ev.done=true}});calTrim()}
 const rdDays=d=>Array.from({length:EV.concert.dur},(_,i)=>d+i);
@@ -4778,8 +4778,8 @@ function hsGo(ev,x){const h=x.hs,F=HSF[h.fmt],mem=ev.members.map(get).filter(Boo
  const att=Math.round(red/F.per),buzz=Math.max(5,Math.min(100,Math.round(10+25*Math.log10(1+att/100)*F.bz)));
  return{fmt:h.fmt,tickets:T,want,red,cap,lost:Math.max(0,want-red),att,buzz,rows,orders:x.cd?x.cd.orders:0,cds:x.cd?x.cd.units:0,cost:(h.est||[]).reduce((a,y)=>a+y[1],0),est:h.est||[]}}
 function hsRun2(ev,part){const k='r'+part;if(ev[k])return;const x=S.singles.find(s=>s.rid==ev.rid);if(!x||!x.hs)return;
- if(part==1){ev.plan=ev.plan||hsGo(ev,x);ev.plan.rows.forEach(r=>{const m=get(r.mid);if(m){r.before=m.fans;m.fans+=r.g1;m.pop=popOf(m);m.en=Math.max(-100,m.en-15);m.mor=cl(m.mor+2)}});ev.r1={day:S.day,redeemed:Math.round(ev.plan.red/2)};resNote(`<div class="c"><b>${esc(ev.title)} — Day 1 (Sat)</b><div class="st">${(HSF[ev.plan.fmt]||{n:"Handshake Event"}).n} · about ${Math.round(ev.plan.att/2).toLocaleString()} fans attended</div></div>`);return}
- if(!ev.r1)hsRun2(ev,1);const P=ev.plan,bz=Math.max(1,Math.round(P.buzz/15*(P.fmt=='hf'?1.5:1)));P.rows.forEach(r=>{const m=get(r.mid);if(m){m.fans+=r.g2;m.buzz=cl(m.buzz+bz);m.pop=popOf(m);m.en=Math.max(-100,m.en-15);m.mor=cl(m.mor+2);r.after=m.fans}else r.after=r.before+r.g1});
+ if(part==1){ev.plan=ev.plan||hsGo(ev,x);ev.plan.rows.forEach(r=>{const m=get(r.mid);if(m){r.before=m.fans;m.fans+=r.g1;m.pop=popOf(m);m.en=Math.max(0,m.en-15);m.mor=cl(m.mor+2)}});ev.r1={day:S.day,redeemed:Math.round(ev.plan.red/2)};resNote(`<div class="c"><b>${esc(ev.title)} — Day 1 (Sat)</b><div class="st">${(HSF[ev.plan.fmt]||{n:"Handshake Event"}).n} · about ${Math.round(ev.plan.att/2).toLocaleString()} fans attended</div></div>`);return}
+ if(!ev.r1)hsRun2(ev,1);const P=ev.plan,bz=Math.max(1,Math.round(P.buzz/15*(P.fmt=='hf'?1.5:1)));P.rows.forEach(r=>{const m=get(r.mid);if(m){m.fans+=r.g2;m.buzz=cl(m.buzz+bz);m.pop=popOf(m);m.en=Math.max(0,m.en-15);m.mor=cl(m.mor+2);r.after=m.fans}else r.after=r.before+r.g1});
  P.newFans=P.rows.reduce((a,r)=>a+r.gain,0);S.fans+=Math.round(P.newFans*.6);ev.r2={day:S.day,redeemed:P.red-ev.r1.redeemed};ev.done=true;P.day=ev.day;P.day2=ev.day2;P.title=x.title;P.groups=(ev.groups||[]).map(g=>({name:g.name,m:g.m.slice()}));
  promoAdd(x,{id:ev.id,type:'handshake',v:2,title:ev.title,day:ev.day,day2:ev.day2,members:ev.members.slice(),res:P});ui.hsDone=ev.id}
 function hsSummary(P){const s=[],rows=P.rows.slice().sort((a,b)=>b.gain-a.gain),med=rows.length?rows[Math.floor(rows.length/2)].gain:0,top=rows[0],rate=P.tickets?Math.round(100*P.red/P.tickets):0,big=rows.filter(r=>r.gain>=Math.max(1,med*1.8));
@@ -6745,13 +6745,13 @@ function wlStrip(){const A=new Set(S.members.filter(wlAway).map(m=>m.id));if(!A.
 
 // ---- daily condition ------------------------------------------------------------------------------
 function wlDay(m){const w=wlOf(m);
- if(w.leave){w.ph=cl(w.ph+.6);w.mh=cl(w.mh+.6);w.load=Math.max(0,w.load-10);w.str=Math.max(0,w.str-5);if(w.mood!='Neutral'&&S.day>=(w.moodTil||0))wlMood(m,'Neutral');
+ if(w.leave){w.load=Math.max(0,w.load-10);w.str=Math.max(0,w.str-5);if(w.mood!='Neutral'&&S.day>=(w.moodTil||0))wlMood(m,'Neutral');
   if(S.day==w.leave.ret-7)toast(`${m.name} returns from leave in 7 days.`);if(S.day>=w.leave.ret)wlLeaveEnd(m);return}
  const R=w.red?1.5:1;w.load=Math.max(0,w.load-6*R);w.str=Math.max(0,w.str-4*R-(WL.mood[w.mood][1]=='pos'?1:0));if(m.en<20)w.str=cl(w.str+1.5);
- let dp=0,dm=0;if(w.load>70)dp-=(w.load-70)*.04;if(m.en<10)dp-=.25;if(dp==0&&w.load<35&&m.en>=30)dp+=.2*R;
- if(w.str>65)dm-=(w.str-65)*.04;if(m.en<10)dm-=.15;if(dm==0&&w.str<35)dm+=.15*R+(WL.mood[w.mood][1]=='pos'?.1:0);
+ let dp=0,dm=0;if(w.load>70)dp-=(w.load-70)*.04;if(m.en<10)dp-=.25;
+ if(w.str>65)dm-=(w.str-65)*.04;if(m.en<10)dm-=.15;
  // rare injury / illness only when the body is already worn out
- if(w.ph<40&&w.load>55&&Math.random()<.03){const v=rnd(6,12);dp-=v;wlLog(m,{t:'injury',txt:`Minor injury from overwork (Physical Health −${v}).`});toast(`${m.name} was injured from overwork.`,'err');wlN(`<li>🩹 <b>${esc(m.name)}</b> was injured from overwork (Physical Health −${v}). Lower her workload and consider Medical Treatment.</li>`)}
+ if(w.ph<40&&w.load>55&&Math.random()<.03){const v=rnd(6,12);dp-=v;wlLog(m,{t:'injury',txt:`Minor injury from overwork (Physical Health −${v}).`});toast(`${m.name} was injured from overwork.`,'err');wlN(`<li>🩹 <b>${esc(m.name)}</b> was injured from overwork (Physical Health −${v}). Lower her workload; Automatic Member Care treats Physical Health below 20.</li>`)}
  else if(w.ph<30&&m.en<20&&Math.random()<.015){const v=rnd(5,9);dp-=v;wlLog(m,{t:'ill',txt:`Caught a cold while exhausted (Physical Health −${v}).`});toast(`${m.name} fell ill.`,'err')}
  if(w.mood!='Neutral'&&S.day>=(w.moodTil||0))wlMood(m,'Neutral');
  if(w.mh<40&&WL.mood[w.mood][1]!='neg'&&Math.random()<(w.mh<20?.08:.04)){const k=pick(['Sad','Lonely','Nervous','Frustrated']);wlMood(m,k,rnd(3,6));wlLog(m,{t:'mood',txt:`Felt ${k.toLowerCase()} for no clear reason (low Mental Health).`})}
@@ -6768,25 +6768,17 @@ const _wlConc=holdConcert;holdConcert=function(p,x){const ev=_wlConc.apply(this,
 function wlTrainMul(m,k){const w=wlOf(m);let f=WL.mhMul(w.mh);if((k=='dance'||k=='cha')&&w.ph<40)f*=.9;if(w.red)f*=.8;const md=WL.mood[w.mood][1];if(w.mood=='Motivated'||w.mood=='Excited')f*=1.05;else if(md=='neg')f*=.95;return f}
 // ---- recovery activities ---------------------------------------------------------------------------
 const WLA={
- rest:{n:'Rest',d:'Free · +40 Energy, lighter workload · she takes the rest of today off'},
- rday:{n:'Recovery Day',c:30000,cd:3,d:'¥30,000 · massage & full rest: +40 Energy, workload −35, stress −20, Physical +3, Mental +3 · today off'},
  check:{n:'Medical Checkup',c:20000,d:'¥20,000 · a doctor\'s report on her condition and risks'},
- treat:{n:'Medical Treatment',c:80000,cd:7,leave:1,d:'¥80,000 · Physical Health +12 (every 7 days)'},
- mental:{n:'Mental Recovery',c:60000,cd:7,leave:1,d:'¥60,000 · counselling: Mental Health +10, stress −30 (every 7 days)'},
  talk:{n:'Producer Talk',cd:14,d:'Free · a one-on-one talk: stress −10, Passion +2, mood lifts (every 14 days)'},
- bond:{n:'Team Bonding',c:100000,cd:30,d:'¥100,000 · an outing for her whole team: stress −15, Mental +3, Loyalty +2 for every member (every 30 days)'}
+ bond:{n:'Team Bonding',c:100000,cd:30,d:'¥100,000 · an outing for her whole team: stress −15, Loyalty +2 for every member (every 30 days)'}
 };
 function wlCdLeft(m,k){const w=wlOf(m),a=WLA[k];if(k=='bond'){const t=teamOf(m);const last=t&&S.wlBond&&S.wlBond[t.id];return last!=null?Math.max(0,last+a.cd-S.day):0}return a.cd&&w.cd[k]!=null?Math.max(0,w.cd[k]+a.cd-S.day):0}
 function wlCan(m,k){const w=wlOf(m),a=WLA[k];if(w.leave&&!a.leave&&k!='check')return'Not available during leave.';if(k=='rest'&&w.rest==S.day)return'Already rested today.';if(k=='rday'&&w.off==S.day)return'Already off today.';if(k=='bond'&&!(isAct(m)&&teamOf(m)))return'Only for members in a team.';const c=wlCdLeft(m,k);if(c)return`Available again in ${c} day${c>1?'s':''}.`;return''}
-function wlDo(id,k){const m=get(id),a=WLA[k];if(!m||!a)return;const no=wlCan(m,k);if(no)return toast(no,'err');const w=wlOf(m);if(a.c&&!spend(a.c,`${a.n}: ${m.name}`))return;
+function wlDo(id,k){const m=get(id),a=WLA[k];if(!m||!a)return toast('Recovery is handled by Automatic Member Care (Members › Automatic Member Care).','err');const no=wlCan(m,k);if(no)return toast(no,'err');const w=wlOf(m);if(a.c&&!spend(a.c,`${a.n}: ${m.name}`))return;
  if(a.cd&&k!='bond')w.cd[k]=S.day;
- if(k=='rest'){m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.rest=S.day;w.off=S.day;wlAdj(m,{load:-10,str:-5});wlLog(m,{t:'care',txt:'Took a rest (+40 Energy).'});toast(`${m.name} rests: Energy ${m.en}/100. No more lessons or events for her today.`)}
- else if(k=='rday'){m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3});wlLog(m,{t:'care',txt:'Recovery Day: full rest and massage.'});toast(`${m.name} enjoys a Recovery Day.`)}
- else if(k=='check'){wlAdj(m,{str:-2});w.cd.check=S.day;wlLog(m,{t:'care',txt:`Medical Checkup: Physical ${WL.lv(w.ph)}, Mental ${WL.lv(w.mh)}.`});ui.mod={t:'html',h:wlReport(m)};render();return}
- else if(k=='treat'){wlAdj(m,{ph:12,load:-15});wlLog(m,{t:'care',txt:'Medical Treatment (Physical Health +12).'});toast(`${m.name} received Medical Treatment: Physical Health ${Math.round(w.ph)}.`)}
- else if(k=='mental'){wlAdj(m,{mh:10,str:-30});wlLog(m,{t:'care',txt:'Mental Recovery session (Mental Health +10).'});toast(`${m.name} attended a Mental Recovery session: Mental Health ${Math.round(w.mh)}.`)}
+ if(k=='check'){wlAdj(m,{str:-2});w.cd.check=S.day;wlLog(m,{t:'care',txt:`Medical Checkup: Physical ${WL.lv(w.ph)}, Mental ${WL.lv(w.mh)}.`});ui.mod={t:'html',h:wlReport(m)};render();return}
  else if(k=='talk'){wlAdj(m,{str:-10});m.pas=cl(m.pas+2);if(WL.mood[w.mood][1]!='pos')wlMood(m,w.mh>=40?'Motivated':'Neutral',5);wlLog(m,{t:'care',txt:'A one-on-one talk with the producer.'});toast(`${m.name} feels heard after your talk.`)}
- else if(k=='bond'){const t=teamOf(m),L=S.members.filter(x=>x.tid==t.id&&!wlAway(x));S.wlBond=S.wlBond||{};S.wlBond[t.id]=S.day;L.forEach(x=>{wlAdj(x,{str:-15,mh:3});x.loy=cl(x.loy+2);if(WL.mood[wlOf(x).mood][1]!='neg')wlMood(x,'Happy',5);wlLog(x,{t:'bond',txt:`Team bonding outing with ${t.name}.`})});toast(`${t.name} enjoyed a team bonding outing (${L.length} members).`)}
+ else if(k=='bond'){const t=teamOf(m),L=S.members.filter(x=>x.tid==t.id&&!wlAway(x));S.wlBond=S.wlBond||{};S.wlBond[t.id]=S.day;L.forEach(x=>{wlAdj(x,{str:-15});x.loy=cl(x.loy+2);if(WL.mood[wlOf(x).mood][1]!='neg')wlMood(x,'Happy',5);wlLog(x,{t:'bond',txt:`Team bonding outing with ${t.name}.`})});toast(`${t.name} enjoyed a team bonding outing (${L.length} members).`)}
  render()}
 function wlRedTog(id){const m=get(id);if(!m)return;const w=wlOf(m);w.red=!w.red;wlLog(m,{t:'care',txt:w.red?'Reduced Schedule started.':'Reduced Schedule ended.'});toast(w.red?`${m.name} is on a Reduced Schedule: faster recovery, lesson EXP ×0.8.`:`${m.name} is back on a normal schedule.`);render()}
 function wlRisk(m){const w=wlOf(m);return w.ph<40&&w.load>55?'High — injury likely if the workload stays heavy':w.ph<60||w.load>70?'Moderate — keep an eye on her schedule':'Low'}
@@ -6906,7 +6898,7 @@ function wlProfHtml(m){const w=wlOf(m),r=srOf(m),mo=WL.mood[w.mood],lv=v=>`<span
  <div class="wlgrid">${stat('Physical Health',w.ph)}<div class="wllvr">${lv(w.ph)}</div>${stat('Energy',m.en,'/100')}<div class="wllvr">${m.en<25?'<span class="wllv po">Tired</span>':'<span class="wllv go">Ready</span>'}</div>${stat('Mental Health',w.mh)}<div class="wllvr">${lv(w.mh)}</div></div>
  <div class="wlrow"><span class="wlmood ${mo[1]}">${mo[0]} Mood: ${w.mood}</span><span class="tag">Passion ${m.pas}</span><span class="tag">Loyalty ${m.loy}</span><span class="tag">Workload: ${wlLoadTxt(w.load)}</span><span class="tag">Stress: ${wlStrTxt(w.str)}</span>${w.red?'<span class="tag warn">Reduced Schedule</span>':''}</div>
  <div class="st">Lesson EXP ×${f.toFixed(2)}${w.mh<20?' · high-pressure activities (Center, events) unavailable':''}${w.ph<20?' · Dance lessons unavailable':''}</div>
- <div class="row wlact">${['rest','rday','check','treat','mental','talk','bond'].map(btn).join('')}<button class="b s ${w.red?'on':''}" ${w.leave?'disabled':''} onclick="wlRedTog(${m.id})">${w.red?'End Reduced Schedule':'Reduced Schedule'}</button></div>
+ <div class="row wlact">${['check','talk','bond'].map(btn).join('')}<button class="b s ${w.red?'on':''}" ${w.leave?'disabled':''} onclick="wlRedTog(${m.id})">${w.red?'End Reduced Schedule':'Reduced Schedule'}</button></div>
  <div class="wl2"><div><h4>Senbatsu record</h4><div class="wlkv">${[['Selected',r.sel],['Center',r.cen],['Front Row',r.front],['Middle Row',r.mid],['Back Row',r.back],['Not Selected',r.none],['Selected in a row',r.cons],['Not selected in a row',r.consNone]].map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('')}</div>
  <div class="st">${r.firstSen?`First Senbatsu: “${esc(r.firstSen.title)}” · `:'No Senbatsu yet · '}${r.firstCen?`First Center: “${esc(r.firstCen.title)}”`:'No Center yet'}${r.lastCen&&r.prev!='center'?` · Last Center: “${esc(r.lastCen.title)}”`:''}</div>
  <ul class="wll">${sl.map(x=>`<li><b>${esc(x.title)}</b> <span class="st">${dayDate(x.day).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</span> <span class="wlpos ${x.pos}">${WL.posN[x.pos]}</span></li>`).join('')||'<li class="st">No Senbatsu announcements yet.</li>'}</ul></div>
@@ -7555,7 +7547,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const L=[...used].map(get).filter(Boolean);if(!L.length){x.st='cancel';x.why='No available performers';thN(`<li>🎭 ${esc(thLabel(x.k))} — no member could perform on ${jd(x.day)}; the performance was cancelled.</li>`);return}
  // energy & quality: existing setlist rules (per-song intensity, MC recovery, low-energy performance factor)
  const rows=new Map(L.map(m=>[m.id,{m,en0:m.en,en:m.en,q:[]}]));thSeq(s).forEach(it=>{if(it.k=='mc'){rows.forEach(r=>{const g=Math.min(CFG.rs.mc,100-r.en);r.en+=g});return}if(it.k!='song')return;const o=S.songs[it.song],R=res[it.id];if(!o||!R)return;const sk=GEN[plG(o.genre)]||['sing','dance'],conc=CONC[plC(o.concept)]||[];
-  R.ids.forEach((id,pi)=>{const r=rows.get(id);if(!r)return;const m=r.m,w=wlOf(m),ef=r.en>=40?1:.55+.45*r.en/40,hf=(w.ph<40?.9:1)*(w.mh<40?.9:1)*(WL.mood[w.mood][1]=='pos'?1.04:WL.mood[w.mood][1]=='neg'?.95:1),suit=conc.includes(m.pers)?1.05:1;r.q.push(avg(sk.map(k=>m[k]))*ef*hf*suit*(pi==0?1.08:1));const c=Math.round((CFG.rs.INT[plG(o.genre)]||6)*(1.25-m.dance/200)*.55);r.en=Math.max(-100,r.en-c)})});
+  R.ids.forEach((id,pi)=>{const r=rows.get(id);if(!r)return;const m=r.m,w=wlOf(m),ef=r.en>=40?1:.55+.45*r.en/40,hf=(w.ph<40?.9:1)*(w.mh<40?.9:1)*(WL.mood[w.mood][1]=='pos'?1.04:WL.mood[w.mood][1]=='neg'?.95:1),suit=conc.includes(m.pers)?1.05:1;r.q.push(avg(sk.map(k=>m[k]))*ef*hf*suit*(pi==0?1.08:1));const c=Math.round((CFG.rs.INT[plG(o.genre)]||6)*(1.25-m.dance/200)*.55);r.en=Math.max(0,r.en-c)})});
  const RW=[...rows.values()],Q=avg(RW.map(r=>r.q.length?avg(r.q):0)),cen=get(res[thSongs(s)[0].id]&&res[thSongs(s)[0].id].c),coord=Math.min(1,.8+.2*Math.min(1,L.length/10))*(notes.some(t=>/replaced/.test(t))?.97:1),sat=cl(Math.round((Q*.85+((cen&&cen.pop)||0)*.15)*coord*1.08+rnd(-4,4)));
  // audience
  const pop=avg(L.map(m=>m.pop)),songPop=avg(thAll(s).map(it=>thSongPop(S.songs[it.song]))),recent=H.pf.filter(p=>p.k==x.k&&p.day>=x.day-28),rs=recent.length?avg(recent.map(p=>p.sat)):55,week=H.pf.filter(p=>p.k==x.k&&p.day>x.day-7).length;
@@ -7565,7 +7557,7 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=typeof thOnlineN=='function'?thOnlineN(subs,sat):Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
  earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);S.money-=cost;S.exp+=cost;S.led.unshift({d:S.day,l:`Theater operating cost: ${thLabel(x.k)}`,a:-cost});S.led.length=Math.min(S.led.length,80);
  const AUD=thAud(x,s,T,L,res,att,online,sat),nf=AUD.nf; // audience: existing fans vs newcomers (Theater update)
- const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(-100,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
+ const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(0,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
   if(Math.random()<.12){const k=pick(['sing','dance','cha','variety']);if(m[k]<100)m[k]++}wlAdj(m,{load:6+Math.round(r.q.length/3),str:sat<40?4:1},'theater performance');if(sat>=80&&Math.random()<.25&&WL.mood[wlOf(m).mood][1]!='neg')wlMood(m,'Happy',3);
   fx.push([m.id,m.pop-p0,m.fans-f0,m.buzz-b0,r.en0-m.en,m.status=='trainee'&&out.size&&Object.values(sub).includes(m.id)?1:0])});
  thAudApply(x,AUD);
@@ -12966,7 +12958,7 @@ const ccSongIt=set=>set.items.filter(i=>i.k=='song');
 function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(!set)return p.res={err:1};const items=set.items,songs=ccSongIt(set);
  // performers: members of at least one song of this setlist; Energy 20 each, never below the limit
  const need=new Set();songs.forEach(it=>ccPerf(it).forEach(id=>need.add(id)));const out={},ok=new Set();need.forEach(id=>{const m=get(id);if(!m||m.status=='graduated')out[id]='Left the group';else if(wlAway(m))out[id]='On leave';else ok.add(id)});
- const en={};ok.forEach(id=>{const m=get(id);en[id]=m.en;m.en=Math.max(-100,m.en-20)});
+ const en={};ok.forEach(id=>{const m=get(id);en[id]=m.en;m.en=Math.max(0,m.en-20)});
  try{wlWork([...ok],{load:6,str:1},'concert performance')}catch(e){}
  // per-member counts and efficiency
  const MR={};const mr=id=>MR[id]=MR[id]||{songs:0,center:0,front:0,middle:0,back:0,mc:0,en:ok.has(id)?20:0,eff:[],sc:0};C.parts.forEach(id=>mr(id));
@@ -14316,7 +14308,7 @@ function xeRun(r){if(!r||r.status!='accepted')return;const X=xeS(),org=X.orgs[r.
  mem.forEach(z=>{const m=get(z.id);if(!m)return;const p0=m.pop,f0=m.fans,ps0=m.pas;const share=Math.round(G*z.vis*Math.pow(Math.max(1,z.sc),2)/wsum);if(share>0){m.fans+=share}
   const d=fbRound(Math.max(0,Math.log10(1+reach)/2.2*z.vis*Math.max(0,q)*(z.sc/70)));if(d>0)gainPop(m,d);else{m.buzz=cl(m.buzz+(q>0?1:0));m.pop=popOf(m)}
   if(z.sc>=70&&(m.en|0)>=30&&Math.random()<.5)m.pas=cl(m.pas+1);if(z.note||(m.en|0)<20)m.pas=cl(m.pas-1);if((r.cat=='media'||r.cat=='special')&&q>.5&&Math.random()<.25&&m.variety<100)m.variety++;
-  const en=r.acts.reduce((a,k)=>a+(XE_EN[k]?XE_EN[k](r):6),0)+((r.et-r.st)>=480?10:0);const e0=m.en|0;m.en=Math.max(-100,e0-en);try{wlWork([m.id],{load:Math.round(en/2),str:q<0?3:1,mh:q>.6?1:0},'external event')}catch(e){}
+  const en=r.acts.reduce((a,k)=>a+(XE_EN[k]?XE_EN[k](r):6),0)+((r.et-r.st)>=480?10:0);const e0=m.en|0;m.en=Math.max(0,e0-en);try{wlWork([m.id],{load:Math.round(en/2),str:q<0?3:1,mh:q>.6?1:0},'external event')}catch(e){}
   try{fbExp(m.id,+(z.vis*Math.max(0,q)*.6).toFixed(2))}catch(e){}Object.assign(z,{dPop:m.pop-p0,fans:m.fans-f0,en:e0-m.en,pas:m.pas-ps0})});
  if(g=='Excellent'||g=='Great'){try{fbBoost(s=>ids.has(s.k),1,1);fbApply()}catch(e){}}
  // finance (once)
@@ -17453,7 +17445,7 @@ function rwRun(y){const Y=rwS().years[y];if(!Y||!Y.line||Y.res)return;const I=S.
  Y.res={acts:ord,R:+R.toFixed(2),W:+W.toFixed(2),jr,jw:11-jr,aud,ar,aw:aud-ar,hall,hr:hall*2>3000,pts,win:pts.red>pts.white?'red':'white',day:S.day};rwEffects(Y);rwResNews(Y)}
 function rwEffects(Y){const I=S.ind,me=Y.res.acts.find(a=>a.gid!=null);
  Y.res.acts.filter(a=>a.gid==null).forEach(a=>{const x=I.A[a.id];if(x){x.fans=Math.round(x.fans*(1.01+a.sc/5000));x.mom=Math.min(15,(x.mom||0)+.8)}});
- if(me){const win=Y.res.win=='red',d=me.sc>=75?3:me.sc>=60?2:1.2;const en=15+(RW_STY[me.sty]||RW_STY.std)[3];me.mem.forEach(id=>{const m=get(id);if(!m)return;gainPop(m,d+(id==me.cen?1:0));m.en=Math.max(-100,(m.en|0)-en);hev(m,{t:'rw',yr:Y.y,song:me.song,cen:id==me.cen?1:0,win:win?1:0})});
+ if(me){const win=Y.res.win=='red',d=me.sc>=75?3:me.sc>=60?2:1.2;const en=15+(RW_STY[me.sty]||RW_STY.std)[3];me.mem.forEach(id=>{const m=get(id);if(!m)return;gainPop(m,d+(id==me.cen?1:0));m.en=Math.max(0,(m.en|0)-en);hev(m,{t:'rw',yr:Y.y,song:me.song,cen:id==me.cen?1:0,win:win?1:0})});
   const n=Math.round(Math.min(90000,4000+(S.fans|0)*.01*(me.sc/60)));try{gsWith(me.gid,()=>fbAcquire(n,{via:'group',org:`${RW_NAME} ${Y.y}`}))}catch(e){}Y.res.fans=n;
   try{gsWith(me.gid,()=>{const e=(S.cal||[]).find(x=>x.id==Y.inv.ev);if(e){e.done=true;e.result={sc:me.sc}}})}catch(e){}
   // the song gets more chart interest
@@ -18016,7 +18008,8 @@ const f10Weak=m=>{try{const w=wlOf(m);return!!m&&!w.leave&&w.ph<F10_HP}catch(e){
 {const f=thWhy;thWhy=function(m,x){const r=f.apply(this,arguments);if(r||!m||!x)return r;try{if(x.day<=S.day+1&&f10Weak(m))return`Health too low (Physical Health ${Math.round(wlOf(m).ph)})`}catch(e){}return r}}
 {const f=xmIds;xmIds=function(){const L=f.apply(this,arguments)||[];return L.filter(id=>!f10Weak(get(id)))}}
 {const f=xeCheck;xeCheck=function(r,ids){const E=f.apply(this,arguments)||[];try{if(r&&r.day<=S.day+3){const L=(ids||r.sel||(r.req||[]).map(q=>q.mid)||[]).map(get).filter(f10Weak);L.forEach(m=>E.push(`${m.name}: health too low (Physical Health ${Math.round(wlOf(m).ph)}). Let her recover first.`))}}catch(e){}return E}}
-function f10Care(){const N=[];S.members.forEach(m=>{if(m.status=='graduated')return;let w;try{w=wlOf(m)}catch(e){return}if(w.leave)return;
+function f10Care(){return; // replaced by Automatic Member Care (member-care.js)
+ const N=[];S.members.forEach(m=>{if(m.status=='graduated')return;let w;try{w=wlOf(m)}catch(e){return}if(w.leave)return;
  if(w.ph<F10_RED&&!w.red){w.red=true;w.redAuto=1;wlLog(m,{t:'care',txt:'Reduced Schedule started automatically (low Physical Health).'});N.push(`🩺 <b>${esc(m.name)}</b> — Physical Health ${Math.round(w.ph)}: automatic Reduced Schedule.`)}
  if(w.ph<F10_HP&&w.off!=S.day&&S.day-(w.autoRd||-99)>=3){w.autoRd=S.day;m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3},'automatic care');wlLog(m,{t:'care',txt:'Automatic Recovery Day (Physical Health below 25).'});N.push(`🛌 <b>${esc(m.name)}</b> takes an automatic Recovery Day and stays off stage until she recovers.`)}
  if(w.redAuto&&w.red&&w.ph>=F10_OK){w.red=false;w.redAuto=0;wlLog(m,{t:'care',txt:'Automatic Reduced Schedule ended (recovered).'})}});
@@ -21123,7 +21116,7 @@ function drStep(p){if(p.status=='cancelled'||p.status=='done'||p.status=='plan')
  if(p.hold){if(p.hold=='filming'&&!drPay(p,.5,'filming'))return;if(p.hold=='post-production'&&!drPay(p,.2,'post-production'))return;if(p.hold=='release'){if(!drRelease(p))return}}
  const days={pre:p.dd.pre,film:p.dd.film,post:p.dd.post}[p.status];
  if(days){let f=1;const L=drLeads(p).map(get);if(p.status=='film'){const away=L.filter(m=>!(typeof xeOk=='function'?xeOk(m):isAct(m||{}))).length;if(away)f=away>=L.length?.2:.55;
-   (p.cast||[]).forEach(c=>{const m=get(c.mid);if(!m||!isAct(m))return;const lead=c.role=='lead'||c.role=='second';m.en=Math.max(-100,(+m.en||0)-(lead?7:3));if(lead&&S.day%3==0&&typeof wlAdj=='function')wlAdj(m,{load:2},'Drama filming')})}
+   (p.cast||[]).forEach(c=>{const m=get(c.mid);if(!m||!isAct(m))return;const lead=c.role=='lead'||c.role=='second';m.en=Math.max(0,(+m.en||0)-(lead?7:3));if(lead&&S.day%3==0&&typeof wlAdj=='function')wlAdj(m,{load:2},'Drama filming')})}
   p.pg=Math.min(1,p.pg+f/days);const late=Math.round((1-p.pg)*days/Math.max(.2,f));p.eta=Math.max(p.eta,S.day+late+(p.status=='pre'?p.dd.film+p.dd.post:p.status=='film'?p.dd.post:0));
   if(p.pg>=1){const nx={pre:'film',film:'post',post:'ready'}[p.status];p.status=nx;p.pg=0;p.stDay=S.day;p.log.push({d:S.day,t:DR_STG[nx]+' started'});
    if(nx=='film')drPay(p,.5,'filming');if(nx=='post')drPay(p,.2,'post-production');if(nx=='ready'){p.eta=S.day;p.log.push({d:S.day,t:'Ready to release'});toast(drT(`“${p.title}” is ready to release!`,`“${p.title}” พร้อมออกฉายแล้ว!`))}}}
@@ -21911,34 +21904,6 @@ function pczCopyGo(){const c=ui.pcp;if(!c||!c.sel.length)return;let n=0;c.sel.fo
 if(typeof plProfExtra=='function'){const f=plProfExtra;plProfExtra=function(m){const h=f.apply(this,arguments);try{if(pczOn(m)){const a=ap(m);return`<div class="c plprofcz"><h3>${PCZ_T('Profile outfit','ชุดในโปรไฟล์')}</h3><div class="row"><svg viewBox="10 -2 80 200" class="plpcz">${fig(m,{pose:2,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:m.profOwn.p})}</svg><div><b>${PCZ_T('Your costume (kept on the profile)','ชุดที่คุณเลือก (ล็อกไว้ในโปรไฟล์)')}</b><div class="st">${PCZ_T('Saved','บันทึก')} ${jd(m.profOwn.day)}</div><button class="b s" onclick="ui.mod=null;ui.cm=${m.id};ui.draft=null;ui.apCat='outfit';goView('creator')">${PCZ_T('Change in Character Creator','เปลี่ยนในหน้าปรับรูปลักษณ์')}</button></div></div></div>`+h.replace('<h3>Profile outfit</h3>',`<h3>${PCZ_T('Latest Single Costume','ชุดซิงเกิลล่าสุด')}</h3>`)}}catch(e){console.error(e)}return h}}
 // the Character Creator preview shows the costume the profile really wears while "Use as profile outfit" is on
 {const f=apPrevHtml;apPrevHtml=function(){try{const m=get(ui.cm);if(m&&ui.draft&&pczOn(m)){const pm={...apPM({})};delete pm._x;const a=pm.ap;return`<div class="approw">${pt(pm,0)}<div class="apfull"><svg class="chf" viewBox="10 -2 80 200" xmlns="http://www.w3.org/2000/svg">${fig(pm,{pose:0,of:a.of,oh:a.oh,ac:a.ac,ex:2,cd:m.profOwn.p})}</svg></div></div>`}}catch(e){console.error(e)}return f.apply(this,arguments)}}
-
-</script>
-<script>
-// =====================================================================================
-//  Automatic Medical Treatment
-//  Members › Idol Roster: a company-wide switch — every day (after Next day), members whose Physical Health is below the
-//  chosen level receive the existing Medical Treatment (same price, effect and 7-day interval as the button in the
-//  profile), as long as the company keeps the chosen money reserve. Each member's profile (Wellness & Emotions) can
-//  follow the company setting, always use it or never use it.  S.autoCare = {on, th, keep};  m.wel.atr = 'on'|'off'.
-// =====================================================================================
-const ATR_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
-// on by default for every member (a save where the player never touched the switch is switched on too)
-const atrS=()=>{if(!S.autoCare||typeof S.autoCare!='object')S.autoCare={on:true,th:40,keep:1000000,set:1};if(!S.autoCare.set){S.autoCare.on=true;S.autoCare.set=1}return S.autoCare};
-const atrOn=m=>{const w=wlOf(m),o=w.atr;return o=='on'?true:o=='off'?false:!!atrS().on};
-function atrRun(){if(!S||!S.members)return;const C=atrS(),A=WLA.treat,done=[];
- S.members.filter(m=>m.status!='graduated').sort((a,b)=>wlOf(a).ph-wlOf(b).ph).forEach(m=>{try{if(!atrOn(m))return;const w=wlOf(m);if(w.ph>=C.th)return;if(wlCan(m,'treat'))return;if(S.money-A.c<(+C.keep||0))return;
-  const p0=Math.round(w.ph);if(!spend(A.c,`${A.n} (automatic): ${m.name}`))return;w.cd.treat=S.day;wlAdj(m,{ph:12,load:-15});wlLog(m,{t:'care',txt:'Medical Treatment — automatic (Physical Health +12).'});done.push(`${esc(m.name)} ${p0}→${Math.round(w.ph)}`)}catch(e){console.error(e)}});
- if(done.length)try{wlN(`<li>🩺 ${ATR_T('Automatic Medical Treatment','รักษาพยาบาลอัตโนมัติ')} (${yen(done.length*A.c)}): ${done.join(' · ')}</li>`)}catch(e){}}
-{const f=tick;tick=function(){const r=f.apply(this,arguments);try{atrRun()}catch(e){console.error(e)}return r}}
-function atrSet(k,v){const C=atrS();C.set=1;if(k=='on')C.on=!!v;else if(k=='th')C.th=Math.max(10,Math.min(90,+v||40));else if(k=='keep')C.keep=Math.max(0,+v||0);render()}
-function atrMem(id,v){const m=get(id);if(!m)return;const w=wlOf(m);if(v)w.atr=v;else delete w.atr;render()}
-function atrCard(){const C=atrS(),A=WLA.treat,low=S.members.filter(m=>m.status!='graduated'&&wlOf(m).ph<C.th).length;
- return`<div class="c atrc"><div class="row"><b>${ATR_T('Automatic Medical Treatment','รักษาพยาบาลอัตโนมัติ')}</b><label class="pczlk"><input type="checkbox" ${C.on?'checked':''} onchange="atrSet('on',this.checked)"> ${C.on?ATR_T('On','เปิด'):ATR_T('Off','ปิด')}</label>
- <label class="st">${ATR_T('When Physical Health is below','เมื่อ Physical Health ต่ำกว่า')} <select onchange="atrSet('th',this.value)">${[30,40,50,60,70].map(v=>`<option ${C.th==v?'selected':''}>${v}</option>`).join('')}</select></label>
- <label class="st">${ATR_T('Keep at least','เหลือเงินอย่างน้อย')} <select onchange="atrSet('keep',this.value)">${[0,500000,1000000,5000000,20000000].map(v=>`<option value="${v}" ${+C.keep==v?'selected':''}>${yen(v)}</option>`).join('')}</select></label></div>
- <p class="st">${ATR_T(`After each Next day, members below the level get Medical Treatment (${yen(A.c)}, Physical Health +12, once every 7 days). Now below ${C.th}: ${low} member(s). Each member's profile can override this (Wellness & Emotions).`,`หลังกด Next day เมมเบอร์ที่ Physical Health ต่ำกว่าค่าที่ตั้งจะได้รับการรักษา (${yen(A.c)} · Physical Health +12 · ทุก 7 วัน) ตอนนี้ต่ำกว่า ${C.th}: ${low} คน ตั้งรายคนได้ในโปรไฟล์ (Wellness & Emotions)`)}</p></div>`}
-{const f=V.members;V.members=function(){const h=f.apply(this,arguments);try{const i=h.indexOf('<div class="g');return i>=0?h.slice(0,i)+atrCard()+h.slice(i):atrCard()+h}catch(e){console.error(e);return h}}}
-{const f=wlProfHtml;wlProfHtml=function(m){let h=f.apply(this,arguments);try{const w=wlOf(m),o=w.atr||'';h=h.replace('<div class="wl2">',`<div class="row atrm"><label class="st">${ATR_T('Automatic Medical Treatment','รักษาพยาบาลอัตโนมัติ')} <select onchange="atrMem(${m.id},this.value)"><option value="" ${!o?'selected':''}>${ATR_T('Follow company setting','ตามการตั้งค่าของค่าย')} (${atrS().on?ATR_T('on','เปิด'):ATR_T('off','ปิด')})</option><option value="on" ${o=='on'?'selected':''}>${ATR_T('Always for her','เปิดสำหรับเธอ')}</option><option value="off" ${o=='off'?'selected':''}>${ATR_T('Never for her','ปิดสำหรับเธอ')}</option></select></label><span class="st">${ATR_T('below Physical Health','เมื่อ Physical Health ต่ำกว่า')} ${atrS().th}</span></div><div class="wl2">`)}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -24104,6 +24069,68 @@ const HX_RIDG=new Map();function hxRidGid(rid){if(rid==null)return null;if(HX_RI
 if(typeof apEff=='function'){const f=apEff;apEff=function(m){const a=f.apply(this,arguments);try{const A=typeof HX_AT!='undefined'?HX_AT:null;if(!A||!m||m._x||A.day==null)return a;const own=typeof gsGid=='function'?gsGid(m):m.group,cur=typeof gsAg=='function'?gsAg():null;if(own==null||own==cur)return a;
   const L=[...(m.czHist||[]),...(m.profCz?[m.profCz]:[])].filter(z=>z&&z.p&&(z.day??0)<=A.day);if(A.rid!=null&&L.some(z=>z.rid==A.rid))return a;
   const mine=L.filter(z=>z.rid==null?z.kind!='single':hxRidGid(z.rid)==own).sort((p,q)=>(q.day??0)-(p.day??0))[0];if(mine)return{...a,cd:mine.p}}catch(e){}return a}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Automatic Member Care (the only recovery system)
+// -------------------------------------------------------------------------------------
+//  Replaces every earlier recovery mechanic (base +15 Energy a day, the slow Physical / Mental drift recovery and leave
+//  recovery of wellness.js, Rest / Recovery Day / Medical Treatment / Mental Recovery buttons, the automatic Reduced
+//  Schedule / Recovery Day of fix10.js and the old Automatic Medical Treatment of auto-treat.js).
+//  The three stats stay as they are (Energy m.en, Mental Health m.wel.mh, Physical Health m.wel.ph, all 0–100) with all
+//  their consequences (leave at 0, injuries, performance, training…).
+//  · Daily natural recovery (always, whatever the setting or the company's money): Energy +30, Mental +2, Physical +1.
+//  · Automatic Member Care (one company-wide switch, ON by default): at the end of each day (before that day's natural
+//    recovery, so a member worn out by the day's work is caught), every member of every
+//    group (members, Under members, Trainees, every team and sister group) with a stat BELOW 20 gets the matching treatment:
+//      Energy +40 (¥5,000) · Mental Health +30 (¥15,000) · Physical Health +30 (¥25,000) — each stat checked and charged
+//    separately, at most once per stat per day. A treatment the company cannot afford is skipped (the balance never goes
+//    negative) and retried the next day.
+//  · One run per in-game day (S.care.last), so the daily update can never apply twice.
+// =====================================================================================
+const MC_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+const MC={nat:{en:30,mh:2,ph:1},th:20,amt:{en:40,mh:30,ph:30},cost:{en:5000,mh:15000,ph:25000},
+ n:{en:['Energy','พลังงาน'],mh:['Mental Health','สุขภาพจิต'],ph:['Physical Health','สุขภาพกาย']}};
+const MC_K=['en','mh','ph'];
+const mcCl=v=>Math.max(0,Math.min(100,Number.isFinite(+v)?+v:0));
+function mcS(){if(!S.care||typeof S.care!='object'){const old=S.autoCare;S.care={on:old&&old.set&&old.on===false?false:true,last:-1,spent:0,cnt:{en:0,mh:0,ph:0},log:[]}}
+ const C=S.care;C.cnt=C.cnt||{en:0,mh:0,ph:0};C.log=Array.isArray(C.log)?C.log:[];C.spent=+C.spent||0;if(C.on==null)C.on=true;return C}
+const mcEligible=()=>(S.members||[]).filter(m=>m&&m.status!='graduated');
+const mcGet=(m,k)=>k=='en'?(+m.en||0):(+wlOf(m)[k]||0);
+function mcSet(m,k,v){v=mcCl(v);if(k=='en')m.en=Math.round(v);else wlOf(m)[k]=v}
+// one daily cycle: natural recovery for everyone, then paid treatment below the threshold (when ON)
+function mcDaily(){if(!S||!S.members)return;const C=mcS();if(C.last===S.day)return;C.last=S.day;const L=mcEligible();
+const natural=()=>L.forEach(m=>{try{MC_K.forEach(k=>mcSet(m,k,mcGet(m,k)+MC.nat[k]))}catch(e){console.error(e)}});
+ // the day's activities are over: first the members below the threshold are treated (when ON), then everyone recovers naturally
+ if(!C.on){natural();return}try{if(typeof moneyOk=='function')moneyOk()}catch(e){}
+ const day={d:S.day,t:[],cost:0,skip:0};
+ // the lowest first, so the most urgent are treated when money is short
+ const need=[];L.forEach(m=>MC_K.forEach(k=>{const v=mcGet(m,k);if(v<MC.th)need.push([m,k,v])}));need.sort((a,b)=>a[2]-b[2]);
+ need.forEach(([m,k,v])=>{const c=MC.cost[k];if(!(S.money>=c)){day.skip++;return}S.money-=c;S.exp=(+S.exp||0)+c;S.mOk=S.money;mcSet(m,k,v+MC.amt[k]);
+  C.cnt[k]++;C.spent+=c;day.cost+=c;day.t.push([m.id,k,Math.round(v),Math.round(mcGet(m,k))]);try{wlLog(m,{t:'care',txt:`Automatic Member Care: ${MC.n[k][0]} ${Math.round(v)} → ${Math.round(mcGet(m,k))} (${yen(c)}).`})}catch(e){}});
+ if(day.t.length){const by=MC_K.map(k=>[k,day.t.filter(z=>z[1]==k).length]).filter(z=>z[1]);
+  S.led.unshift({d:S.day,l:`Automatic Member Care: ${by.map(([k,n])=>`${n}× ${MC.n[k][0]}`).join(', ')}`,a:-day.cost});S.led.length=Math.min(S.led.length,80);
+  try{wlN(`<li>🩺 ${MC_T('Automatic Member Care','ดูแลเมมเบอร์อัตโนมัติ')} (${yen(day.cost)}): ${day.t.slice(0,12).map(([id,k,a,b])=>`${esc((get(id)||{}).name||'')} ${MC_T(MC.n[k][0],MC.n[k][1])} ${a}→${b}`).join(' · ')}${day.t.length>12?' …':''}</li>`)}catch(e){}}
+ if(day.skip)try{wlN(`<li>⚠ ${MC_T(`Automatic Member Care: ${day.skip} treatment(s) skipped — not enough money. They are retried tomorrow.`,`ดูแลเมมเบอร์อัตโนมัติ: ข้าม ${day.skip} รายการเพราะเงินไม่พอ จะลองใหม่พรุ่งนี้`)}</li>`)}catch(e){}
+ if(day.t.length||day.skip){C.log.unshift(day);if(C.log.length>120)C.log.length=120}
+ natural()}
+// the daily update: after every other daily process of the day (activities have used their Energy by then)
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{mcDaily()}catch(e){console.error('member care',e)}return r}}
+// 0–100 everywhere, once at load (older saves could hold negative Energy)
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{mcS();delete S.autoCare;(S.members||[]).forEach(m=>{try{m.en=Math.round(mcCl(m.en));const w=wlOf(m);w.ph=mcCl(w.ph);w.mh=mcCl(w.mh);delete w.atr;if(w.redAuto){w.red=false;w.redAuto=0}}catch(e){}})}catch(e){console.error(e)}return r}}
+function mcToggle(on){const C=mcS();C.on=!!on;toast(on?MC_T('Automatic Member Care is ON for the whole company.','เปิดการดูแลเมมเบอร์อัตโนมัติทั้งค่ายแล้ว'):MC_T('Automatic Member Care is OFF. Daily natural recovery continues.','ปิดการดูแลเมมเบอร์อัตโนมัติแล้ว การฟื้นตัวตามธรรมชาติรายวันยังทำงาน'));render()}
+// ---- UI: one page (Members › Automatic Member Care) -------------------------------------------------------------------------------
+V.care=function(){const C=mcS(),L=mcEligible(),low=k=>L.filter(m=>mcGet(m,k)<MC.th).length,n=k=>MC_T(...MC.n[k]);
+ const row=k=>`<tr><td><b>${n(k)}</b></td><td>+${MC.nat[k]} / ${MC_T('day','วัน')}</td><td>&lt; ${MC.th}</td><td>+${MC.amt[k]}</td><td>${yen(MC.cost[k])}</td><td>${C.cnt[k]}</td><td>${low(k)}</td></tr>`;
+ return`<div class="c mcc"><div class="row"><h3 style="margin:0">🩺 ${MC_T('Automatic Member Care','ดูแลเมมเบอร์อัตโนมัติ')}</h3><span style="flex:1"></span><button class="b s ${C.on?'p':''}" onclick="mcToggle(1)">${MC_T('ON','เปิด')}</button><button class="b s ${C.on?'':'p'}" onclick="mcToggle(0)">${MC_T('OFF','ปิด')}</button></div>
+ <p class="st">${MC_T(`One setting for the whole company: every member, Under member and Trainee of every team and sister group (${L.length} now). Natural recovery happens every day whether it is ON or OFF. When ON, a member whose stat is below ${MC.th} at the end of the day is treated automatically and the cost is paid from company funds (never below ¥0 — an unaffordable treatment waits for the next day).`,`ตั้งค่าเดียวทั้งค่าย: เมมเบอร์ อันเดอร์ และเด็กฝึกทุกทีมทุกวง (ตอนนี้ ${L.length} คน) การฟื้นตัวตามธรรมชาติเกิดทุกวันทั้งตอนเปิดและปิด เมื่อเปิด เมมเบอร์ที่ค่าต่ำกว่า ${MC.th} ตอนจบวันจะได้รับการรักษาอัตโนมัติ จ่ายจากเงินบริษัท (ไม่ติดลบ — ถ้าเงินไม่พอจะรอวันถัดไป)`)}</p>
+ <div class="tw"><table class="mct"><tr><th>${MC_T('Stat','ค่า')}</th><th>${MC_T('Natural recovery','ฟื้นตัวตามธรรมชาติ')}</th><th>${MC_T('Treated when','รักษาเมื่อ')}</th><th>${MC_T('Treatment','การรักษา')}</th><th>${MC_T('Cost / member','ค่ารักษา/คน')}</th><th>${MC_T('Treatments','ครั้งที่รักษา')}</th><th>${MC_T('Below now','ต่ำกว่าตอนนี้')}</th></tr>${MC_K.map(row).join('')}</table></div>
+ <div class="fbkv">${[[MC_T('Status','สถานะ'),C.on?MC_T('ON','เปิด'):MC_T('OFF','ปิด')],[MC_T('Total spent','ค่าใช้จ่ายรวม'),yen(C.spent)],[MC_T('Treatments','จำนวนการรักษา'),C.cnt.en+C.cnt.mh+C.cnt.ph]].map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('')}</div></div>
+ <div class="c"><h3>${MC_T('Treatment history','ประวัติการรักษา')}</h3>${C.log.length?`<ul class="ms mclog">${C.log.slice(0,40).map(d=>`<li><b>${jd(d.d)}</b> · ${yen(d.cost)}${d.skip?` · <span class="thwarn">${MC_T(`${d.skip} skipped (money)`,`ข้าม ${d.skip} (เงินไม่พอ)`)}</span>`:''}<div class="st">${d.t.map(([id,k,a,b])=>`${esc((get(id)||(S.alumni||[]).find(x=>x.id==id)||{}).name||'#'+id)} ${n(k)} ${a}→${b}`).join(' · ')||'—'}</div></li>`).join('')}</ul>`:`<p class="st">${MC_T('No automatic treatment yet.','ยังไม่มีการรักษาอัตโนมัติ')}</p>`}</div>`};
+(function(){try{const M=SECS.find(s=>s.k=='members');if(M&&!M.v.some(x=>x[0]=='care'))M.v.push(['care','Automatic Member Care']);if(typeof SC_VIEW!='undefined')SC_VIEW.care=SC_VIEW.care||'office';if(typeof SUBLOC!='undefined')SUBLOC.care='Medical Office · Automatic Member Care'}catch(e){console.error(e)}})();
+// the member profile points to it (the old per-member recovery buttons are gone)
+if(typeof wlProfHtml=='function'){const f=wlProfHtml;wlProfHtml=function(m){let h=f.apply(this,arguments);try{h=h.replace('<div class="row wlact">',`<p class="st">🩺 ${MC_T(`Recovery: Energy +${MC.nat.en}, Mental +${MC.nat.mh}, Physical +${MC.nat.ph} every day; Automatic Member Care (${mcS().on?'ON':'OFF'}) treats any stat below ${MC.th}.`,`การฟื้นตัว: พลังงาน +${MC.nat.en} สุขภาพจิต +${MC.nat.mh} สุขภาพกาย +${MC.nat.ph} ทุกวัน · ดูแลเมมเบอร์อัตโนมัติ (${mcS().on?'เปิด':'ปิด'}) รักษาเมื่อค่าใดต่ำกว่า ${MC.th}`)} <button class="b s" onclick="goView('care')">${MC_T('Open','เปิด')}</button></p><div class="row wlact">`)}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -27033,6 +27060,7 @@ Object.assign(I18N_TH,{"Lai Kanok (Thai)":"ลายกนก (ไทย)",
 "＋ Save this color":"＋ บันทึกสีนี้",
 "No saved colors yet.":"ยังไม่มีสีที่บันทึกไว้",
 "Eyelash color…":"สีขนตา…",
+"Automatic Member Care":"ดูแลเมมเบอร์อัตโนมัติ",
 "Resting expression":"สีหน้าปกติ",
 "Her everyday face (open or closed eyes). Event expressions still change it for the moment.":"สีหน้าประจำวันของเธอ (ลืมตาหรือหลับตา) สีหน้าตามเหตุการณ์ยังเปลี่ยนได้ชั่วคราว",
 "Gentle smile":"ยิ้มอ่อน ๆ",

@@ -107,7 +107,8 @@ const f10Weak=m=>{try{const w=wlOf(m);return!!m&&!w.leave&&w.ph<F10_HP}catch(e){
 {const f=thWhy;thWhy=function(m,x){const r=f.apply(this,arguments);if(r||!m||!x)return r;try{if(x.day<=S.day+1&&f10Weak(m))return`Health too low (Physical Health ${Math.round(wlOf(m).ph)})`}catch(e){}return r}}
 {const f=xmIds;xmIds=function(){const L=f.apply(this,arguments)||[];return L.filter(id=>!f10Weak(get(id)))}}
 {const f=xeCheck;xeCheck=function(r,ids){const E=f.apply(this,arguments)||[];try{if(r&&r.day<=S.day+3){const L=(ids||r.sel||(r.req||[]).map(q=>q.mid)||[]).map(get).filter(f10Weak);L.forEach(m=>E.push(`${m.name}: health too low (Physical Health ${Math.round(wlOf(m).ph)}). Let her recover first.`))}}catch(e){}return E}}
-function f10Care(){const N=[];S.members.forEach(m=>{if(m.status=='graduated')return;let w;try{w=wlOf(m)}catch(e){return}if(w.leave)return;
+function f10Care(){return; // replaced by Automatic Member Care (member-care.js)
+ const N=[];S.members.forEach(m=>{if(m.status=='graduated')return;let w;try{w=wlOf(m)}catch(e){return}if(w.leave)return;
  if(w.ph<F10_RED&&!w.red){w.red=true;w.redAuto=1;wlLog(m,{t:'care',txt:'Reduced Schedule started automatically (low Physical Health).'});N.push(`🩺 <b>${esc(m.name)}</b> — Physical Health ${Math.round(w.ph)}: automatic Reduced Schedule.`)}
  if(w.ph<F10_HP&&w.off!=S.day&&S.day-(w.autoRd||-99)>=3){w.autoRd=S.day;m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3},'automatic care');wlLog(m,{t:'care',txt:'Automatic Recovery Day (Physical Health below 25).'});N.push(`🛌 <b>${esc(m.name)}</b> takes an automatic Recovery Day and stays off stage until she recovers.`)}
  if(w.redAuto&&w.red&&w.ph>=F10_OK){w.red=false;w.redAuto=0;wlLog(m,{t:'care',txt:'Automatic Reduced Schedule ended (recovered).'})}});

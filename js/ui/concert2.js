@@ -109,7 +109,7 @@ const ccSongIt=set=>set.items.filter(i=>i.k=='song');
 function ccPerform(C,p){const set=ccSetOf(C,p),V=ccV(C.vid),day=ccPfDay(C,p);if(!set)return p.res={err:1};const items=set.items,songs=ccSongIt(set);
  // performers: members of at least one song of this setlist; Energy 20 each, never below the limit
  const need=new Set();songs.forEach(it=>ccPerf(it).forEach(id=>need.add(id)));const out={},ok=new Set();need.forEach(id=>{const m=get(id);if(!m||m.status=='graduated')out[id]='Left the group';else if(wlAway(m))out[id]='On leave';else ok.add(id)});
- const en={};ok.forEach(id=>{const m=get(id);en[id]=m.en;m.en=Math.max(-100,m.en-20)});
+ const en={};ok.forEach(id=>{const m=get(id);en[id]=m.en;m.en=Math.max(0,m.en-20)});
  try{wlWork([...ok],{load:6,str:1},'concert performance')}catch(e){}
  // per-member counts and efficiency
  const MR={};const mr=id=>MR[id]=MR[id]||{songs:0,center:0,front:0,middle:0,back:0,mc:0,en:ok.has(id)?20:0,eff:[],sc:0};C.parts.forEach(id=>mr(id));

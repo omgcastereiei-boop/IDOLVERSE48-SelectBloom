@@ -84,7 +84,7 @@ function drStep(p){if(p.status=='cancelled'||p.status=='done'||p.status=='plan')
  if(p.hold){if(p.hold=='filming'&&!drPay(p,.5,'filming'))return;if(p.hold=='post-production'&&!drPay(p,.2,'post-production'))return;if(p.hold=='release'){if(!drRelease(p))return}}
  const days={pre:p.dd.pre,film:p.dd.film,post:p.dd.post}[p.status];
  if(days){let f=1;const L=drLeads(p).map(get);if(p.status=='film'){const away=L.filter(m=>!(typeof xeOk=='function'?xeOk(m):isAct(m||{}))).length;if(away)f=away>=L.length?.2:.55;
-   (p.cast||[]).forEach(c=>{const m=get(c.mid);if(!m||!isAct(m))return;const lead=c.role=='lead'||c.role=='second';m.en=Math.max(-100,(+m.en||0)-(lead?7:3));if(lead&&S.day%3==0&&typeof wlAdj=='function')wlAdj(m,{load:2},'Drama filming')})}
+   (p.cast||[]).forEach(c=>{const m=get(c.mid);if(!m||!isAct(m))return;const lead=c.role=='lead'||c.role=='second';m.en=Math.max(0,(+m.en||0)-(lead?7:3));if(lead&&S.day%3==0&&typeof wlAdj=='function')wlAdj(m,{load:2},'Drama filming')})}
   p.pg=Math.min(1,p.pg+f/days);const late=Math.round((1-p.pg)*days/Math.max(.2,f));p.eta=Math.max(p.eta,S.day+late+(p.status=='pre'?p.dd.film+p.dd.post:p.status=='film'?p.dd.post:0));
   if(p.pg>=1){const nx={pre:'film',film:'post',post:'ready'}[p.status];p.status=nx;p.pg=0;p.stDay=S.day;p.log.push({d:S.day,t:DR_STG[nx]+' started'});
    if(nx=='film')drPay(p,.5,'filming');if(nx=='post')drPay(p,.2,'post-production');if(nx=='ready'){p.eta=S.day;p.log.push({d:S.day,t:'Ready to release'});toast(drT(`“${p.title}” is ready to release!`,`“${p.title}” พร้อมออกฉายแล้ว!`))}}}

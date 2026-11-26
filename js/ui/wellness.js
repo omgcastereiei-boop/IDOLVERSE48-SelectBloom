@@ -56,13 +56,13 @@ function wlStrip(){const A=new Set(S.members.filter(wlAway).map(m=>m.id));if(!A.
 
 // ---- daily condition ------------------------------------------------------------------------------
 function wlDay(m){const w=wlOf(m);
- if(w.leave){w.ph=cl(w.ph+.6);w.mh=cl(w.mh+.6);w.load=Math.max(0,w.load-10);w.str=Math.max(0,w.str-5);if(w.mood!='Neutral'&&S.day>=(w.moodTil||0))wlMood(m,'Neutral');
+ if(w.leave){w.load=Math.max(0,w.load-10);w.str=Math.max(0,w.str-5);if(w.mood!='Neutral'&&S.day>=(w.moodTil||0))wlMood(m,'Neutral');
   if(S.day==w.leave.ret-7)toast(`${m.name} returns from leave in 7 days.`);if(S.day>=w.leave.ret)wlLeaveEnd(m);return}
  const R=w.red?1.5:1;w.load=Math.max(0,w.load-6*R);w.str=Math.max(0,w.str-4*R-(WL.mood[w.mood][1]=='pos'?1:0));if(m.en<20)w.str=cl(w.str+1.5);
- let dp=0,dm=0;if(w.load>70)dp-=(w.load-70)*.04;if(m.en<10)dp-=.25;if(dp==0&&w.load<35&&m.en>=30)dp+=.2*R;
- if(w.str>65)dm-=(w.str-65)*.04;if(m.en<10)dm-=.15;if(dm==0&&w.str<35)dm+=.15*R+(WL.mood[w.mood][1]=='pos'?.1:0);
+ let dp=0,dm=0;if(w.load>70)dp-=(w.load-70)*.04;if(m.en<10)dp-=.25;
+ if(w.str>65)dm-=(w.str-65)*.04;if(m.en<10)dm-=.15;
  // rare injury / illness only when the body is already worn out
- if(w.ph<40&&w.load>55&&Math.random()<.03){const v=rnd(6,12);dp-=v;wlLog(m,{t:'injury',txt:`Minor injury from overwork (Physical Health −${v}).`});toast(`${m.name} was injured from overwork.`,'err');wlN(`<li>🩹 <b>${esc(m.name)}</b> was injured from overwork (Physical Health −${v}). Lower her workload and consider Medical Treatment.</li>`)}
+ if(w.ph<40&&w.load>55&&Math.random()<.03){const v=rnd(6,12);dp-=v;wlLog(m,{t:'injury',txt:`Minor injury from overwork (Physical Health −${v}).`});toast(`${m.name} was injured from overwork.`,'err');wlN(`<li>🩹 <b>${esc(m.name)}</b> was injured from overwork (Physical Health −${v}). Lower her workload; Automatic Member Care treats Physical Health below 20.</li>`)}
  else if(w.ph<30&&m.en<20&&Math.random()<.015){const v=rnd(5,9);dp-=v;wlLog(m,{t:'ill',txt:`Caught a cold while exhausted (Physical Health −${v}).`});toast(`${m.name} fell ill.`,'err')}
  if(w.mood!='Neutral'&&S.day>=(w.moodTil||0))wlMood(m,'Neutral');
  if(w.mh<40&&WL.mood[w.mood][1]!='neg'&&Math.random()<(w.mh<20?.08:.04)){const k=pick(['Sad','Lonely','Nervous','Frustrated']);wlMood(m,k,rnd(3,6));wlLog(m,{t:'mood',txt:`Felt ${k.toLowerCase()} for no clear reason (low Mental Health).`})}
@@ -79,25 +79,17 @@ const _wlConc=holdConcert;holdConcert=function(p,x){const ev=_wlConc.apply(this,
 function wlTrainMul(m,k){const w=wlOf(m);let f=WL.mhMul(w.mh);if((k=='dance'||k=='cha')&&w.ph<40)f*=.9;if(w.red)f*=.8;const md=WL.mood[w.mood][1];if(w.mood=='Motivated'||w.mood=='Excited')f*=1.05;else if(md=='neg')f*=.95;return f}
 // ---- recovery activities ---------------------------------------------------------------------------
 const WLA={
- rest:{n:'Rest',d:'Free · +40 Energy, lighter workload · she takes the rest of today off'},
- rday:{n:'Recovery Day',c:30000,cd:3,d:'¥30,000 · massage & full rest: +40 Energy, workload −35, stress −20, Physical +3, Mental +3 · today off'},
  check:{n:'Medical Checkup',c:20000,d:'¥20,000 · a doctor\'s report on her condition and risks'},
- treat:{n:'Medical Treatment',c:80000,cd:7,leave:1,d:'¥80,000 · Physical Health +12 (every 7 days)'},
- mental:{n:'Mental Recovery',c:60000,cd:7,leave:1,d:'¥60,000 · counselling: Mental Health +10, stress −30 (every 7 days)'},
  talk:{n:'Producer Talk',cd:14,d:'Free · a one-on-one talk: stress −10, Passion +2, mood lifts (every 14 days)'},
- bond:{n:'Team Bonding',c:100000,cd:30,d:'¥100,000 · an outing for her whole team: stress −15, Mental +3, Loyalty +2 for every member (every 30 days)'}
+ bond:{n:'Team Bonding',c:100000,cd:30,d:'¥100,000 · an outing for her whole team: stress −15, Loyalty +2 for every member (every 30 days)'}
 };
 function wlCdLeft(m,k){const w=wlOf(m),a=WLA[k];if(k=='bond'){const t=teamOf(m);const last=t&&S.wlBond&&S.wlBond[t.id];return last!=null?Math.max(0,last+a.cd-S.day):0}return a.cd&&w.cd[k]!=null?Math.max(0,w.cd[k]+a.cd-S.day):0}
 function wlCan(m,k){const w=wlOf(m),a=WLA[k];if(w.leave&&!a.leave&&k!='check')return'Not available during leave.';if(k=='rest'&&w.rest==S.day)return'Already rested today.';if(k=='rday'&&w.off==S.day)return'Already off today.';if(k=='bond'&&!(isAct(m)&&teamOf(m)))return'Only for members in a team.';const c=wlCdLeft(m,k);if(c)return`Available again in ${c} day${c>1?'s':''}.`;return''}
-function wlDo(id,k){const m=get(id),a=WLA[k];if(!m||!a)return;const no=wlCan(m,k);if(no)return toast(no,'err');const w=wlOf(m);if(a.c&&!spend(a.c,`${a.n}: ${m.name}`))return;
+function wlDo(id,k){const m=get(id),a=WLA[k];if(!m||!a)return toast('Recovery is handled by Automatic Member Care (Members › Automatic Member Care).','err');const no=wlCan(m,k);if(no)return toast(no,'err');const w=wlOf(m);if(a.c&&!spend(a.c,`${a.n}: ${m.name}`))return;
  if(a.cd&&k!='bond')w.cd[k]=S.day;
- if(k=='rest'){m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.rest=S.day;w.off=S.day;wlAdj(m,{load:-10,str:-5});wlLog(m,{t:'care',txt:'Took a rest (+40 Energy).'});toast(`${m.name} rests: Energy ${m.en}/100. No more lessons or events for her today.`)}
- else if(k=='rday'){m.en=Math.max(-100,Math.min(100,(+m.en||0)+40));w.off=S.day;w.rest=S.day;wlAdj(m,{load:-35,str:-20,ph:3,mh:3});wlLog(m,{t:'care',txt:'Recovery Day: full rest and massage.'});toast(`${m.name} enjoys a Recovery Day.`)}
- else if(k=='check'){wlAdj(m,{str:-2});w.cd.check=S.day;wlLog(m,{t:'care',txt:`Medical Checkup: Physical ${WL.lv(w.ph)}, Mental ${WL.lv(w.mh)}.`});ui.mod={t:'html',h:wlReport(m)};render();return}
- else if(k=='treat'){wlAdj(m,{ph:12,load:-15});wlLog(m,{t:'care',txt:'Medical Treatment (Physical Health +12).'});toast(`${m.name} received Medical Treatment: Physical Health ${Math.round(w.ph)}.`)}
- else if(k=='mental'){wlAdj(m,{mh:10,str:-30});wlLog(m,{t:'care',txt:'Mental Recovery session (Mental Health +10).'});toast(`${m.name} attended a Mental Recovery session: Mental Health ${Math.round(w.mh)}.`)}
+ if(k=='check'){wlAdj(m,{str:-2});w.cd.check=S.day;wlLog(m,{t:'care',txt:`Medical Checkup: Physical ${WL.lv(w.ph)}, Mental ${WL.lv(w.mh)}.`});ui.mod={t:'html',h:wlReport(m)};render();return}
  else if(k=='talk'){wlAdj(m,{str:-10});m.pas=cl(m.pas+2);if(WL.mood[w.mood][1]!='pos')wlMood(m,w.mh>=40?'Motivated':'Neutral',5);wlLog(m,{t:'care',txt:'A one-on-one talk with the producer.'});toast(`${m.name} feels heard after your talk.`)}
- else if(k=='bond'){const t=teamOf(m),L=S.members.filter(x=>x.tid==t.id&&!wlAway(x));S.wlBond=S.wlBond||{};S.wlBond[t.id]=S.day;L.forEach(x=>{wlAdj(x,{str:-15,mh:3});x.loy=cl(x.loy+2);if(WL.mood[wlOf(x).mood][1]!='neg')wlMood(x,'Happy',5);wlLog(x,{t:'bond',txt:`Team bonding outing with ${t.name}.`})});toast(`${t.name} enjoyed a team bonding outing (${L.length} members).`)}
+ else if(k=='bond'){const t=teamOf(m),L=S.members.filter(x=>x.tid==t.id&&!wlAway(x));S.wlBond=S.wlBond||{};S.wlBond[t.id]=S.day;L.forEach(x=>{wlAdj(x,{str:-15});x.loy=cl(x.loy+2);if(WL.mood[wlOf(x).mood][1]!='neg')wlMood(x,'Happy',5);wlLog(x,{t:'bond',txt:`Team bonding outing with ${t.name}.`})});toast(`${t.name} enjoyed a team bonding outing (${L.length} members).`)}
  render()}
 function wlRedTog(id){const m=get(id);if(!m)return;const w=wlOf(m);w.red=!w.red;wlLog(m,{t:'care',txt:w.red?'Reduced Schedule started.':'Reduced Schedule ended.'});toast(w.red?`${m.name} is on a Reduced Schedule: faster recovery, lesson EXP ×0.8.`:`${m.name} is back on a normal schedule.`);render()}
 function wlRisk(m){const w=wlOf(m);return w.ph<40&&w.load>55?'High — injury likely if the workload stays heavy':w.ph<60||w.load>70?'Moderate — keep an eye on her schedule':'Low'}
@@ -217,7 +209,7 @@ function wlProfHtml(m){const w=wlOf(m),r=srOf(m),mo=WL.mood[w.mood],lv=v=>`<span
  <div class="wlgrid">${stat('Physical Health',w.ph)}<div class="wllvr">${lv(w.ph)}</div>${stat('Energy',m.en,'/100')}<div class="wllvr">${m.en<25?'<span class="wllv po">Tired</span>':'<span class="wllv go">Ready</span>'}</div>${stat('Mental Health',w.mh)}<div class="wllvr">${lv(w.mh)}</div></div>
  <div class="wlrow"><span class="wlmood ${mo[1]}">${mo[0]} Mood: ${w.mood}</span><span class="tag">Passion ${m.pas}</span><span class="tag">Loyalty ${m.loy}</span><span class="tag">Workload: ${wlLoadTxt(w.load)}</span><span class="tag">Stress: ${wlStrTxt(w.str)}</span>${w.red?'<span class="tag warn">Reduced Schedule</span>':''}</div>
  <div class="st">Lesson EXP ×${f.toFixed(2)}${w.mh<20?' · high-pressure activities (Center, events) unavailable':''}${w.ph<20?' · Dance lessons unavailable':''}</div>
- <div class="row wlact">${['rest','rday','check','treat','mental','talk','bond'].map(btn).join('')}<button class="b s ${w.red?'on':''}" ${w.leave?'disabled':''} onclick="wlRedTog(${m.id})">${w.red?'End Reduced Schedule':'Reduced Schedule'}</button></div>
+ <div class="row wlact">${['check','talk','bond'].map(btn).join('')}<button class="b s ${w.red?'on':''}" ${w.leave?'disabled':''} onclick="wlRedTog(${m.id})">${w.red?'End Reduced Schedule':'Reduced Schedule'}</button></div>
  <div class="wl2"><div><h4>Senbatsu record</h4><div class="wlkv">${[['Selected',r.sel],['Center',r.cen],['Front Row',r.front],['Middle Row',r.mid],['Back Row',r.back],['Not Selected',r.none],['Selected in a row',r.cons],['Not selected in a row',r.consNone]].map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('')}</div>
  <div class="st">${r.firstSen?`First Senbatsu: “${esc(r.firstSen.title)}” · `:'No Senbatsu yet · '}${r.firstCen?`First Center: “${esc(r.firstCen.title)}”`:'No Center yet'}${r.lastCen&&r.prev!='center'?` · Last Center: “${esc(r.lastCen.title)}”`:''}</div>
  <ul class="wll">${sl.map(x=>`<li><b>${esc(x.title)}</b> <span class="st">${dayDate(x.day).toLocaleDateString('en-US',{month:'short',year:'numeric'})}</span> <span class="wlpos ${x.pos}">${WL.posN[x.pos]}</span></li>`).join('')||'<li class="st">No Senbatsu announcements yet.</li>'}</ul></div>
