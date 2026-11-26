@@ -1,0 +1,39 @@
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — a graduating member stays until her single is out (and its election single sold)
+// -------------------------------------------------------------------------------------
+//  · A member who takes part in a single that is still in production never graduates before its release.
+//  · A member who takes part in a General Election single stays until that single's CD sales are over
+//    (all editions closed / sold out) — e.g. a member who announced her graduation during the election.
+//    Her graduation (Graduation Stage, last day, contract end…) waits and happens automatically on the first day
+//    nothing holds her any more. Dismissals are not held.
+//  · Repair: members who graduated while their election single was in production come back until it is released
+//    and sold, and take their empty positions again.
+// =====================================================================================
+const GH_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+const ghSongs=x=>[x.mainId,...(x.coup||[]),...((x.tracks||[]).map(t=>t&&t.id))].filter(Boolean);
+const ghSelling=x=>!!(x&&x.sale&&(x.sale.eds||[]).some(e=>e.st=='selling'||e.st=='open'||e.st=='upcoming'));
+// what keeps her: singles in production she sings in; election singles of hers still on sale
+function ghHolds(m){const out=[];if(!m)return out;(S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const p=S.pj,inS=ids=>ids.some(i=>((S.songs[i]||{}).slots||[]).includes(m.id)||(((S.songs[i]||{}).fm||{}).sl||[]).some(z=>z&&z.m==m.id));
+  if(p&&p.status=='producing'&&inS(usedSongs(p)))out.push({k:'rel',t:p.title||'',gid:g.id});
+  (S.singles||[]).forEach(x=>{if(x.ge&&ghSelling(x)&&inS(ghSongs(x)))out.push({k:'sale',t:x.title||'',gid:g.id})})})}catch(e){console.error(e)}});return out}
+const ghTxt=h=>h.k=='rel'?GH_T(`release of “${h.t}”`,`การปล่อยซิงเกิล “${h.t}”`):GH_T(`CD sales of “${h.t}”`,`การขายซีดี “${h.t}”`);
+{const f=ctComplete;ctComplete=function(m,o){o=o||{};try{const G=m&&m.grad;if(G&&G.kind!='dismiss'&&!o.dismiss&&!o.ghForce){const H=ghHolds(m);if(H.length){const first=!G.hold;G.hold={since:(G.hold&&G.hold.since)||S.day,o:{...o},L:H.map(ghTxt)};
+   if(first)CTQ.push(`<div class="ctbd">🎓 ${esc(GH_T(`${m.name} stays until the ${H.map(ghTxt).join(' and ')} is over, then graduates.`,`${m.name} จะอยู่ต่อจนกว่า${H.map(ghTxt).join(' และ ')}จะจบ แล้วจึงจบการศึกษา`))}</div>`);return null}}}catch(e){console.error(e)}return f.apply(this,arguments)}}
+// the graduation window waits too (her last day is not reached while something holds her)
+{const f=oblState;oblState=function(m){const r=f.apply(this,arguments);try{if(m&&m.grad&&m.grad.kind!='dismiss'){const H=ghHolds(m);if(H.length){r.pend=true;H.forEach(h=>r.L.push({t:ghTxt(h),day:null,done:false}))}}}catch(e){console.error(e)}return r}}
+// the day nothing holds her any more, she graduates as planned
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.members)S.members.slice().forEach(m=>{const G=m.grad;if(!G||!G.hold||!S.members.includes(m))return;if(ghHolds(m).length)return;const o={...(G.hold.o||{}),ghForce:1};delete G.hold;ctComplete(m,o)})}catch(e){console.error(e)}return r}}
+// ---- repair: members who graduated during their election single's production come back -------------------------------------
+function ghRepair(){let n=0;if(!S||!S.groups)return 0;(S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const p=S.pj;if(!p||p.status!='producing'||!p.ge)return;const e=typeof geGet=='function'?geGet(p.ge):null;if(!e||!e.final||!e.final.rows)return;
+  const from=e.vStart??p.startDay??0,rk=new Map(e.final.rows.filter(r=>r.rank).map(r=>[r.id,r.rank]));
+  const seats=usedSongs(p).reduce((a,i)=>a+((((S.songs[i]||{}).fm||{}).sl||[]).length),0);
+  const back=(S.alumni||[]).filter(m=>m&&rk.has(m.id)&&rk.get(m.id)<=seats&&m.dep&&m.dep.kind=='grad'&&(m.gradDay??0)>=from).sort((a,b)=>rk.get(a.id)-rk.get(b.id));if(!back.length)return;
+  back.forEach(m=>{const d=m.dep,tl=[...(m.mh||[])].reverse().find(h=>h.t=='team_leave'&&h.day>=(m.gradDay??0)-1),t=tl&&(g.teams||[]).find(x=>x.id==tl.tid);
+   S.alumni=S.alumni.filter(x=>x!==m);if(!S.members.includes(m))S.members.push(m);m.status=t?'active':'trainee';try{if(t)setTeamOf(m,t)}catch(x){m.tid=t.id;m.team=t.name}
+   m.grad={kind:'grad',reason:d.reason,ann:d.ann,target:d.target,early:d.early,fee:d.fee||0,songs:d.songs||[],singles:d.singles||[],obl:{ev:[],pj:[],ge:[]},hold:{since:S.day,o:{},L:[]}};delete m.dep;delete m.gradDay;delete m.career;
+   try{if(m.ct&&m.ct.end<S.day+1)m.ct.end=S.day+90}catch(x){}hev(m,{t:'grad_hold',txt:'Returned until her election single is released and sold'});n++});
+  // her empty positions: the songs of the single take her back (by election rank)
+  usedSongs(p).forEach(i=>{const o=S.songs[i];if(!o||!o.fm||!o.fm.sl)return;const empty=o.fm.sl.filter(z=>!z.m);if(!empty.length)return;const have=new Set(o.fm.sl.map(z=>z.m).filter(Boolean));const ord=slotOrder(o.fm).map(k=>o.fm.sl[k]).filter(z=>!z.m);
+   back.filter(m=>!have.has(m.id)).forEach((m,k)=>{if(ord[k])ord[k].m=m.id});try{fmSync(o,!fmCheck(o).length)}catch(x){console.error(x)}});
+  if(back.length)CTQ.push(`<div class="ctbd">🎓 ${esc(GH_T(`${back.map(m=>m.name).join(', ')} stay${back.length==1?'s':''} until “${p.title}” is released and its CDs are sold, then graduate${back.length==1?'s':''}.`,`${back.map(m=>m.name).join(', ')} จะอยู่ต่อจนปล่อย “${p.title}” และขายซีดีจบ แล้วจึงจบการศึกษา`))}</div>`)})}catch(e){console.error(e)}});try{if(n&&typeof leadFix=='function')leadFix(true)}catch(e){}return n}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{const n=ghRepair();if(n)console.log('graduation hold repair:',n)}catch(e){console.error(e)}return r}}
