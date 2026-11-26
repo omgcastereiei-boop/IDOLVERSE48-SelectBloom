@@ -157,7 +157,9 @@ const h4Band=(S,t,c)=>{const q=h4At(S,t);return`<path d="M${N2(q.p[0]-q.w/2-.3)}
   if(T&&T4X[T.t]){const r=czPat(id+'Z4t',T);if(r.d)O.defs=(O.defs||'')+r.d;const X=T4X[T.t](T,r.f,czLine(T.c1),O);if(X.mid)O.mid=X.mid+(O.mid||'')}
   const SH=cd.shoes;if(SH&&SH4[SH.t]){const R=SH4[SH.t],c=SH.c1||'#ffffff',a=SH.c2||'#ffffff';O.shoe={t:'sneaker',c,a,x4:SH.t,c3:SH.c3||'#f27aa6',deco:O.shoe&&O.shoe.deco};
    if(R.from!=null){const bt={t:'boot',c,from:R.from,lace:null};O.leg=O.leg&&O.leg.t?{...O.leg,over:bt}:bt}}}catch(e){console.error(e)}return O}}
-{const f=legBuild;legBuild=function(J,sk,O,left){const r=f.apply(this,arguments);try{const sh=O&&O.shoe;if(!sh||!sh.x4)return r;const R=SH4[sh.x4];if(!R)return r;const i=r.lastIndexOf('<g transform="translate(');if(i<0)return r;
+{const f=legBuild;legBuild=function(J,sk,O,left){const sh=O&&O.shoe;if(!sh||!sh.x4||!SH4[sh.x4])return f.apply(this,arguments);
+  // the shoe decoration is added on the new shoe below: build the base leg without it (its bow group would be taken for the shoe group)
+  const r=f.call(this,J,sk,sh.deco?{...O,shoe:{...sh,deco:null}}:O,left);try{const R=SH4[sh.x4];const i=r.lastIndexOf('<g transform="translate(');if(i<0)return r;
   const head=r.slice(0,i),g=r.slice(i),m=/^<g transform="([^"]*)">/.exec(g);if(!m)return r;const l=mixc(sh.c,'#3a2a3a',.5),fl=left?-1:1;let shoe=R.svg(sh.c,sh.a,l,fl);if(sh.deco)shoe+=bowS(0,1.2,.32,sh.deco,mixc(sh.deco,'#3a2a4a',.4),0);
   let shaft='';if(R.shaft){const S=h4LegPts(J);if(S)shaft=R.shaft(S,sh.c,sh.a,l,sh.c3)}
   return head+shaft+`<g transform="${m[1]}">${shoe}</g>`}catch(e){console.error(e);return r}}}
