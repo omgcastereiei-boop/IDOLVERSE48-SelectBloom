@@ -103,8 +103,10 @@ function ccSglCz(C,z,mid){const{gid,rid}=ccSglOf(C,z);if(gid==null||rid==null)re
  try{gsWith(gid,()=>{const x=(S.singles||[]).find(s=>s.rid==rid);if(!x)return;const mn=S.songs[x.mainId];if(!mn)return;const tt=new Set((x.tt&&x.tt.members)||(mn.slots||[]).filter(Boolean));
   if(tt.has(mid)){p=czFor(mn,mid);return}
   const sc=(x.scz&&x.scz.cdz&&x.scz.cdz.mem)||{},v=sc[mid];if(v&&v.own&&v.ok){p=v.own.p;return}
-  for(const i of [...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))]){const o=S.songs[i];if(o&&i!=x.mainId&&(o.slots||[]).includes(mid)){try{p=czFor(o,mid)}catch(e){}if(p)return}}
-  const any=Object.values(sc).find(q=>q&&q.own&&q.own.p&&q.ok);if(any)p=any.own.p})}catch(e){console.error(e)}return p}
+  // everyone else (sister-group members included) wears the single's Under Girls costume — not a coupling song's
+  const cz=x.scz&&x.scz.cdz;if(cz&&cz.main){const d=czD(cz.main);if(d&&d.p){p=d.p;return}}
+  const any=Object.values(sc).find(q=>q&&q.own&&q.own.p&&q.ok);if(any){p=any.own.p;return}
+  for(const i of [...(x.coup||[]),...((x.types||[]).flatMap(t=>t.songs||[]))]){const o=S.songs[i];if(o&&i!=x.mainId&&(o.slots||[]).includes(mid)){try{p=czFor(o,mid)}catch(e){}if(p)return}}})}catch(e){console.error(e)}return p}
 {const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx],z=it&&it.cz;if(!it||it.k!='song'||!z||z.mode!='sgl')return f.apply(this,arguments);
   const p=ccSglCz(C,z,mid);if(p)return p;const keep=it.cz;it.cz={mode:'orig'};try{return f.apply(this,arguments)}finally{it.cz=keep}}}
 function ccSglList(){const L=[];S.groups.forEach(g=>{try{gsWith(g.id,()=>{(S.singles||[]).slice().sort((a,b)=>(b.relDay??b.day??0)-(a.relDay??a.day??0)).forEach(x=>{if(x.mainId&&S.songs[x.mainId])L.push({gid:g.id,g:g.name,rid:x.rid,t:x.title})})})}catch(e){}});return L}
