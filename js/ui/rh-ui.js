@@ -11,7 +11,7 @@
 const RHU_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
 rhLink=function(id){const E=rhGet(id);if(!E||E.status!='setup')return;const er=rhErrs(E,1);if(er.length)return toast(er[0],'err');
  if(typeof gsAg=='function'&&gsAg()!=E.gid)return toast(rhT(`Switch to ${rhGrp(E.gid).name} first (the Request Hour single is that group's single).`,`สลับไปที่วง ${rhGrp(E.gid).name} ก่อน (ซิงเกิล Request Hour เป็นซิงเกิลของวงนั้น)`),'err');
- const p=S.pj;if(!p||p.status!='draft')return toast(rhT('Start planning a single first (or finish the one in production).','เริ่มวางแผนซิงเกิลก่อน (หรือปล่อยซิงเกิลที่กำลังผลิตให้เสร็จ)'),'err');
+ const p=S.pj;if(!p||(p.status!='draft'&&p.status!='producing'))return toast(rhT('Start planning a single first.','เริ่มวางแผนซิงเกิลก่อน'),'err');
  if(plAlb&&plAlb(p))return toast(rhT('An album cannot carry Request Hour voting codes.','อัลบั้มไม่สามารถแนบรหัสโหวต Request Hour ได้'),'err');
  if(p.rh&&p.rh!=E.id)return toast(rhT('This single already carries another Request Hour.','ซิงเกิลนี้ผูกกับ Request Hour อื่นอยู่แล้ว'),'err');
  const kind=p.ge?RHU_T(' (General Election single: every CD carries a ballot and a Request Hour code)',' (ซิงเกิลเลือกตั้ง: ซีดีทุกแผ่นมีทั้งบัตรเลือกตั้งและรหัส Request Hour)'):p.geNext?RHU_T(' (election results single)',' (ซิงเกิลจากผลเลือกตั้ง)'):p.jk?RHU_T(' (Janken single)',' (ซิงเกิลจังเก้น)'):'';
@@ -50,3 +50,6 @@ function rhuLaunch(){const R=rhS(),act=R.list.filter(e=>e.status!='done').length
 {const f=V.concert;V.concert=function(){let h=f.apply(this,arguments);try{if(!ccCur()){const R=rhS(),E=R.list.filter(e=>e.status!='done').sort((a,b)=>a.date-b.date)[0],st=E?(rhTh()?RH_ST_TH[E.status]:RH_ST[E.status]):'';
   const ban=`<div class="c rhban" onclick="ui.rhe=${E?`'${E.id}'`:'null'};ui.rht='${E&&E.status=='voting'?'vote':E&&['closed','concert'].includes(E.status)?'res':'setup'}';goView('rh')">${rhuPoster(E,0)}<div class="rhbanb"><b>🎤 Request Hour</b><span>${E?`${esc(E.name)} · ${st}${E.status=='voting'?` · ${RHU_T('voting closes','ปิดโหวต')} ${jd(E.close)}`:''}`:RHU_T('Create this year\'s Request Hour — fans choose the setlist.','สร้าง Request Hour ของปีนี้ — แฟน ๆ เป็นคนเลือกเซ็ตลิสต์')}</span></div><button class="b p">${E?RHU_T('Open','เปิด'):RHU_T('Create','สร้าง')}</button></div>`;
   h=h.replace(/<button class="b s rhnav"[^>]*>[^<]*<\/button>/,'');const k=h.indexOf('<div class="c');h=k>=0?h.slice(0,k)+ban+h.slice(k):ban+h}}catch(e){console.error(e)}return h}}
+
+// the Request Hour pages belong to Events & Concerts (header, background and menu)
+try{const sec=SECS.find(s=>s.k=='events');if(sec){sec.hid=sec.hid||[];if(!sec.hid.includes('rh'))sec.hid.push('rh')}if(typeof SC_VIEW!='undefined')SC_VIEW.rh='stage';if(typeof SUBLOC!='undefined')SUBLOC.rh='Concert Hall · Request Hour'}catch(e){console.error(e)}

@@ -11038,11 +11038,9 @@ function spCancel(x,why){const sp=x.sp;sp.cx=why;sp.mids.forEach(id=>{const m=ge
  ui.mod.h=ui.mod.h.replace('</h2>',`</h2><div class="c spsum"><h3>${sp.kind=='grad'?'🎓':'🎂'} ${SP_K[sp.kind]} — ${esc(sp.names.join(', '))}</h3><p class="st">${esc(sp.stno)} “${esc(sp.stage)}” performed unchanged (not counted as an extra performance), then at the end of the Encore:</p><ol class="ms">${sp.songs.map(z=>`<li><b>${esc(z.title)}</b>${z.unit?' · '+esc(z.unit):''} · Center ${z.center?esc((ctMem(z.center)||{}).name||''):'—'} · ${z.ids.length} member(s): ${z.ids.map(i=>{const m=ctMem(i);return m?esc(m.name)+` (row ${z.rows[i]})`:''}).join(', ')}</li>`).join('')}</ol><div class="row">${Object.entries(sp.cz).filter(([i])=>sp.mids.includes(+i)).map(([i,n])=>{const m=ctMem(+i);return m?`<span class="st">${esc(m.name)}: ${esc(n)}</span>`:''}).join(' · ')}</div></div>`)}catch(e){console.error(e)}}}
 // cancelled performances lose their special stage
 {const f=thPerform;thPerform=function(x){const sp=x&&x.sp;const r=f.apply(this,arguments);try{if(sp&&x.sp&&x.st=='cancel')spCancel(x,x.why||'performance cancelled')}catch(e){console.error(e)}return r}}
-// graduation date passed without a stage → the next performance of her team becomes her Graduation Stage
-{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.th)S.members.forEach(m=>{if(!m.grad||m.grad.done)return;{const H=m.grad.hon&&hgOf(m.grad.hon);if(H&&H.st=='sched')return}const x0=m.grad.stage&&spShow(m.grad.stage);if(x0&&x0.sp&&x0.st=='sched')return;m.grad.stage=null;if(S.day<m.grad.target)return;
-  const L=spOpts(m,'grad').filter(x=>x.day>S.day);if(L.length){const x=L[0];x.sp=x.sp||{kind:'grad',mids:[],songs:[],cz:{}};if(!x.sp.mids.includes(m.id))x.sp.mids.push(m.id);m.grad.stage=x.id;if(!x.sp.songs.length){const S0=spSongs(x.k),gs=S0.find(o=>o.gf==m.id);x.sp.songs.push({song:(gs||S0[0]||{}).id||null,ids:thPool(x.k).map(z=>z.id),center:m.id,unit:'',rows:{}})}
-   CTQ.push(`<div class="ctbd">🎓 ${esc(m.name)}'s graduation date has passed: her Graduation Stage is set to ${wd(x.day)} ${TH_SLOT[x.sl]}. <button class="b s" onclick="ui.mod=null;ui.spx='${x.id}';goView('spst')">Edit</button></div>`)}
-  else if((S.day-m.grad.target)%7==0)CTQ.push(`<div class="ctbd">⚠ ${esc(m.name)} needs a Graduation Stage: schedule a performance for ${esc(spLabel(spKey(m)))}.</div>`)})}catch(e){console.error(e)}return r}}
+// graduation date passed without a stage → she graduates on her last day without one (sp-group.js)
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.th)S.members.slice().forEach(m=>{if(!m.grad||m.grad.done)return;{const H=m.grad.hon&&hgOf(m.grad.hon);if(H&&H.st=='sched')return}const x0=m.grad.stage&&spShow(m.grad.stage);if(x0&&x0.sp&&x0.st=='sched')return;m.grad.stage=null;if(typeof spgDue=='function'?!spgDue(m):S.day<m.grad.target)return;
+  if(typeof spgGradNoStage=='function')spgGradNoStage(m)})}catch(e){console.error(e)}return r}}
 // schedule page: list special stages
 {const f=V.thsched;V.thsched=function(){let h=f.apply(this,arguments);try{const key=thCur(),L=thS().sh.filter(x=>x.k==key&&x.sp&&x.st=='sched').sort((a,b)=>a.day-b.day);if(L.length)h+=`<div class="c"><h3>Special Stages</h3>${L.map(x=>`<div class="fbrow"><span class="tag">${x.sp.kind=='grad'?'🎓':'🎂'} ${SP_K[x.sp.kind]}</span><b>${x.sp.mids.map(i=>esc((ctMem(i)||{}).name||'')).join(', ')}</b><span class="st">${wd(x.day)} ${TH_SLOT[x.sl]}</span><button class="b s" onclick="ui.spx='${x.id}';goView('spst')">✎ Edit</button></div>`).join('')}</div>`}catch(e){console.error(e)}return h}}
 
@@ -21453,7 +21451,7 @@ rhChg=function(z){if(z.prev==null)return z.re?`<span class="rhre">RETURN</span>`
 const RHU_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
 rhLink=function(id){const E=rhGet(id);if(!E||E.status!='setup')return;const er=rhErrs(E,1);if(er.length)return toast(er[0],'err');
  if(typeof gsAg=='function'&&gsAg()!=E.gid)return toast(rhT(`Switch to ${rhGrp(E.gid).name} first (the Request Hour single is that group's single).`,`สลับไปที่วง ${rhGrp(E.gid).name} ก่อน (ซิงเกิล Request Hour เป็นซิงเกิลของวงนั้น)`),'err');
- const p=S.pj;if(!p||p.status!='draft')return toast(rhT('Start planning a single first (or finish the one in production).','เริ่มวางแผนซิงเกิลก่อน (หรือปล่อยซิงเกิลที่กำลังผลิตให้เสร็จ)'),'err');
+ const p=S.pj;if(!p||(p.status!='draft'&&p.status!='producing'))return toast(rhT('Start planning a single first.','เริ่มวางแผนซิงเกิลก่อน'),'err');
  if(plAlb&&plAlb(p))return toast(rhT('An album cannot carry Request Hour voting codes.','อัลบั้มไม่สามารถแนบรหัสโหวต Request Hour ได้'),'err');
  if(p.rh&&p.rh!=E.id)return toast(rhT('This single already carries another Request Hour.','ซิงเกิลนี้ผูกกับ Request Hour อื่นอยู่แล้ว'),'err');
  const kind=p.ge?RHU_T(' (General Election single: every CD carries a ballot and a Request Hour code)',' (ซิงเกิลเลือกตั้ง: ซีดีทุกแผ่นมีทั้งบัตรเลือกตั้งและรหัส Request Hour)'):p.geNext?RHU_T(' (election results single)',' (ซิงเกิลจากผลเลือกตั้ง)'):p.jk?RHU_T(' (Janken single)',' (ซิงเกิลจังเก้น)'):'';
@@ -21492,6 +21490,9 @@ function rhuLaunch(){const R=rhS(),act=R.list.filter(e=>e.status!='done').length
 {const f=V.concert;V.concert=function(){let h=f.apply(this,arguments);try{if(!ccCur()){const R=rhS(),E=R.list.filter(e=>e.status!='done').sort((a,b)=>a.date-b.date)[0],st=E?(rhTh()?RH_ST_TH[E.status]:RH_ST[E.status]):'';
   const ban=`<div class="c rhban" onclick="ui.rhe=${E?`'${E.id}'`:'null'};ui.rht='${E&&E.status=='voting'?'vote':E&&['closed','concert'].includes(E.status)?'res':'setup'}';goView('rh')">${rhuPoster(E,0)}<div class="rhbanb"><b>🎤 Request Hour</b><span>${E?`${esc(E.name)} · ${st}${E.status=='voting'?` · ${RHU_T('voting closes','ปิดโหวต')} ${jd(E.close)}`:''}`:RHU_T('Create this year\'s Request Hour — fans choose the setlist.','สร้าง Request Hour ของปีนี้ — แฟน ๆ เป็นคนเลือกเซ็ตลิสต์')}</span></div><button class="b p">${E?RHU_T('Open','เปิด'):RHU_T('Create','สร้าง')}</button></div>`;
   h=h.replace(/<button class="b s rhnav"[^>]*>[^<]*<\/button>/,'');const k=h.indexOf('<div class="c');h=k>=0?h.slice(0,k)+ban+h.slice(k):ban+h}}catch(e){console.error(e)}return h}}
+
+// the Request Hour pages belong to Events & Concerts (header, background and menu)
+try{const sec=SECS.find(s=>s.k=='events');if(sec){sec.hid=sec.hid||[];if(!sec.hid.includes('rh'))sec.hid.push('rh')}if(typeof SC_VIEW!='undefined')SC_VIEW.rh='stage';if(typeof SUBLOC!='undefined')SUBLOC.rh='Concert Hall · Request Hour'}catch(e){console.error(e)}
 
 </script>
 <script>
@@ -23770,6 +23771,58 @@ function rgMissing(){const p=S&&S.pj;if(!p||p.status!='producing')return null;if
 function rgApply(){try{const B=document.querySelectorAll('[onclick="release()"]:not([data-rg])');if(!B.length)return;RG_C=null;const M=rgMissing();B.forEach(b=>{b.setAttribute('data-rg','1');if(!M||!M.length)return;b.disabled=true;b.classList.add('rgoff');b.title=M.join('\n');
   if(!b.nextElementSibling||!b.nextElementSibling.classList.contains('rgwhy')){const d=document.createElement('div');d.className='st rgwhy';d.innerHTML=`<b>${M.length} ${M.length==1?'item':'items'} before release:</b><ul class="ms">${M.slice(0,6).map(x=>`<li style="color:var(--err)">✗ ${esc(x)}</li>`).join('')}</ul>`;b.after(d);try{if(typeof i18nApply=='function')i18nApply(d)}catch(e){}}})}catch(e){console.error(e)}}
 let RG_RAF=0;try{new MutationObserver(()=>{if(RG_RAF)return;RG_RAF=requestAnimationFrame(()=>{RG_RAF=0;rgApply()})}).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Graduation & Birthday Stages on group stages · graduation choices
+// -------------------------------------------------------------------------------------
+//  · Graduation Stage: chosen by the player only (nothing is scheduled automatically). Besides her team's shows,
+//    the player can choose a show of a group-wide stage (All-Team Stage) or a Special Stage of her group — only
+//    shows she performs in.
+//  · No Graduation Stage: she graduates on her last day (the graduation date) without a stage. Her final profile
+//    picture is the costume of the last single she took part in; a member who completed her contract receives the
+//    Honorary Graduate gown (grad2.js).
+//  · Birthday Stage (automatic): when her team has no show around her birthday but a group-wide / Special Stage of her
+//    group has one, that show is used — preferably one she performs in; otherwise the show closest to her birthday,
+//    where she takes an empty position or the last position of the lineup (sp-fix.js).
+//  · Leaving before the contract ends: the member herself decides whether she stays with the agency until the end of
+//    her contract (Agency Retained) or ends the contract (termination fee) — the producer no longer chooses.
+// =====================================================================================
+const SPG_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+// the members who perform a scheduled show (its Stage lineup, Special Stage lineup…)
+function spgIds(x){try{const C=thCheck(x);if(!C||!C.s)return[];return(C.B||thPerf(C.s)).map(m=>m.id)}catch(e){return[]}}
+function spgKeys(m){const gid=typeof gsGid=='function'?gsGid(m):m.group,own=spKey(m);try{return thKeysAll().filter(K=>K.gid==gid&&K.key!=own&&K.kind!='team'&&K.kind!='tr').map(K=>K.key)}catch(e){return[]}}
+function spgShows(m,kind,lo,hi){const keys=new Set(spgKeys(m));if(!keys.size)return[];return thS().sh.filter(x=>keys.has(x.k)&&x.st=='sched'&&x.day>=lo&&x.day<=hi&&(!x.sp||x.sp.kind==kind))}
+// graduation: her team's shows + group / Special Stage shows she performs in
+{const f=spOpts;spOpts=function(m,kind){const L=f.apply(this,arguments);try{if(kind=='grad'&&m){const[lo,hi]=spWin(m,kind),rb=spRelBlock(m);spgShows(m,kind,lo,hi).filter(x=>(rb==null||x.day>rb)&&spgIds(x).includes(m.id)).forEach(x=>{if(!L.includes(x))L.push(x)});L.sort((a,b)=>a.day-b.day||(a.sl=='a'?-1:1))}}catch(e){console.error(e)}return L}}
+{const f=spPlan;spPlan=function(mid,kind){const r=f.apply(this,arguments);try{if(kind=='grad'&&ui.mod&&ui.mod.t=='html'){const m=get(mid);ui.mod.h=ui.mod.h.replace(/<p class="st">Choose a scheduled performance of [^<]*/,s=>s+SPG_T(' Shows of group stages and Special Stages of her group are listed too when she performs in them.',' แสดงรอบของสเตจรวมของวงและสเปเชียลสเตจของวงที่เธอขึ้นแสดงด้วย'));
+  ui.mod.h=ui.mod.h.replace(/(<button class="b s spopt" onclick="spSet\('([^']+)'[^>]*>)([^<]*)/g,(a,b,id,t)=>{const x=spShow(id);return x&&x.k!=spKey(m)?b+t+' · '+esc(spLabel(x.k)):a})}}catch(e){console.error(e)}return r}}
+// nothing is scheduled automatically for a graduation (the 🎲 button still proposes one when the player asks)
+{const f=spAutoGrad;spAutoGrad=function(m,manual){if(!manual)return;return f.apply(this,arguments)}}
+// birthday: group-wide / Special Stage shows when her team has none
+{const f=spAutoBd;spAutoBd=function(m,manual){const n0=CTQ.length;const r=f.apply(this,arguments);try{if(!m||spCur(m,'bd'))return r;const c=spBdC(m);if((m.bdh||[]).some(b=>Math.abs(b.day-c)<=30))return r;if(spOpts(m,'bd').length)return r;
+  const[lo,hi]=spWin(m,'bd'),L=spgShows(m,'bd',lo,hi);if(!L.length)return r;const near=(a,b)=>Math.abs(a.day-c)-Math.abs(b.day-c)||a.day-b.day;const mine=L.filter(x=>spgIds(x).includes(m.id)).sort(near),x=(mine[0]||L.slice().sort(near)[0]);
+  // drop the "no performance" warning just queued for her
+  for(let i=CTQ.length-1;i>=n0;i--)if(String(CTQ[i]).includes(m.name))CTQ.splice(i,1);
+  const had=!!x.sp;x.sp=x.sp||{kind:'bd',mids:[],songs:[],cz:{}};if(!x.sp.mids.includes(m.id))x.sp.mids.push(m.id);if(!had)spAutoFill(x,'bd',m.id);x.sp.auto=1;m.bdA={c,x:x.id};
+  const inL=!!mine.length;CTQ.push(`<div class="ctbd">🎂 ${SPG_T(`Birthday Stage auto-scheduled for <b>${esc(m.name)}</b> (birthday ${longDate(c)}) on ${esc(spLabel(x.k))}: ${wd(x.day)} ${TH_SLOT[x.sl]}${inL?'':` — she joins the lineup for this show (an empty position, or the last position sits out)`}.`,`จัดสเตจวันเกิดให้ <b>${esc(m.name)}</b> (วันเกิด ${longDate(c)}) อัตโนมัติที่ ${esc(spLabel(x.k))}: ${wd(x.day)} ${TH_SLOT[x.sl]}${inL?'':` — เธอเข้าไลน์อัปรอบนี้ (แทนตำแหน่งว่าง หรือแทนคนตำแหน่งสุดท้าย)`}`)} <button class="b s" onclick="ui.mod=null;ui.spx='${x.id}';goView('spst')">${SPG_T('Review','ดู')}</button></div>`);if(manual){ui.spx=x.id;goView('spst')}}catch(e){console.error(e)}return r}}
+// no Graduation Stage: she graduates on her last day; final profile = costume of the last single she was part of
+function spgFinalProfile(m){if(m.profCz&&m.profCz.p&&m.profCz.kind!='grad')return;const L=(m.czHist||[]).filter(z=>z&&z.p&&z.rid&&(z.kind=='title'||z.kind=='single')).sort((a,b)=>(b.day||0)-(a.day||0));if(L[0]){if(m.profCz)m.czHist.push(m.profCz);m.profCz=L[0]}}
+// her last day: a fixed date (the graduation window otherwise moves with today): contract end for an expiring contract,
+// otherwise 120 days after the announcement (90-day notice + 30-day window), later only while obligations are still pending
+function spgDue(m){const G=m.grad;if(!G||G.kind=='dismiss')return S.day>=(G?G.target:1e9);const c=m.ct||{};let dl=G.reason=='exp'?Math.max(c.end||0,G.ann+14):G.ann+120;
+ try{const st=oblState(m);if(st.pend)return false;if(st.last>=0)dl=Math.max(dl,st.last+1)}catch(e){}G.last=dl;return S.day>=dl}
+function spgGradNoStage(m){if(!m||!m.grad||m.grad.done||m.grad.kind=='dismiss')return false;const G=m.grad;const cz=G.cz;G.cz=null;spgFinalProfile(m);
+ try{ctComplete(m,{})}catch(e){console.error(e);G.cz=cz;return false}try{const i=CTQ.length-1;if(i>=0)CTQ[i]=String(CTQ[i]).replace('</h2>',`</h2><p class="st">${SPG_T('No Graduation Stage was held: she graduated on her last day.','ไม่มีสเตจแกรด: เธอจบการศึกษาในวันสุดท้ายของเธอ')}</p>`)}catch(e){}return true}
+// ---- leaving early: the member decides (Agency Retained or contract termination) --------------------------------------------
+function spgDecide(m){const l=m.loy??50,mor=m.mor??60,p=Math.max(.12,Math.min(.9,.2+l/140+(mor-60)/300));return Math.random()<p?'ret':'fee'}
+{const f=ctAnnounce;ctAnnounce=function(m,o){try{if(m&&o&&o.kind!='dismiss'&&o.reason!='dis'&&m.ct&&o.target<m.ct.end-30){o.early=spgDecide(m);o.self=1}}catch(e){console.error(e)}const r=f.apply(this,arguments);
+ try{if(m&&m.grad&&o&&o.self){const G=m.grad,txt=G.early=='ret'?SPG_T(`${m.name} decided to stay with the agency until her contract ends (${longDate(m.ct.end)}) — Agency Retained.`,`${m.name} ตัดสินใจอยู่กับค่ายต่อจนหมดสัญญา (${longDate(m.ct.end)}) — Agency Retained`):SPG_T(`${m.name} decided to end her contract when she graduates${G.fee>0?` (termination fee ${yen(G.fee)})`:''}.`,`${m.name} ตัดสินใจยกเลิกสัญญาเมื่อจบการศึกษา${G.fee>0?` (ค่ายกเลิกสัญญา ${yen(G.fee)})`:''}`);
+  ctLog(m,'self',txt);hev(m,{t:'ct_self',early:G.early});if(ui.mod&&ui.mod.t=='html'&&ui.mod.h.includes('ctann'))ui.mod.h+=`<p class="ctsay">“${esc(G.early=='ret'?SPG_T('I want to stay with this agency, even after the group.','หนูอยากอยู่กับค่ายนี้ต่อ แม้จะจบจากวงแล้ว'):SPG_T('I want to start my next step on my own.','หนูอยากเริ่มก้าวต่อไปด้วยตัวเอง'))}”</p><p class="st">${esc(txt)}</p>`;else CTQ.push(`<div class="ctbd">🎓 ${esc(txt)}</div>`)}}catch(e){console.error(e)}return r}}
+// the graduation dialog: the choice is hers
+{const f=ctGradDlg;ctGradDlg=function(){const r=f.apply(this,arguments);try{if(ui.mod&&ui.mod.t=='html'){const h=ui.mod.h,i=h.indexOf('<div class="c"><h3>Early graduation'),j=h.indexOf('<div class="row"><button class="b p" onclick="ctGradGo');
+  if(i>=0&&j>i)ui.mod.h=h.slice(0,i)+`<div class="c"><h3>${SPG_T('Early graduation','จบการศึกษาก่อนหมดสัญญา')}</h3><p class="st">${SPG_T('She decides for herself when the graduation is announced: stay with the agency until her contract ends (Agency Retained), or end her contract (a termination fee applies when she asked to leave).','เมมเบอร์ตัดสินใจเองตอนประกาศจบการศึกษา: อยู่กับค่ายต่อจนหมดสัญญา (Agency Retained) หรือยกเลิกสัญญา (ถ้าเธอขอออกเอง จะมีค่ายกเลิกสัญญา)')}</p></div>`+h.slice(j)}}catch(e){console.error(e)}return r}}
 
 </script>
 <script>
