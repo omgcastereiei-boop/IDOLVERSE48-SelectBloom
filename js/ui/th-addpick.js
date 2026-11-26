@@ -17,7 +17,7 @@ function tapData(s,gid){const K=thK(s.k),own=K?K.gid:null;gid=gid??own;const run
    const L=ids.map(id=>A.get(id)).filter(Boolean);return L.length?{h:x.title||(S.songs[x.mainId]||{}).title||'Single',sub:[x.no?ordN(x.no)+' Single':'',(x.relDay??x.day)!=null?jd(x.relDay??x.day):''].filter(Boolean).join(' · '),L,role:id=>id==x.mainId?TAP_T('Title track','เพลงหลัก'):TAP_T('Coupling','เพลงรอง')}:null}).filter(Boolean);
   sing.forEach(b=>b.L.forEach(o=>used.add(o.id)));
   const keys=new Set(thKeysAll().filter(k=>k.gid==gid).map(k=>k.key));
-  const stg=Object.values(thS().st||{}).filter(t=>keys.has(t.k)&&t.id!=s.id&&(t.no||t.status=='active'||t.status=='retired')).sort((a,b)=>(b.debut??0)-(a.debut??0)).map(t=>{const L=[...new Set(thAll(t).map(it=>it.song))].map(id=>A.get(id)).filter(Boolean);
+  const stg=Object.values(thS().st||{}).filter(t=>keys.has(t.k)&&t.id!=s.id&&!String(t.k).startsWith('sx')&&(t.no||t.status=='active'||t.status=='retired')).sort((a,b)=>(b.debut??0)-(a.debut??0)).map(t=>{const L=[...new Set(thAll(t).map(it=>it.song))].map(id=>A.get(id)).filter(Boolean);
    return L.length?{h:`${thLabel(t.k)} ${t.no?ordN(t.no)+' Stage':'Stage'} “${t.name}”`,sub:t.debut!=null?jd(t.debut):'',L}:null}).filter(Boolean);
   stg.forEach(b=>b.L.forEach(o=>used.add(o.id)));
   const oth=[...A.values()].filter(o=>!used.has(o.id)).sort((a,b)=>thSongPop(b)-thSongPop(a));return{sing,stg,oth}})}
@@ -48,3 +48,24 @@ const tapIsSp=key=>{try{const K=thK(key);return!!K&&K.kind=='sp'}catch(e){return
 {const f=thSongNew;thSongNew=function(){if(tapIsSp(thCur()))return toast(TAP_T('Special Stages use existing songs only. New songs are created in Team Stages or Single Production.','สเปเชียลสเตจใช้ได้เฉพาะเพลงที่มีอยู่แล้ว เพลงใหม่สร้างได้ที่สเตจของทีมหรือการทำซิงเกิล'),'err');return f.apply(this,arguments)}}
 {const f=thSongMake2;thSongMake2=function(){if(tapIsSp(thCur()))return;return f.apply(this,arguments)}}
 {const f=thTimeline;thTimeline=function(s){const h=f.apply(this,arguments);try{if(s&&tapIsSp(s.k))return h.replace(/<button class="b p" onclick="thSongNew\(\)">✦ Add New Song<\/button><span class="st">[^<]*<\/span>/,`<span class="st">${TAP_T('Special Stages use existing songs only: add them with “Add songs” below.','สเปเชียลสเตจใช้ได้เฉพาะเพลงที่มีอยู่แล้ว: เพิ่มเพลงด้วยปุ่ม “เพิ่มเพลง” ด้านล่าง')}</span>`)}catch(e){console.error(e)}return h}}
+// Special Stage Encore: no new songs either
+{const f=thEncHtml;thEncHtml=function(s){const h=f.apply(this,arguments);try{if(s&&tapIsSp(s.k))return h.replace(/<button[^>]*onclick="thSongNew\(1\)"[^>]*>[^<]*<\/button>/g,'')}catch(e){console.error(e)}return h}}
+// ---- schedule grid: slots taken by another Stage of the same theater are shown with its name ---------------------------------
+{const f=thWeekGrid;thWeekGrid=function(key){let h=f.apply(this,arguments);try{h=h.replace(/<button class="thsl2 no([^"]*)" title="The theater is booked by ([^"]+)\."([^>]*)>([^<]*)<\/button>/g,(a,c,who,rest,l)=>{const sh=String(who).replace(/^Team\s+/,'').replace(/&amp;/g,'&').slice(0,4);return`<button class="thsl2 no tapoth${c}" title="${TAP_T('Booked by','จองโดย')} ${who}"${rest}>${esc(sh)}</button>`});
+ if(h.includes('tapoth'))h=h.replace('<div class="thwg">',`<p class="st"><span class="thsl2 no tapoth">W</span> ${TAP_T('= taken by another Stage of this theater (its name is shown). Special Stages cannot be booked on those slots.','= รอบของสเตจอื่นในเธียเตอร์นี้ (แสดงชื่อ) สเปเชียลสเตจจองทับรอบนั้นไม่ได้')}</p><div class="thwg">`)}catch(e){console.error(e)}return h}}
+// ---- Add-song pickers (concert + Stage): jump to Singles / Stages / Other songs, and stay in place after "+ Add" -------------
+const PK_SECS=[['💿',TAP_T('Singles','ซิงเกิล')],['🎭',TAP_T('Stages','สเตจ')],['🎵',TAP_T('Other songs','เพลงอื่น ๆ')]];
+function pkJumpRow(h){const have=PK_SECS.filter(([e])=>h.includes(`<summary><b>${e} `));if(have.length<2)return'';return`<div class="row pkjump">${have.map(([e,n])=>`<button class="b s" onclick="pkJump('${e}')">${e} ${esc(n)}</button>`).join('')}</div>`}
+function pkJump(e){const D=[...document.querySelectorAll('.mod details.ccpks')].find(d=>{const s=d.querySelector('summary');return s&&s.textContent.trim().startsWith(e)});if(!D)return;D.open=true;try{D.scrollIntoView({block:'start',behavior:'smooth'})}catch(x){D.scrollIntoView()}}
+const pkWithJump=h=>{try{const i=h.indexOf('<input class="ccpkq"');if(i<0)return h;return h.slice(0,i)+pkJumpRow(h)+h.slice(i)}catch(e){return h}};
+{const f=ccPickHtml;ccPickHtml=function(){return pkWithJump(f.apply(this,arguments))}}
+{const f=tapHtml;tapHtml=function(){return pkWithJump(f.apply(this,arguments))}}
+const pkDlg=()=>document.querySelector('.mod [role=dialog]');
+const pkL=()=>document.querySelector('.mod .ccpk');
+function pkKeep(fn){return function(){const d=pkDlg(),y=d?d.scrollTop:0,l=pkL(),ly=l?l.scrollTop:0,w=window.scrollY;const r=fn.apply(this,arguments);const put=()=>{const d2=pkDlg(),l2=pkL();if(d2)d2.scrollTop=y;if(l2)l2.scrollTop=ly};try{put();requestAnimationFrame(put);window.scrollTo(0,w)}catch(e){}return r}}
+ccPickAdd=pkKeep(ccPickAdd);ccPickAddSt=pkKeep(ccPickAddSt);tapAdd=pkKeep(tapAdd);tapAddX=pkKeep(tapAddX);
+// ---- Concert Encore mode (like the Stage editor): while it is on, every added song goes to the Encore ---------------------------
+{const f=ccAddSong;ccAddSong=function(){const C=ccCur(),s=C&&C.sets[ui.ccs],before=s?new Set(s.items.map(x=>x.id)):null;const r=f.apply(this,arguments);try{if(s&&s.encMode){s.items.forEach(x=>{if(!before.has(x.id)&&x.k=='song')x.enc=1});ccEncSort(s)}}catch(e){console.error(e)}return r}}
+function ccEncMode(on){const C=ccCur(),s=C&&C.sets[ui.ccs];if(!ccEdit(C)||!s)return;s.encMode=on?1:0;toast(on?TAP_T('Encore on: songs you add now go to the Encore.','เปิดอังกอร์: เพลงที่เพิ่มต่อจากนี้จะเข้าอังกอร์'):TAP_T('Encore off: songs you add go to the main setlist.','ปิดอังกอร์: เพลงที่เพิ่มจะเข้าเซ็ตลิสต์หลัก'));render()}
+{const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{const s=C&&C.sets[ui.ccs];if(s&&ccEdit(C)&&h.includes('<h3>Setlist</h3>')){const n=s.items.filter(x=>x.k=='song'&&x.enc).length;
+  h=h.replace('<h3>Setlist</h3>',`<div class="row ccencm"><h3 style="margin:0">Setlist</h3><span style="flex:1"></span><span class="st">${TAP_T('Encore','อังกอร์')} ${n}</span><button class="b s ${s.encMode?'p':''}" onclick="ccEncMode(1)">${TAP_T('Encore on','เปิดอังกอร์')}</button><button class="b s ${s.encMode?'':'p'}" onclick="ccEncMode(0)">${TAP_T('Encore off','ปิดอังกอร์')}</button></div>${s.encMode?`<p class="st">${TAP_T('Encore is on: songs added now (Add songs) are placed in the Encore.','เปิดอังกอร์อยู่: เพลงที่เพิ่ม (Add songs) ตอนนี้จะอยู่ในอังกอร์')}</p>`:''}`)}}catch(e){console.error(e)}return h}}

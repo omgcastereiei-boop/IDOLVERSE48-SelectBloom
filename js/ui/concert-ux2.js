@@ -51,7 +51,7 @@ ccPickHtml=function(){const C=ccCur(),s=C&&C.sets[ui.ccs],P=ui.ccpk=ui.ccpk||{q:
  return`<h2 class="ht">Add songs</h2>${I?`<div class="c ccins">Adding ${ui.ccins.below?'below':'above'} <b>${esc(I.it.title||I.it.name||'')}</b> <button class="b s" onclick="ui.ccins=null;ui.mod.h=ccPickHtml();render()">Add at the end instead</button></div>`:''}
  ${G.length>1?`<div class="row cctabs">${G.map(x=>`<button class="b s ${x.id==g?'p':''}" onclick="ui.ccpk.g=${x.id};ui.mod.h=ccPickHtml();render()">${esc(x.name)}</button>`).join('')}</div>`:''}
  <input class="ccpkq" placeholder="Search songs" value="${esc(P.q||'')}" onchange="ui.ccpk.q=this.value;ui.mod.h=ccPickHtml();render()">
- <div class="ccpk">${sec('single','💿 Singles',`${sing.length} single(s)`,sing.map(b=>blk(b,'s')).join(''))}${sec('stage','🎭 Stages',`${stg.length} stage(s)`,'<p class="st">Stage songs are added with the members and positions of the Stage’s first performance (only concert participants are placed).</p>'+stg.map(b=>blk(b,'t')).join(''))}${sec('other','🎵 Other songs',`${oth.length} song(s)`,oth.map(x=>row(x)).join(''))}
+ <div class="ccpk">${sec('single','💿 Singles',`${sing.length} single(s)`,sing.map(b=>blk(b,'s')).join(''))}${sec('stage','🎭 Stages',`${stg.length} stage(s)`,'<p class="st">Stage songs are added with the Stage’s current lineup and formation (only concert participants are placed).</p>'+stg.map(b=>blk(b,'t')).join(''))}${sec('other','🎵 Other songs',`${oth.length} song(s)`,oth.map(x=>row(x)).join(''))}
  ${!sing.length&&!stg.length&&!oth.length?'<p class="st">No songs match.</p>':''}</div>`};
 {const f=ccPickOpen;ccPickOpen=function(){const r=f.apply(this,arguments);return r}}
 // closing the picker ends "add above / below"

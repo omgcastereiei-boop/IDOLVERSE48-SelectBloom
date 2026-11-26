@@ -82,7 +82,7 @@ function spxShowLu(sid,v){const x=thS().sh.find(z=>z.id==sid);if(!x||x.st!='sche
 const spxPart=p=>{const K=new Set(p.teams.map(t=>'t'+t));if(p.tr)K.add('tr'+p.gid);return K};
 {const f=thSlotErr;thSlotErr=function(key,d,sl,isNew){const p=spxOf(key);if(!p)return f.apply(this,arguments);
   if(isNew&&d<S.day+SPX_LEAD)return SPX_T(`Special Stage performances must be scheduled at least ${SPX_LEAD} days ahead.`,`ต้องจัดรอบสเปเชียลสเตจล่วงหน้าอย่างน้อย ${SPX_LEAD} วัน`);
-  const H=thS(),P=spxPart(p),all=H.sh;H.sh=all.filter(z=>!(P.has(z.k)&&z.day==d));try{return f.call(this,key,d,sl,false)}finally{H.sh=all}}}
+  return f.call(this,key,d,sl,false)}} // a Special Stage never takes a slot another Stage of the theater already has
 function spxLimitErr(p,key,d){const live=spxLive(key),D=p.dur||{};if(p.status=='done')return SPX_T('This Special Stage is completed.','สเปเชียลสเตจนี้จบแล้ว');
  if(p.fmt=='ann'||(p.fmt=='lim'&&D.t=='one'))return live.length>=1?SPX_T('This Special Stage has exactly one performance (already scheduled).','สเปเชียลสเตจนี้แสดงครั้งเดียว (จัดรอบแล้ว)'):'';
  if(p.fmt=='lim'&&D.t=='count'&&live.length>=D.n)return SPX_T(`All ${D.n} performances are already scheduled.`,`จัดครบ ${D.n} รอบแล้ว`);
@@ -92,7 +92,7 @@ function spxLimitErr(p,key,d){const live=spxLive(key),D=p.dur||{};if(p.status=='
  if(p.status!='active'||!thOf(key).active)return SPX_T('Activate the Special Stage first (its Setlist must be complete).','เปิดใช้สเปเชียลสเตจก่อน (เซ็ตลิสต์ต้องครบ)');const e=spxLimitErr(p,key,d);if(e)return e;const r=f.apply(this,arguments);if(!r)spxSync();return r}}
 // regular performances of the participating teams on a Special Stage date are replaced (and come back when it is cancelled / moved)
 function spxSync(){if(!S||!S.th||!S.th.sp)return;const H=thS(),want=new Map();
- H.sh.forEach(x=>{if(!thIsSx(x.k)||x.st=='cancel')return;const p=spxOf(x.k);if(!p)return;const P=spxPart(p);H.sh.forEach(z=>{if(z===x||!P.has(z.k)||z.day!=x.day||z.keep)return;if(z.st=='sched'||z.repl)want.set(z.id,x)})});
+ H.sh.forEach(x=>{if(!thIsSx(x.k)||x.st=='cancel')return;const p=spxOf(x.k);if(!p)return;const P=spxPart(p);H.sh.forEach(z=>{if(z===x||!P.has(z.k)||z.day!=x.day||z.keep)return;if(z.repl)want.set(z.id,x)})});
  H.sh.forEach(z=>{const w=want.get(z.id);if(w){if(z.st=='sched'){z.st='cancel';z.why=`Replaced by Special Stage “${(spxOf(w.k)||{}).name||''}”`;z.ex=1}z.repl=w.id}else if(z.repl){if(z.st=='cancel'&&z.day>S.day){z.st='sched';delete z.why;delete z.ex}delete z.repl}})}
 // ---- performance: lineup, Special Stage record, completion -------------------------------------------------------------------------
 {const f=thPerform;thPerform=function(x){if(!x)return f.apply(this,arguments);const H=thS(),n0=H.pf.length;

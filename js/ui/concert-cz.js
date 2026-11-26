@@ -16,7 +16,7 @@
 {const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx];const r=f.apply(this,arguments);try{if(!it||it.k!='song')return r;const z=it.cz||{mode:'orig'};
   const useOrig=z.mode=='orig'||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]));if(!useOrig)return r;
   const o=ccSong(it.gid,it.song);if(!o)return r;let own=false;try{gsWith(it.gid,()=>{own=czMembers(o).some(m=>m.id==mid)})}catch(e){}if(own)return r;
-  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k<0?null:it.orig&&it.orig[k]&&it.orig[k].m!=null?it.orig[k].m:it.pos[k].o??null;if(om==null)return r;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
+  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k<0?null:it.orig&&it.orig[k]&&it.orig[k].m!=null?it.orig[k].m:it.pos[k].o??null;if(om==null){let q=null;try{q=ccCzFill(C,set,idx,mid,depth)}catch(e){}return q||r}let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
 // ---- 1b. nobody stays in her everyday clothes ---------------------------------------------------------------------------------
 //  When a performer has no costume of her own for the song (e.g. a concert song set up before positions were saved, or a
 //  Theater Stage song she never performed), she wears the costume of the original position she takes; failing that, the
@@ -26,7 +26,10 @@ function ccCzFill(C,set,idx,mid,depth){const it=set&&set.items[idx];if(!it||it.k
  if(!(z.mode=='orig'||!z.mode||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]))))return null;
  const o=ccSong(it.gid,it.song);if(!o)return null;let orig=(it.orig||[]).map(x=>x.m);if(!orig.some(x=>x!=null)){try{orig=ccOrigPos(o).map(x=>x.m)}catch(e){orig=[]}}
  const k=(it.pos||[]).findIndex(p=>p.m==mid),ids=[];if(k>=0&&it.pos[k].o!=null)ids.push(it.pos[k].o);if(k>=0&&orig[k]!=null&&!ids.includes(orig[k]))ids.push(orig[k]);
- const cen=new Set(o.centers||[]);[...orig.filter(x=>x!=null&&cen.has(x)),...orig,...(o.centers||[]),...((o.slots||[]).filter(Boolean))].forEach(x=>{if(x!=null&&x!=mid&&!ids.includes(x))ids.push(x)});
+ const cen=new Set(o.centers||[]);
+ // an added position (more performers than the original song): a non-Center original costume, from the back row, never the Center's
+ if(k>=0&&it.pos[k].o==null&&orig[k]==null){const nc=orig.filter(x=>x!=null&&!cen.has(x));const extra=(it.pos||[]).slice(0,k).filter((p,j)=>p.o==null&&orig[j]==null).length;if(nc.length){const pick=nc[(nc.length-1-(extra%nc.length)+nc.length)%nc.length];if(pick!=null&&!ids.includes(pick))ids.push(pick);nc.slice().reverse().forEach(x=>{if(!ids.includes(x))ids.push(x)})}}
+ [...orig.filter(x=>x!=null&&cen.has(x)),...orig,...(o.centers||[]),...((o.slots||[]).filter(Boolean))].forEach(x=>{if(x!=null&&x!=mid&&!ids.includes(x))ids.push(x)});
  for(const id of ids){const p=ccCzOrig(C,it,id);if(p)return p}
  if(depth<1)for(const id of ccPerf(it)){if(id==mid)continue;const p=ccCzOrig(C,it,id);if(p)return p}return null}
 {const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const r=f.apply(this,arguments);if(r)return r;try{return ccCzFill(C,set,idx,mid,depth)}catch(e){console.error(e);return r}}}

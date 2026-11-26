@@ -1944,3 +1944,10 @@ body.czfs .mod{z-index:80}
 .rhban{display:flex;gap:12px;align-items:center;cursor:pointer;padding:8px;background:linear-gradient(90deg,#24113f,#4b1f66);border:none;color:#fff}
 .rhban .rhposter{width:42%;max-width:260px;flex:none;box-shadow:none;border-radius:12px}.rhbanb{flex:1;display:flex;flex-direction:column;gap:3px}.rhbanb b{font-size:17px;color:#ffd86b}.rhbanb span{font-size:12.5px;opacity:.9}
 @media(max-width:520px){.rhban{flex-wrap:wrap}.rhban .rhposter{width:100%;max-width:none}.rhban .b{width:100%}}
+.thsl2.no.tapoth{background:#e7dcf5;color:#6d5a8e;text-decoration:none;font-size:9px;font-weight:800}
+/* CD Cover Studio full screen */
+body.cvfs .hd,body.cvfs .nav,body.cvfs .side,body.cvfs aside.sb,body.cvfs .gssw,body.cvfs .locb,body.cvfs .gebanner,body.cvfs .sbar{display:none!important}
+body.cvfs .cvx{position:fixed!important;inset:0!important;top:0!important;height:100dvh!important;margin:0!important;z-index:60;border-radius:0;background:var(--bg,#fff8fb);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+body.cvfs{overflow:hidden}body.cvfs .mod{z-index:80}
+.cvfsb{font-weight:800}
+.pkjump{gap:6px;flex-wrap:wrap;margin:4px 0}

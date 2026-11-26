@@ -37,3 +37,14 @@ function ghRepair(){let n=0;if(!S||!S.groups)return 0;(S.groups||[]).forEach(g=>
    back.filter(m=>!have.has(m.id)).forEach((m,k)=>{if(ord[k])ord[k].m=m.id});try{fmSync(o,!fmCheck(o).length)}catch(x){console.error(x)}});
   if(back.length)CTQ.push(`<div class="ctbd">🎓 ${esc(GH_T(`${back.map(m=>m.name).join(', ')} stay${back.length==1?'s':''} until “${p.title}” is released and its CDs are sold, then graduate${back.length==1?'s':''}.`,`${back.map(m=>m.name).join(', ')} จะอยู่ต่อจนปล่อย “${p.title}” และขายซีดีจบ แล้วจึงจบการศึกษา`))}</div>`)})}catch(e){console.error(e)}});try{if(n&&typeof leadFix=='function')leadFix(true)}catch(e){}return n}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{const n=ghRepair();if(n)console.log('graduation hold repair:',n)}catch(e){console.error(e)}return r}}
+// ---- a sister group's single whose Title Track comes from the Main Group election: members already reacted at the
+//      ceremony, so the Title Track is only recorded; reactions are given for the Coupling Songs only -------------------------
+{const f=wlReact;wlReact=function(p){if(!p||!p.geSub||p.geNext||typeof wlPositions!='function')return f.apply(this,arguments);const P0=wlPositions,cp=new Set();
+ try{sr2Songs(p).forEach(o=>{if(o&&o.id!=p.mainId)sr2Pos(o).forEach((pos,id)=>cp.add(+id))})}catch(e){console.error(e)}
+ wlPositions=function(pp){const M=P0.apply(this,arguments);if(!M||pp!==p)return M;const R=new Map(),title=String(p.title||'').trim();M.forEach((pos,id)=>{if(pos!='none'){const m=get(id);if(m)try{wlRecord(m,pos,p.id,title,S.day)}catch(e){}return}if(cp.has(+id))R.set(id,pos)});return R};
+ try{return f.apply(this,arguments)}finally{wlPositions=P0}}}
+// ---- history of a single: a member of another (sister) group is shown in HER group's profile costume of that time ----------------
+const HX_RIDG=new Map();function hxRidGid(rid){if(rid==null)return null;if(HX_RIDG.has(rid))return HX_RIDG.get(rid);let g=null;try{(S.groups||[]).some(G=>{const L=gsCtx(G.id,'singles')||[];if(L.some(x=>x.rid==rid)){g=G.id;return true}return false})}catch(e){}if(HX_RIDG.size>3000)HX_RIDG.clear();HX_RIDG.set(rid,g);return g}
+if(typeof apEff=='function'){const f=apEff;apEff=function(m){const a=f.apply(this,arguments);try{const A=typeof HX_AT!='undefined'?HX_AT:null;if(!A||!m||m._x||A.day==null)return a;const own=typeof gsGid=='function'?gsGid(m):m.group,cur=typeof gsAg=='function'?gsAg():null;if(own==null||own==cur)return a;
+  const L=[...(m.czHist||[]),...(m.profCz?[m.profCz]:[])].filter(z=>z&&z.p&&(z.day??0)<=A.day);if(A.rid!=null&&L.some(z=>z.rid==A.rid))return a;
+  const mine=L.filter(z=>z.rid==null?z.kind!='single':hxRidGid(z.rid)==own).sort((p,q)=>(q.day??0)-(p.day??0))[0];if(mine)return{...a,cd:mine.p}}catch(e){}return a}}

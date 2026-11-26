@@ -2026,6 +2026,13 @@ body.czfs .mod{z-index:80}
 .rhban{display:flex;gap:12px;align-items:center;cursor:pointer;padding:8px;background:linear-gradient(90deg,#24113f,#4b1f66);border:none;color:#fff}
 .rhban .rhposter{width:42%;max-width:260px;flex:none;box-shadow:none;border-radius:12px}.rhbanb{flex:1;display:flex;flex-direction:column;gap:3px}.rhbanb b{font-size:17px;color:#ffd86b}.rhbanb span{font-size:12.5px;opacity:.9}
 @media(max-width:520px){.rhban{flex-wrap:wrap}.rhban .rhposter{width:100%;max-width:none}.rhban .b{width:100%}}
+.thsl2.no.tapoth{background:#e7dcf5;color:#6d5a8e;text-decoration:none;font-size:9px;font-weight:800}
+/* CD Cover Studio full screen */
+body.cvfs .hd,body.cvfs .nav,body.cvfs .side,body.cvfs aside.sb,body.cvfs .gssw,body.cvfs .locb,body.cvfs .gebanner,body.cvfs .sbar{display:none!important}
+body.cvfs .cvx{position:fixed!important;inset:0!important;top:0!important;height:100dvh!important;margin:0!important;z-index:60;border-radius:0;background:var(--bg,#fff8fb);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+body.cvfs{overflow:hidden}body.cvfs .mod{z-index:80}
+.cvfsb{font-weight:800}
+.pkjump{gap:6px;flex-wrap:wrap;margin:4px 0}
 
 </style>
 </head><body>
@@ -14854,19 +14861,20 @@ function ccVtrRow(C,s,it,i){const ed=ccEdit(C);return`<li class="thmc ccvtr ${it
 
 // ---- Stage songs keep their first-performance members and positions ---------------------------------------------------------
 function ccThPos(C,gid,sid,song){let out=null;try{gsWith(gid,()=>{let s=sid&&thStage(sid);if(!s){const L=Object.values((S.th&&S.th.st)||{}).filter(x=>!x.revOf&&!x.adopted&&thAll(x).some(it=>it.song==song)).sort((a,b)=>(a.debut??1e9)-(b.debut??1e9));s=L[0]}if(!s)return;
-  let mem=null,cen=[],rows=null;const fp=typeof rcEnsure=='function'?rcEnsure(s.id):null,z=fp&&(fp.items||[]).find(q=>q.k=='song'&&q.song==song);
-  if(z&&z.mem&&z.mem.length){mem=z.mem.slice();cen=[z.center,z.c2].filter(x=>x!=null);rows=z.rows&&z.rows.reduce((a,b)=>a+b,0)==mem.length?z.rows:null}
-  else{const it=thAll(s).find(q=>q.song==song);if(!it)return;mem=thMem(s,it).slice();const c=thCen(s,it);if(c!=null)cen=[c]}
+  // the Stage's own lineup and formation as they are now (its main members), not the first performance
+  let mem=null,cen=[],rows=null;const it0=thAll(s).find(q=>q.song==song);
+  if(it0){try{const F=thForm(s,it0);mem=(F&&F.o&&F.o.length?F.o:thMem(s,it0)).slice();rows=F&&F.rows&&F.rows.reduce((a,b)=>a+b,0)==mem.length?F.rows.slice():null}catch(e){mem=thMem(s,it0).slice()}const c=thCen(s,it0),c2=typeof thCen2=='function'?thCen2(s,it0):null;cen=[c,c2].filter(x=>x!=null)}
+  else{const fp=typeof rcEnsure=='function'?rcEnsure(s.id):null,z=fp&&(fp.items||[]).find(q=>q.k=='song'&&q.song==song);if(!z||!z.mem||!z.mem.length)return;mem=z.mem.slice();cen=[z.center,z.c2].filter(x=>x!=null);rows=z.rows&&z.rows.reduce((a,b)=>a+b,0)==mem.length?z.rows:null}
   if(!mem||!mem.length)return;rows=rows||fxRows(mem.length,1);const P=new Set(C.parts);let a=0;out={sid:s.id,pos:[]};
   rows.forEach((n,r)=>{const L=thArr(mem.slice(a,a+n));a+=n;L.forEach(id=>{const m=ccMem(id),ok=P.has(id)&&m&&m.status!='graduated';out.pos.push({m:ok?id:null,r,c:cen.includes(id),o:id,why:ok?'':!m||m.status=='graduated'?'graduated':'not in this concert'})})})})}catch(e){console.error(e)}return out}
 function ccThApply(C,it,sid){const o=ccSong(it.gid,it.song);if(!o)return;const orig=ccOrigPos(o);if(orig.length&&!sid)return;const T=ccThPos(C,it.gid,sid,it.song);if(!T)return;it.pos=T.pos;it.orig=T.pos.map(z=>({m:z.o,r:z.r,c:z.c}));it.thsid=T.sid}
 {const f=ccAddSong;ccAddSong=function(key,sid){const C=ccCur(),s=C&&C.sets[ui.ccs],n=s?s.items.length:0,before=s?s.items.slice():[];const r=f.apply(this,arguments);try{if(s&&s.items.length>n){const it=s.items.find(x=>x.k=='song'&&x.gid+':'+x.song==key&&!before.includes(x));if(it)ccThApply(C,it,sid||null)}}catch(e){console.error(e)}return r}}
 {const f=ccPosReset;ccPosReset=function(iid){const C=ccCur(),r=C&&ccItem(C,iid);if(r&&ccEdit(C)){const o=ccSong(r.it.gid,r.it.song);if(r.it.thsid||(o&&!ccOrigPos(o).length)){const T=ccThPos(C,r.it.gid,r.it.thsid,r.it.song);if(T){r.it.pos=T.pos;toast('Formation reset to the first performance (participants only).');return render()}}}return f.apply(this,arguments)}}
-function ccPickAddSt(k,sid){ccAddSong(k,sid);const C=ccCur(),s=C&&C.sets[ui.ccs];const it=s&&s.items.filter(x=>x.k=='song').at(-1);toast(`Added “${it?it.title:''}” with its first-performance lineup.`);ui.mod={t:'html',ccpk:1,h:ccPickHtml()};render()}
+function ccPickAddSt(k,sid){ccAddSong(k,sid);const C=ccCur(),s=C&&C.sets[ui.ccs];const it=s&&s.items.filter(x=>x.k=='song').at(-1);toast(`Added “${it?it.title:''}” with the Stage lineup.`);ui.mod={t:'html',ccpk:1,h:ccPickHtml()};render()}
 // ---- song picker: Group · Single · Stage (group → team → stage no., no Revival Stages) ----------------------------------------
 {const f0=ccPickData;ccPickData=function(){const D=f0.apply(this,arguments),all=ccSongsAll(),idx=new Map(all.map(x=>[x.gid+':'+x.o.id,x])),G=S.groups.filter(g=>!g.dis),st=[];
  G.forEach(g=>{try{gsWith(g.id,()=>{const keys=(typeof thKeysAll=='function'?thKeysAll():thKeys()).map(K=>K.key),ko=k=>{const i=keys.indexOf(k);return i<0?99:i};
-  Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&!s.adopted&&(s.no!=null||['active','retired','archived'].includes(s.status))).sort((a,b)=>ko(a.k)-ko(b.k)||(a.no||99)-(b.no||99)).forEach(s=>{const L=thAll(s).map(it=>idx.get(g.id+':'+it.song)).filter(Boolean);if(L.length)st.push({h:`${thLabel(s.k)} ${s.no?ordN(s.no)+' Stage':'Stage'} “${s.name}”`,sub:G.length>1?g.name:'',L,sid:s.id})})})}catch(e){console.error(e)}});
+  Object.values((S.th&&S.th.st)||{}).filter(s=>!s.revOf&&!s.adopted&&!String(s.k).startsWith('sx')&&(s.no!=null||['active','retired','archived'].includes(s.status))).sort((a,b)=>ko(a.k)-ko(b.k)||(a.no||99)-(b.no||99)).forEach(s=>{const L=thAll(s).map(it=>idx.get(g.id+':'+it.song)).filter(Boolean);if(L.length)st.push({h:`${thLabel(s.k)} ${s.no?ordN(s.no)+' Stage':'Stage'} “${s.name}”`,sub:G.length>1?g.name:'',L,sid:s.id})})})}catch(e){console.error(e)}});
  D.stage=st;delete D.team;return D}}
 ccPickHtml=function(){const C=ccCur(),s=C&&C.sets[ui.ccs],P=ui.ccpk=ui.ccpk||{tab:'single',q:''};if(!s)return'';if(P.tab=='team')P.tab='stage';const D=ccPickData(),q=(P.q||'').toLowerCase(),have={};s.items.forEach(it=>{if(it.k=='song'){const k=it.gid+':'+it.song;have[k]=(have[k]||0)+1}});
  const T=[['grp','Group'],['single','Single'],['stage','Stage']],blocks=(D[P.tab]||[]).map(b=>({...b,L:b.L.filter(x=>!q||x.o.title.toLowerCase().includes(q))})).filter(b=>b.L.length);
@@ -15744,7 +15752,7 @@ function hzHtml(){const C=hzCur();if(!C)return'';const m=get(C.mid),o=C.o,H=hzOf
 {const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const it=set&&set.items[idx];const r=f.apply(this,arguments);try{if(!it||it.k!='song')return r;const z=it.cz||{mode:'orig'};
   const useOrig=z.mode=='orig'||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]));if(!useOrig)return r;
   const o=ccSong(it.gid,it.song);if(!o)return r;let own=false;try{gsWith(it.gid,()=>{own=czMembers(o).some(m=>m.id==mid)})}catch(e){}if(own)return r;
-  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k<0?null:it.orig&&it.orig[k]&&it.orig[k].m!=null?it.orig[k].m:it.pos[k].o??null;if(om==null)return r;let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
+  const k=(it.pos||[]).findIndex(p=>p.m==mid),om=k<0?null:it.orig&&it.orig[k]&&it.orig[k].m!=null?it.orig[k].m:it.pos[k].o??null;if(om==null){let q=null;try{q=ccCzFill(C,set,idx,mid,depth)}catch(e){}return q||r}let p=null;try{gsWith(it.gid,()=>{p=czFor(o,om)})}catch(e){}return p||r}catch(e){console.error(e);return r}}}
 // ---- 1b. nobody stays in her everyday clothes ---------------------------------------------------------------------------------
 //  When a performer has no costume of her own for the song (e.g. a concert song set up before positions were saved, or a
 //  Theater Stage song she never performed), she wears the costume of the original position she takes; failing that, the
@@ -15754,7 +15762,10 @@ function ccCzFill(C,set,idx,mid,depth){const it=set&&set.items[idx];if(!it||it.k
  if(!(z.mode=='orig'||!z.mode||(z.mode=='mem'&&!(z.memP&&z.memP[mid])&&!(z.mem&&z.mem[mid]))))return null;
  const o=ccSong(it.gid,it.song);if(!o)return null;let orig=(it.orig||[]).map(x=>x.m);if(!orig.some(x=>x!=null)){try{orig=ccOrigPos(o).map(x=>x.m)}catch(e){orig=[]}}
  const k=(it.pos||[]).findIndex(p=>p.m==mid),ids=[];if(k>=0&&it.pos[k].o!=null)ids.push(it.pos[k].o);if(k>=0&&orig[k]!=null&&!ids.includes(orig[k]))ids.push(orig[k]);
- const cen=new Set(o.centers||[]);[...orig.filter(x=>x!=null&&cen.has(x)),...orig,...(o.centers||[]),...((o.slots||[]).filter(Boolean))].forEach(x=>{if(x!=null&&x!=mid&&!ids.includes(x))ids.push(x)});
+ const cen=new Set(o.centers||[]);
+ // an added position (more performers than the original song): a non-Center original costume, from the back row, never the Center's
+ if(k>=0&&it.pos[k].o==null&&orig[k]==null){const nc=orig.filter(x=>x!=null&&!cen.has(x));const extra=(it.pos||[]).slice(0,k).filter((p,j)=>p.o==null&&orig[j]==null).length;if(nc.length){const pick=nc[(nc.length-1-(extra%nc.length)+nc.length)%nc.length];if(pick!=null&&!ids.includes(pick))ids.push(pick);nc.slice().reverse().forEach(x=>{if(!ids.includes(x))ids.push(x)})}}
+ [...orig.filter(x=>x!=null&&cen.has(x)),...orig,...(o.centers||[]),...((o.slots||[]).filter(Boolean))].forEach(x=>{if(x!=null&&x!=mid&&!ids.includes(x))ids.push(x)});
  for(const id of ids){const p=ccCzOrig(C,it,id);if(p)return p}
  if(depth<1)for(const id of ccPerf(it)){if(id==mid)continue;const p=ccCzOrig(C,it,id);if(p)return p}return null}
 {const f=ccCzFor;ccCzFor=function(C,set,idx,mid,depth=0){const r=f.apply(this,arguments);if(r)return r;try{return ccCzFill(C,set,idx,mid,depth)}catch(e){console.error(e);return r}}}
@@ -16208,7 +16219,7 @@ ccPickHtml=function(){const C=ccCur(),s=C&&C.sets[ui.ccs],P=ui.ccpk=ui.ccpk||{q:
  return`<h2 class="ht">Add songs</h2>${I?`<div class="c ccins">Adding ${ui.ccins.below?'below':'above'} <b>${esc(I.it.title||I.it.name||'')}</b> <button class="b s" onclick="ui.ccins=null;ui.mod.h=ccPickHtml();render()">Add at the end instead</button></div>`:''}
  ${G.length>1?`<div class="row cctabs">${G.map(x=>`<button class="b s ${x.id==g?'p':''}" onclick="ui.ccpk.g=${x.id};ui.mod.h=ccPickHtml();render()">${esc(x.name)}</button>`).join('')}</div>`:''}
  <input class="ccpkq" placeholder="Search songs" value="${esc(P.q||'')}" onchange="ui.ccpk.q=this.value;ui.mod.h=ccPickHtml();render()">
- <div class="ccpk">${sec('single','💿 Singles',`${sing.length} single(s)`,sing.map(b=>blk(b,'s')).join(''))}${sec('stage','🎭 Stages',`${stg.length} stage(s)`,'<p class="st">Stage songs are added with the members and positions of the Stage’s first performance (only concert participants are placed).</p>'+stg.map(b=>blk(b,'t')).join(''))}${sec('other','🎵 Other songs',`${oth.length} song(s)`,oth.map(x=>row(x)).join(''))}
+ <div class="ccpk">${sec('single','💿 Singles',`${sing.length} single(s)`,sing.map(b=>blk(b,'s')).join(''))}${sec('stage','🎭 Stages',`${stg.length} stage(s)`,'<p class="st">Stage songs are added with the Stage’s current lineup and formation (only concert participants are placed).</p>'+stg.map(b=>blk(b,'t')).join(''))}${sec('other','🎵 Other songs',`${oth.length} song(s)`,oth.map(x=>row(x)).join(''))}
  ${!sing.length&&!stg.length&&!oth.length?'<p class="st">No songs match.</p>':''}</div>`};
 {const f=ccPickOpen;ccPickOpen=function(){const r=f.apply(this,arguments);return r}}
 // closing the picker ends "add above / below"
@@ -21653,6 +21664,12 @@ function cvmTrim(x,hdB){const w=x.closest('.cvxw')||x;const cur=parseFloat(w.sty
  if(view=='cover'&&document.querySelector('.cvx')){cvmLayout();if(first&&cvmIsMob()){ui.cvmView=ui.ed+'|'+(ui.cvCtx||'');const x=document.querySelector('.cvx'),hd=document.querySelector('.hd'),y=window.scrollY+x.getBoundingClientRect().top-(hd?hd.getBoundingClientRect().height:0);window.scrollTo(0,Math.max(0,y));setTimeout(()=>{const x2=document.querySelector('.cvx');if(!x2)return;const hd2=document.querySelector('.hd');window.scrollTo(0,Math.max(0,window.scrollY+x2.getBoundingClientRect().top-(hd2?hd2.getBoundingClientRect().height:0)));cvmLayout()},120)}}
  else if(view!='cover')ui.cvmView=null;return r}}
 window.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(view=='cover')cvmLayout()});
+// ---- fullscreen studio (like the Costume Studio): game header and bottom tab bar hidden, the editor fills the screen ----------
+const cvFs=()=>document.body.classList.contains('cvfs');
+function cvFsTog(){const on=!cvFs();document.body.classList.toggle('cvfs',on);ui.cvFs=on?1:0;try{const el=document.documentElement;if(on){const rq=el.requestFullscreen||el.webkitRequestFullscreen;if(rq)rq.call(el).catch&&rq.call(el).catch(()=>{})}else{const ex=document.exitFullscreen||document.webkitExitFullscreen;if((document.fullscreenElement||document.webkitFullscreenElement)&&ex)ex.call(document)}}catch(e){}render()}
+{const f=V.cover;V.cover=function(){let h=f.apply(this,arguments);try{if(h.includes('class="cvtop"'))h=h.replace('<div class="cvtop">',`<div class="cvtop"><button class="cvtb t cvfsb" onclick="cvFsTog()" title="${cvFs()?CVM_T('Exit full screen','ออกจากเต็มจอ'):CVM_T('Full screen','เต็มจอ')}">${cvFs()?'⤡':'⛶'} <span>${cvFs()?CVM_T('Exit','ออก'):CVM_T('Full screen','เต็มจอ')}</span></button>`)}catch(e){console.error(e)}return h}}
+// leaving the studio leaves full screen
+{const f=render;render=function(){if(view!='cover'&&cvFs()){document.body.classList.remove('cvfs');ui.cvFs=0;try{const ex=document.exitFullscreen||document.webkitExitFullscreen;if((document.fullscreenElement||document.webkitFullscreenElement)&&ex)ex.call(document)}catch(e){}}return f.apply(this,arguments)}}
 
 </script>
 <script>
@@ -22191,7 +22208,7 @@ function spxShowLu(sid,v){const x=thS().sh.find(z=>z.id==sid);if(!x||x.st!='sche
 const spxPart=p=>{const K=new Set(p.teams.map(t=>'t'+t));if(p.tr)K.add('tr'+p.gid);return K};
 {const f=thSlotErr;thSlotErr=function(key,d,sl,isNew){const p=spxOf(key);if(!p)return f.apply(this,arguments);
   if(isNew&&d<S.day+SPX_LEAD)return SPX_T(`Special Stage performances must be scheduled at least ${SPX_LEAD} days ahead.`,`ต้องจัดรอบสเปเชียลสเตจล่วงหน้าอย่างน้อย ${SPX_LEAD} วัน`);
-  const H=thS(),P=spxPart(p),all=H.sh;H.sh=all.filter(z=>!(P.has(z.k)&&z.day==d));try{return f.call(this,key,d,sl,false)}finally{H.sh=all}}}
+  return f.call(this,key,d,sl,false)}} // a Special Stage never takes a slot another Stage of the theater already has
 function spxLimitErr(p,key,d){const live=spxLive(key),D=p.dur||{};if(p.status=='done')return SPX_T('This Special Stage is completed.','สเปเชียลสเตจนี้จบแล้ว');
  if(p.fmt=='ann'||(p.fmt=='lim'&&D.t=='one'))return live.length>=1?SPX_T('This Special Stage has exactly one performance (already scheduled).','สเปเชียลสเตจนี้แสดงครั้งเดียว (จัดรอบแล้ว)'):'';
  if(p.fmt=='lim'&&D.t=='count'&&live.length>=D.n)return SPX_T(`All ${D.n} performances are already scheduled.`,`จัดครบ ${D.n} รอบแล้ว`);
@@ -22201,7 +22218,7 @@ function spxLimitErr(p,key,d){const live=spxLive(key),D=p.dur||{};if(p.status=='
  if(p.status!='active'||!thOf(key).active)return SPX_T('Activate the Special Stage first (its Setlist must be complete).','เปิดใช้สเปเชียลสเตจก่อน (เซ็ตลิสต์ต้องครบ)');const e=spxLimitErr(p,key,d);if(e)return e;const r=f.apply(this,arguments);if(!r)spxSync();return r}}
 // regular performances of the participating teams on a Special Stage date are replaced (and come back when it is cancelled / moved)
 function spxSync(){if(!S||!S.th||!S.th.sp)return;const H=thS(),want=new Map();
- H.sh.forEach(x=>{if(!thIsSx(x.k)||x.st=='cancel')return;const p=spxOf(x.k);if(!p)return;const P=spxPart(p);H.sh.forEach(z=>{if(z===x||!P.has(z.k)||z.day!=x.day||z.keep)return;if(z.st=='sched'||z.repl)want.set(z.id,x)})});
+ H.sh.forEach(x=>{if(!thIsSx(x.k)||x.st=='cancel')return;const p=spxOf(x.k);if(!p)return;const P=spxPart(p);H.sh.forEach(z=>{if(z===x||!P.has(z.k)||z.day!=x.day||z.keep)return;if(z.repl)want.set(z.id,x)})});
  H.sh.forEach(z=>{const w=want.get(z.id);if(w){if(z.st=='sched'){z.st='cancel';z.why=`Replaced by Special Stage “${(spxOf(w.k)||{}).name||''}”`;z.ex=1}z.repl=w.id}else if(z.repl){if(z.st=='cancel'&&z.day>S.day){z.st='sched';delete z.why;delete z.ex}delete z.repl}})}
 // ---- performance: lineup, Special Stage record, completion -------------------------------------------------------------------------
 {const f=thPerform;thPerform=function(x){if(!x)return f.apply(this,arguments);const H=thS(),n0=H.pf.length;
@@ -23959,7 +23976,7 @@ function tapData(s,gid){const K=thK(s.k),own=K?K.gid:null;gid=gid??own;const run
    const L=ids.map(id=>A.get(id)).filter(Boolean);return L.length?{h:x.title||(S.songs[x.mainId]||{}).title||'Single',sub:[x.no?ordN(x.no)+' Single':'',(x.relDay??x.day)!=null?jd(x.relDay??x.day):''].filter(Boolean).join(' · '),L,role:id=>id==x.mainId?TAP_T('Title track','เพลงหลัก'):TAP_T('Coupling','เพลงรอง')}:null}).filter(Boolean);
   sing.forEach(b=>b.L.forEach(o=>used.add(o.id)));
   const keys=new Set(thKeysAll().filter(k=>k.gid==gid).map(k=>k.key));
-  const stg=Object.values(thS().st||{}).filter(t=>keys.has(t.k)&&t.id!=s.id&&(t.no||t.status=='active'||t.status=='retired')).sort((a,b)=>(b.debut??0)-(a.debut??0)).map(t=>{const L=[...new Set(thAll(t).map(it=>it.song))].map(id=>A.get(id)).filter(Boolean);
+  const stg=Object.values(thS().st||{}).filter(t=>keys.has(t.k)&&t.id!=s.id&&!String(t.k).startsWith('sx')&&(t.no||t.status=='active'||t.status=='retired')).sort((a,b)=>(b.debut??0)-(a.debut??0)).map(t=>{const L=[...new Set(thAll(t).map(it=>it.song))].map(id=>A.get(id)).filter(Boolean);
    return L.length?{h:`${thLabel(t.k)} ${t.no?ordN(t.no)+' Stage':'Stage'} “${t.name}”`,sub:t.debut!=null?jd(t.debut):'',L}:null}).filter(Boolean);
   stg.forEach(b=>b.L.forEach(o=>used.add(o.id)));
   const oth=[...A.values()].filter(o=>!used.has(o.id)).sort((a,b)=>thSongPop(b)-thSongPop(a));return{sing,stg,oth}})}
@@ -23990,6 +24007,27 @@ const tapIsSp=key=>{try{const K=thK(key);return!!K&&K.kind=='sp'}catch(e){return
 {const f=thSongNew;thSongNew=function(){if(tapIsSp(thCur()))return toast(TAP_T('Special Stages use existing songs only. New songs are created in Team Stages or Single Production.','สเปเชียลสเตจใช้ได้เฉพาะเพลงที่มีอยู่แล้ว เพลงใหม่สร้างได้ที่สเตจของทีมหรือการทำซิงเกิล'),'err');return f.apply(this,arguments)}}
 {const f=thSongMake2;thSongMake2=function(){if(tapIsSp(thCur()))return;return f.apply(this,arguments)}}
 {const f=thTimeline;thTimeline=function(s){const h=f.apply(this,arguments);try{if(s&&tapIsSp(s.k))return h.replace(/<button class="b p" onclick="thSongNew\(\)">✦ Add New Song<\/button><span class="st">[^<]*<\/span>/,`<span class="st">${TAP_T('Special Stages use existing songs only: add them with “Add songs” below.','สเปเชียลสเตจใช้ได้เฉพาะเพลงที่มีอยู่แล้ว: เพิ่มเพลงด้วยปุ่ม “เพิ่มเพลง” ด้านล่าง')}</span>`)}catch(e){console.error(e)}return h}}
+// Special Stage Encore: no new songs either
+{const f=thEncHtml;thEncHtml=function(s){const h=f.apply(this,arguments);try{if(s&&tapIsSp(s.k))return h.replace(/<button[^>]*onclick="thSongNew\(1\)"[^>]*>[^<]*<\/button>/g,'')}catch(e){console.error(e)}return h}}
+// ---- schedule grid: slots taken by another Stage of the same theater are shown with its name ---------------------------------
+{const f=thWeekGrid;thWeekGrid=function(key){let h=f.apply(this,arguments);try{h=h.replace(/<button class="thsl2 no([^"]*)" title="The theater is booked by ([^"]+)\."([^>]*)>([^<]*)<\/button>/g,(a,c,who,rest,l)=>{const sh=String(who).replace(/^Team\s+/,'').replace(/&amp;/g,'&').slice(0,4);return`<button class="thsl2 no tapoth${c}" title="${TAP_T('Booked by','จองโดย')} ${who}"${rest}>${esc(sh)}</button>`});
+ if(h.includes('tapoth'))h=h.replace('<div class="thwg">',`<p class="st"><span class="thsl2 no tapoth">W</span> ${TAP_T('= taken by another Stage of this theater (its name is shown). Special Stages cannot be booked on those slots.','= รอบของสเตจอื่นในเธียเตอร์นี้ (แสดงชื่อ) สเปเชียลสเตจจองทับรอบนั้นไม่ได้')}</p><div class="thwg">`)}catch(e){console.error(e)}return h}}
+// ---- Add-song pickers (concert + Stage): jump to Singles / Stages / Other songs, and stay in place after "+ Add" -------------
+const PK_SECS=[['💿',TAP_T('Singles','ซิงเกิล')],['🎭',TAP_T('Stages','สเตจ')],['🎵',TAP_T('Other songs','เพลงอื่น ๆ')]];
+function pkJumpRow(h){const have=PK_SECS.filter(([e])=>h.includes(`<summary><b>${e} `));if(have.length<2)return'';return`<div class="row pkjump">${have.map(([e,n])=>`<button class="b s" onclick="pkJump('${e}')">${e} ${esc(n)}</button>`).join('')}</div>`}
+function pkJump(e){const D=[...document.querySelectorAll('.mod details.ccpks')].find(d=>{const s=d.querySelector('summary');return s&&s.textContent.trim().startsWith(e)});if(!D)return;D.open=true;try{D.scrollIntoView({block:'start',behavior:'smooth'})}catch(x){D.scrollIntoView()}}
+const pkWithJump=h=>{try{const i=h.indexOf('<input class="ccpkq"');if(i<0)return h;return h.slice(0,i)+pkJumpRow(h)+h.slice(i)}catch(e){return h}};
+{const f=ccPickHtml;ccPickHtml=function(){return pkWithJump(f.apply(this,arguments))}}
+{const f=tapHtml;tapHtml=function(){return pkWithJump(f.apply(this,arguments))}}
+const pkDlg=()=>document.querySelector('.mod [role=dialog]');
+const pkL=()=>document.querySelector('.mod .ccpk');
+function pkKeep(fn){return function(){const d=pkDlg(),y=d?d.scrollTop:0,l=pkL(),ly=l?l.scrollTop:0,w=window.scrollY;const r=fn.apply(this,arguments);const put=()=>{const d2=pkDlg(),l2=pkL();if(d2)d2.scrollTop=y;if(l2)l2.scrollTop=ly};try{put();requestAnimationFrame(put);window.scrollTo(0,w)}catch(e){}return r}}
+ccPickAdd=pkKeep(ccPickAdd);ccPickAddSt=pkKeep(ccPickAddSt);tapAdd=pkKeep(tapAdd);tapAddX=pkKeep(tapAddX);
+// ---- Concert Encore mode (like the Stage editor): while it is on, every added song goes to the Encore ---------------------------
+{const f=ccAddSong;ccAddSong=function(){const C=ccCur(),s=C&&C.sets[ui.ccs],before=s?new Set(s.items.map(x=>x.id)):null;const r=f.apply(this,arguments);try{if(s&&s.encMode){s.items.forEach(x=>{if(!before.has(x.id)&&x.k=='song')x.enc=1});ccEncSort(s)}}catch(e){console.error(e)}return r}}
+function ccEncMode(on){const C=ccCur(),s=C&&C.sets[ui.ccs];if(!ccEdit(C)||!s)return;s.encMode=on?1:0;toast(on?TAP_T('Encore on: songs you add now go to the Encore.','เปิดอังกอร์: เพลงที่เพิ่มต่อจากนี้จะเข้าอังกอร์'):TAP_T('Encore off: songs you add go to the main setlist.','ปิดอังกอร์: เพลงที่เพิ่มจะเข้าเซ็ตลิสต์หลัก'));render()}
+{const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{const s=C&&C.sets[ui.ccs];if(s&&ccEdit(C)&&h.includes('<h3>Setlist</h3>')){const n=s.items.filter(x=>x.k=='song'&&x.enc).length;
+  h=h.replace('<h3>Setlist</h3>',`<div class="row ccencm"><h3 style="margin:0">Setlist</h3><span style="flex:1"></span><span class="st">${TAP_T('Encore','อังกอร์')} ${n}</span><button class="b s ${s.encMode?'p':''}" onclick="ccEncMode(1)">${TAP_T('Encore on','เปิดอังกอร์')}</button><button class="b s ${s.encMode?'':'p'}" onclick="ccEncMode(0)">${TAP_T('Encore off','ปิดอังกอร์')}</button></div>${s.encMode?`<p class="st">${TAP_T('Encore is on: songs added now (Add songs) are placed in the Encore.','เปิดอังกอร์อยู่: เพลงที่เพิ่ม (Add songs) ตอนนี้จะอยู่ในอังกอร์')}</p>`:''}`)}}catch(e){console.error(e)}return h}}
 
 </script>
 <script>
@@ -24032,6 +24070,17 @@ function ghRepair(){let n=0;if(!S||!S.groups)return 0;(S.groups||[]).forEach(g=>
    back.filter(m=>!have.has(m.id)).forEach((m,k)=>{if(ord[k])ord[k].m=m.id});try{fmSync(o,!fmCheck(o).length)}catch(x){console.error(x)}});
   if(back.length)CTQ.push(`<div class="ctbd">🎓 ${esc(GH_T(`${back.map(m=>m.name).join(', ')} stay${back.length==1?'s':''} until “${p.title}” is released and its CDs are sold, then graduate${back.length==1?'s':''}.`,`${back.map(m=>m.name).join(', ')} จะอยู่ต่อจนปล่อย “${p.title}” และขายซีดีจบ แล้วจึงจบการศึกษา`))}</div>`)})}catch(e){console.error(e)}});try{if(n&&typeof leadFix=='function')leadFix(true)}catch(e){}return n}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{const n=ghRepair();if(n)console.log('graduation hold repair:',n)}catch(e){console.error(e)}return r}}
+// ---- a sister group's single whose Title Track comes from the Main Group election: members already reacted at the
+//      ceremony, so the Title Track is only recorded; reactions are given for the Coupling Songs only -------------------------
+{const f=wlReact;wlReact=function(p){if(!p||!p.geSub||p.geNext||typeof wlPositions!='function')return f.apply(this,arguments);const P0=wlPositions,cp=new Set();
+ try{sr2Songs(p).forEach(o=>{if(o&&o.id!=p.mainId)sr2Pos(o).forEach((pos,id)=>cp.add(+id))})}catch(e){console.error(e)}
+ wlPositions=function(pp){const M=P0.apply(this,arguments);if(!M||pp!==p)return M;const R=new Map(),title=String(p.title||'').trim();M.forEach((pos,id)=>{if(pos!='none'){const m=get(id);if(m)try{wlRecord(m,pos,p.id,title,S.day)}catch(e){}return}if(cp.has(+id))R.set(id,pos)});return R};
+ try{return f.apply(this,arguments)}finally{wlPositions=P0}}}
+// ---- history of a single: a member of another (sister) group is shown in HER group's profile costume of that time ----------------
+const HX_RIDG=new Map();function hxRidGid(rid){if(rid==null)return null;if(HX_RIDG.has(rid))return HX_RIDG.get(rid);let g=null;try{(S.groups||[]).some(G=>{const L=gsCtx(G.id,'singles')||[];if(L.some(x=>x.rid==rid)){g=G.id;return true}return false})}catch(e){}if(HX_RIDG.size>3000)HX_RIDG.clear();HX_RIDG.set(rid,g);return g}
+if(typeof apEff=='function'){const f=apEff;apEff=function(m){const a=f.apply(this,arguments);try{const A=typeof HX_AT!='undefined'?HX_AT:null;if(!A||!m||m._x||A.day==null)return a;const own=typeof gsGid=='function'?gsGid(m):m.group,cur=typeof gsAg=='function'?gsAg():null;if(own==null||own==cur)return a;
+  const L=[...(m.czHist||[]),...(m.profCz?[m.profCz]:[])].filter(z=>z&&z.p&&(z.day??0)<=A.day);if(A.rid!=null&&L.some(z=>z.rid==A.rid))return a;
+  const mine=L.filter(z=>z.rid==null?z.kind!='single':hxRidGid(z.rid)==own).sort((p,q)=>(q.day??0)-(p.day??0))[0];if(mine)return{...a,cd:mine.p}}catch(e){}return a}}
 
 </script>
 <script>
