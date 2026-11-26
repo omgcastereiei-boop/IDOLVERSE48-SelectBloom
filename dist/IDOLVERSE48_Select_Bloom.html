@@ -6599,10 +6599,10 @@ const _mxCardT=mcardT;mcardT=function(m){return`<!--mc:${m.id}-->`+_mxCardT.appl
 const _mxProfC=profHtml;profHtml=function(){return _mxProfC.apply(this,arguments).replace(/<label class="st">Costume <select onchange="setMemCos\([\s\S]*?<\/select><\/label>/,'')};
 function sortBar(obj,g){const op=(a,v)=>a.map(([k,n])=>`<option value="${k}" ${String(k)==String(v)?'selected':''}>${n}</option>`).join('');return`<div class="row gsort"><label class="st">Sort by <select onchange="${obj}.k=this.value;render()">${op(STATS.map(x=>[x[0],x[1]]),g.k)}</select></label><select onchange="${obj}.dir=this.value;render()" aria-label="Order">${op([['d','Highest to Lowest'],['a','Lowest to Highest']],g.dir)}</select></div>`}
 // add-members window: same sorting, value shown on each card
-const _mxAddm2=addmHtml;addmHtml=function(){let h=_mxAddm2.apply(this,arguments);const g=ui.ams=ui.ams||{k:'pop',dir:'d'},lab=(STATS.find(x=>x[0]==g.k)||['',''])[1];
- h=h.replace(/(?:<div class="c m" id="am\d+"[\s\S]*?<\/div><\/div>)+/,run=>{const C=[];run.replace(/<div class="c m" id="am(\d+)"[\s\S]*?<\/div><\/div>/g,(c,id)=>{C.push([get(+id),c])});C.sort((a,b)=>(a[0]&&b[0])?((g.dir=='a'?-1:1)*(sv(b[0],g.k)-sv(a[0],g.k))||a[0].id-b[0].id):0);
-  return C.map(([m,c])=>m?c.replace(/<\/div><\/div>$/,`<br>${esc(lab)}: <b>${svs(m,g.k)}</b></div></div>`):c).join('')});
- return h.replace('<div class="gcolbar"',sortBar('ui.ams',g)+'<div class="gcolbar"')};
+// add-members window: one sort only (the member list bar above the cards: sort + team / generation / group filters);
+// each card shows the value of the chosen sort
+const _mxAddm2=addmHtml;addmHtml=function(){let h=_mxAddm2.apply(this,arguments);try{const pre=`${view}|${ui.mod?ui.mod.t:''}|`,E=Object.entries(ui.mls||{}).find(([k,c])=>k.startsWith(pre)&&c&&c.k),k=E&&E[1].k,st=k&&STATS.find(x=>x[0]==k);if(!st)return h;
+ h=h.replace(/<div class="c m" id="am(\d+)"[\s\S]*?<\/div><\/div>/g,(c,id)=>{const m=get(+id);return m?c.replace(/<\/div><\/div>$/,`<br>${esc(st[1])}: <b>${svs(m,k)}</b></div></div>`):c})}catch(e){console.error(e)}return h};
 
 // ---- song history: Title Tracks (A-Sides) and Coupling Songs (B-Sides), oldest first ----------------------
 histHtml=function(m){const H=(m.hist||[]).slice(),rel=h=>S.singles.find(x=>x.rid==h.rid)||(S.albums||[]).find(a=>a.id==h.rid)||null,ym=d=>d==null?'':new Date(2026,3,1+d).toLocaleDateString('en-US',{month:'short',year:'numeric'});
