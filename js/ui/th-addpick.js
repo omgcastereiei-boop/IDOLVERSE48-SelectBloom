@@ -1,0 +1,50 @@
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Stage editor: "Add songs" menu like the concert one
+// -------------------------------------------------------------------------------------
+//  The long Song Library list under the setlist is replaced by an "+ Add songs" button that opens a picker
+//  organised like the concert's: 💿 Singles (each single with its tracks), 🎭 Stages (each Stage with its songs),
+//  🎵 Other songs (album songs, Theater originals…), collapsible, with a search box. Random songs and New original
+//  song stay next to the button. Replacing unavailable songs keeps its own list.
+// =====================================================================================
+const TAP_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+const tapOpen=k=>!(ui.tapz||{})[k];
+function tapTog(el,k){const Z=ui.tapz=ui.tapz||{};if(el.open)delete Z[k];else Z[k]=1}
+function tapData(s){const K=thK(s.k),gid=K?K.gid:null,run=f=>(typeof gsWith=='function'&&gid!=null&&typeof gsAg=='function'&&gid!=gsAg())?gsWith(gid,f):f();
+ return run(()=>{const A=new Map(thAvail(s.k).map(o=>[o.id,o])),used=new Set(),take=id=>{const o=A.get(id);if(o)used.add(id);return o};
+  const sing=(S.singles||[]).slice().sort((a,b)=>(b.relDay??b.day??0)-(a.relDay??a.day??0)).map(x=>{const ids=[x.mainId,...(x.coup||[]),...((x.tracks||[]).map(t=>t.id))].filter((id,i,L)=>id&&L.indexOf(id)==i);
+   const L=ids.map(id=>A.get(id)).filter(Boolean);return L.length?{h:x.title||(S.songs[x.mainId]||{}).title||'Single',sub:[x.no?ordN(x.no)+' Single':'',(x.relDay??x.day)!=null?jd(x.relDay??x.day):''].filter(Boolean).join(' · '),L,role:id=>id==x.mainId?TAP_T('Title track','เพลงหลัก'):TAP_T('Coupling','เพลงรอง')}:null}).filter(Boolean);
+  sing.forEach(b=>b.L.forEach(o=>used.add(o.id)));
+  const keys=new Set(thKeysAll().filter(k=>k.gid==gid).map(k=>k.key));
+  const stg=Object.values(thS().st||{}).filter(t=>keys.has(t.k)&&t.id!=s.id&&(t.no||t.status=='active'||t.status=='retired')).sort((a,b)=>(b.debut??0)-(a.debut??0)).map(t=>{const L=[...new Set(thAll(t).map(it=>it.song))].map(id=>A.get(id)).filter(Boolean);
+   return L.length?{h:`${thLabel(t.k)} ${t.no?ordN(t.no)+' Stage':'Stage'} “${t.name}”`,sub:t.debut!=null?jd(t.debut):'',L}:null}).filter(Boolean);
+  stg.forEach(b=>b.L.forEach(o=>used.add(o.id)));
+  const oth=[...A.values()].filter(o=>!used.has(o.id)).sort((a,b)=>thSongPop(b)-thSongPop(a));return{sing,stg,oth}})}
+function tapHtml(){const s=thEd();if(!s)return'';const q=String(ui.tapq||'').toLowerCase(),have=new Set(thAll(s).map(i=>i.song)),D=tapData(s),ok=o=>!q||String(o.title).toLowerCase().includes(q),full=thAll(s).length>=TH_MAXS;
+ const row=(o,role)=>{const n=have.has(o.id);return`<div class="row ccpki"><div style="flex:1;min-width:0"><b>${esc(o.title)}</b><small class="st">${esc(role||thCat(o))}${o.genre?' · '+esc(o.genre):''}${o.concept?' · '+esc(o.concept):''} · ≈${thDur(o)}</small></div>${n?`<span class="tag">${TAP_T('In setlist','อยู่ในเซ็ตลิสต์แล้ว')}</span>`:`<button class="b s p" ${full?'disabled':''} onclick="tapAdd('${o.id}')">+ Add</button>`}</div>`};
+ const blk=(b,pre)=>{const L=b.L.filter(ok);if(!L.length)return'';const k=pre+b.h;return`<details ${tapOpen(k)?'open':''} class="ccpkb" ontoggle="tapTog(this,'${esc(k).replace(/'/g,'')}')"><summary><b>${esc(b.h)}</b> <small class="st">${esc(b.sub||'')}</small></summary>${L.map(o=>row(o,b.role?b.role(o.id):'')).join('')}</details>`};
+ const sec=(id,title,body,n)=>{const k='sec'+id;return n?`<details ${tapOpen(k)?'open':''} class="ccpks" ontoggle="tapTog(this,'${k}')"><summary><b>${title}</b> <small class="st">${n}</small></summary>${body}</details>`:''};
+ const si=D.sing.map(b=>blk(b,'s')).filter(Boolean),st=D.stg.map(b=>blk(b,'t')).filter(Boolean),ot=D.oth.filter(ok);
+ return`<h2 class="ht">${TAP_T('Add songs','เพิ่มเพลง')}</h2><p class="st">“${esc(s.name)}” · ${thAll(s).length}/${TH_MAXS} ${TAP_T('songs','เพลง')}${full?' · '+TAP_T('the setlist is full','เซ็ตลิสต์เต็มแล้ว'):''}</p>
+ <input class="ccpkq" placeholder="${TAP_T('Search songs','ค้นหาเพลง')}" value="${esc(ui.tapq||'')}" onchange="ui.tapq=this.value;ui.mod.h=tapHtml();render()">
+ <div class="ccpk">${sec('single','💿 '+TAP_T('Singles','ซิงเกิล'),si.join(''),si.length?`${si.length} ${TAP_T('single(s)','ซิงเกิล')}`:'')}${sec('stage','🎭 '+TAP_T('Stages','สเตจ'),st.join(''),st.length?`${st.length} ${TAP_T('stage(s)','สเตจ')}`:'')}${sec('other','🎵 '+TAP_T('Other songs','เพลงอื่น ๆ'),ot.map(o=>row(o)).join(''),ot.length?`${ot.length} ${TAP_T('song(s)','เพลง')}`:'')}
+ ${!si.length&&!st.length&&!ot.length?`<p class="st">${TAP_T('No songs match.','ไม่พบเพลง')}</p>`:''}</div>
+ <div class="row"><button class="b" onclick="ui.mod=null;render()">${TAP_T('Done','เสร็จ')}</button></div>`}
+function tapPick(){if(!thEd())return;ui.mod={t:'html',h:tapHtml(),tap:1};render()}
+function tapAdd(id){const y=(document.querySelector('.mod .ccpk')||{}).scrollTop||0;thSongAdd(id);if(ui.mod&&ui.mod.tap){ui.mod.h=tapHtml();render();try{const el=document.querySelector('.mod .ccpk');if(el)el.scrollTop=y}catch(e){}}}
+// the Stage editor: compact card with the button, Random and New original song (the replacement list stays as it was)
+{const f=thSongsTab;thSongsTab=function(s,tr,lk){const h=f.apply(this,arguments);try{const mk='<div class="c"><h3>Add songs from the Song Library</h3>',i=h.lastIndexOf(mk);if(i<0)return h;const end=h.lastIndexOf('</div>');if(end<i)return h;
+  const card=`<div class="c tapc"><h3>${TAP_T('Add songs','เพิ่มเพลง')}</h3><p class="st">${TAP_T('Choose songs by Single, by Stage or from the other songs of the group.','เลือกเพลงตามซิงเกิล ตามสเตจ หรือจากเพลงอื่น ๆ ของวง')}</p><div class="row"><button class="b p" onclick="tapPick()">＋ ${TAP_T('Add songs','เพิ่มเพลง')}</button><label class="st">${TAP_T('Random','สุ่ม')} <select id="thrn">${[1,3,5,8,12].map(n=>`<option>${n}</option>`).join('')}</select></label><button class="b s" onclick="thSongRand($('#thrn').value)">🎲 ${TAP_T('Random songs','สุ่มเพลง')}</button>${tr?'':`<button class="b s p" onclick="thSongNew()">✦ ${TAP_T('New original song','สร้างเพลงใหม่')}</button>`}</div>${tr?`<p class="st">${TAP_T('Trainee Theater uses songs from the Song Library; new songs are created by Single Production or Team Theater.','เธียเตอร์เด็กฝึกใช้เพลงจากคลังเพลง เพลงใหม่สร้างจากการทำซิงเกิลหรือเธียเตอร์ของทีม')}</p>`:''}</div>`;
+  return h.slice(0,i)+card+h.slice(end)}catch(e){console.error(e);return h}}}
+// ---- Graduation / Birthday Special Stage: new original songs ------------------------------------------------------------------
+// the song list of a Special Stage also offers Theater songs of the group and songs made for a Special Stage
+{const f=spSongs;spSongs=function(key){const L=f.apply(this,arguments);try{const have=new Set(L.map(o=>o.id));gsWith(spGidOf(key),()=>Object.values(S.songs||{}).filter(o=>o&&!have.has(o.id)&&(o.spx||(o.th&&thSongOk(o,key)))).forEach(o=>L.push({id:o.id,title:o.title,gf:o.gradFor||null})));L.sort((a,b)=>String(a.title).localeCompare(String(b.title)))}catch(e){console.error(e)}return L}}
+function tapSpNew(){const x=spShow(ui.spx);if(!x||!x.sp||x.st!='sched')return;ui.tapsn={title:'',genre:'Ballad',concept:x.sp.kind=='grad'?'Graduation':'Cute'};if(!CONCEPTS.includes(ui.tapsn.concept))ui.tapsn.concept=CONCEPTS[0];
+ const op=(L,v)=>L.map(k=>`<option ${k==v?'selected':''}>${esc(k)}</option>`).join('');
+ ui.mod={t:'html',h:`<h2 class="ht">${TAP_T('New song for this Special Stage','สร้างเพลงใหม่สำหรับสเปเชียลสเตจ')}</h2><p class="st">${TAP_T('Creates a real song in the Song Library and adds it to this Special Stage.','สร้างเพลงจริงในคลังเพลง และเพิ่มเข้าสเปเชียลสเตจนี้')}</p>
+  <label class="fl">${TAP_T('Song title','ชื่อเพลง')}<input id="tapsnt" maxlength="100" placeholder="${TAP_T('Enter a title','ใส่ชื่อเพลง')}"></label><div class="row"><button class="b s" onclick="$('#tapsnt').value=genTitle('any','any')">🎲 ${TAP_T('Random song name','สุ่มชื่อเพลง')}</button></div>
+  <div class="row"><label class="st">${TAP_T('Genre','แนวเพลง')} <select onchange="ui.tapsn.genre=this.value">${op(GENRES,ui.tapsn.genre)}</select></label><label class="st">${TAP_T('Concept','คอนเซ็ปต์')} <select onchange="ui.tapsn.concept=this.value">${op(CONCEPTS,ui.tapsn.concept)}</select></label></div>
+  <div class="row"><button class="b p" onclick="tapSpMake()">✦ ${TAP_T('Create and add','สร้างและเพิ่ม')}</button><button class="b" onclick="ui.mod=null;render()">${TAP_T('Cancel','ยกเลิก')}</button></div>`};render()}
+function tapSpMake(){const x=spShow(ui.spx),e=ui.tapsn;if(!x||!x.sp||x.st!='sched'||!e)return;const inp=document.getElementById('tapsnt'),title=cleanTitle((inp&&inp.value)||'');if(!title)return toast(TAP_T('Enter a song title (or use Random song name).','ใส่ชื่อเพลง (หรือกดสุ่มชื่อเพลง)'),'err');
+ const o=gsWith(spGidOf(x.k),()=>mkSong('Coupling',{title,genre:GENRES.includes(e.genre)?e.genre:'Ballad',concept:CONCEPTS.includes(e.concept)?e.concept:CONCEPTS[0],th:{k:x.k,day:S.day,deb:S.day},spx:x.id}));if(!o)return;
+ const pool=thPool(x.k).map(z=>z.id),sp=x.sp,empty=sp.songs.find(z=>!z.song);if(empty)empty.song=o.id;else if(sp.songs.length<3)sp.songs.push({song:o.id,ids:pool,center:sp.mids[0]||null,unit:'',rows:{}});else{ui.mod=null;toast(TAP_T(`“${title}” was created (Song Library). This Special Stage already has 3 extra songs — choose it in one of them.`,`สร้าง “${title}” แล้ว (คลังเพลง) สเปเชียลสเตจนี้มีเพลงเพิ่ม 3 เพลงแล้ว — เลือกเพลงนี้แทนเพลงใดเพลงหนึ่ง`),'err');render();return}ui.mod=null;ui.tapsn=null;toast(TAP_T(`“${title}” was created and added to this Special Stage.`,`สร้าง “${title}” และเพิ่มเข้าสเปเชียลสเตจแล้ว`));render()}
+{const f=V.spst;V.spst=function(){const h=f.apply(this,arguments);try{const x=spShow(ui.spx);if(!x||!x.sp||x.st!='sched')return h;return h.replace(/(Extra songs at the end of the Encore \(\d+\/3\)<\/h3>)/,`$1<button class="b s p" onclick="tapSpNew()">✦ ${TAP_T('New song','สร้างเพลงใหม่')}</button>`)}catch(e){console.error(e);return h}}}
