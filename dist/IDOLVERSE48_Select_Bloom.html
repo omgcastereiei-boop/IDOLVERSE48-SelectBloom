@@ -24114,7 +24114,10 @@ if(typeof apEff=='function'){const f=apEff;apEff=function(m){const a=f.apply(thi
 // ---- last resort: an election single can always be released. A position left empty by a member who cannot come back
 //      (dismissed, or no record left) is taken by the best-ranked election participant who is not in the single yet;
 //      if nobody is left, by the best eligible member. --------------------------------------------------------------
-function ghFill(gid){let n=0;const run=()=>{const p=S.pj;if(!p||!p.ge||!(p.status=='producing'||p.status=='draft'))return;const e=typeof geGet=='function'?geGet(p.ge):null;
+const ghGeSong=o=>!!(o&&(o.ge||o.geSub));
+function ghGePj(p){try{return!!(p&&(p.ge||p.geSub||usedSongs(p).some(i=>ghGeSong(S.songs[i]))))}catch(e){return false}}
+function ghFill(gid){let n=0;const run=()=>{const p=S.pj;if(!ghGePj(p)||!(p.status=='producing'||p.status=='draft'))return;const s0=usedSongs(p).map(i=>S.songs[i]).find(o=>o&&o.ge),eid=p.ge||(s0&&s0.ge&&s0.ge.eid);let e=null;try{e=typeof geGet=='function'&&eid?geGet(eid):null}catch(x){}
+  if(!e&&eid)try{(S.groups||[]).some(g=>{const L=(gsCtx(g.id,'ge')||{}).list||[];e=L.find(z=>z.id==eid)||null;return!!e})}catch(x){}
   const songs=usedSongs(p).map(i=>S.songs[i]).filter(o=>o&&o.fm&&o.fm.sl);const used=new Set(songs.flatMap(o=>o.fm.sl.map(z=>z.m).filter(Boolean)));
   const ok=m=>m&&S.members.includes(m)&&m.status!='graduated'&&!(m.grad&&!m.grad.hold&&m.grad.kind=='dismiss');
   const ranked=((e&&e.final&&e.final.rows)||[]).filter(r=>r.rank).sort((a,b)=>a.rank-b.rank).map(r=>get(r.id)).filter(ok);
@@ -24129,11 +24132,16 @@ function ghFill(gid){let n=0;const run=()=>{const p=S.pj;if(!p||!p.ge||!(p.statu
  try{gid==null?(S.groups||[]).forEach(g=>gsWith(g.id,run)):gsWith(gid,run)}catch(e){console.error(e)}return n}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
-{const f=startSingle;startSingle=function(){try{if(S.pj&&S.pj.ge)ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
+{const f=startSingle;startSingle=function(){try{if(ghGePj(S.pj))ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
 
 // an election single never waits for positions nobody can fill
-{const f=fmCheck;fmCheck=function(o){const r=f.apply(this,arguments);try{const p=S.pj;if(p&&p.ge&&o&&usedSongs(p).includes(o.id))return r.filter(x=>!/still empty|Invalid Senbatsu size|Invalid number of centers|Center slots do not match/.test(x))}catch(e){}return r}}
-{const f=reqs;reqs=function(p){try{if(p&&p.ge&&p===S.pj)ghFill(gsAg())}catch(e){}const r=f.apply(this,arguments);try{if(p&&p.ge)return r.filter(x=>!/position\(s\) still empty|Invalid Senbatsu size|save the lineup|Center slots do not match|Invalid number of centers/.test(x))}catch(e){}return r}}
+{const f=fmCheck;fmCheck=function(o){const r=f.apply(this,arguments);try{const p=S.pj;if(o&&(ghGeSong(o)||(ghGePj(p)&&usedSongs(p).includes(o.id))))return r.filter(x=>!/still empty|Invalid Senbatsu size|Invalid number of centers|Center slots do not match/.test(x))}catch(e){}return r}}
+{const f=reqs;reqs=function(p){try{if(p===S.pj&&ghGePj(p))ghFill(gsAg())}catch(e){}const r=f.apply(this,arguments);try{if(ghGePj(p))return r.filter(x=>!/position\(s\) still empty|Invalid Senbatsu size|save the lineup|Center slots do not match|Invalid number of centers/.test(x))}catch(e){}return r}}
+
+// release readiness: an election song is ready once its lineup is filled (or reduced) — never waits for an impossible position
+{const f=readiness;readiness=function(p){try{if(p===S.pj&&ghGePj(p))ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
+// the planning page builds its own check list: run the repair before every render of the music page
+{const f=V.music;V.music=function(){try{if(S&&ghGePj(S.pj)&&S.pj.status=='draft')ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
 
 </script>
 <script>
