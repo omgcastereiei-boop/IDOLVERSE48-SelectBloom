@@ -25849,6 +25849,16 @@ if(typeof fdGroupFans=='function'){const f=fdGroupFans;fdGroupFans=function(gid)
 function advlPruneXe(){try{const X=xeS(),lim=S.day-120,n=X.list.length;X.list=X.list.filter(r=>!(['done','expired','cancelled','declined'].includes(r.status)&&r.ch!='mp'&&(r.end??r.dl??r.day??S.day)<lim));return n-X.list.length}catch(e){return 0}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);advlPruneXe();return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(dt().getDate()==1)advlPruneXe()}catch(e){}return r}}
+// ---- faster screens ----------------------------------------------------------------------------------------------------------
+// member lookup by id: an index instead of scanning every member on each call (the handshake budget asked thousands of times)
+{const f0=get;let IX=null,IA=null,IN=-1;const build=L=>{IX=new Map();L.forEach((m,i)=>{if(m)IX.set(String(m.id),i)});IA=L;IN=L.length};
+ get=function(id){const L=S&&S.members;if(!L||id==null)return f0(id);if(IA!==L||IN!==L.length)build(L);let i=IX.get(String(id));if(i!=null){const m=L[i];if(m&&m.id==id)return m;build(L);i=IX.get(String(id));if(i!=null&&L[i]&&L[i].id==id)return L[i]}return f0(id)}}
+// the single's budget: computed once per screen update / tap / day (the handshake estimate behind it is heavy)
+let ADVL_GEN=0;
+{const f=render;render=function(){ADVL_GEN++;try{return f.apply(this,arguments)}finally{ADVL_GEN++}}}
+{const f=tick;tick=function(){ADVL_GEN++;try{return f.apply(this,arguments)}finally{ADVL_GEN++}}}
+try{['pointerdown','click','change','input','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ADVL_GEN++},true))}catch(e){}
+{const f=cost;let C=null;cost=function(p){if(!p||!S)return f.apply(this,arguments);if(C&&C.p===p&&C.g===ADVL_GEN&&C.d===S.day)return{L:C.r.L.map(x=>x.slice()),u:new Set(C.r.u),t:C.r.t};const r=f.apply(this,arguments);try{C={p,g:ADVL_GEN,d:S.day,r:{L:r.L.map(x=>x.slice()),u:new Set(r.u),t:r.t}}}catch(e){C=null}return r}}
 
 </script>
 <script>
