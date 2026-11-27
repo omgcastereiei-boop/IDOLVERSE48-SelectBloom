@@ -2127,6 +2127,15 @@ details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(s
 .fnhr{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:6px;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--line)}
 @media(max-width:560px){.fntab{font-size:12px}.fntab td,.fntab th{padding:5px 3px}.fnkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fnkpis.sm{grid-template-columns:1fr}.fnhead{padding:12px}.fncash b{font-size:22px}}
 .fntab th{white-space:normal!important;font-size:11px;color:var(--mut)}
+/* ---- Next day loading screen ---- */
+#advload{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;background:rgba(40,16,64,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#advload.on{display:flex}
+.advlbox{width:min(340px,calc(100vw - 40px));background:linear-gradient(160deg,#fff7fb,#f3ecff);border-radius:22px;padding:22px 18px 18px;text-align:center;box-shadow:0 18px 50px rgba(30,10,60,.35);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink)}
+.advlbox b{font:800 17px Quicksand}.advlbox span{font:700 13px Quicksand;color:#8a5ab0}.advlbox small{color:var(--mut);font-size:11.5px;line-height:1.4}
+.advlspin{width:46px;height:46px;border-radius:50%;border:5px solid #f3d3e6;border-top-color:#ff8fc4;border-right-color:#b48cff;animation:advlsp .8s linear infinite;will-change:transform;margin-bottom:4px}
+@keyframes advlsp{to{transform:rotate(360deg)}}
+.advlbar{width:100%;height:6px;border-radius:6px;background:#efe3f7;overflow:hidden;margin:4px 0}.advlbar i{display:block;width:40%;height:100%;border-radius:6px;background:linear-gradient(90deg,#ff8fc4,#b48cff);animation:advlbr 1.1s ease-in-out infinite;will-change:transform}
+@keyframes advlbr{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
 
 </style>
 </head><body>
@@ -5200,7 +5209,7 @@ dash(){if(!S.members.length)return`<div class="c" style="margin:8px 0"><h2 class
  tired=S.members.filter(m=>m.en<30).length,nt=[p?`"${p.title}" ${p.left?p.left+' days to go':'is ready to release!'}`:'No single in production.',tired?tired+' members are tired. Rest a day.':'Everyone is in good shape.',S.money<300000?'Funds are low!':'Finances are stable.'];
  return`${onboard()}<div class="hero" style="--h:${hh}"><div class="hl"><div class="plaque"><b>${S.co}</b><div class="st">${S.producer?'Producer '+esc(S.producer)+' · ':''}${rank} · Lv ${Math.floor(S.fans/2000)+1}</div></div><div class="bub"><b>${fm.name}</b><br>${LINES[fm.pers]}</div><div style="margin-top:10px"><span class="pill gd">${yen(S.money)}</span> <span class="pill">♥ ${(+S.fans||0).toLocaleString()} fans</span></div><div class="st" style="margin-top:6px">${fd()}<br>${c?'Now playing: <b>'+c.title+'</b>':'No single released yet'}</div></div><div class="fp">${pt(fm,0,1)}</div></div>
 <div class="ban" style="--bh:${hh}"><span>${EV[fe].n}<br><small style="font-size:12px">Featured event · cost ${yen(EV[fe].cost)}</small></span><button class="b p" onclick="openEv('${fe}')">Plan now</button></div>
-<div class="qa">${[['members','Members'],['groups','Groups'],['music','Single'],['albums','Albums']].map(([k,l])=>`<button onclick="view='${k}';render()"><i>${IC[k]}</i>${l}</button>`).join('')}<button onclick="openEv('theater')"><i>♬</i>Theater</button><button onclick="view='events';render()"><i>✦</i>Events</button><button onclick="view='finances';render()"><i>◆</i>Office</button><button onclick="adv(1)"><i>☀</i>Next day</button></div>
+<div class="qa">${[['members','Members'],['groups','Groups'],['music','Single'],['albums','Albums']].map(([k,l])=>`<button onclick="view='${k}';render()"><i>${IC[k]}</i>${l}</button>`).join('')}<button onclick="openEv('theater')"><i>♬</i>Theater</button><button onclick="view='events';render()"><i>✦</i>Events</button><button onclick="view='finances';render()"><i>◆</i>Office</button><button onclick="advUI(1)"><i>☀</i>Next day</button></div>
 <div class="g2">${c&&c.covers&&fc(c)?`<div class="c"><h3>Current single</h3>${coverSvg(fc(c),{size:150})}<div class="st">${c.title} · ${(+c.sales||0).toLocaleString()} sold</div></div>`:''}${S.cal&&S.cal.some(e=>!e.done)?`<div class="c"><h3>Calendar</h3>${calHtml()}</div>`:''}<div class="c"><h3>Missions</h3><ul class="ms">${ms.map(([t,d])=>`<li class="${d?'ok':''}">${d?'✔':'○'} ${t}</li>`).join('')}</ul></div><div class="c"><h3>Notifications</h3><ul class="ms">${nt.map(t=>`<li>✿ ${t}</li>`).join('')}</ul>${p&&!p.left?'<button class="b p" onclick="release()">Release now</button>':''}</div></div>`},
 promo(){const R=S.singles.slice().reverse(),r=ui.rs=ui.rs||{rid:null,dest:CFG.roadDest[0].id,off:7,sel:[]};if(!S.singles.some(x=>x.rid==r.rid)){r.rid=R[0]?R[0].rid:null;r.sel=[]}const x=S.singles.find(s=>s.rid==r.rid),dest=CFG.roadDest.find(d=>d.id==r.dest)||CFG.roadDest[0],days=rdDays(S.day+(+r.off||1)),el=x?singleMembersX(x).map(get).filter(Boolean):[],up=(S.cal||[]).filter(e=>e.type=='road'&&!e.done).sort((a,b)=>a.day-b.day),er=x?roadErr(r):[];
  return`<h2 class="ht">Promotion</h2><div class="c"><h3>Calendar</h3>${calHtml()}</div>
@@ -5486,7 +5495,7 @@ function chrome(inner){const sec=secOf(view),loc=SUBLOC[view]||sec.loc,sub=sec.v
  const act=S.members.filter(isAct),gp=act.length?Math.round(avg(act.map(m=>m.pop))):0;
  return`<header class="hd"><button class="hmenu" onclick="ui.t=true;render()" aria-label="Title menu">${ico('menu')}</button><div class="logo"><span class="lg1">${GAME_T}</span><span class="lg2">${GAME_S}</span></div>
  <div class="hud"><span class="hp cal" title="In-game date">${ico('cal')}<b>${fd()}</b></span><span class="hp gold" title="Funds">${ico('coin')}<b>${yen(S.money)}</b></span><span class="hp fan" title="Fans">${ico('heart')}<b>${(+S.fans||0).toLocaleString()}</b></span><span class="hp pop" title="Average popularity of active members">${ico('star')}<b>${gp}</b></span></div>
- <div class="hdb"><button class="b p nd" onclick="adv(1)">${ico('sun')}<span>Next day</span></button><button class="b s" onclick="adv(7)" title="Advance 7 days">+7</button></div></header>
+ <div class="hdb"><button class="b p nd" onclick="advUI(1)">${ico('sun')}<span>Next day</span></button><button class="b s" onclick="advUI(7)" title="Advance 7 days">+7</button></div></header>
  <main class="${enter?'main-enter':''}"><div class="locb"><div class="lt"><span class="li">${ico(sec.k)}</span><div><span class="jp">${sec.jp}</span><b>${sec.n}</b><small>✦ ${loc} · ${esc(S.co)}</small></div></div>${sub}</div>${inner}</main>
  <nav class="nav" aria-label="Main navigation"><div class="brand"><span class="crest">✿</span><span class="lg1">${GAME_T}</span><span class="lg2">${GAME_S}</span><span class="lg3">${GAME_TAG}</span></div>${SECS.map((s,i)=>`<button class="${s.k==sec.k?'on':''}" onclick="goSec('${s.k}')" title="${s.n}" aria-current="${s.k==sec.k?'page':'false'}"><i>${ico(s.k)}</i><span class="sn">${s.sh}</span><span class="ln">${s.n}<small>${s.jp}</small></span></button>`).join('')}<div class="navf">${esc(S.co)}<br><small>Producer ${esc(S.producer||'')}</small></div></nav>`}
 
@@ -5516,7 +5525,7 @@ V.dash=function(){const quick=[['members','Members','メンバー'],['training',
  return`${onboard()}<div class="ofc"><div class="vn"><div class="vnart">${chFull(fm,1,2)}</div><div class="vnbox"><span class="vnn">${esc(fm.name)}</span><p>${LINES[fm.pers]}</p><div class="row"><button class="b s" onclick="${prof(fm.id)}">View profile</button><button class="b s" onclick="goView('training')">Lessons</button></div></div></div>
  <div class="desk"><div class="plate"><span class="st">${S.producer?'Producer '+esc(S.producer)+' · ':''}${rank}</span><span class="lv">Lv ${Math.floor(S.fans/2000)+1}</span></div><div class="co">${esc(S.co)}</div>
  <div class="kv"><div><small>Today</small><b style="font-size:14px">${fd()}</b></div><div><small>Funds</small><b>${yen(S.money)}</b></div><div><small>Fans</small><b>♥ ${(+S.fans||0).toLocaleString()}</b></div><div><small>Members</small><b>${S.members.length}</b><small>${act.length} active</small></div><div><small>Groups</small><b>${S.groups.length}</b></div><div><small>Now playing</small><b style="font-size:13px">${c?esc(c.title):'—'}</b></div></div>
- <div class="row" style="margin-top:10px"><button class="b p" onclick="adv(1)">☀ Next day</button>${p&&!p.left?'<button class="b p" onclick="release()">Release now</button>':''}<button class="b" onclick="goView('music')">Single plan</button><button class="b" onclick="goView('promo')">Schedule</button></div>
+ <div class="row" style="margin-top:10px"><button class="b p" onclick="advUI(1)">☀ Next day</button>${p&&!p.left?'<button class="b p" onclick="release()">Release now</button>':''}<button class="b" onclick="goView('music')">Single plan</button><button class="b" onclick="goView('promo')">Schedule</button></div>
  <div class="lineup"><span class="st">Top members</span><div>${lineup}</div></div></div></div>
  <div class="apps">${quick}<button class="app" onclick="openEv('theater')"><i>${ico('theater')}</i><b>Theater</b><small>劇場公演</small></button></div>
  <div class="board"><div class="c note-c"><h3>Notice board</h3>${nt.map(t=>`<div class="note">✿ ${t}</div>`).join('')}${p&&!p.left?'<button class="b p" onclick="release()">Release now</button>':''}</div>
@@ -7798,7 +7807,7 @@ function thStageFor(T,x){if(T.trans&&x.day>=T.trans.dday)return thStage(T.trans.
 function thTrainees(x,s){const K=thK(x.k);if(!K)return[];const base=new Set(thBase(s).map(m=>m.id));return S.members.filter(m=>m.status=='trainee'&&m.group==K.gid&&!base.has(m.id)&&!thWhy(m,x))}
 function thAutoPick(x,s,missing,taken){const songs=thAll(s);const fit=m=>avg(songs.map(it=>{const o=S.songs[it.song];return avg((GEN[plG(o&&o.genre)]||['sing','dance']).map(k=>m[k]))}))*.7+(m.variety||0)*.1+m.en*.1+wlOf(m).ph*.05+wlOf(m).mh*.05;
  const C=thTrainees(x,s).filter(m=>!taken.has(m.id)).sort((a,b)=>fit(b)-fit(a)||a.id-b.id);const R={};missing.forEach(id=>{const c=C.find(m=>!taken.has(m.id));if(c){R[id]=c.id;taken.add(c.id)}});return R}
-function thCheck(x){const T=thOf(x.k),s=thStageFor(T,x);if(!s)return{s:null,miss:[],rp:{},err:'No active Stage'};const B=thPerf(s),miss=B.filter(m=>thWhy(m,x)).map(m=>({id:m.id,why:thWhy(m,x)}));
+function thCheck(x){const T=thOf(x.k),s=thStageFor(T,x);if(!s)return{s:null,miss:[],rp:{},err:'No active Stage'};const B=thPerf(s),miss=B.map(m=>({id:m.id,why:thWhy(m,x)})).filter(z=>z.why);
  const taken=new Set(),rp={};Object.entries(x.rp||{}).forEach(([o,n])=>{const t=get(+n);if(miss.some(z=>z.id==+o)&&t&&t.status=='trainee'&&!thWhy(t,x)&&!taken.has(t.id)&&!B.some(m=>m.id==t.id)){rp[o]=t.id;taken.add(t.id)}});
  if(T.rmode=='auto'){Object.assign(rp,thAutoPick(x,s,miss.map(z=>z.id).filter(id=>!rp[id]),taken))}return{s,miss,rp,B}}
 function thRp(sid,out,inn){const x=thS().sh.find(z=>z.id==sid);if(!x||x.st!='sched')return;x.rp=x.rp||{};if(!inn){delete x.rp[out];return render()}const t=get(+inn);if(!t||t.status!='trainee')return toast('Only Trainees can replace members.','err');if(Object.entries(x.rp).some(([o,n])=>n==+inn&&o!=out))return toast(`${t.name} already replaces another member in this performance.`,'err');const w=thWhy(t,x);if(w)return toast(`${t.name} is not available: ${w}.`,'err');x.rp[out]=+inn;toast(`${t.name} will replace ${get(+out).name} (she stays a Trainee).`);render()}
@@ -9774,7 +9783,13 @@ const gsShare=gid=>{if(!S||S.groups.length<2)return 1;const T=Math.max(1,S.fans|
 // ---- member schedule & cross-group conflicts ------------------------------------------------------
 const GS_TIME={a:[840,960],e:[1080,1200]},gsHM=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
 function gsSched(){if(!S.sched||typeof S.sched!='object')S.sched={seq:0,res:[]};if(!Array.isArray(S.sched.res))S.sched.res=[];return S.sched}
-function gsCommits(mid,from,to){const L=[];from=from??S.day;to=to??(S.day+400);
+let GS_DI=null; // while a day is played: every member's commitments of one day, built once (perf-day.js resets it)
+function gsDayIndex(d){const M=new Map(),add=(id,c)=>{let a=M.get(id);if(!a)M.set(id,a=[]);a.push(c)};
+ gsSched().res.forEach(r=>{if(r.st=='ok'&&r.day==d)add(r.mid,{src:'res',id:r.act,gid:r.gid,type:r.type,label:r.label,day:r.day,s:r.s,e:r.e})});
+ S.groups.forEach(g=>{(gsCtx(g.id,'cal')||[]).forEach(ev=>{if(ev.done||!Array.isArray(ev.members))return;if(!evDays(ev).includes(d))return;ev.members.forEach(mid=>add(mid,{src:'cal',id:ev.id,gid:g.id,type:ev.type,label:ev.title,day:d,s:0,e:1440}))})});
+ try{thKeysAll().forEach(K=>{thShowsOf(K.key).forEach(x=>{if(x.st!='sched'||x.day!=d)return;let P=[];try{P=thPlanned(x)}catch(e){}const t=GS_TIME[x.sl]||[0,1440];new Set(P).forEach(mid=>add(mid,{src:'th',id:x.id,gid:K.gid,type:'theater',label:`${gsShort(grp(K.gid))} ${K.label} theater performance (${TH_SLOT[x.sl]})`,day:x.day,s:t[0],e:t[1]}))})})}catch(e){}return M}
+function gsCommits(mid,from,to){if(typeof PD_IN!='undefined'&&PD_IN&&from!=null&&from===to){const sig=typeof pdSig=='function'?pdSig():S.day;if(!GS_DI||GS_DI.sig!==sig)GS_DI={sig,D:new Map()};let M=GS_DI.D.get(from);if(!M)GS_DI.D.set(from,M=gsDayIndex(from));return(M.get(mid)||[]).map(c=>({...c}))}
+ const L=[];from=from??S.day;to=to??(S.day+400);
  gsSched().res.forEach(r=>{if(r.mid==mid&&r.st=='ok'&&r.day>=from&&r.day<=to)L.push({src:'res',id:r.act,gid:r.gid,type:r.type,label:r.label,day:r.day,s:r.s,e:r.e})});
  S.groups.forEach(g=>{(gsCtx(g.id,'cal')||[]).forEach(ev=>{if(ev.done||!Array.isArray(ev.members)||!ev.members.includes(mid))return;evDays(ev).forEach(d=>{if(d>=from&&d<=to)L.push({src:'cal',id:ev.id,gid:g.id,type:ev.type,label:ev.title,day:d,s:0,e:1440})})})});
  try{thKeysAll().forEach(K=>{thShowsOf(K.key).forEach(x=>{if(x.st!='sched'||x.day<from||x.day>to)return;let P=[];try{P=thPlanned(x)}catch(e){}if(P.includes(mid)){const t=GS_TIME[x.sl]||[0,1440];L.push({src:'th',id:x.id,gid:K.gid,type:'theater',label:`${gsShort(grp(K.gid))} ${K.label} theater performance (${TH_SLOT[x.sl]})`,day:x.day,s:t[0],e:t[1]})}})})}catch(e){}return L}
@@ -16972,8 +16987,8 @@ let PD_IN=0,PD_C=null;
 const pdSig=()=>{try{const sc=S.sched&&S.sched.res;return S.day+'|'+(sc?sc.length:0)}catch(e){return String(Math.random())}};
 {const f=gsCommits;gsCommits=function(mid,from,to){if(!PD_IN||from==null||from!==to)return f.apply(this,arguments);const sig=pdSig();if(!PD_C||PD_C.sig!==sig)PD_C={sig,M:new Map()};const k=mid+'|'+from;
   if(!PD_C.M.has(k))PD_C.M.set(k,f.apply(this,arguments));return PD_C.M.get(k).map(c=>({...c}))}}
-{const f=tick;tick=function(){const o=PD_IN;PD_IN=1;PD_C=null;try{return f.apply(this,arguments)}finally{PD_IN=o;PD_C=null}}}
-{const f=thPerform;thPerform=function(){try{return f.apply(this,arguments)}finally{PD_C=null}}}
+{const f=tick;tick=function(){const o=PD_IN;PD_IN=1;PD_C=null;GS_DI=null;try{return f.apply(this,arguments)}finally{PD_IN=o;PD_C=null;GS_DI=null}}}
+{const f=thPerform;thPerform=function(){try{return f.apply(this,arguments)}finally{PD_C=null;GS_DI=null}}}
 // birthday photo drawings are not part of the save
 function pdStripBd(){try{const clean=o=>{if(o&&o.img&&typeof o.img=='object'&&Object.prototype.propertyIsEnumerable.call(o.img,'_c'))delete o.img._c};
   ((S.th&&S.th.pf)||[]).forEach(r=>clean(r.sp));[...(S.members||[]),...(S.alumni||[])].forEach(m=>(m.bdh||[]).forEach(clean))}catch(e){console.error(e)}}
@@ -25648,7 +25663,7 @@ try{Object.assign(CFG.aud.street,{base:300000,per:3000});Object.assign(CFG.aud.c
 try{EV.handshake.cost=600000;EV.concert.cost=1500000;EV.election.cost=1500000;EV.anniv.cost=2500000;EV.janken.cost=600000}catch(e){}
 try{CFG.rs.venue={1:400000,2:800000,3:1500000}}catch(e){}
 const FIN_COSTUME=45000; // one stage outfit (design, fabric, sewing, fittings)
-{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;(typeof usedSongs=='function'?usedSongs(p):[]).forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
+{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;if(p&&p.status!='draft'&&p._fcn!=null)n=p._fcn;else{(typeof usedSongs=='function'?usedSongs(p):[]).forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(p&&p.status!='draft')p._fcn=n}if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
 // external work: fees at market level (the old formula paid 4–5× the going rate)
 {const f=xePay;xePay=function(r){return Math.max(30000,Math.round(f.apply(this,arguments)*.2/10000)*10000)}}
 // roadshows: a release event venue holds only so many people per day
@@ -25799,6 +25814,24 @@ function svAct(){if(!S||!S.members||!S.members.length||ui.t)return;clearTimeout(
  'xeAccept','xeDoAccept','rsBook','geBook','roadBook','rwBook','rsPlanStart','alRelease','release','drStart','srStart','dvdStart','jkStart',
  'thSongEditSave','thNewStage','ctRenew','ctActRenew','ctSoloSign','gsCreate','uCreate','ctGroupNew','plProfSave','plProfSaveAll','plMvDone','plSaleDone','plCzDone','plLimCovDone']
  .forEach(n=>{try{const f=window[n];if(typeof f!='function')return;window[n]=function(){const r=f.apply(this,arguments);try{svAct()}catch(e){}return r}}catch(e){}});
+
+</script>
+<script>
+// =====================================================================================
+//  Next day / +7: a loading screen while the days are played (the page cannot redraw during the calculation,
+//  so the screen is shown first, painted, and then the days run). Double taps are ignored while it runs.
+// =====================================================================================
+const ADVL_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+let ADVL_ON=0;
+function advUI(n){n=Math.max(1,n|0);if(ADVL_ON||!S)return;ADVL_ON=1;let el=document.getElementById('advload');if(!el){el=document.createElement('div');el.id='advload';el.setAttribute('data-notr','1');document.body.appendChild(el)}
+ const d0=S.day,from=jd(d0),to=jd(d0+n);
+ el.innerHTML=`<div class="advlbox" role="status" aria-live="polite"><div class="advlspin"></div><b>${n>1?ADVL_T(`Playing the next ${n} days…`,`กำลังดำเนินเกม ${n} วันถัดไป…`):ADVL_T('Going to the next day…','กำลังไปวันถัดไป…')}</b><span>${from} → ${to}</span><div class="advlbar"><i></i></div><small>${ADVL_T('Theater shows, events, sales and fans are being calculated. Please wait.','กำลังคำนวณการแสดงเธียเตอร์ อีเวนต์ ยอดขาย และแฟนคลับ กรุณารอสักครู่')}</small></div>`;
+ el.className='on';
+ // let the browser paint the screen before the work starts
+ requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{try{adv(n)}catch(e){console.error(e)}finally{ADVL_ON=0;el.className='';setTimeout(()=>{if(!ADVL_ON)el.innerHTML=''},250)}},16)))}
+// faster days: a group's fan count is counted once per day state (it loops over every fan cohort and is asked many times)
+let ADVL_FC=null;
+if(typeof fdGroupFans=='function'){const f=fdGroupFans;fdGroupFans=function(gid){if(typeof PD_IN=='undefined'||!PD_IN||!S||!S.fb||!S.fb.segs||arguments.length>1)return f.apply(this,arguments);const k=S.day+'|'+S.fb.segs.length+'|'+(S.fans|0)+'|'+(S.fb.ver|0);if(!ADVL_FC||ADVL_FC.k!==k)ADVL_FC={k,m:new Map()};if(!ADVL_FC.m.has(gid))ADVL_FC.m.set(gid,f.apply(this,arguments));return ADVL_FC.m.get(gid)}}
 
 </script>
 <script>

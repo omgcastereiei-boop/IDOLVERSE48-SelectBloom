@@ -97,7 +97,13 @@ const gsShare=gid=>{if(!S||S.groups.length<2)return 1;const T=Math.max(1,S.fans|
 // ---- member schedule & cross-group conflicts ------------------------------------------------------
 const GS_TIME={a:[840,960],e:[1080,1200]},gsHM=t=>`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
 function gsSched(){if(!S.sched||typeof S.sched!='object')S.sched={seq:0,res:[]};if(!Array.isArray(S.sched.res))S.sched.res=[];return S.sched}
-function gsCommits(mid,from,to){const L=[];from=from??S.day;to=to??(S.day+400);
+let GS_DI=null; // while a day is played: every member's commitments of one day, built once (perf-day.js resets it)
+function gsDayIndex(d){const M=new Map(),add=(id,c)=>{let a=M.get(id);if(!a)M.set(id,a=[]);a.push(c)};
+ gsSched().res.forEach(r=>{if(r.st=='ok'&&r.day==d)add(r.mid,{src:'res',id:r.act,gid:r.gid,type:r.type,label:r.label,day:r.day,s:r.s,e:r.e})});
+ S.groups.forEach(g=>{(gsCtx(g.id,'cal')||[]).forEach(ev=>{if(ev.done||!Array.isArray(ev.members))return;if(!evDays(ev).includes(d))return;ev.members.forEach(mid=>add(mid,{src:'cal',id:ev.id,gid:g.id,type:ev.type,label:ev.title,day:d,s:0,e:1440}))})});
+ try{thKeysAll().forEach(K=>{thShowsOf(K.key).forEach(x=>{if(x.st!='sched'||x.day!=d)return;let P=[];try{P=thPlanned(x)}catch(e){}const t=GS_TIME[x.sl]||[0,1440];new Set(P).forEach(mid=>add(mid,{src:'th',id:x.id,gid:K.gid,type:'theater',label:`${gsShort(grp(K.gid))} ${K.label} theater performance (${TH_SLOT[x.sl]})`,day:x.day,s:t[0],e:t[1]}))})})}catch(e){}return M}
+function gsCommits(mid,from,to){if(typeof PD_IN!='undefined'&&PD_IN&&from!=null&&from===to){const sig=typeof pdSig=='function'?pdSig():S.day;if(!GS_DI||GS_DI.sig!==sig)GS_DI={sig,D:new Map()};let M=GS_DI.D.get(from);if(!M)GS_DI.D.set(from,M=gsDayIndex(from));return(M.get(mid)||[]).map(c=>({...c}))}
+ const L=[];from=from??S.day;to=to??(S.day+400);
  gsSched().res.forEach(r=>{if(r.mid==mid&&r.st=='ok'&&r.day>=from&&r.day<=to)L.push({src:'res',id:r.act,gid:r.gid,type:r.type,label:r.label,day:r.day,s:r.s,e:r.e})});
  S.groups.forEach(g=>{(gsCtx(g.id,'cal')||[]).forEach(ev=>{if(ev.done||!Array.isArray(ev.members)||!ev.members.includes(mid))return;evDays(ev).forEach(d=>{if(d>=from&&d<=to)L.push({src:'cal',id:ev.id,gid:g.id,type:ev.type,label:ev.title,day:d,s:0,e:1440})})})});
  try{thKeysAll().forEach(K=>{thShowsOf(K.key).forEach(x=>{if(x.st!='sched'||x.day<from||x.day>to)return;let P=[];try{P=thPlanned(x)}catch(e){}if(P.includes(mid)){const t=GS_TIME[x.sl]||[0,1440];L.push({src:'th',id:x.id,gid:K.gid,type:'theater',label:`${gsShort(grp(K.gid))} ${K.label} theater performance (${TH_SLOT[x.sl]})`,day:x.day,s:t[0],e:t[1]})}})})}catch(e){}return L}
