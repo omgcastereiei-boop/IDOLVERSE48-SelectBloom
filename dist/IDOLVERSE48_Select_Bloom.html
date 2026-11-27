@@ -26057,6 +26057,17 @@ function ccItemTo2(iid,to){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)
  if(r.it.k=='song'){if(inEnc&&!r.it.enc){L.splice(i,0,r.it);return toast(CE2_T('Songs join the Encore only with “Add Encore songs”.','เพลงจะเข้าอังกอร์ได้ผ่านปุ่ม “เพิ่มเพลงอังกอร์” เท่านั้น'),'err')}if(!inEnc)delete r.it.enc}else{if(inEnc)r.it.enc=1;else delete r.it.enc}
  L.splice(to,0,r.it);ccEncSort(r.s);toast(CE2_T(`“${r.it.title||r.it.name}” moved to No. ${L.indexOf(r.it)+1}.`,`ย้าย “${r.it.title||r.it.name}” ไปลำดับ ${L.indexOf(r.it)+1} แล้ว`));render()}
 {const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{if(!C.rh)h=h.replace(/onchange="ccItemTo\(/g,'onchange="ccItemTo2(')}catch(e){}return h}}
+// ---- positions follow the participant list: a song's original member who joins the concert later gets her position back ----
+// (positions are copied when the song is added; before, members added to the concert afterwards left their original positions empty)
+function ccRefill(C,only){if(!C||!C.sets)return 0;const P=new Set((C.parts||[]).map(String)),O=only?new Set(only.map(String)):null;let n=0;
+ Object.values(C.sets).forEach(s=>(s.items||[]).forEach(it=>{if(it.k!='song'||!Array.isArray(it.pos))return;const used=new Set(it.pos.filter(z=>z.m!=null).map(z=>String(z.m)));
+  it.pos.forEach(z=>{if(z.m!=null||z.o==null)return;const k=String(z.o);if(!P.has(k)||used.has(k))return;if(O?!O.has(k):z.why!='not in this concert')return;const m=ccMem(z.o);if(!m||m.status=='graduated')return;
+   z.m=typeof z.o=='string'&&/^\d+$/.test(z.o)?+z.o:z.o;z.why='';used.add(k);n++})}));return n}
+{const f=ccPartTog;ccPartTog=function(id){const C=ccCur(),had=C&&C.parts.map(String).includes(String(id));const r=f.apply(this,arguments);try{if(C&&!had&&C.parts.map(String).includes(String(id))&&ccRefill(C,[id]))render()}catch(e){console.error(e)}return r}}
+{const f=ccPartSet;ccPartSet=function(ids,on){const C=ccCur();const r=f.apply(this,arguments);try{if(C&&on&&ccRefill(C,ids))render()}catch(e){console.error(e)}return r}}
+if(typeof ccGradTog=='function'){const f=ccGradTog;ccGradTog=function(id){const C=ccCur();const r=f.apply(this,arguments);try{if(C&&ccRefill(C,[id]))render()}catch(e){console.error(e)}return r}}
+// saves made before this fix: fill positions left empty only because the member was not yet in the concert
+{const f=render;render=function(){try{if(S&&typeof ccS=='function'&&/^cc|^concert/.test(String(view))){const C=ccCur&&ccCur();if(C&&C.status!='done'&&typeof ccEdit=='function'&&C.sets)ccRefill(C)}}catch(e){}return f.apply(this,arguments)}}
 
 </script>
 <script>
