@@ -2067,3 +2067,6 @@ body.lite #scene{display:none!important}
 body.lite{background:#f6ece3!important}
 /* header without blur: solid background so the page does not show through */
 .hd{background:linear-gradient(180deg,#fffaf6,#fdf3ee)!important}
+/* ---- summer collection: MV costumes ---- */
+.czsmv .row{gap:6px;align-items:center;flex-wrap:wrap}.czsmvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-top:6px}
+.czsmvm{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);border-radius:12px;padding:4px;background:#fffdf8}.czsmvm b{font:700 11px Quicksand;text-align:center}.czsmvm select{width:100%;font-size:11px}

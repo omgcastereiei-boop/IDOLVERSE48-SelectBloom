@@ -1214,3 +1214,11 @@ The site is an installable web app (manifest.webmanifest, icons/, sw.js). iPhone
 - **Election Single**: 1 eligible CD = 1 vote. Each member receives 30% of her own votes × ¥300 (company allocation per CD), and the company keeps 70%.
 - **Rebalance**: external fees ×0.2, roadshow attendance capped by venue, platform / manufacturing deductions, realistic production / audition / costume costs. Older saves convert their cash once: ¥50M + 4% of the cash above the old ¥3M start. Finished work is never paid again.
 - **Dashboard**: Office → Finances & Ledger (overview, monthly, yearly, transactions, project reports, member pay, loans & assets). The member profile shows salary per group, seniority, next increment, job payments and election revenue share.
+
+## Costume Designer — Summer Collection
+Extends the existing designer, library and save format (no new editor):
+- Swimwear (bikini/ruffle/tankini/sporty tops & bottoms, one-pieces, swim skirt/dress), summer tops, cold-shoulder/flutter sleeves, summer skirts/shorts, sundresses — all separate pieces that combine with every existing piece.
+- New **Summer** section: cover-ups, lace collection, details, hair/jewelry (incl. anklet)/hats/beach/tropical accessories.
+- Summer & Lace pattern groups, **Pattern spacing** slider, optional **Transparency** slider (sheer fabrics and lace only, default 0).
+- 12 summer presets (Marine, Tropical Idol, Beach Festival, Summer Festival, Sailor Summer, Cute, Elegant, Resort, Sundress, swimsuits, kimono cover-up).
+- MV planner: per-member costume from the Costume Library (independent of the stage/song costume). CD cover: existing per-member picker lists every library design.
