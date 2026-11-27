@@ -33,10 +33,10 @@ const natural=()=>L.forEach(m=>{try{MC_K.forEach(k=>mcSet(m,k,mcGet(m,k)+MC.nat[
  const day={d:S.day,t:[],cost:0,skip:0};
  // the lowest first, so the most urgent are treated when money is short
  const need=[];L.forEach(m=>MC_K.forEach(k=>{const v=mcGet(m,k);if(v<MC.th)need.push([m,k,v])}));need.sort((a,b)=>a[2]-b[2]);
- need.forEach(([m,k,v])=>{const c=MC.cost[k];if(!(S.money>=c)){day.skip++;return}S.money-=c;S.exp=(+S.exp||0)+c;S.mOk=S.money;mcSet(m,k,v+MC.amt[k]);
+ need.forEach(([m,k,v])=>{const c=MC.cost[k];if(!(S.money-day.cost>=c)){day.skip++;return}mcSet(m,k,v+MC.amt[k]);
   C.cnt[k]++;C.spent+=c;day.cost+=c;day.t.push([m.id,k,Math.round(v),Math.round(mcGet(m,k))]);try{wlLog(m,{t:'care',txt:`Automatic Member Care: ${MC.n[k][0]} ${Math.round(v)} → ${Math.round(mcGet(m,k))} (${yen(c)}).`})}catch(e){}});
  if(day.t.length){const by=MC_K.map(k=>[k,day.t.filter(z=>z[1]==k).length]).filter(z=>z[1]);
-  S.led.unshift({d:S.day,l:`Automatic Member Care: ${by.map(([k,n])=>`${n}× ${MC.n[k][0]}`).join(', ')}`,a:-day.cost});S.led.length=Math.min(S.led.length,80);
+  finPost({a:-day.cost,l:`Automatic Member Care: ${by.map(([k,n])=>`${n}× ${MC.n[k][0]}`).join(', ')}`,cat:'ops',proj:null});
   try{wlN(`<li>🩺 ${MC_T('Automatic Member Care','ดูแลเมมเบอร์อัตโนมัติ')} (${yen(day.cost)}): ${day.t.slice(0,12).map(([id,k,a,b])=>`${esc((get(id)||{}).name||'')} ${MC_T(MC.n[k][0],MC.n[k][1])} ${a}→${b}`).join(' · ')}${day.t.length>12?' …':''}</li>`)}catch(e){}}
  if(day.skip)try{wlN(`<li>⚠ ${MC_T(`Automatic Member Care: ${day.skip} treatment(s) skipped — not enough money. They are retried tomorrow.`,`ดูแลเมมเบอร์อัตโนมัติ: ข้าม ${day.skip} รายการเพราะเงินไม่พอ จะลองใหม่พรุ่งนี้`)}</li>`)}catch(e){}
  if(day.t.length||day.skip){C.log.unshift(day);if(C.log.length>120)C.log.length=120}

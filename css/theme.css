@@ -2021,3 +2021,25 @@ details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(s
 .ce2enc{margin-top:12px;border:2px dashed #f0b6d6;border-radius:16px;padding:8px;background:linear-gradient(180deg,#fff4fa,#fff)}
 .ce2hd{display:flex;align-items:center;gap:8px;margin-bottom:6px}.ce2hd b{letter-spacing:3px;color:#c25a9a;font:800 14px Quicksand}
 .ce2pk{margin:0 0 6px;text-align:center}
+/* ---- Business & Financial System ---- */
+.fnwrap{max-width:1100px;margin:0 auto}
+.fnhead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,#3a2350,#6b3a7e);color:#fff;margin-bottom:10px}
+.fnhead h2{margin:0;font:800 20px Quicksand;color:#fff}.fnkick{font:700 11px Quicksand;letter-spacing:2px;opacity:.75}
+.fncash{text-align:right}.fncash small{display:block;font:700 11px Quicksand;opacity:.8}.fncash b{font:800 26px Quicksand;font-variant-numeric:tabular-nums}
+.fntabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px;scrollbar-width:thin}.fntabs button{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:700 13px Quicksand;color:var(--ink);cursor:pointer;min-height:38px}.fntabs button.on{background:#3a2350;color:#fff;border-color:#3a2350}
+.fnkpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:10px}.fnkpis.sm{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fnkpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 11px;display:flex;flex-direction:column;gap:2px}.fnkpi small{color:var(--mut);font:700 11px Quicksand}.fnkpi b{font:800 16px Quicksand;font-variant-numeric:tabular-nums}.fnkpi span{font-size:11px;color:var(--mut)}
+.fnpos{color:#2f8a5c}.fnneg{color:#c2384f}
+.fngrid{display:grid;grid-template-columns:1fr;gap:10px}@media(min-width:820px){.fngrid{grid-template-columns:1fr 1fr}}
+.fnbars{display:flex;flex-direction:column;gap:5px}.fnbar{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;align-items:center;gap:8px;font-size:12px}.fnbar i{display:block;height:9px;border-radius:9px;background:linear-gradient(90deg,#b48cff,#ff8fc4);width:var(--w)}.fnbar b{font-variant-numeric:tabular-nums}
+.fntab{width:100%;border-collapse:collapse;font-size:13px}.fntab td,.fntab th{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left}.fntab td:not(:first-child),.fntab th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.fntab .fntot td{font-weight:800;border-top:2px solid var(--line)}
+.fnchk{font:700 12px Quicksand;padding:4px 10px;border-radius:999px}.fnchk.ok{background:#e4f6ec;color:#2f8a5c}.fnchk.bad{background:#fff3da;color:#9a6a12}
+.fnfil{gap:6px}.fnfil input{flex:1;min-width:0}
+.fntx{display:flex;flex-direction:column}.fntxr{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:8px;padding:7px 2px;border-bottom:1px solid var(--line);font-size:12px;align-items:center}.fntxd small,.fntxl small{display:block;color:var(--mut);font-size:10.5px}.fntxr b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.fnpjl{display:grid;grid-template-columns:1fr;gap:8px}@media(min-width:820px){.fnpjl{grid-template-columns:1fr 1fr}}
+.fnpjh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px}.fntag{background:#efe7ff;color:#5a3a8a;border-radius:999px;padding:2px 9px;font:700 11px Quicksand}
+.fnpay{display:flex;flex-direction:column;gap:4px}.fnpayr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;color:var(--ink)}.fnpayr .st{grid-column:1}.fnpayr .fnamt{grid-column:2;grid-row:1/span 3;align-self:center;font-variant-numeric:tabular-nums}
+.fnfac{display:flex;flex-direction:column;gap:6px}.fnfacr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.fnhr{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:6px;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--line)}
+@media(max-width:560px){.fntab{font-size:12px}.fntab td,.fntab th{padding:5px 3px}.fnkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fnkpis.sm{grid-template-columns:1fr}.fnhead{padding:12px}.fncash b{font-size:22px}}
+.fntab th{white-space:normal!important;font-size:11px;color:var(--mut)}

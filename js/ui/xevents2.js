@@ -27,7 +27,7 @@ const XE_ACTSTAT={live:m=>(m.sing+m.dance)/2,talk:m=>m.variety,guest:m=>m.pop,ph
 const XE_EN={live:r=>6+(r.songs||1)*4,talk:()=>5,guest:()=>6,photo:()=>6,fashion:()=>10,cm:r=>8+Math.round((r.et-r.st)/60)*2,mc:()=>8,promo:()=>7};
 const XE_REACH={music:[1,.05],corp:[1,.02],media:[25,.0025],school:[1,.04],fashion:[3,.012],cm:[40,.0012],charity:[1,.03],special:[2,.02]};
 const xeGrade=v=>v>=85?'Excellent':v>=72?'Great':v>=58?'Good':v>=45?'Average':'Poor';
-function xeOut(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp=(S.exp||0)+a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80)}
+function xeOut(a,l){finOut(a,l)} // central Financial Engine (js/core/finance.js)
 // ---- running the event -----------------------------------------------------------------------------------------------------------
 // floor: an event that went reasonably well brings more new group fans than an average Theater show of the booked group(s)
 function xeFanFloor(r,q){if(q<=-.1)return 0;let n=0,c=0;try{((r.gr&&r.gr.length)?r.gr.map(e=>e.gid):[gsAg()]).forEach(gid=>gsWith(gid,()=>((S.th&&S.th.pf)||[]).slice(-12).forEach(p=>{const a=p.aud||{};if(a.trial==null&&a.liveNew==null)return;n+=(a.liveNew||0)+(a.trial||0)*(a.conv||0);c++})))}catch(e){}
@@ -119,7 +119,7 @@ function xeMpGen(x){if(!x||x.mpGen)return[];x.mpGen=1;const X=xeS(),o=S.songs[x.
   const r={id:'xe'+(++X.seq),ch:'mp',cat:'mp',type:p.fmt,name:`${p.nm} — “${o.title}”`,org:org.id,orgNm:p.net,lv,venue:p.stu,loc:'Tokyo',dist:0,st:p.st,et:Math.min(1439,p.et),acts:p.acts.slice(),songs:1,perfMin:5,mode:'org',made:S.day,status:'open',
    prog:{id:p.id,nm:p.nm,net:p.net,fmt:p.fmt,pop:p.pop,aud:p.aud,pre:p.pre,style:p.style,iv:p.iv,req:p.req,seg:p.seg.slice()},gid,rid:x.rid,song:x.mainId,title:o.title,single:x.title,cen:(o.centers||[]).slice(),
    req:line.map(id=>{const m=get(id);return{mid:id,gid,nm:m.name,gn:g?g.name:''}}),gr:[{gid,gn:g?g.name:''}],day};r.n=r.req.length;r.prep=1;r.dl=Math.max(S.day+1,day-1);
-  const sp=avg(line.map(id=>get(id).pop)),sales=Math.log10(1+(x.sales||0));r.pay=Math.max(100000,Math.round(250000*(p.pre/50)*Math.pow(p.aud/3e6,.35)*(.6+rep/100)*(.7+sp/120)*(.75+sales/14)*(.8+line.length/40)/10000)*10000);
+  const sp=avg(line.map(id=>get(id).pop)),sales=Math.log10(1+(x.sales||0));r.pay=Math.max(30000,Math.round(62500*(p.pre/50)*Math.pow(p.aud/3e6,.35)*(.6+rep/100)*(.7+sp/120)*(.75+sales/14)*(.8+line.length/40)/10000)*10000);
   r.cond=['Fixed appearance fee — no negotiation.','Performers: exactly the Title Track Senbatsu of the single (no changes, no substitutes).',`Program requirements: ${p.req}.`,'Cancellation by the company without a valid reason: 30% of the fee.'];
   r.art=xeArtMake(r,line,x.mainId);r.art.prog={nm:p.nm,net:p.net};r.art.hue=p.hue;X.list.push(r);out.push(r)}
  return out}

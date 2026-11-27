@@ -2105,6 +2105,28 @@ details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(s
 .ce2enc{margin-top:12px;border:2px dashed #f0b6d6;border-radius:16px;padding:8px;background:linear-gradient(180deg,#fff4fa,#fff)}
 .ce2hd{display:flex;align-items:center;gap:8px;margin-bottom:6px}.ce2hd b{letter-spacing:3px;color:#c25a9a;font:800 14px Quicksand}
 .ce2pk{margin:0 0 6px;text-align:center}
+/* ---- Business & Financial System ---- */
+.fnwrap{max-width:1100px;margin:0 auto}
+.fnhead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:18px;background:linear-gradient(135deg,#3a2350,#6b3a7e);color:#fff;margin-bottom:10px}
+.fnhead h2{margin:0;font:800 20px Quicksand;color:#fff}.fnkick{font:700 11px Quicksand;letter-spacing:2px;opacity:.75}
+.fncash{text-align:right}.fncash small{display:block;font:700 11px Quicksand;opacity:.8}.fncash b{font:800 26px Quicksand;font-variant-numeric:tabular-nums}
+.fntabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px;scrollbar-width:thin}.fntabs button{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:700 13px Quicksand;color:var(--ink);cursor:pointer;min-height:38px}.fntabs button.on{background:#3a2350;color:#fff;border-color:#3a2350}
+.fnkpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:10px}.fnkpis.sm{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fnkpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 11px;display:flex;flex-direction:column;gap:2px}.fnkpi small{color:var(--mut);font:700 11px Quicksand}.fnkpi b{font:800 16px Quicksand;font-variant-numeric:tabular-nums}.fnkpi span{font-size:11px;color:var(--mut)}
+.fnpos{color:#2f8a5c}.fnneg{color:#c2384f}
+.fngrid{display:grid;grid-template-columns:1fr;gap:10px}@media(min-width:820px){.fngrid{grid-template-columns:1fr 1fr}}
+.fnbars{display:flex;flex-direction:column;gap:5px}.fnbar{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;align-items:center;gap:8px;font-size:12px}.fnbar i{display:block;height:9px;border-radius:9px;background:linear-gradient(90deg,#b48cff,#ff8fc4);width:var(--w)}.fnbar b{font-variant-numeric:tabular-nums}
+.fntab{width:100%;border-collapse:collapse;font-size:13px}.fntab td,.fntab th{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left}.fntab td:not(:first-child),.fntab th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.fntab .fntot td{font-weight:800;border-top:2px solid var(--line)}
+.fnchk{font:700 12px Quicksand;padding:4px 10px;border-radius:999px}.fnchk.ok{background:#e4f6ec;color:#2f8a5c}.fnchk.bad{background:#fff3da;color:#9a6a12}
+.fnfil{gap:6px}.fnfil input{flex:1;min-width:0}
+.fntx{display:flex;flex-direction:column}.fntxr{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:8px;padding:7px 2px;border-bottom:1px solid var(--line);font-size:12px;align-items:center}.fntxd small,.fntxl small{display:block;color:var(--mut);font-size:10.5px}.fntxr b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.fnpjl{display:grid;grid-template-columns:1fr;gap:8px}@media(min-width:820px){.fnpjl{grid-template-columns:1fr 1fr}}
+.fnpjh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px}.fntag{background:#efe7ff;color:#5a3a8a;border-radius:999px;padding:2px 9px;font:700 11px Quicksand}
+.fnpay{display:flex;flex-direction:column;gap:4px}.fnpayr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;color:var(--ink)}.fnpayr .st{grid-column:1}.fnpayr .fnamt{grid-column:2;grid-row:1/span 3;align-self:center;font-variant-numeric:tabular-nums}
+.fnfac{display:flex;flex-direction:column;gap:6px}.fnfacr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.fnhr{display:grid;grid-template-columns:90px minmax(0,1fr) auto;gap:6px;font-size:12px;padding:4px 0;border-bottom:1px dashed var(--line)}
+@media(max-width:560px){.fntab{font-size:12px}.fntab td,.fntab th{padding:5px 3px}.fnkpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fnkpis.sm{grid-template-columns:1fr}.fnhead{padding:12px}.fncash b{font-size:22px}}
+.fntab th{white-space:normal!important;font-size:11px;color:var(--mut)}
 
 </style>
 </head><body>
@@ -2183,7 +2205,7 @@ function mk(g,team,rr,age,namer){let name,t=0;do{name=namer?namer():pick(FN)+' '
 const cleanName=v=>String(v||'').replace(/[<>"'`\\]/g,'').replace(/\s+/g,' ').trim().slice(0,30);
 // song titles may be longer (up to 100 characters)
 const cleanTitle=v=>String(v||'').replace(/[<>"`\\]/g,'').replace(/\s+/g,' ').trim().slice(0,100);
-function newGame(o){S={cov:{},songs:{},albums:[],sid:0,producer:o.pn,co:o.cn,day:0,money:3000000,fans:0,nid:0,gid:1,members:[],groups:[{id:1,name:o.gn,active:false,founded:0,debutDay:null}],singles:[],cur:null,prod:null,sen:{slots:Array(16).fill(null),center:null},saved:null,led:[],inc:0,exp:0};
+function newGame(o){S={cov:{},songs:{},albums:[],sid:0,producer:o.pn,co:o.cn,day:0,money:FIN_START,fans:0,nid:0,gid:1,members:[],groups:[{id:1,name:o.gn,active:false,founded:0,debutDay:null}],singles:[],cur:null,prod:null,sen:{slots:Array(16).fill(null),center:null},saved:null,led:[],inc:0,exp:0};
  migrate();ui.g=1;ui.t=false;ui.ng=null;ui.au=null;ui.asid=null;AU().gid=1;view='audition';toast(`Welcome, Producer ${o.pn}! ${o.cn} is open. Hold your first audition to find members for ${o.gn}.`);render()}
 function startNew(){const f=ui.ng||{},o={pn:cleanName(f.pn),cn:cleanName(f.cn),gn:cleanName(f.gn)},miss=[['pn','Producer Name'],['cn','Company Name'],['gn','First Idol Group Name']].filter(([k])=>!o[k]).map(x=>x[1]);
  if(miss.length){ui.ngErr=miss;toast('Please fill in: '+miss.join(', ')+'.','err');return render()}ui.ngErr=null;if(S)ask(`Start a new agency? Your current progress (${S.co}) will be replaced.`,()=>newGame(o),'Start over');else newGame(o)}
@@ -2203,8 +2225,7 @@ function earn(a,l){a=+a;if(!isFinite(a)){console.error('earn: invalid amount for
 function spend(a,l){a=+a;if(!isFinite(a)||a<0){console.error('spend: invalid amount for "'+l+'":',a);toast('That cost could not be calculated, so nothing was charged or bought.','err');return false}moneyOk();if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}S.money-=a;S.exp+=a;S.mOk=S.money;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);return true}
 function tick(){S.day++;if(S.pj&&S.pj.status=='producing')Object.values(S.songs).forEach(o=>{if(o.cosProd&&!o.cosProd.done&&S.day>=o.cosProd.ready){costumeDone(o)}});S.members.forEach(m=>{m.mor=cl(m.mor+(m.mor>60?-1:1));if(S.day%3==0)m.buzz=cl(m.buzz-1);m.fans+=Math.round(m.fans*m.buzz*.00003);m.pop=popOf(m)});
  earn(Math.round(S.fans*3),'Merch & streaming');
- if(dt().getDate()==1){const s=S.members.length*25000,p=Math.min(s,S.money);S.money-=p;S.exp+=p;S.led.unshift({d:S.day,l:'Monthly salaries',a:-p});
-  if(p<s){S.members.forEach(m=>m.mor=cl(m.mor-10));toast('Salaries not fully paid! Morale dropped.','err')}}
+ if(dt().getDate()==1)finMonthly(); // salaries, operating costs, loans, tax (js/core/finance.js)
  if(S.pj&&S.pj.status=='producing'&&S.pj.releaseDay!=null&&S.prod){const l=Math.max(0,S.pj.releaseDay-S.day),was=S.prod.left;S.prod.left=l;if(was>0&&l==0)toast(`Release day for "${S.prod.title}" has arrived!`);prodDay()}else if(S.prod&&S.prod.left>0){S.prod.left--;if(!S.prod.left)toast(`"${S.prod.title}" is ready to release!`)}promoDay()}
 function adv(n=1){ui.newRes=[];ui.hsDone=null;ui.rsDone=[];for(let i=0;i<n;i++)tick();const hd=ui.hsDone&&(S.singles.flatMap(x=>x.promo||[]).find(r=>r.id==ui.hsDone&&r.v==2));const rl=ui.rsDone.at(-1);if(rl)ui.mod={t:'rsres',id:rl.id,tab:rsGet(rl.id)&&rsGet(rl.id).done&&rl.part==2?'d2':'d'+rl.part,extra:ui.newRes.join('')};else if(hd)ui.mod={t:'hsres',P:hd.res,extra:ui.newRes.join('')};else if(ui.newRes.length)ui.mod={t:'html',h:'<h2 class="ht">Promotion results</h2>'+ui.newRes.join('')};ui.newRes=null;ui.hsDone=null;ui.rsDone=null;render()}
 function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:0}
@@ -2244,6 +2265,171 @@ function artMigrate(){if(S.artV>=2)return;const all=[...S.members,...(S.auds||[]
  const BK=pm(BKN.length,11),FT=pm(FTN.length,23),HCs=[...HC_NAT.slice(0,7),...HC_FAN],HP=pm(HCs.length,37),seen=new Set();
  all.forEach((m,i)=>{let t=0,a;do{a=newAp(m,t,{bk:BK[(i+t)%BK.length],ft:FT[(i*3+t)%FT.length],hc:HCs[HP[(i*5+t)%HP.length]]});t++}while(seen.has(a.bk+'/'+a.ft+'/'+a.hc)&&t<40);seen.add(a.bk+'/'+a.ft+'/'+a.hc);if(m.ap&&!m.apOld)m.apOld=m.ap;m.ap=a});S.artV=2;if(typeof ART!='undefined')ART.cache.clear()}
 function rapp(){return{bk:rnd(0,BKN.length-1),ft:rnd(0,FTN.length-1),hc:rnd(0,HC.length-1),ec:rnd(0,EC.length-1),ey:rnd(0,5),br:rnd(0,3),bc:-1,mo:rnd(0,4),of:rnd(0,6),oh:pick(OHS),ac:rnd(0,6),sk:rnd(0,4)}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Central Financial Engine
+// -------------------------------------------------------------------------------------
+//  Every yen that enters or leaves the company passes through finPost(). earn() / spend() and the older project
+//  helpers (ccPay, xeOut, rcPay …) are thin wrappers around it.
+//  · one currency (JPY), whole yen, Math.round everywhere
+//  · every transaction: unique id (TX…), day, signed amount, category, source, description, group, optional
+//    member / project / dedupe key, gross and deductions for sales
+//  · a dedupe key can be posted only once (salaries, job payments, revenue shares, recurring costs)
+//  · reversals post the opposite amount and point back to the original (rev)
+//  · company money (S.money) is separate from member earnings (m.earn / m.payH)
+//  · monthly aggregates (S.fx.mon) are built from the same postings, so reports equal the ledger
+// =====================================================================================
+const FIN_START=50000000;           // starting capital for a new company (Normal · Balanced)
+const FIN_LEGACY_START=3000000;     // starting capital of saves made before the overhaul
+const FIN_TAX=.30;                  // simplified corporate tax on taxable profit of the fiscal year (April–March)
+// categories ------------------------------------------------------------------------------------------------------
+const FIN_INC={cd:'CD & album sales',digital:'Digital & streaming',concert:'Concert tickets',online:'Online tickets & memberships',theater:'Theater tickets',dvd:'DVD & video',merch:'Merchandise',fanev:'Fan events',deals:'Sponsorship, commercial & appearances',license:'Licensing & drama',other:'Other income',refund:'Refunds received'};
+const FIN_EXP={prod:'Production costs',ops:'Operating expenses',msal:'Member salaries',mjob:'Member job payments',mshare:'Member revenue sharing',staff:'Staff salaries',mkt:'Marketing',tax:'Taxes',debt:'Debt repayments',int:'Loan interest'};
+const FIN_FIN={loan:'Loan proceeds',adj:'Economy rebalance adjustment'}; // financing / adjustments: not revenue, not expense
+// label → category; for sales: gross receipts and the deduction taken before the company receives its share
+//  k: gross per allocated yen (CD: retail ¥1,600 per CD, company allocation ¥300 per CD)
+//  d: share of the gross kept by the channel (ticketing / platform / manufacturing) — the company receives the rest
+const FIN_RULES=[
+ [/^(Election )?CD sales|^Sales: |^Album sales/,'cd',{k:1600/300,dl:'Retail, distribution, manufacturing & royalties'}],
+ [/^Merch & streaming/,'digital',{d:.50,dl:'Platform fees, merchandise manufacturing & online shop'}],
+ [/merchandise/i,'merch',{d:.50,dl:'Merchandise manufacturing, stock & venue sales'}],
+ [/Hi-Touch tickets|^Handshake Event day \d+:/,'fanev',{d:.08,dl:'Ticketing fees'}],
+ [/Online Theater Membership/,'online',{d:.50,dl:'Streaming platform fees & broadcast production'}],
+ [/Concert online tickets/,'online',{}],
+ [/Theater tickets|Graduation Stage tickets/,'theater',{d:.05,dl:'Ticketing fees'}],
+ [/Concert tickets|ceremony tickets|Mini Concert|^Road Show: /,'concert',{}],
+ [/^External event|^Music program/,'deals',{d:.15,dl:'Advertising agency & booking commissions'}],
+ [/Screening tickets|TV ads|Streaming (license|views)/,'license',{}],
+ [/DVD|Blu-ray/,'dvd',{}],
+ [/refund/i,'refund',{}],
+];
+const FIN_XRULES=[[/salar/i,'msal'],[/^Job payment/,'mjob'],[/revenue share/i,'mshare'],[/^Staff salaries/,'staff'],[/Marketing|Promotion campaign|Advertising/i,'mkt'],[/Corporate tax|^Tax/i,'tax'],[/Loan repayment/,'debt'],[/Loan interest/,'int'],
+ [/^Production|MV production|^Album|Costume|Request Hour CDs|cover|Drama (production|distribution)|Recording|CD manufacturing|Song production/i,'prod']];
+function finCatOf(a,l){l=String(l||'');if(a>=0){for(const[re,c,o]of FIN_RULES)if(re.test(l))return[c,o];return['other',{}]}for(const[re,c]of FIN_XRULES)if(re.test(l))return[c,{}];return['ops',{}]}
+// project key from a description (single / album / MV / concert / roadshow / event / drama / theater)
+function finProjOf(l){l=String(l||'');let m;
+ if((m=l.match(/^(?:Production|Sales|CD sales|Election CD sales|Release Day Mini Concert|Handshake Event day \d+(?: cost)?|MV production(?: \(revised budget\))?|MV refund|Costume production|Single production|Job payment · (?:recording|MV filming|handshake event)): (.+?)(?: \(.*\))?$/)))return'single:'+m[1].replace(/^.*“|”$/g,'');
+ if((m=l.match(/^Album(?: sales)?: (.+)$/)))return'album:'+m[1];
+ if((m=l.match(/^Concert [^:]*: (.+?)(?: · Performance \d+| \(.*\))?$/))||(m=l.match(/^Job payment · concert: (.+?)(?: · .*)?$/)))return'concert:'+m[1];
+ if((m=l.match(/^Road ?[Ss]how[^:]*: (.+?)(?: day \d| \(.*\))?$/))||(m=l.match(/^Job payment · roadshow: (.+?)(?: day \d)?$/)))return'road:'+m[1];
+ if((m=l.match(/^(?:External event|Music program): (.+)$/))||(m=l.match(/^(?:Transportation|Accommodation|Staff \/ Crew|Equipment|Other operational expenses): (.+)$/))||(m=l.match(/^Job payment · (?:external event|music program): (.+)$/)))return'event:'+m[1];
+ if((m=l.match(/^(?:Drama [^:]*|Screening tickets & goods|TV ads & sponsors \(ep \d+\)|Streaming[^:]*|Job payment · drama): (.+)$/)))return'drama:'+m[1];
+ if((m=l.match(/^Theater (?:tickets|operating cost): ([^(]+?)(?: \(.*)?$/)))return'theater:'+m[1].trim();
+ return null}
+// store ---------------------------------------------------------------------------------------------------------------
+function finS(){if(!S)return null;let X=S.fx;if(!X||typeof X!='object')X=S.fx={};X.v=X.v||1;X.mon=X.mon&&typeof X.mon=='object'?X.mon:{};X.keys=X.keys&&typeof X.keys=='object'?X.keys:{};
+ X.loans=Array.isArray(X.loans)?X.loans:[];X.tax=X.tax&&typeof X.tax=='object'?X.tax:{nol:0,due:[],hist:[]};X.tax.due=X.tax.due||[];X.tax.hist=X.tax.hist||[];X.tax.nol=+X.tax.nol||0;
+ X.proj=X.proj&&typeof X.proj=='object'?X.proj:{};X.facil=Array.isArray(X.facil)?X.facil:[];X.cf=X.cf||{};return X}
+const finYM=d=>{const t=new Date(2026,3,1+d);return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')};
+const finFY=d=>{const t=new Date(2026,3,1+d);return t.getMonth()>=3?t.getFullYear():t.getFullYear()-1}; // fiscal year starts in April
+function finLedger(){try{if(typeof gsFin=='function')return gsFin()}catch(e){}S.fin=S.fin||{seq:0,tx:[]};S.fin.tx=S.fin.tx||[];return S.fin}
+let FIN_GID=null; // a caller may name the group a posting belongs to
+// the one place where the company's money changes
+function finPost(o){if(!S)return null;let a=Math.round(+o.a);if(!isFinite(a)||a===0&&!o.zero)return null;const X=finS(),key=o.key||null;
+ if(key&&X.keys[key])return null; // duplicate payment / income prevented
+ try{moneyOk()}catch(e){}
+ const l=String(o.l||'');let cat=o.cat,opt={};if(!cat){[cat,opt]=finCatOf(a,l)}else if(a>=0){const r=FIN_RULES.find(z=>z[1]==cat);opt=o.rule||{}}
+ // sales: gross receipts and channel deductions; the company receives the allocated (net) amount only
+ let gross=null,ded=0,cash=a;
+ if(a>0&&!o.net){if(o.gross!=null){gross=Math.round(o.gross);ded=Math.max(0,gross-a)}else if(opt.k){gross=Math.round(a*opt.k);ded=gross-a}else if(opt.d){gross=a;ded=Math.round(a*opt.d);cash=a-ded}}
+ S.money+=cash;if(cash>=0){if(!FIN_FIN[cat])S.inc=(+S.inc||0)+cash}else{if(!FIN_FIN[cat])S.exp=(+S.exp||0)-cash}S.mOk=S.money;
+ const F=finLedger(),id='TX'+(++F.seq);let gid=o.gid!=null?o.gid:FIN_GID;if(gid==null){try{gid=typeof GS_TXG!='undefined'&&GS_TXG!=null?GS_TXG:(typeof gsAg=='function'?gsAg():S.ag)}catch(e){gid=S.ag}}
+ const proj=o.proj!==undefined?o.proj:finProjOf(l);
+ const tx={id,co:S.co,gid,type:o.type||(typeof gsType=='function'?gsType(l):cat),io:cash>=0?'in':'out',amt:Math.abs(cash),day:S.day,desc:l,cat,src:o.src||finSrcOf(cat,l),v:2};
+ if(gross!=null){tx.gross=gross;tx.ded=ded;tx.dl=opt.dl||o.dl||'Deductions'}if(o.mid!=null)tx.mid=o.mid;if(proj)tx.proj=proj;if(key)tx.key=key;if(o.rev)tx.rev=o.rev;if(o.units)tx.units=o.units;if(o.note)tx.note=o.note;
+ F.tx.push(tx);if(F.tx.length>60000)F.tx.splice(0,F.tx.length-60000);
+ S.led.unshift({d:S.day,l,a:cash,_t:1,id});S.led.length=Math.min(S.led.length,80);
+ if(key)X.keys[key]=id;
+ // monthly aggregate
+ const ym=finYM(S.day),M=X.mon[ym]=X.mon[ym]||{inc:{},exp:{},fin:{},gross:0,ded:0,n:0};M.n++;
+ if(FIN_FIN[cat])M.fin[cat]=(M.fin[cat]||0)+cash;else if(cash>=0)M.inc[cat]=(M.inc[cat]||0)+cash;else M.exp[cat]=(M.exp[cat]||0)-cash;if(gross!=null){M.gross+=gross;M.ded+=ded}
+ if(proj){const P=X.proj[proj]=X.proj[proj]||{k:proj,inc:0,exp:0,d0:S.day,d1:S.day,n:0};if(FIN_FIN[cat]){}else if(cash>=0)P.inc+=cash;else P.exp-=cash;P.d1=S.day;P.n++}
+ return tx}
+function finSrcOf(cat,l){if(/Theater/.test(l))return'theater';if(/Concert/.test(l))return'concert';if(/Road ?[Ss]how/.test(l))return'roadshow';if(/Handshake|Hi-Touch/.test(l))return'fan events';if(/External event|Music program/.test(l))return'external events';if(/Election/.test(l))return'election';if(/Drama/.test(l))return'drama';if(/MV|Music Video/.test(l))return'music video';if(/Album/.test(l))return'album';if(/Production|CD sales|Sales:/.test(l))return'single';if(/Audition/.test(l))return'audition';if(/salar|Job payment|revenue share/i.test(l))return'members';return'company'}
+// reversal of a posted transaction (refund / cancellation): posts the opposite amount once
+function finReverse(txid,why){const F=finLedger(),t=F.tx.find(x=>x.id==txid);if(!t)return null;const a=t.io=='in'?-t.amt:t.amt;return finPost({a,l:`Reversal: ${t.desc}${why?' — '+why:''}`,cat:t.cat,net:1,key:'rev:'+txid,rev:txid,mid:t.mid,proj:t.proj||null,gid:t.gid})}
+// income & expenses through the engine ---------------------------------------------------------------------------------
+earn=function(a,l,o){a=+a;if(!isFinite(a)){console.error('earn: invalid amount for "'+l+'":',a);return}if(!a)return;finPost({...(o||{}),a,l})};
+spend=function(a,l,o){a=+a;if(!isFinite(a)||a<0){console.error('spend: invalid amount for "'+l+'":',a);toast('That cost could not be calculated, so nothing was charged or bought.','err');return false}moneyOk();if(a>S.money){toast(`Not enough money: need ${yen(a)}, you have ${yen(S.money)}.`,'err');return false}finPost({...(o||{}),a:-a,l});return true};
+// an obligation that is paid even when cash is short (salaries, contracts already performed, operating costs)
+function finOut(a,l,o){a=Math.round(+a);if(!isFinite(a)||a<=0)return null;return finPost({...(o||{}),a:-a,l})}
+// ---- members: employment, positions, salaries -----------------------------------------------------------------------
+const FIN_SAL={trainee:80000,member:180000,tvice:230000,tcap:280000,gvice:280000,gcap:350000};
+const FIN_POSN={trainee:'Trainee',member:'Active Member',tvice:'Team Vice-Captain',tcap:'Team Captain',gvice:'Group Vice-Captain',gcap:'Group Captain'};
+const FIN_SEN=10000; // per completed year of employment
+const finDate=d=>new Date(2026,3,1+d);
+function finMem(id){if(!S)return null;let m=null;try{m=get(id)}catch(e){}if(!m)m=(S.alumni||[]).find(a=>a.id==id)||null;if(!m&&typeof ctMem=='function'){try{m=ctMem(id)}catch(e){}}return m}
+function finEmpStart(m){if(!m)return 0;if(m.emp==null){let d=m.joined;if(d==null&&m.ct&&m.ct.start!=null)d=m.ct.start;m.emp=d==null?(S?S.day:0):d}return m.emp}
+function finYears(m,day){const a=finDate(finEmpStart(m)),b=finDate(day==null?S.day:day);let y=b.getFullYear()-a.getFullYear();if(b.getMonth()<a.getMonth()||(b.getMonth()==a.getMonth()&&b.getDate()<a.getDate()))y--;return Math.max(0,y)}
+function finNextAnniv(m){const a=finDate(finEmpStart(m)),y=finYears(m)+1;const n=new Date(a.getFullYear()+y,a.getMonth(),a.getDate());return Math.round((n-finDate(0))/864e5)}
+const finRealGroup=g=>g&&!g.dis&&!g.ext&&g.type!='unit'&&g.type!='solo';
+function finUnitActive(g){if(!g||g.dis)return false;try{if(typeof uState=='function'&&uState(g)!='active')return false}catch(e){}return true}
+function finRoster(g){try{if(typeof uRoster=='function')return uRoster(g)}catch(e){}return g.type=='solo'?(g.solo&&!g.solo.end?[g.solo.mid]:[]):((g.unit&&g.unit.roster)||[])}
+// the official position of a member in one group
+function finPosIn(m,g){if(!m||!g)return null;if(g.type=='unit'||g.type=='solo')return'member';
+ if(g.cap==m.id)return'gcap';if(g.vcap==m.id)return'gvice';const tl=g.tl||{};for(const k in tl){if(tl[k]&&tl[k].cap==m.id)return'tcap'}for(const k in tl){if(tl[k]&&tl[k].vice==m.id)return'tvice'}
+ return m.status=='trainee'?'trainee':'member'}
+// the groups a member officially belongs to (each one is paid separately)
+function finGroupsOf(m){if(!m||!S)return[];const out=[],grad=m.status=='graduated'||!S.members.includes(m);
+ (S.groups||[]).forEach(g=>{if(finRealGroup(g)){if(grad)return;const main=(typeof gsGid=='function'?gsGid(m):m.group)==g.id,kn=m.kn&&m.kn.gid==g.id;if(main||kn)out.push(g)}else if((g.type=='unit'||g.type=='solo')&&finUnitActive(g)&&finRoster(g).includes(m.id))out.push(g)});return out}
+function finSalaryOf(m,day){const y=finYears(m,day),inc=y*FIN_SEN;const rows=finGroupsOf(m).map(g=>{const pos=finPosIn(m,g),base=FIN_SAL[pos]||FIN_SAL.member;return{gid:g.id,gn:g.name,pos,pn:FIN_POSN[pos],base,inc,amt:base+inc}});return{y,inc,rows,total:rows.reduce((a,r)=>a+r.amt,0)}}
+// member earnings (kept apart from the company's money)
+function finMemPay(m,k,a,l,o){if(!m||!(a>0))return;const E=m.earn=m.earn&&typeof m.earn=='object'?m.earn:{sal:0,job:0,ge:0};E[k]=(E[k]||0)+a;m.payH=Array.isArray(m.payH)?m.payH:[];m.payH.unshift({d:S.day,k,a,l,...(o||{})});if(m.payH.length>150)m.payH.length=150}
+// everyone who may receive a salary: current members + graduated members in an active unit / solo
+function finPayees(){const L=S.members.slice(),seen=new Set(L.map(m=>m.id));(S.groups||[]).forEach(g=>{if((g.type=='unit'||g.type=='solo')&&finUnitActive(g))finRoster(g).forEach(id=>{if(seen.has(id))return;const m=finMem(id);if(m){L.push(m);seen.add(id)}})});return L}
+function finPayroll(ym){let n=0,t=0;finPayees().forEach(m=>{const P=finSalaryOf(m);P.rows.forEach(r=>{const tx=finPost({a:-r.amt,l:`Member salaries: ${m.name} (${r.gn} · ${r.pn})`,cat:'msal',key:`sal:${ym}:${m.id}:${r.gid}`,mid:m.id,gid:r.gid,proj:null});if(tx){n++;t+=r.amt;finMemPay(m,'sal',r.amt,`Salary ${ym} · ${r.gn} · ${r.pn}`,{gid:r.gid,pos:r.pos,base:r.base,inc:r.inc,ym})}})});return{n,t}}
+// ---- job payments ------------------------------------------------------------------------------------------------------
+// [label, base per unit (yen)] — unit = song recorded, filming day, performance, event day, appearance
+const FIN_JOB={rec:['Recording',12000],mv:['MV filming',20000],concert:['Concert performance',25000],theater:['Theater performance',8000],special:['Special Stage performance',8000],road:['Roadshow',15000],hs:['Handshake event',10000],xe:['External work',20000],mp:['Music program',20000],award:['Awards ceremony',15000],drama:['Drama',30000],ge:['Election ceremony',15000],reunion:['Special appearance',40000]};
+// pay = base × units (+ extra yen for workload); one transaction per member; the key prevents paying the same work twice
+function finJob(ids,kind,o){o=o||{};const J=FIN_JOB[kind];if(!J)return 0;let t=0;[...new Set(ids||[])].forEach(id=>{const m=finMem(id);if(!m)return;const units=Math.max(1,+(typeof o.units=='function'?o.units(id):o.units)||1),extra=Math.round(+(typeof o.extra=='function'?o.extra(id):o.extra)||0);
+  let a=Math.round(J[1]*units+extra);if(o.min)a=Math.max(a,o.min);if(!(a>0))return;const grad=m.status=='graduated'||!S.members.includes(m);
+  const tx=finPost({a:-a,l:`Job payment · ${o.lbl||J[0].toLowerCase()}: ${o.desc||''}${grad?' (special appearance)':''} — ${m.name}`,cat:'mjob',key:`job:${o.key}:${id}`,mid:id,gid:o.gid,proj:o.proj||null});
+  if(tx){t+=a;finMemPay(m,'job',a,`${J[0]}: ${o.desc||''}`,{kind,units})}});return t}
+// ---- operating costs (monthly, by size of the company) ------------------------------------------------------------------
+function finOpsPlan(){const act=S.members.filter(m=>m.status!='graduated'),N=act.length,real=(S.groups||[]).filter(finRealGroup),G=Math.max(1,real.length),T=real.reduce((a,g)=>a+((g.teams||[]).length),0),U=(S.groups||[]).filter(g=>(g.type=='unit'||g.type=='solo')&&finUnitActive(g)).length;
+ const staffN=4+Math.ceil(N/3)+2*G+2*T+U,thL=(()=>{try{const P=(S.th&&S.th.pf)||[];return new Set(P.filter(p=>p.day>S.day-60).map(p=>String(p.k).split(':')[0])).size?G:0}catch(e){return 0}})(),fans=Math.max(0,S.fans||0);return{N,G,T,U,staffN,rows:[
+  ['Office rent','ops',1200000+400000*(G-1)+8000*N],
+  ['Utilities & administration','ops',350000+3000*N],
+  ['Staff salaries',`staff`,staffN*320000],
+  ['Marketing & public relations','mkt',500000+200000*G+Math.min(10000000,Math.round(fans))],
+  ['Theater lease','ops',thL*3000000],
+  ['Training facilities & maintenance','ops',600000+250000*(G-1)],
+  ['Coaches & instructors','ops',150000*Math.ceil(N/12)],
+  ['Insurance & legal','ops',150000+1000*N],
+  ['Fan club & ticketing systems','ops',300000+Math.min(6000000,Math.round(fans*1.5))],
+  ...finS().facil.filter(f=>f.on).map(f=>[`Facility upkeep: ${f.n}`,'ops',f.upk])]}}
+function finOps(ym){const P=finOpsPlan();let t=0;P.rows.forEach(([n,c,a])=>{if(a>0&&finPost({a:-a,l:`${n} (${ym})`,cat:c,key:`op:${ym}:${n}`,proj:null,gid:FIN_GID!=null?FIN_GID:(S.groups.find(finRealGroup)||{}).id}))t+=a});return t}
+// ---- loans --------------------------------------------------------------------------------------------------------------
+function finLoanPay(P,r,n){if(r<=0)return Math.round(P/n);const i=r/12;return Math.round(P*i/(1-Math.pow(1+i,-n)))}
+function finLoanTake(P,months,rate,why){P=Math.round(P);if(!(P>0))return null;const X=finS(),id='LN'+(X.loans.length+1)+'-'+S.day,pay=finLoanPay(P,rate,months);const L={id,P,rate,months,pay,bal:P,start:S.day,paid:0,int:0,why:why||'Bank loan',st:'active',hist:[]};X.loans.push(L);
+ finPost({a:P,l:`Loan proceeds: ${L.why} (${id})`,cat:'loan',key:'loan:'+id,proj:null});return L}
+function finLoanMonth(ym){finS().loans.forEach(L=>{if(L.st!='active'||L.start>=S.day)return;const i=Math.round(L.bal*L.rate/12),prin=Math.min(L.bal,Math.max(0,L.pay-i));
+  if(i>0)finPost({a:-i,l:`Loan interest: ${L.id}`,cat:'int',key:`li:${ym}:${L.id}`,proj:null});if(prin>0&&finPost({a:-prin,l:`Loan repayment: ${L.id}`,cat:'debt',key:`lp:${ym}:${L.id}`,proj:null})){L.bal-=prin;L.paid+=prin;L.int+=i;L.hist.push({ym,i,p:prin,bal:L.bal})}if(L.bal<=0){L.bal=0;L.st='repaid'}})}
+function finLoanRepayAll(id){const L=finS().loans.find(x=>x.id==id&&x.st=='active');if(!L)return;if(L.bal>S.money)return toast(`Not enough money to repay ${yen(L.bal)}.`,'err');finPost({a:-L.bal,l:`Loan repayment: ${L.id} (early, in full)`,cat:'debt',key:'lpf:'+L.id,proj:null});L.paid+=L.bal;L.bal=0;L.st='repaid';render()}
+// ---- tax (fiscal year April–March, paid two months after year end) -----------------------------------------------------
+function finFYResult(fy){const X=finS();let rev=0,exp=0;Object.entries(X.mon).forEach(([ym,M])=>{const[y,m]=ym.split('-').map(Number);const f=m>=4?y:y-1;if(f!=fy)return;rev+=Object.values(M.inc).reduce((a,b)=>a+b,0);exp+=Object.entries(M.exp).filter(([c])=>c!='tax'&&c!='debt').reduce((a,[,b])=>a+b,0)});return{rev,exp,profit:rev-exp}}
+function finTaxYearEnd(fy){const X=finS(),T=X.tax;if(T.hist.some(h=>h.fy==fy)||(T.from!=null&&fy<T.from))return;const R=finFYResult(fy);let base=R.profit,used=0;if(base>0&&T.nol>0){used=Math.min(T.nol,base);base-=used;T.nol-=used}else if(base<0){T.nol+=-base;base=0}
+ const amt=Math.round(Math.max(0,base)*FIN_TAX);const h={fy,rev:R.rev,exp:R.exp,profit:R.profit,nolUsed:used,base,amt,paid:0,due:S.day+60};T.hist.push(h);if(amt>0)T.due.push({fy,amt,due:h.due})}
+function finTaxPay(){const T=finS().tax;T.due=T.due.filter(d=>{if(S.day<d.due)return true;finPost({a:-d.amt,l:`Corporate tax: fiscal year ${d.fy}`,cat:'tax',key:'tax:'+d.fy,proj:null});const h=T.hist.find(x=>x.fy==d.fy);if(h)h.paid=d.amt;return false})}
+// ---- the monthly accounting cycle (1st of each month; runs once per month) -------------------------------------------------
+function finMonthly(){if(!S)return;const X=finS(),ym=finYM(S.day);if(X.lastMon==ym)return;X.lastMon=ym;
+ const pr=finPayroll(ym),op=finOps(ym);finLoanMonth(ym);
+ const t=finDate(S.day);if(t.getMonth()==3)finTaxYearEnd(t.getFullYear()-1); // April 1: close the fiscal year that just ended
+ finTaxPay();
+ // Normal difficulty: a company that cannot cover its obligations receives an automatic bank loan (24 months, 3%/year)
+ if(S.money<0){const need=Math.ceil((-S.money+20000000)/1000000)*1000000;finLoanTake(need,24,.03,'Emergency operating loan');try{toast(`Funds ran short — an emergency bank loan of ${yen(need)} covered this month's obligations.`,'err')}catch(e){}}
+ X.cf[ym]={pay:pr.t,ops:op}}
+// ---- reports ---------------------------------------------------------------------------------------------------------------
+function finMonthSum(ym){const M=finS().mon[ym]||{inc:{},exp:{},fin:{},gross:0,ded:0};const inc=Object.values(M.inc).reduce((a,b)=>a+b,0),exp=Object.values(M.exp).reduce((a,b)=>a+b,0);return{ym,M,inc,exp,net:inc-exp,gross:M.gross,ded:M.ded}}
+// recompute a month straight from the transaction list (the reports must match it)
+function finMonthFromTx(ym){const F=finLedger();let inc=0,exp=0;F.tx.forEach(t=>{if(t.v!=2||finYM(t.day)!=ym||FIN_FIN[t.cat])return;if(t.io=='in')inc+=t.amt;else exp+=t.amt});return{inc,exp,net:inc-exp}}
+function finLiab(){const X=finS();const debt=X.loans.filter(l=>l.st=='active').reduce((a,l)=>a+l.bal,0),tax=X.tax.due.reduce((a,d)=>a+d.amt,0);return{debt,tax,total:debt+tax}}
+function finAssets(){const X=finS(),fac=X.facil.filter(f=>f.on).reduce((a,f)=>a+Math.round(f.cost*Math.max(.2,1-(S.day-f.day)/3650)),0);return{cash:S.money,fac,total:S.money+fac}}
+// ---- estimates for projects (before confirming) ----------------------------------------------------------------------------
+function finEst(key,rev,exp,lbl){if(!S||!key)return;const P=finS().proj[key]=finS().proj[key]||{k:key,inc:0,exp:0,d0:S.day,d1:S.day,n:0};P.er=Math.round(rev||0);P.ee=Math.round(exp||0);if(lbl)P.lbl=lbl;P.ed=S.day}
 
 </script>
 <script>
@@ -4721,7 +4907,7 @@ function evOut(e,L,focus,mul){const cap=Math.round(e.cap*(mul||1)),q=(avg(L.map(
 const promoAdd=(x,rec)=>{if(!x)return;x.promo=x.promo||[];if(!x.promo.some(r=>r.id==rec.id))x.promo.push(rec)},resNote=h=>{if(ui.newRes)ui.newRes.push(h)};
 function hsRun(ev,part){const k='r'+part;if(ev[k])return;const all=ev.members.filter(id=>get(id)),L=all.map(get).filter(m=>m.en>=20),x=S.singles.find(s=>s.rid==ev.rid);let r;
  if(!L.length)r={day:S.day,att:0,cap:0,rev:0,cost:0,fans:0,gr:'—',present:[],absent:all,note:'No member had enough Stamina, so the day was cancelled.'};
- else{const o=evOut(EV.handshake,L,'variety',Math.max(1,all.length/EV.handshake.max));earn(o.rev,`Handshake Event day ${part}: ${ev.st}`);const pay=Math.min(EV.handshake.cost,S.money);S.money-=pay;S.exp+=pay;S.led.unshift({d:S.day,l:`Handshake Event day ${part} cost: ${ev.st}`,a:-pay});S.led.length=Math.min(S.led.length,80);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(0,m.en-20)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,cost:pay,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
+ else{const o=evOut(EV.handshake,L,'variety',Math.max(1,all.length/EV.handshake.max));earn(o.rev,`Handshake Event day ${part}: ${ev.st}`);const pay=EV.handshake.cost;finOut(pay,`Handshake Event day ${part} cost: ${ev.st}`);S.fans+=o.fans;L.forEach(m=>{gainPop(m,o.pg);m.mor=cl(m.mor+3);m.en=Math.max(0,m.en-20)});r={day:S.day,att:o.att,cap:o.cap,rev:o.rev,cost:pay,fans:o.fans,gr:o.gr,present:L.map(m=>m.id),absent:all.filter(id=>!L.some(m=>m.id==id))}}
  ev[k]=r;resNote(`<div class="c"><b>${esc(ev.title)} — Day ${part} (${part==1?'Sat':'Sun'})</b><div class="st">${r.note||`Grade ${r.gr} · ${r.att.toLocaleString()} fans attended · revenue ${yen(r.rev)} (cost ${yen(r.cost)}) · +${r.fans} fans`} · ${r.present.length} member(s) present${r.absent.length?`, ${r.absent.length} resting`:''}</div></div>`);
  if(part==2){ev.done=true;promoAdd(x,{id:ev.id,type:'handshake',title:ev.title,day:ev.day,day2:ev.day2,members:ev.members.slice(),r1:ev.r1,r2:ev.r2})}}
 function roadRun(ev){if(ev.res)return;const all=ev.members.filter(id=>get(id)),need=20*(ev.dur||1),L=all.map(get).filter(m=>m.en>=need),x=S.singles.find(s=>s.rid==ev.rid);let r;
@@ -5371,7 +5557,7 @@ function uiSave(){save();ui.savedAt=fd();toast('Game saved.')}
 function uiLoad(){ask('Load the saved game? The game autosaves when you press Next day or +7 and every 10 minutes, so this restores the last saved state.',()=>cont(),'Load')}
 function uiExport(){try{const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`IDOLVERSE48_${(S.co||'save').replace(/[^\w-]+/g,'_')}_day${S.day}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('Save file exported.')}catch(e){toast('Export failed.','err')}}
 function uiImport(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const s=JSON.parse(r.result);if(!(s&&Array.isArray(s.members)&&Array.isArray(s.groups)&&Array.isArray(s.led)&&typeof s.money=='number'&&s.sen&&Array.isArray(s.sen.slots)&&s.sen.slots.length==16))throw 0;ask(`Import "${s.co||'save'}" (day ${s.day})? Your current progress in this browser will be replaced.`,()=>{localStorage.setItem(KEY,JSON.stringify(s));cont()},'Import')}catch(e){toast('That file is not a valid IDOLVERSE48 save.','err')}};r.readAsText(f);inp.value=''}
-V.manage=function(){const mo=S.members.length*25000;
+V.manage=function(){const mo=(typeof finPayrollNow=="function"?finPayrollNow().t:0);
  return`<h2 class="ht">Agency Management</h2><div class="g2"><div class="c"><h3>Agency</h3><div class="kv"><div><small>Company</small><b style="font-size:15px">${esc(S.co)}</b></div><div><small>Producer</small><b style="font-size:15px">${esc(S.producer||'—')}</b></div><div><small>Date</small><b style="font-size:14px">${fd()}</b></div><div><small>Members</small><b>${S.members.length}</b></div></div><h3 style="margin-top:10px">Groups</h3>${S.groups.map(g=>`<div class="uprow"><span class="gdot" style="background:${g.color}"></span><b style="flex:1">${esc(g.name)}</b><span class="st">${S.members.filter(m=>m.group==g.id).length} members · ${(g.teams||[]).length} team(s)</span></div>`).join('')}<div class="row"><button class="b s" onclick="goView('groups')">Team management</button><button class="b s" onclick="goView('members')">Member management</button><button class="b s" onclick="goView('audition')">Recruitment</button></div></div>
  <div class="c"><h3>Finances</h3><div class="kv"><div><small>Balance</small><b>${yen(S.money)}</b></div><div><small>Total income</small><b>${yen(S.inc)}</b></div><div><small>Total expenses</small><b>${yen(S.exp)}</b></div><div><small>Monthly salaries</small><b>${yen(mo)}</b></div></div><div class="row"><button class="b s" onclick="goView('finances')">Open ledger</button></div></div>
  <div class="c"><h3>Save & Load</h3><p class="st">Progress is stored in this browser and saved automatically when you press Next day or +7, and every 10 minutes. Use Save Game to keep changes made since then.${ui.savedAt?' Last manual save: '+ui.savedAt+'.':''}</p><div class="row"><button class="b p" onclick="uiSave()">Save Game</button><button class="b" onclick="uiLoad()">Load Game</button><button class="b" onclick="ui.t=true;render()">Title screen</button></div><div class="row"><button class="b s" onclick="uiExport()">Export save file</button><label class="b s" style="cursor:pointer">Import save file<input type="file" accept="application/json,.json" style="display:none" onchange="uiImport(this)"></label></div><p class="st">Export/Import copies the exact same save data as the browser autosave (backup or move between devices).</p></div>
@@ -6119,7 +6305,7 @@ function fbRecord(start){const fb=S.fb,A=fb.acc,st=fbStatsRaw(),G=st.G,mon=fb.mo
 // ---- hooks into the existing game -----------------------------------------------------------
 const _fbTick=tick;tick=function(){const r=_fbTick.apply(this,arguments);try{if(S&&S.fb){fbSync(FBORG?null:{org:'Member buzz'});const mk=fbMon();if(mk!==S.fb.mon){fbMonthly();S.fb.mon=mk}}else fbState()}catch(e){console.error(e)}return r};
 let FB_MW=null; // daily merch & streaming: fan statistics are refreshed weekly (they change slowly)
-const _fbEarn=earn;earn=function(a,l){if(l=='Merch & streaming'&&S&&S.fb&&!FBW){const a0=a;try{fbNumFix();const st=(FB_MW&&FB_MW.s===S&&S.day-FB_MW.d<7&&S.day>=FB_MW.d)?FB_MW.st:(FB_MW={s:S,d:S.day,st:fbStats()}).st,G=st.G,str=G.total*(.7+.8*G.eng/100),mer=(G.merch+G.goods)/30*fbJit(.92,1.08);a=Math.round(str+mer);const R=S.fb.acc.rev;R.stream+=str;R.merch+=mer;if(!isFinite(a)){a=a0;FB_MW=null}else{R.stream+=str;R.merch+=mer;Object.values(st.M).forEach(X=>{R.mem[X.id]=(R.mem[X.id]||0)+X.mp/30})}}catch(e){a=a0;console.error(e)}}return _fbEarn.call(this,a,l)};
+const _fbEarn=earn;earn=function(a,l){if(l=='Merch & streaming'&&S&&S.fb&&!FBW){const a0=a;try{fbNumFix();const st=(FB_MW&&FB_MW.s===S&&S.day-FB_MW.d<7&&S.day>=FB_MW.d)?FB_MW.st:(FB_MW={s:S,d:S.day,st:fbStats()}).st,G=st.G,str=G.total*(.14+.16*G.eng/100),mer=(G.merch+G.goods)/30*fbJit(.92,1.08);a=Math.round(str+mer);const R=S.fb.acc.rev;R.stream+=str;R.merch+=mer;if(!isFinite(a)){a=a0;FB_MW=null}else{R.stream+=str;R.merch+=mer;Object.values(st.M).forEach(X=>{R.mem[X.id]=(R.mem[X.id]||0)+X.mp/30})}}catch(e){a=a0;console.error(e)}}return _fbEarn.call(this,a,l)};
 // fan data repair: a segment value that is not a number (from an older save or an interrupted calculation) is reset to a
 // neutral value, so revenue, budgets and stats keep working. Values that are already valid are never touched.
 function fbNumFix(){const fb=S&&S.fb;if(!fb||!fb.segs)return 0;let n=0;const ok=v=>typeof v=='number'&&isFinite(v);
@@ -7642,9 +7828,9 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const pop=avg(L.map(m=>m.pop)),songPop=avg(thAll(s).map(it=>thSongPop(S.songs[it.song]))),recent=H.pf.filter(p=>p.k==x.k&&p.day>=x.day-28),rs=recent.length?avg(recent.map(p=>p.sat)):55,week=H.pf.filter(p=>p.k==x.k&&p.day>x.day-7).length;
  const promo=(S.singles.some(z=>(z.relDay??z.day)>=x.day-14)?1.15:1)*((S.cal||[]).some(e=>e.type=='road'&&evDays(e).some(d=>d>=x.day-7&&d<=x.day))?1.05:1)*(x.sl=='a'?1.06:1)*(dowOf(x.day)==0||dowOf(x.day)==6?1.1:1)*(thTr(x.k)?.8:1);
  const dem=(25+pop*1.6+((cen&&cen.pop)||0)*.7+songPop*.6+Math.sqrt(Math.max(0,S.fans))*.9+(s.hype||0)*.5)*(.8+rs/250)*(1/(1+.07*Math.max(0,week-3)))*promo*Math.pow(3000/Math.max(500,T.price),.85)*(.85+Math.random()*.3);
- const sold=Math.max(0,Math.min(TH_CAP,Math.round(dem))),att=Math.max(0,sold-Math.round(sold*Math.random()*.03)),rev=sold*T.price,cost=60000+L.length*3000;
+ const sold=Math.max(0,Math.min(TH_CAP,Math.round(dem))),att=Math.max(0,sold-Math.round(sold*Math.random()*.03)),rev=sold*T.price,cost=180000+L.length*5000;
  const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=typeof thOnlineN=='function'?thOnlineN(subs,sat):Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
- earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);S.money-=cost;S.exp+=cost;S.led.unshift({d:S.day,l:`Theater operating cost: ${thLabel(x.k)}`,a:-cost});S.led.length=Math.min(S.led.length,80);
+ earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);finOut(cost,`Theater operating cost: ${thLabel(x.k)}`);
  const AUD=thAud(x,s,T,L,res,att,online,sat),nf=AUD.nf; // audience: existing fans vs newcomers (Theater update)
  const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(0,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
   if(Math.random()<.12){const k=pick(['sing','dance','cha','variety']);if(m[k]<100)m[k]++}wlAdj(m,{load:6+Math.round(r.q.length/3),str:sat<40?4:1},'theater performance');if(sat>=80&&Math.random()<.25&&WL.mood[wlOf(m).mood][1]!='neg')wlMood(m,'Happy',3);
@@ -10917,7 +11103,7 @@ function ctDisDlg(mid){const m=get(mid);if(!m)return;if(m.grad&&m.grad.kind=='di
  <p class="st">${X.just?'A justified dismissal (serious misconduct or contract violation): no compensation is due, and fans react less strongly.':`An unjustified dismissal: the agency pays compensation (${X.mo} remaining month(s), pay and popularity) from Company Money, and fans criticise the decision — some boycott upcoming singles.`} ${D.how=='stage'?'She keeps performing until her Graduation Stage (within 60 days), then her status becomes Dismissed.':'Her status becomes Dismissed immediately.'}</p>
  <div class="row"><button class="b p" onclick="ctDisGo(${mid})">Confirm dismissal</button><button class="b s" onclick="ui.ctdis=null;ui.mod=null;render()">Cancel</button></div>`};render()}
 function ctDisGo(mid){const m=get(mid),D=ui.ctdis;if(!m||!D)return;const X=ctDisCalc(m,D.reason),dis={reason:D.reason,how:D.how,day:S.day,comp:X.comp,just:X.just,loss:0,mult:X.mult};
- if(X.comp>0){S.money-=X.comp;S.exp+=X.comp;S.led.unshift({d:S.day,l:`Dismissal compensation: ${m.name}`,a:-X.comp});S.led.length=Math.min(S.led.length,80);m.ct.hist.push({day:S.day,kind:'comp',fee:X.comp})}
+ if(X.comp>0){finOut(X.comp,`Dismissal compensation: ${m.name}`,{mid:m.id});m.ct.hist.push({day:S.day,kind:'comp',fee:X.comp})}
  dis.loss=ctFanLoss(X.loss,m.id,'Dismissal');const B=ctS();B.boy={mult:Math.min(X.mult,B.boy&&B.boy.until>=S.day?B.boy.mult:1),until:S.day+X.days,why:m.name};
  if(X.crit)S.members.filter(x=>x.id!=m.id&&x.group==m.group).forEach(x=>{x.mor=cl(x.mor-3)});
  hev(m,{t:'ct_dis',reason:CT_DR[D.reason],how:D.how,comp:X.comp});ctLog(m,'dis',`Dismissal: ${CT_DR[D.reason]} · ${D.how=='now'?'immediate':'with a Graduation Stage'}${X.comp?' · compensation '+yen(X.comp):''} · fans −${dis.loss.toLocaleString()}`);ui.ctdis=null;
@@ -13118,7 +13304,7 @@ function ccGrowth(C,p,res){const fb=fbState();if(!fb)return;const per=res._per||
  C.parts.forEach(id=>{const m=get(id),e=ex[id]||0;if(!m||!e)return;const g=Math.round(e*(res.phys+res.onl)/Math.max(1,C.parts.length)*.02);m.fans=(m.fans||0)+g;m.pop=popOf(m);if(fb.mf)fb.mf[id]=m.fans;fbExp(id,Math.min(3,e/4));(gm(id)).rec=g});
  try{fbMerge()}catch(e){}fbApply();res.growth=G;delete res._per;delete res._SB}
 // ---- completion: expenses, trust, member treatment, history ---------------------------------------------------------------
-function ccPay(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp+=a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);try{if(typeof gsLedTag=='function')gsLedTag()}catch(e){}}
+function ccPay(a,l){finOut(a,l)} // central Financial Engine (js/core/finance.js)
 function ccFinish(C){const E=C.est,rows={},line=(g,n,a)=>{rows[g]=rows[g]||{n,a:0};rows[g].a+=Math.round(a)};
  const revP=C.pf.reduce((a,p)=>a+((p.res||{}).revP||0),0),revO=C.pf.reduce((a,p)=>a+((p.res||{}).revO||0),0);
  Object.entries(E.G).forEach(([k,g])=>{let a=g.a;if(k=='misc')a=Math.round(g.rows[0].a*(.5+Math.random())+g.rows[1].a);line(k,g.n,a)});
@@ -14369,7 +14555,7 @@ const XE_ACTSTAT={live:m=>(m.sing+m.dance)/2,talk:m=>m.variety,guest:m=>m.pop,ph
 const XE_EN={live:r=>6+(r.songs||1)*4,talk:()=>5,guest:()=>6,photo:()=>6,fashion:()=>10,cm:r=>8+Math.round((r.et-r.st)/60)*2,mc:()=>8,promo:()=>7};
 const XE_REACH={music:[1,.05],corp:[1,.02],media:[25,.0025],school:[1,.04],fashion:[3,.012],cm:[40,.0012],charity:[1,.03],special:[2,.02]};
 const xeGrade=v=>v>=85?'Excellent':v>=72?'Great':v>=58?'Good':v>=45?'Average':'Poor';
-function xeOut(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp=(S.exp||0)+a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80)}
+function xeOut(a,l){finOut(a,l)} // central Financial Engine (js/core/finance.js)
 // ---- running the event -----------------------------------------------------------------------------------------------------------
 // floor: an event that went reasonably well brings more new group fans than an average Theater show of the booked group(s)
 function xeFanFloor(r,q){if(q<=-.1)return 0;let n=0,c=0;try{((r.gr&&r.gr.length)?r.gr.map(e=>e.gid):[gsAg()]).forEach(gid=>gsWith(gid,()=>((S.th&&S.th.pf)||[]).slice(-12).forEach(p=>{const a=p.aud||{};if(a.trial==null&&a.liveNew==null)return;n+=(a.liveNew||0)+(a.trial||0)*(a.conv||0);c++})))}catch(e){}
@@ -14461,7 +14647,7 @@ function xeMpGen(x){if(!x||x.mpGen)return[];x.mpGen=1;const X=xeS(),o=S.songs[x.
   const r={id:'xe'+(++X.seq),ch:'mp',cat:'mp',type:p.fmt,name:`${p.nm} — “${o.title}”`,org:org.id,orgNm:p.net,lv,venue:p.stu,loc:'Tokyo',dist:0,st:p.st,et:Math.min(1439,p.et),acts:p.acts.slice(),songs:1,perfMin:5,mode:'org',made:S.day,status:'open',
    prog:{id:p.id,nm:p.nm,net:p.net,fmt:p.fmt,pop:p.pop,aud:p.aud,pre:p.pre,style:p.style,iv:p.iv,req:p.req,seg:p.seg.slice()},gid,rid:x.rid,song:x.mainId,title:o.title,single:x.title,cen:(o.centers||[]).slice(),
    req:line.map(id=>{const m=get(id);return{mid:id,gid,nm:m.name,gn:g?g.name:''}}),gr:[{gid,gn:g?g.name:''}],day};r.n=r.req.length;r.prep=1;r.dl=Math.max(S.day+1,day-1);
-  const sp=avg(line.map(id=>get(id).pop)),sales=Math.log10(1+(x.sales||0));r.pay=Math.max(100000,Math.round(250000*(p.pre/50)*Math.pow(p.aud/3e6,.35)*(.6+rep/100)*(.7+sp/120)*(.75+sales/14)*(.8+line.length/40)/10000)*10000);
+  const sp=avg(line.map(id=>get(id).pop)),sales=Math.log10(1+(x.sales||0));r.pay=Math.max(30000,Math.round(62500*(p.pre/50)*Math.pow(p.aud/3e6,.35)*(.6+rep/100)*(.7+sp/120)*(.75+sales/14)*(.8+line.length/40)/10000)*10000);
   r.cond=['Fixed appearance fee — no negotiation.','Performers: exactly the Title Track Senbatsu of the single (no changes, no substitutes).',`Program requirements: ${p.req}.`,'Cancellation by the company without a valid reason: 30% of the fee.'];
   r.art=xeArtMake(r,line,x.mainId);r.art.prog={nm:p.nm,net:p.net};r.art.hue=p.hue;X.list.push(r);out.push(r)}
  return out}
@@ -14575,7 +14761,7 @@ function rcCastHtml(fp,only){const L=(fp.items||[]).filter(z=>z.k=='song'&&(!onl
  ${L.map(z=>`<div class="rcsong"><div class="row"><b>${esc(z.title)}</b>${z.unit?`<span class="thptb unit">UNIT · ${esc(z.unit.name)}</span>`:'<span class="thptb team">Team</span>'}<span class="st">Center ${z.center!=null?esc(rcMemNm(fp,z.center)):'—'}${z.c2!=null?' & '+esc(rcMemNm(fp,z.c2)):''} · ${z.mem.length} member(s)${z.rows&&z.rows.length?' · rows '+z.rows.join('-'):''}</span></div><div class="rcfaces">${z.mem.map(id=>rcFace(fp,id,28)).join('')}</div></div>`).join('')||'<p class="st">No song selected.</p>'}</div>`}
 function rcAvail(fp,kind){if(!fp)return'No completed performance yet';if(kind=='sr')return fp.ok.sr?'':fp.miss[0]||'Historical data incomplete';return fp.ok.dvd?'':fp.miss.join(' ')||'Historical data incomplete'}
 function rcStages(kind){const R=rcS();rcScanAll();return Object.values(R.fps).map(fp=>({fp,why:rcAvail(fp,kind)})).sort((a,b)=>b.fp.day-a.fp.day)}
-function rcPay(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp=(S.exp||0)+a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80)}
+function rcPay(a,l){finOut(a,l)} // central Financial Engine (js/core/finance.js)
 const RC_SR_STEPS=['Project preparation','Studio recording','Audio editing & mixing','Final mastering','Completion'],RC_DVD_STEPS=['Footage archive & review','Video editing','Audio mixing & subtitles','Authoring & pressing','Completion'];
 function rcProg(p,steps){const tot=Math.max(1,p.end-p.start),d=Math.max(0,Math.min(tot,S.day-p.start)),i=p.status=='done'?steps.length-1:Math.min(steps.length-2,Math.floor(d/tot*(steps.length-1)));return`<div class="rcprog"><span class="sebar"><i style="width:${p.status=='done'?100:Math.round(100*d/tot)}%"></i></span><div class="rcsteps">${steps.map((s,k)=>`<span class="${k<i||p.status=='done'?'dn':k==i?'on':''}">${k+1}. ${esc(s)}</span>`).join('')}</div><small class="st">${p.status=='done'?`Completed ${jd(p.done)}`:`Started ${jd(p.start)} · completion ${jd(p.end)}`}</small></div>`}
 // ---- Part 2: Studio Recording ----------------------------------------------------------------------------------------
@@ -24230,10 +24416,10 @@ const natural=()=>L.forEach(m=>{try{MC_K.forEach(k=>mcSet(m,k,mcGet(m,k)+MC.nat[
  const day={d:S.day,t:[],cost:0,skip:0};
  // the lowest first, so the most urgent are treated when money is short
  const need=[];L.forEach(m=>MC_K.forEach(k=>{const v=mcGet(m,k);if(v<MC.th)need.push([m,k,v])}));need.sort((a,b)=>a[2]-b[2]);
- need.forEach(([m,k,v])=>{const c=MC.cost[k];if(!(S.money>=c)){day.skip++;return}S.money-=c;S.exp=(+S.exp||0)+c;S.mOk=S.money;mcSet(m,k,v+MC.amt[k]);
+ need.forEach(([m,k,v])=>{const c=MC.cost[k];if(!(S.money-day.cost>=c)){day.skip++;return}mcSet(m,k,v+MC.amt[k]);
   C.cnt[k]++;C.spent+=c;day.cost+=c;day.t.push([m.id,k,Math.round(v),Math.round(mcGet(m,k))]);try{wlLog(m,{t:'care',txt:`Automatic Member Care: ${MC.n[k][0]} ${Math.round(v)} → ${Math.round(mcGet(m,k))} (${yen(c)}).`})}catch(e){}});
  if(day.t.length){const by=MC_K.map(k=>[k,day.t.filter(z=>z[1]==k).length]).filter(z=>z[1]);
-  S.led.unshift({d:S.day,l:`Automatic Member Care: ${by.map(([k,n])=>`${n}× ${MC.n[k][0]}`).join(', ')}`,a:-day.cost});S.led.length=Math.min(S.led.length,80);
+  finPost({a:-day.cost,l:`Automatic Member Care: ${by.map(([k,n])=>`${n}× ${MC.n[k][0]}`).join(', ')}`,cat:'ops',proj:null});
   try{wlN(`<li>🩺 ${MC_T('Automatic Member Care','ดูแลเมมเบอร์อัตโนมัติ')} (${yen(day.cost)}): ${day.t.slice(0,12).map(([id,k,a,b])=>`${esc((get(id)||{}).name||'')} ${MC_T(MC.n[k][0],MC.n[k][1])} ${a}→${b}`).join(' · ')}${day.t.length>12?' …':''}</li>`)}catch(e){}}
  if(day.skip)try{wlN(`<li>⚠ ${MC_T(`Automatic Member Care: ${day.skip} treatment(s) skipped — not enough money. They are retried tomorrow.`,`ดูแลเมมเบอร์อัตโนมัติ: ข้าม ${day.skip} รายการเพราะเงินไม่พอ จะลองใหม่พรุ่งนี้`)}</li>`)}catch(e){}
  if(day.t.length||day.skip){C.log.unshift(day);if(C.log.length>120)C.log.length=120}
@@ -25439,6 +25625,162 @@ function ccAddMCEnc(){const s=ce2Set();if(!s)return;const ids=new Set(s.items.ma
   // the encore block goes after the main buttons (bottom of the card)
   const pe=rest.indexOf('<p class="st">Tap a song');if(pe>=0)rest=rest.slice(0,pe)+encBlock+rest.slice(pe);else rest=encBlock+rest;
   h=h.slice(0,a)+`<ol class="thtl cctl">${main||`<li class="st">The setlist is empty.</li>`}</ol>`+rest}catch(e){console.error(e)}return h}}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Business & Financial System (members, election sharing, balance, dashboard)
+// -------------------------------------------------------------------------------------
+//  Uses the central engine in js/core/finance.js. This file:
+//  · rebalances prices and revenue formulas of the existing systems (one economic standard, Normal · Balanced)
+//  · pays members: monthly salary (position + seniority, per group) and a job payment for every piece of work
+//  · Election Single: 1 eligible CD = 1 vote; each member receives 30% of the revenue allocated to her own votes
+//  · project estimates vs actual results, monthly / yearly reports, loans, facilities, tax, cash-flow forecast
+//  · migrates older saves once (cash rebalanced with one formula; nothing already done is paid or charged again)
+// =====================================================================================
+const FT=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+const FIN_CD_ALLOC=300;      // company allocation per CD after retail, distribution, manufacturing and royalties (retail ¥1,600)
+const FIN_GE_SHARE=.30;      // member share of the revenue allocated to her own Election votes
+const FIN_MIG_K=.04;         // older saves: accumulated cash above the old starting capital is converted at this rate
+// ---- 1. rebalance: production, auditions, events --------------------------------------------------------------------------
+Object.assign(CFG,{base:2000000,main:1500000,song:700000,type:400000,cover:120000,albBase:2500000,albNew:900000,albReuse:80000,albCover:250000});
+try{Object.assign(CFG.aud.street,{base:300000,per:3000});Object.assign(CFG.aud.city,{base:900000,per:8000});Object.assign(CFG.aud.national,{base:3000000,per:20000});Object.assign(CFG.aud.world,{base:8000000,per:40000})}catch(e){}
+try{EV.handshake.cost=600000;EV.concert.cost=1500000;EV.election.cost=1500000;EV.anniv.cost=2500000;EV.janken.cost=600000}catch(e){}
+try{CFG.rs.venue={1:400000,2:800000,3:1500000}}catch(e){}
+const FIN_COSTUME=45000; // one stage outfit (design, fabric, sewing, fittings)
+{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;(typeof usedSongs=='function'?usedSongs(p):[]).forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
+// external work: fees at market level (the old formula paid 4–5× the going rate)
+{const f=xePay;xePay=function(r){return Math.max(30000,Math.round(f.apply(this,arguments)*.2/10000)*10000)}}
+// roadshows: a release event venue holds only so many people per day
+const RS_CAPD={1:2500,2:5000,3:9000};
+{const f=rsDay;rsDay=function(l){const r=f.apply(this,arguments);try{const cap=Math.round((RS_CAPD[l.tier]||2000)*(l.kind=='as'?.8:1));if(r.att>cap){const k=cap/r.att;r.local=Math.round(r.local*k);r.trav=cap-r.local;r.att=cap;r.cap=cap}}catch(e){}return r}}
+// ---- 2. job payments for every piece of work -----------------------------------------------------------------------------
+{const f=thPerform;thPerform=function(x){const r=f.apply(this,arguments);try{if(x&&x.st=='done'&&x.perf){const rec=(thS().pf||[]).find(p=>p.id==x.perf);if(rec){const sp=/Special|Graduation|Birthday/i.test(rec.nm||'')||rec.spk;finJob(rec.mem,sp?'special':'theater',{key:'th:'+rec.id,desc:`${thLabel(rec.k)} · ${jd(rec.day)}`,lbl:sp?'special stage':'theater performance'})}}}catch(e){console.error(e)}return r}}
+{const f=ccPerform;ccPerform=function(C,p){const r=f.apply(this,arguments);try{const res=p&&p.res;if(res&&res.mem&&!res.err){const ids=Object.keys(res.mem).map(Number),n=id=>{const it=(res.songs||[]).length;return it};finJob(ids,'concert',{key:`cc:${C.id}:${p.id}`,desc:`${C.name} · Performance ${p.no}`,extra:id=>{const R=res.mem[id]||{};return 1500*Math.max(0,(R.n||R.songs||0))},proj:'concert:'+C.name})}}catch(e){console.error(e)}return r}}
+{const f=rsRun;rsRun=function(ev,part){const r=f.apply(this,arguments);try{const d=ev&&ev['d'+part];if(d&&d.rows){const l=RSL[ev.loc];finJob(d.rows.map(z=>z.mid),'road',{key:`rs:${ev.id}:${part}`,desc:`${l?l.n:ev.loc} day ${part}`,lbl:'roadshow'})}}catch(e){console.error(e)}return r}}
+['hsRun','hsRun2'].forEach(fn=>{if(typeof window[fn]!='function')return;const f=window[fn];window[fn]=function(ev,part){const r=f.apply(this,arguments);try{const d=ev&&ev['r'+part];if(d){const ids=d.present||d.mem||(d.rows||[]).map(z=>z.mid||z.id)||[];finJob(ids,'hs',{key:`hs:${ev.id}:${part}`,desc:`${ev.st||ev.title||''} day ${part}`,lbl:'handshake event',proj:'single:'+(ev.st||'')})}}catch(e){console.error(e)}return r}});
+// work that is found by looking at finished records (each one paid once: flag + transaction key)
+function finCtx(fn){const seen=new Set();(S.groups||[]).forEach(g=>{if(g.dis||seen.has(g.id))return;seen.add(g.id);try{typeof gsWith=='function'?gsWith(g.id,fn):fn()}catch(e){console.error(e)}})}
+const FIN_XE_RATE={media:25000,cm:50000,fashion:40000,music:30000,corp:25000,school:20000,charity:15000,special:20000};
+const FIN_DR_UNITS={lead:20,second:12,sup:5,guest:2};
+function finScan(){if(!S)return;
+ // external events & music programs: by kind of work, at least 12% of the fee shared by the members who worked
+ try{(xeS().list||[]).forEach(r=>{if(r.status!='done'||r.fj)return;r.fj=1;const ids=((r.res&&r.res.mem)||[]).map(z=>z.id);if(!ids.length)return;const per=Math.round(Math.max(FIN_XE_RATE[r.cat]||20000,(r.pay||0)*.12/ids.length)/1000)*1000;
+  finJob(ids,r.ch=='mp'?'mp':'xe',{key:'xe:'+r.id,units:1,extra:per-FIN_JOB[r.ch=='mp'?'mp':'xe'][1],desc:r.name,lbl:r.ch=='mp'?'music program':'external event',proj:'event:'+r.name})})}catch(e){}
+ // singles (recording: per song), music videos (per filming day), elections (ceremony, revenue sharing)
+ finCtx(()=>{(S.singles||[]).forEach(x=>{if(x.fj)return;x.fj=1;const per={};((x.ann&&x.ann.tracks)||[]).forEach(t=>(t.songs||[]).forEach(s=>(s.members||[]).forEach(id=>{if(id==null)return;per[id]=per[id]||new Set();per[id].add(s.id)})));
+   const ids=Object.keys(per).map(Number);if(ids.length)finJob(ids,'rec',{key:'rec:'+(x.rid||x.pid||x.title),units:id=>per[id].size,desc:x.title,lbl:'recording',proj:'single:'+x.title})});
+  Object.values(S.songs||{}).forEach(o=>{const v=o.mv;if(!v||!v.film||v.fj)return;v.fj=1;const days=Math.max(1,Math.ceil(((MV_STY[v.style]||{}).days||1)*(Array.isArray(v.scenes)?1+.5*(new Set(v.scenes.map(s=>s.id)).size-1):1)));finJob(v.film.mem||[],'mv',{key:`mv:${o.id}:${v.film.day}`,units:days,desc:o.title,lbl:'MV filming',proj:'single:'+(v.single||o.title)})});
+  ((S.ge&&S.ge.list)||[]).forEach(e=>{if(e.st=='done'&&!e.fj)finGeSettle(e)})});
+ // drama: by role, when filming is over (release)
+ try{(drS().list||[]).forEach(p=>{if(p.fj||!['air','done'].includes(p.status))return;p.fj=1;const ids=(p.cast||[]).map(c=>c.mid);finJob(ids,'drama',{key:'dr:'+p.id,units:id=>FIN_DR_UNITS[((p.cast||[]).find(c=>c.mid==id)||{}).role]||3,desc:p.title,lbl:'drama',proj:'drama:'+p.title})})}catch(e){}
+ // awards ceremonies
+ try{Object.values((S.aw&&S.aw.years)||{}).forEach(Y=>{if(!Y.done||Y.fj||!Array.isArray(Y.attH))return;Y.fj=1;finJob(Y.attH,'award',{key:'aw:'+Y.y,desc:`Awards ${Y.y}`,lbl:'awards ceremony'})})}catch(e){}}
+// ---- 3. Election Single: 1 CD = 1 vote, 70:30 per member -------------------------------------------------------------------
+function finGeSettle(e){e.fj=1;const V=e.votes||{},ids=Object.keys(V).filter(k=>(+V[k]||0)>0),tot=ids.reduce((a,k)=>a+(+V[k]||0),0),cds=+e.tokens||0;
+ // only votes that come from eligible CDs count; never more votes than CDs sold
+ const k=cds&&tot>cds?cds/tot:1,rows=[];
+ ids.forEach(id=>{const m=finMem(+id);const v=Math.floor((+V[id]||0)*k);if(!v)return;const rev=v*FIN_CD_ALLOC,mem=Math.round(rev*FIN_GE_SHARE),co=rev-mem;rows.push({id:+id,nm:m?m.name:'#'+id,v,rev,mem,co});
+  const tx=finPost({a:-mem,l:`Election revenue share: ${m?m.name:'#'+id} — ${v.toLocaleString()} votes (${e.name})`,cat:'mshare',key:`ge:${e.id}:${id}`,mid:+id,proj:'election:'+e.name});
+  if(tx&&m)finMemPay(m,'ge',mem,`${e.name}: ${v.toLocaleString()} votes × ${yen(FIN_CD_ALLOC)} × 30%`,{ge:e.id,v,rev})});
+ rows.sort((a,b)=>b.v-a.v);e.share={alloc:FIN_CD_ALLOC,pct:FIN_GE_SHARE,cds,votes:tot,rows,day:S.day};
+ // ceremony attendance (ranked members)
+ const att=((e.final&&e.final.rows)||[]).map(r=>r.id).filter(id=>finMem(id));if(att.length)finJob(att,'ge',{key:'gec:'+e.id,desc:e.name,lbl:'election ceremony'})}
+// ---- 4. project estimates (shown before confirming; compared with the actual result) -----------------------------------------
+{const f=startSingle;startSingle=function(){const p=S.pj,t=p&&p.title;let est=null;try{if(p&&p.status=='draft'){const last=(S.singles||[]).at(-1),u=last?(last.sales||0):Math.round((S.fans||0)*.12);est={rev:u*FIN_CD_ALLOC,exp:cost(p).t}}}catch(e){}const r=f.apply(this,arguments);try{if(est&&S.pj&&S.pj.status=='producing')finEst('single:'+t,est.rev,est.exp,t)}catch(e){}return r}}
+{const f=ccConfirm;ccConfirm=function(){const C=ccCur();const r=f.apply(this,arguments);try{if(C&&C.status!='plan'){let rev=0;C.pf.forEach(p=>{Object.keys(p.tix||{}).forEach(k=>{const T=p.tix[k];rev+=(T.n||T.cap||0)*(T.price||0)*.8})});let exp=0;try{exp=ccRent(C).total}catch(e){}finEst('concert:'+C.name,rev,exp,C.name)}}catch(e){}return r}}
+{const f=mvConfirm;mvConfirm=function(id){const r=f.apply(this,arguments);try{const o=S.songs[id];if(o&&o.mv&&o.mv.st!='plan'){const k='single:'+(S.pj?S.pj.title:o.title),P=finS().proj[k];finEst(k,P?P.er:0,(P?P.ee:0)+mvCost(o).t,P&&P.lbl)}}catch(e){}return r}}
+// ---- 5. daily: scan finished work; monthly cycle is called from tick() -----------------------------------------------------------
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{finScan()}catch(e){console.error('finance scan',e)}return r}}
+// ---- 6. migration of older saves (once) ---------------------------------------------------------------------------------------
+function finMigrate(){if(!S)return;const X=finS();S.members.forEach(m=>finEmpStart(m));(S.alumni||[]).forEach(m=>{if(m&&m.emp==null&&m.joined!=null)m.emp=m.joined});
+ if(X.mig)return;X.mig=1;X.tax.from=finFY(S.day);X.lastMon=finYM(S.day);
+ const fresh=S.day==0&&!(S.led||[]).length;if(!fresh){const old=Math.round(S.money||0),nw=Math.round(FIN_START+(old-FIN_LEGACY_START)*(old>FIN_LEGACY_START?FIN_MIG_K:1));X.migr={day:S.day,old,new:nw,k:FIN_MIG_K};
+  if(nw!=old)finPost({a:nw-old,l:`Economy rebalance adjustment (${yen(old)} → ${yen(nw)})`,cat:'adj',key:'mig:v1',proj:null});
+  // work completed before the overhaul is never paid again
+  try{(xeS().list||[]).forEach(r=>{if(r.status=='done')r.fj=1;else if(r.status=='open'||r.status=='accepted'){if(r.pay)r.pay=Math.max(30000,Math.round(r.pay*.2/10000)*10000)}})}catch(e){}
+  finCtx(()=>{(S.singles||[]).forEach(x=>x.fj=1);Object.values(S.songs||{}).forEach(o=>{if(o.mv&&o.mv.film)o.mv.fj=1});((S.ge&&S.ge.list)||[]).forEach(e=>{if(e.st=='done'){e.fj=1;e.share=e.share||{legacy:1}}})});
+  try{(drS().list||[]).forEach(p=>{if(['air','done'].includes(p.status))p.fj=1})}catch(e){}try{Object.values((S.aw&&S.aw.years)||{}).forEach(Y=>{if(Y.done)Y.fj=1})}catch(e){}}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{finMigrate()}catch(e){console.error('finance migrate',e)}return r}}
+// ---- 7. loans, facilities -----------------------------------------------------------------------------------------------------
+const FIN_LOANS=[[10000000,24,.025],[30000000,36,.028],[100000000,60,.032]];
+function finLoanAsk(i){const[P,n,r]=FIN_LOANS[i];ask(FT(`Borrow ${yen(P)} for ${n} months at ${(r*100).toFixed(1)}% a year? Monthly repayment ${yen(finLoanPay(P,r,n))}.`,`กู้ ${yen(P)} ${n} เดือน ดอกเบี้ย ${(r*100).toFixed(1)}% ต่อปี? ผ่อนเดือนละ ${yen(finLoanPay(P,r,n))}`),()=>{finLoanTake(P,n,r,'Bank loan');render()},FT('Borrow','กู้'))}
+const FIN_FAC=[['studio','Own rehearsal studio',60000000,350000,'Training facilities cost 40% less.'],['wardrobe','Costume workshop',25000000,150000,'Costume production costs 25% less.'],['media','In-house video team',40000000,250000,'MV production costs 15% less.']];
+function finFac(k){return finS().facil.find(f=>f.k==k&&f.on)}
+function finFacBuy(k){const D=FIN_FAC.find(x=>x[0]==k);if(!D||finFac(k))return;ask(FT(`Invest ${yen(D[2])} in “${D[1]}”? Upkeep ${yen(D[3])} a month. ${D[4]}`,`ลงทุน ${yen(D[2])} ใน “${D[1]}”? ค่าดูแล ${yen(D[3])} ต่อเดือน`),()=>{if(!spend(D[2],`Facility investment: ${D[1]}`,{cat:'prod',proj:null}))return;finS().facil.push({k,n:D[1],cost:D[2],upk:D[3],day:S.day,on:1});render()},FT('Invest','ลงทุน'))}
+// facility benefits (savings, never zero cost)
+{const f=finOpsPlan;finOpsPlan=function(){const P=f.apply(this,arguments);if(finFac('studio'))P.rows=P.rows.map(r=>r[0]=='Training facilities & maintenance'?[r[0],r[1],Math.round(r[2]*.6)]:r);return P}}
+{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{if(finFac('wardrobe')){const i=r.L.findIndex(x=>/^Costume production/.test(x[0]));if(i>=0){const s=Math.round(r.L[i][1]*.25);r.L[i]=[r.L[i][0]+' (workshop −25%)',r.L[i][1]-s];r.t-=s}}}catch(e){}return r}}
+{const f=mvCost;mvCost=function(o,v){const r=f.apply(this,arguments);try{if(finFac('media')&&r&&r.t){const s=Math.round(r.t*.15);r.rows=(r.rows||[]).concat([['In-house video team (−15%)',-s]]);r.t-=s}}catch(e){}return r}}
+// ---- 8. dashboard -----------------------------------------------------------------------------------------------------------------
+const finK=v=>yen(Math.round(v||0));
+const finSign=v=>`<span class="${v<0?'fnneg':'fnpos'}">${v<0?'−':'+'}${yen(Math.abs(Math.round(v||0)))}</span>`;
+function finMonths(n){const L=[];let d=finDate(S.day);for(let i=0;i<n;i++){L.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'));d=new Date(d.getFullYear(),d.getMonth()-1,1)}return L}
+const finYMn=ym=>{const[y,m]=ym.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString(FT('en-US','th-TH'),{year:'numeric',month:'short'})};
+function finPayrollNow(){let t=0,n=0;finPayees().forEach(m=>{const P=finSalaryOf(m);if(P.total){t+=P.total;n++}});return{t,n}}
+function finForecast(){const pr=finPayrollNow(),op=finOpsPlan(),ops=op.rows.reduce((a,r)=>a+r[2],0),loans=finS().loans.filter(l=>l.st=='active').reduce((a,l)=>a+Math.min(l.pay,l.bal+Math.round(l.bal*l.rate/12)),0),tax=finS().tax.due.reduce((a,d)=>a+d.amt,0);
+ const M=finMonths(4).slice(1).map(finMonthSum).filter(x=>x.inc||x.exp),avgInc=M.length?M.reduce((a,x)=>a+x.inc,0)/M.length:0,avgOut=M.length?M.reduce((a,x)=>a+x.exp,0)/M.length:0;
+ const fixed=pr.t+ops+loans,avgVar=Math.max(0,avgOut-fixed);let cash=S.money;const rows=[];for(let i=1;i<=3;i++){const out=Math.max(avgOut,fixed)+(i==1?tax:0);cash+=avgInc-out;rows.push({i,inc:avgInc,out,cash})}return{pr,ops,loans,tax,fixed,avgInc,avgVar,rows,op}}
+const FIN_TABS=[['ov','Overview','ภาพรวม'],['mon','Monthly','รายเดือน'],['yr','Yearly','รายปี'],['tx','Transactions','รายการ'],['pj','Projects','โปรเจกต์'],['pay','Member pay','ค่าตอบแทนเมมเบอร์'],['debt','Loans & assets','เงินกู้และทรัพย์สิน']];
+function finBreak(obj,names,tot){const E=Object.entries(obj||{}).filter(([,v])=>v).sort((a,b)=>b[1]-a[1]);if(!E.length)return`<p class="st">${FT('Nothing recorded.','ยังไม่มีรายการ')}</p>`;const mx=Math.max(...E.map(e=>e[1]));
+ return`<div class="fnbars">${E.map(([k,v])=>`<div class="fnbar"><span>${esc(FT(names[k]||k,FIN_TH[names[k]]||names[k]||k))}</span><i style="--w:${Math.max(2,Math.round(v/mx*100))}%"></i><b>${finK(v)}</b></div>`).join('')}</div>`}
+V.finances=function(){if(!S)return'';finS();const tab=ui.fnt||'ov',X=finS(),ym=finYM(S.day),cur=finMonthSum(ym),L=finLiab(),A=finAssets();
+ const head=`<div class="fnhead"><div><div class="fnkick">${FT('COMPANY FINANCES','การเงินบริษัท')}</div><h2>${esc(S.co||'')}</h2></div><div class="fncash"><small>${FT('Available cash','เงินสดคงเหลือ')}</small><b class="${S.money<0?'fnneg':''}">${finK(S.money)}</b></div></div>
+ <div class="fntabs">${FIN_TABS.map(([k,e,t])=>`<button class="${tab==k?'on':''}" onclick="ui.fnt='${k}';render()">${FT(e,t)}</button>`).join('')}</div>`;
+ let body='';
+ if(tab=='ov'){const E=cur.M.exp,F=finForecast(),kp=(a,b,c)=>`<div class="fnkpi"><small>${a}</small><b>${b}</b>${c?`<span>${c}</span>`:''}</div>`;
+  body=`<div class="fnkpis">${kp(FT('Revenue this month','รายได้เดือนนี้'),finK(cur.inc),FT('net of channel deductions','หลังหักค่าช่องทาง'))}${kp(FT('Expenses this month','รายจ่ายเดือนนี้'),finK(cur.exp))}${kp(FT('Profit / loss this month','กำไร / ขาดทุนเดือนนี้'),finSign(cur.net))}
+   ${kp(FT('Member salaries','เงินเดือนเมมเบอร์'),finK(E.msal))}${kp(FT('Member job payments','ค่าจ้างงานเมมเบอร์'),finK(E.mjob))}${kp(FT('Staff salaries','เงินเดือนสตาฟ'),finK(E.staff))}${kp(FT('Production','ค่าผลิต'),finK(E.prod))}${kp(FT('Marketing','การตลาด'),finK(E.mkt))}${kp(FT('Taxes','ภาษี'),finK(E.tax))}
+   ${kp(FT('Outstanding debt','หนี้คงค้าง'),finK(L.debt))}${kp(FT('Assets','สินทรัพย์'),finK(A.total))}${kp(FT('Liabilities','หนี้สิน'),finK(L.total))}</div>
+  <div class="fngrid"><div class="c"><h3>${FT('Revenue breakdown','รายได้แยกประเภท')} <small class="st">${finYMn(ym)}</small></h3>${finBreak(cur.M.inc,FIN_INC)}${cur.gross?`<p class="st">${FT('Gross sales','ยอดขายรวม')} ${finK(cur.gross)} · ${FT('channel deductions','หักค่าช่องทาง')} ${finK(cur.ded)}</p>`:''}</div>
+  <div class="c"><h3>${FT('Expense breakdown','รายจ่ายแยกประเภท')} <small class="st">${finYMn(ym)}</small></h3>${finBreak(cur.M.exp,FIN_EXP)}</div></div>
+  <div class="c"><h3>${FT('Cash flow forecast','คาดการณ์กระแสเงินสด')}</h3><table class="fntab"><tr><th>${FT('Month','เดือน')}</th><th>${FT('Expected revenue','รายได้คาด')}</th><th>${FT('Expected outgoings','รายจ่ายคาด')}</th><th>${FT('Cash at month end','เงินสดปลายเดือน')}</th></tr>${F.rows.map(r=>`<tr><td>+${r.i}</td><td>${finK(r.inc)}</td><td>${finK(r.out)}</td><td class="${r.cash<0?'fnneg':''}">${finK(r.cash)}</td></tr>`).join('')}</table>
+  <p class="st">${FT('Based on the average of the last three months. Fixed each month','อิงค่าเฉลี่ย 3 เดือนล่าสุด รายจ่ายคงที่ต่อเดือน')}: ${FT('member salaries','เงินเดือนเมมเบอร์')} ${finK(F.pr.t)} (${F.pr.n}) · ${FT('operating & staff','ค่าดำเนินงานและสตาฟ')} ${finK(F.ops)} · ${FT('loans','เงินกู้')} ${finK(F.loans)}${F.tax?` · ${FT('tax due','ภาษีค้างจ่าย')} ${finK(F.tax)}`:''}</p></div>
+  <div class="c"><h3>${FT('Budget overview — monthly fixed costs','ภาพรวมงบประมาณ — รายจ่ายคงที่รายเดือน')}</h3><table class="fntab">${F.op.rows.map(([n,c,a])=>`<tr><td>${esc(FT(n,FIN_TH[n]||n))}</td><td>${finK(a)}</td></tr>`).join('')}<tr><td>${FT('Member salaries','เงินเดือนเมมเบอร์')}</td><td>${finK(F.pr.t)}</td></tr><tr class="fntot"><td>${FT('Total','รวม')}</td><td>${finK(F.fixed)}</td></tr></table><p class="st">${FT(`${F.op.staffN} staff · ${F.op.N} members · ${F.op.G} group(s) · ${F.op.T} team(s). A larger operation costs more to run.`,`สตาฟ ${F.op.staffN} คน · เมมเบอร์ ${F.op.N} คน · ${F.op.G} วง · ${F.op.T} ทีม ยิ่งองค์กรใหญ่ ค่าใช้จ่ายยิ่งสูง`)}</p></div>
+  ${X.migr?`<p class="st">${FT(`Economy rebalance on ${jd(X.migr.day)}: company cash ${finK(X.migr.old)} → ${finK(X.migr.new)} (new standard ¥50,000,000 + ${X.migr.k*100}% of the earlier accumulated cash). History is kept.`,`ปรับสมดุลเศรษฐกิจเมื่อ ${jd(X.migr.day)}: เงินบริษัท ${finK(X.migr.old)} → ${finK(X.migr.new)} (มาตรฐานใหม่ ¥50,000,000 + ${X.migr.k*100}% ของเงินสะสมเดิม) ประวัติยังอยู่ครบ`)}</p>`:''}`}
+ else if(tab=='mon'){const M=ui.fnm||ym,ms=Object.keys(X.mon).sort().reverse();if(!ms.includes(ym))ms.unshift(ym);const R=finMonthSum(M),T=finMonthFromTx(M),ok=R.inc==T.inc&&R.exp==T.exp;
+  body=`<div class="c"><div class="row"><select onchange="ui.fnm=this.value;render()">${ms.map(k=>`<option value="${k}" ${k==M?'selected':''}>${finYMn(k)}</option>`).join('')}</select><span class="fnchk ${ok?'ok':'bad'}">${ok?FT('Matches the transaction ledger','ตรงกับบัญชีรายการ'):FT('Ledger partly trimmed for this month','รายการเดือนนี้ถูกตัดบางส่วน')}</span></div>
+  <table class="fntab"><tr><th colspan="2">${FT('Revenue','รายได้')}</th></tr>${Object.entries(R.M.inc).map(([k,v])=>`<tr><td>${FT(FIN_INC[k]||k,FIN_TH[FIN_INC[k]]||k)}</td><td>${finK(v)}</td></tr>`).join('')}<tr class="fntot"><td>${FT('Total revenue (allocated)','รายได้รวม (ส่วนของบริษัท)')}</td><td>${finK(R.inc)}</td></tr>
+  ${R.gross?`<tr><td class="st">${FT('Gross sales','ยอดขายรวม')}</td><td class="st">${finK(R.gross)}</td></tr><tr><td class="st">${FT('Distribution & channel deductions','หักค่าจัดจำหน่ายและช่องทาง')}</td><td class="st">−${finK(R.ded)}</td></tr>`:''}
+  <tr><th colspan="2">${FT('Expenses','รายจ่าย')}</th></tr>${Object.entries(R.M.exp).map(([k,v])=>`<tr><td>${FT(FIN_EXP[k]||k,FIN_TH[FIN_EXP[k]]||k)}</td><td>${finK(v)}</td></tr>`).join('')}<tr class="fntot"><td>${FT('Total expenses','รายจ่ายรวม')}</td><td>${finK(R.exp)}</td></tr>
+  <tr class="fntot"><td>${FT('Net profit / loss','กำไร / ขาดทุนสุทธิ')}</td><td>${finSign(R.net)}</td></tr>${Object.entries(R.M.fin||{}).map(([k,v])=>`<tr><td class="st">${FT(FIN_FIN[k],FIN_TH[FIN_FIN[k]]||FIN_FIN[k])}</td><td class="st">${finSign(v)}</td></tr>`).join('')}</table></div>`}
+ else if(tab=='yr'){const FY={};Object.keys(X.mon).forEach(ym=>{const[y,m]=ym.split('-').map(Number),fy=m>=4?y:y-1;(FY[fy]=FY[fy]||[]).push(ym)});const ys=Object.keys(FY).sort().reverse();
+  body=ys.map(fy=>{const L2=FY[fy].sort();let inc=0,exp=0;const rows=L2.map(k=>{const R=finMonthSum(k);inc+=R.inc;exp+=R.exp;return`<tr><td>${finYMn(k)}</td><td>${finK(R.inc)}</td><td>${finK(R.exp)}</td><td>${finSign(R.net)}</td></tr>`}).join('');const tx=X.tax.hist.find(h=>h.fy==fy);
+   return`<div class="c"><h3>${FT(`Fiscal year ${fy} (April ${fy} – March ${+fy+1})`,`ปีงบประมาณ ${fy} (เม.ย. ${fy} – มี.ค. ${+fy+1})`)}</h3><table class="fntab"><tr><th>${FT('Month','เดือน')}</th><th>${FT('Revenue','รายได้')}</th><th>${FT('Expenses','รายจ่าย')}</th><th>${FT('Profit / loss','กำไร / ขาดทุน')}</th></tr>${rows}<tr class="fntot"><td>${FT('Year','ทั้งปี')}</td><td>${finK(inc)}</td><td>${finK(exp)}</td><td>${finSign(inc-exp)}</td></tr></table>
+   ${tx?`<p class="st">${FT(`Taxable profit ${finK(tx.base)} (loss carried forward used ${finK(tx.nolUsed)}) · corporate tax ${finK(tx.amt)} (30%) · ${tx.paid?'paid':'due '+jd(tx.due)}`,`กำไรที่ต้องเสียภาษี ${finK(tx.base)} (ใช้ขาดทุนสะสม ${finK(tx.nolUsed)}) · ภาษีนิติบุคคล ${finK(tx.amt)} (30%) · ${tx.paid?'ชำระแล้ว':'ครบกำหนด '+jd(tx.due)}`)}</p>`:`<p class="st">${FT('Corporate tax (30% of taxable profit) is calculated when the fiscal year closes on 31 March and paid two months later. Losses are carried forward.','ภาษีนิติบุคคล 30% ของกำไรที่ต้องเสียภาษี คำนวณเมื่อปิดปีงบ 31 มี.ค. และชำระภายใน 2 เดือน ขาดทุนยกไปหักปีถัดไปได้')}</p>`}</div>`}).join('')||`<div class="c"><p class="st">${FT('No months recorded yet.','ยังไม่มีข้อมูล')}</p></div>`}
+ else if(tab=='tx'){const F=finLedger(),q=(ui.fnq||'').toLowerCase(),c=ui.fnc||'';const L2=F.tx.filter(t=>t.v==2&&(!c||t.cat==c)&&(!q||t.desc.toLowerCase().includes(q))).slice(-250).reverse();
+  body=`<div class="c"><div class="row fnfil"><input placeholder="${FT('Search','ค้นหา')}" value="${esc(ui.fnq||'')}" onchange="ui.fnq=this.value;render()"><select onchange="ui.fnc=this.value;render()"><option value="">${FT('All categories','ทุกประเภท')}</option>${Object.entries({...FIN_INC,...FIN_EXP,...FIN_FIN}).map(([k,n])=>`<option value="${k}" ${c==k?'selected':''}>${FT(n,FIN_TH[n]||n)}</option>`).join('')}</select></div>
+  <div class="fntx">${L2.map(t=>`<div class="fntxr"><span class="fntxd">${jd(t.day)}<small>${t.id}</small></span><span class="fntxl">${esc(t.desc)}<small>${FT(FIN_INC[t.cat]||FIN_EXP[t.cat]||FIN_FIN[t.cat]||t.cat,FIN_TH[FIN_INC[t.cat]||FIN_EXP[t.cat]||FIN_FIN[t.cat]]||t.cat)}${t.gross?` · ${FT('gross','ยอดรวม')} ${finK(t.gross)} − ${finK(t.ded)}`:''}</small></span><b class="${t.io=='in'?'fnpos':'fnneg'}">${t.io=='in'?'+':'−'}${finK(t.amt)}</b></div>`).join('')||`<p class="st">${FT('No transactions.','ไม่มีรายการ')}</p>`}</div><p class="st">${FT('Every transaction has its own ID; salaries, job payments and revenue shares can be posted only once.','ทุกรายการมีรหัสของตัวเอง เงินเดือน ค่าจ้าง และส่วนแบ่งรายได้บันทึกได้ครั้งเดียว')}</p></div>`}
+ else if(tab=='pj'){const L2=Object.values(X.proj).sort((a,b)=>b.d1-a.d1).slice(0,60);const kind=k=>({single:FT('Single','ซิงเกิล'),album:FT('Album','อัลบั้ม'),concert:FT('Concert','คอนเสิร์ต'),road:FT('Roadshow','โรดโชว์'),event:FT('External event','งานภายนอก'),drama:FT('Drama','ละคร'),theater:FT('Theater','เธียเตอร์'),election:FT('Election','เลือกตั้ง')})[k.split(':')[0]]||k.split(':')[0];
+  body=`<div class="fnpjl">${L2.map(P=>{const pl=P.inc-P.exp,has=P.er!=null||P.ee!=null;return`<div class="c fnpj"><div class="fnpjh"><span class="fntag">${kind(P.k)}</span><b>${esc(P.k.split(':').slice(1).join(':'))}</b><span class="st">${jd(P.d0)}${P.d1!=P.d0?' – '+jd(P.d1):''}</span></div>
+   <table class="fntab"><tr><th></th><th>${FT('Estimated','ประมาณการ')}</th><th>${FT('Actual','จริง')}</th><th>${FT('Difference','ส่วนต่าง')}</th></tr><tr><td>${FT('Revenue','รายได้')}</td><td>${has?finK(P.er):'—'}</td><td>${finK(P.inc)}</td><td>${has?finSign(P.inc-(P.er||0)):'—'}</td></tr><tr><td>${FT('Expenses','รายจ่าย')}</td><td>${has?finK(P.ee):'—'}</td><td>${finK(P.exp)}</td><td>${has?finSign((P.ee||0)-P.exp):'—'}</td></tr><tr class="fntot"><td>${FT('Profit / loss','กำไร / ขาดทุน')}</td><td>${has?finSign((P.er||0)-(P.ee||0)):'—'}</td><td>${finSign(pl)}</td><td></td></tr></table></div>`}).join('')||`<div class="c"><p class="st">${FT('Project reports appear once a project has income or expenses.','รายงานโปรเจกต์จะแสดงเมื่อมีรายรับหรือรายจ่าย')}</p></div>`}</div><p class="st">${FT('Estimates are recorded when a project is confirmed. Profit is never guaranteed.','ตัวเลขประมาณการบันทึกตอนยืนยันโปรเจกต์ ไม่รับประกันกำไร')}</p>`}
+ else if(tab=='pay'){const P=finPayees().map(m=>({m,P:finSalaryOf(m)})).sort((a,b)=>b.P.total-a.P.total),tot=P.reduce((a,x)=>a+x.P.total,0);
+  body=`<div class="c"><h3>${FT('Monthly payroll','เงินเดือนรายเดือน')} · ${finK(tot)}</h3><p class="st">${FT('Salary = position base salary + ¥10,000 for every completed year with the company, paid for each group a member belongs to. Center, Senbatsu and Under selection do not change salary. Paid on the 1st of every month.','เงินเดือน = ฐานเงินเดือนตามตำแหน่ง + ¥10,000 ต่อปีที่ทำงานครบ จ่ายแยกทุกวงที่สังกัด เซ็นเตอร์ เซ็มบัตสึ อันเดอร์ ไม่มีผลกับเงินเดือน จ่ายทุกวันที่ 1')}</p>
+  <div class="fnpay">${P.map(({m,P:Q})=>`<button class="fnpayr" onclick="${(typeof get=='function'&&get(m.id))?`ui.ptab='stats';ui.mod={t:'prof',id:${m.id}};render()`:''}"><b>${esc(m.name)}</b><span class="st">${Q.rows.map(r=>`${esc(r.gn)} · ${FT(r.pn,FIN_TH[r.pn]||r.pn)} ${finK(r.amt)}`).join(' + ')||FT('no salary (no active group or unit)','ไม่มีเงินเดือน (ไม่มีวงหรือยูนิตที่สังกัด)')}</span><span class="st">${FT(`${Q.y} yr(s) · next increment ${jd(finNextAnniv(m))}`,`${Q.y} ปี · ขึ้นเงินเดือนถัดไป ${jd(finNextAnniv(m))}`)}</span><b class="fnamt">${finK(Q.total)}</b></button>`).join('')}</div></div>`}
+ else if(tab=='debt'){const Ls=X.loans;
+  body=`<div class="c"><h3>${FT('Loans','เงินกู้')}</h3>${Ls.length?`<table class="fntab"><tr><th>${FT('Loan','เงินกู้')}</th><th>${FT('Principal','เงินต้น')}</th><th>${FT('Rate · term','ดอกเบี้ย · ระยะ')}</th><th>${FT('Monthly','ผ่อน/เดือน')}</th><th>${FT('Outstanding','คงค้าง')}</th><th></th></tr>${Ls.map(l=>`<tr><td>${esc(l.id)}<small class="st"> ${esc(l.why)}</small></td><td>${finK(l.P)}</td><td>${(l.rate*100).toFixed(1)}% · ${l.months}</td><td>${finK(l.pay)}</td><td>${finK(l.bal)}</td><td>${l.st=='active'?`<button class="b s" onclick="finLoanRepayAll('${l.id}')">${FT('Repay','ปิดหนี้')}</button>`:FT('Repaid','ชำระครบ')}</td></tr>`).join('')}</table>`:`<p class="st">${FT('No loans.','ไม่มีเงินกู้')}</p>`}
+   <div class="row">${FIN_LOANS.map(([P,n,r],i)=>`<button class="b s" onclick="finLoanAsk(${i})">${FT('Borrow','กู้')} ${finK(P)} · ${n}${FT(' months',' เดือน')} · ${(r*100).toFixed(1)}%</button>`).join('')}</div><p class="st">${FT('If cash falls below zero on the 1st of a month, an emergency loan (24 months, 3%) covers the obligations automatically.','ถ้าเงินสดติดลบในวันที่ 1 ระบบจะกู้ฉุกเฉินให้อัตโนมัติ (24 เดือน 3%)')}</p></div>
+  <div class="c"><h3>${FT('Facilities & investments','สิ่งอำนวยความสะดวกและการลงทุน')}</h3><div class="fnfac">${FIN_FAC.map(([k,n,c,u,b])=>{const F=finFac(k);return`<div class="fnfacr"><b>${esc(FT(n,FIN_TH[n]||n))}</b><span class="st">${FT(b,FIN_TH[b]||b)} ${FT('Upkeep','ค่าดูแล')} ${finK(u)}/${FT('month','เดือน')}</span>${F?`<span class="fntag">${FT('Owned since','เป็นเจ้าของตั้งแต่')} ${jd(F.day)}</span>`:`<button class="b s" onclick="finFacBuy('${k}')">${FT('Invest','ลงทุน')} ${finK(c)}</button>`}</div>`}).join('')}</div></div>
+  <div class="c"><h3>${FT('Financial position','ฐานะการเงิน')}</h3><table class="fntab"><tr><td>${FT('Cash','เงินสด')}</td><td>${finK(A.cash)}</td></tr><tr><td>${FT('Facilities (book value)','สิ่งอำนวยความสะดวก (มูลค่าทางบัญชี)')}</td><td>${finK(A.fac)}</td></tr><tr class="fntot"><td>${FT('Assets','สินทรัพย์')}</td><td>${finK(A.total)}</td></tr><tr><td>${FT('Loans outstanding','เงินกู้คงค้าง')}</td><td>${finK(L.debt)}</td></tr><tr><td>${FT('Tax payable','ภาษีค้างจ่าย')}</td><td>${finK(L.tax)}</td></tr><tr class="fntot"><td>${FT('Liabilities','หนี้สิน')}</td><td>${finK(L.total)}</td></tr><tr class="fntot"><td>${FT('Net position','ฐานะสุทธิ')}</td><td>${finSign(A.total-L.total)}</td></tr></table></div>`}
+ return`<div class="fnwrap">${head}${body}</div>`};
+// dashboard tile on the Office page uses the new figures
+// ---- 9. member salary in the profile ------------------------------------------------------------------------------------------
+function finProfHtml(m){const P=finSalaryOf(m),E=m.earn||{},H=(m.payH||[]);const jobs=H.filter(x=>x.k=='job').slice(0,12),ge=H.filter(x=>x.k=='ge');
+ return`<div class="c fnprof"><h3>${FT('Salary & earnings','เงินเดือนและรายได้')}</h3>
+ <table class="fntab"><tr><th>${FT('Group','วง')}</th><th>${FT('Official position','ตำแหน่ง')}</th><th>${FT('Base','ฐาน')}</th><th>${FT('Seniority','อายุงาน')}</th><th>${FT('Monthly','ต่อเดือน')}</th></tr>${P.rows.map(r=>`<tr><td>${esc(r.gn)}</td><td>${FT(r.pn,FIN_TH[r.pn]||r.pn)}</td><td>${finK(r.base)}</td><td>+${finK(r.inc)}</td><td>${finK(r.amt)}</td></tr>`).join('')||`<tr><td colspan="5" class="st">${FT('No monthly salary: not in any active group or unit. Special appearances are paid as jobs.','ไม่มีเงินเดือน: ไม่ได้สังกัดวงหรือยูนิตที่ทำกิจกรรม งานพิเศษจ่ายเป็นค่าจ้างรายงาน')}</td></tr>`}
+ ${P.rows.length>1?`<tr class="fntot"><td colspan="4">${FT('Combined monthly salary','เงินเดือนรวม')}</td><td>${finK(P.total)}</td></tr>`:''}</table>
+ <p class="st">${FT(`Employed since ${jd(finEmpStart(m))} · ${P.y} completed year(s) · +${finK(P.inc)} per group · next increment on ${jd(finNextAnniv(m))} (+¥10,000)`,`เริ่มงาน ${jd(finEmpStart(m))} · ทำงานครบ ${P.y} ปี · +${finK(P.inc)} ต่อวง · ขึ้นเงินเดือนครั้งถัดไป ${jd(finNextAnniv(m))} (+¥10,000)`)}</p>
+ <div class="fnkpis sm"><div class="fnkpi"><small>${FT('Salary received','เงินเดือนที่ได้รับ')}</small><b>${finK(E.sal)}</b></div><div class="fnkpi"><small>${FT('Job payments','ค่าจ้างงาน')}</small><b>${finK(E.job)}</b></div><div class="fnkpi"><small>${FT('Election revenue share','ส่วนแบ่งรายได้เลือกตั้ง')}</small><b>${finK(E.ge)}</b></div></div>
+ <details><summary>${FT('Job payment history','ประวัติค่าจ้างงาน')} (${H.filter(x=>x.k=='job').length})</summary>${jobs.map(x=>`<div class="fnhr"><span>${jd(x.d)}</span><span>${esc(x.l)}</span><b>${finK(x.a)}</b></div>`).join('')||`<p class="st">—</p>`}</details>
+ <details><summary>${FT('Election revenue sharing','ส่วนแบ่งรายได้เลือกตั้ง')} (${ge.length})</summary>${ge.map(x=>`<div class="fnhr"><span>${jd(x.d)}</span><span>${esc(x.l)}</span><b>${finK(x.a)}</b></div>`).join('')||`<p class="st">—</p>`}</details></div>`}
+{const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{if(!cand&&m&&(ui.ptab||'stats')=='stats')h+=finProfHtml(m)}catch(e){console.error(e)}return h}}
+// ---- 10. Thai -------------------------------------------------------------------------------------------------------------------
+const FIN_TH={'CD & album sales':'ยอดขาย CD และอัลบั้ม','Digital & streaming':'ดิจิทัลและสตรีมมิง','Concert tickets':'บัตรคอนเสิร์ต','Online tickets & memberships':'บัตรออนไลน์และสมาชิก','Theater tickets':'บัตรเธียเตอร์','DVD & video':'DVD และวิดีโอ','Merchandise':'สินค้า','Fan events':'งานแฟนมีต','Sponsorship, commercial & appearances':'สปอนเซอร์ โฆษณา และงานออกสื่อ','Licensing & drama':'ลิขสิทธิ์และละคร','Other income':'รายได้อื่น','Refunds received':'เงินคืน',
+ 'Production costs':'ค่าผลิต','Operating expenses':'ค่าดำเนินงาน','Member salaries':'เงินเดือนเมมเบอร์','Member job payments':'ค่าจ้างงานเมมเบอร์','Member revenue sharing':'ส่วนแบ่งรายได้เมมเบอร์','Staff salaries':'เงินเดือนสตาฟ','Marketing':'การตลาด','Taxes':'ภาษี','Debt repayments':'ชำระหนี้','Loan interest':'ดอกเบี้ยเงินกู้','Loan proceeds':'เงินกู้ที่ได้รับ','Economy rebalance adjustment':'ปรับสมดุลเศรษฐกิจ',
+ 'Trainee':'เด็กฝึก','Active Member':'สมาชิก','Team Vice-Captain':'รองกัปตันทีม','Team Captain':'กัปตันทีม','Group Vice-Captain':'รองกัปตันวง','Group Captain':'กัปตันวง',
+ 'Office rent':'ค่าเช่าออฟฟิศ','Utilities & administration':'ค่าน้ำไฟและธุรการ','Training facilities & maintenance':'ห้องซ้อมและการดูแล','Coaches & instructors':'โค้ชและครูฝึก','Insurance & legal':'ประกันและกฎหมาย','Marketing & public relations':'การตลาดและประชาสัมพันธ์','Theater lease':'ค่าเช่าเธียเตอร์','Fan club & ticketing systems':'ระบบแฟนคลับและจำหน่ายบัตร','Staff salaries':'เงินเดือนสตาฟ',
+ 'Own rehearsal studio':'สตูดิโอซ้อมของบริษัท','Costume workshop':'โรงตัดชุด','In-house video team':'ทีมวิดีโอของบริษัท','Training facilities cost 40% less.':'ค่าห้องซ้อมลดลง 40%','Costume production costs 25% less.':'ค่าผลิตชุดลดลง 25%','MV production costs 15% less.':'ค่าผลิต MV ลดลง 15%'};
+try{Object.assign(I18N_TH,{'Finances & Ledger':'การเงินและบัญชี'})}catch(e){}
 
 </script>
 <script>

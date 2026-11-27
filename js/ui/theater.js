@@ -139,9 +139,9 @@ function thPerform(x){if(x.st!='sched')return;const H=thS(),T=thOf(x.k),f=thForb
  const pop=avg(L.map(m=>m.pop)),songPop=avg(thAll(s).map(it=>thSongPop(S.songs[it.song]))),recent=H.pf.filter(p=>p.k==x.k&&p.day>=x.day-28),rs=recent.length?avg(recent.map(p=>p.sat)):55,week=H.pf.filter(p=>p.k==x.k&&p.day>x.day-7).length;
  const promo=(S.singles.some(z=>(z.relDay??z.day)>=x.day-14)?1.15:1)*((S.cal||[]).some(e=>e.type=='road'&&evDays(e).some(d=>d>=x.day-7&&d<=x.day))?1.05:1)*(x.sl=='a'?1.06:1)*(dowOf(x.day)==0||dowOf(x.day)==6?1.1:1)*(thTr(x.k)?.8:1);
  const dem=(25+pop*1.6+((cen&&cen.pop)||0)*.7+songPop*.6+Math.sqrt(Math.max(0,S.fans))*.9+(s.hype||0)*.5)*(.8+rs/250)*(1/(1+.07*Math.max(0,week-3)))*promo*Math.pow(3000/Math.max(500,T.price),.85)*(.85+Math.random()*.3);
- const sold=Math.max(0,Math.min(TH_CAP,Math.round(dem))),att=Math.max(0,sold-Math.round(sold*Math.random()*.03)),rev=sold*T.price,cost=60000+L.length*3000;
+ const sold=Math.max(0,Math.min(TH_CAP,Math.round(dem))),att=Math.max(0,sold-Math.round(sold*Math.random()*.03)),rev=sold*T.price,cost=180000+L.length*5000;
  const subs=Object.values(T.subs).reduce((a,b)=>a+b,0),online=typeof thOnlineN=='function'?thOnlineN(subs,sat):Math.round(subs*(.35+Math.random()*.25)*(.8+sat/250));
- earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);S.money-=cost;S.exp+=cost;S.led.unshift({d:S.day,l:`Theater operating cost: ${thLabel(x.k)}`,a:-cost});S.led.length=Math.min(S.led.length,80);
+ earn(rev,`Theater tickets: ${thNoTxt(s)} (${jd(x.day)} ${TH_SLOT[x.sl]})`);finOut(cost,`Theater operating cost: ${thLabel(x.k)}`);
  const AUD=thAud(x,s,T,L,res,att,online,sat),nf=AUD.nf; // audience: existing fans vs newcomers (Theater update)
  const fx=[];RW.forEach(r=>{const m=r.m,p0=m.pop,f0=m.fans,b0=m.buzz;thGainM(m,AUD,sat);m.en=Math.max(0,Math.round(r.en));m.mor=cl(m.mor+(sat>=60?2:0));if(sat>=75&&Math.random()<.3)m.pas=cl(m.pas+1);
   if(Math.random()<.12){const k=pick(['sing','dance','cha','variety']);if(m[k]<100)m[k]++}wlAdj(m,{load:6+Math.round(r.q.length/3),str:sat<40?4:1},'theater performance');if(sat>=80&&Math.random()<.25&&WL.mood[wlOf(m).mood][1]!='neg')wlMood(m,'Happy',3);

@@ -179,7 +179,7 @@ function ccGrowth(C,p,res){const fb=fbState();if(!fb)return;const per=res._per||
  C.parts.forEach(id=>{const m=get(id),e=ex[id]||0;if(!m||!e)return;const g=Math.round(e*(res.phys+res.onl)/Math.max(1,C.parts.length)*.02);m.fans=(m.fans||0)+g;m.pop=popOf(m);if(fb.mf)fb.mf[id]=m.fans;fbExp(id,Math.min(3,e/4));(gm(id)).rec=g});
  try{fbMerge()}catch(e){}fbApply();res.growth=G;delete res._per;delete res._SB}
 // ---- completion: expenses, trust, member treatment, history ---------------------------------------------------------------
-function ccPay(a,l){a=Math.round(a);if(!(a>0))return;S.money-=a;S.exp+=a;S.led.unshift({d:S.day,l,a:-a});S.led.length=Math.min(S.led.length,80);try{if(typeof gsLedTag=='function')gsLedTag()}catch(e){}}
+function ccPay(a,l){finOut(a,l)} // central Financial Engine (js/core/finance.js)
 function ccFinish(C){const E=C.est,rows={},line=(g,n,a)=>{rows[g]=rows[g]||{n,a:0};rows[g].a+=Math.round(a)};
  const revP=C.pf.reduce((a,p)=>a+((p.res||{}).revP||0),0),revO=C.pf.reduce((a,p)=>a+((p.res||{}).revO||0),0);
  Object.entries(E.G).forEach(([k,g])=>{let a=g.a;if(k=='misc')a=Math.round(g.rows[0].a*(.5+Math.random())+g.rows[1].a);line(k,g.n,a)});
