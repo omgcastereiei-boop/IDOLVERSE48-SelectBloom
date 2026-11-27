@@ -2144,6 +2144,13 @@ details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(s
 #advload{background:rgba(40,16,64,.72)!important}
 .tcast svg.chf,.vnart svg.chf{animation:none!important}
 .mc.rUR .mart::after{animation:sh 3.4s linear 1!important}
+/* ---- Lite mode ---- */
+body.lite *,body.lite *::before,body.lite *::after{animation:none!important;transition:none!important;box-shadow:none!important;text-shadow:none!important}
+body.lite svg.chf,body.lite .mvxbig,body.lite .cvx svg{filter:none!important}
+body.lite #scene{display:none!important}
+body.lite{background:#f6ece3!important}
+/* header without blur: solid background so the page does not show through */
+.hd{background:linear-gradient(180deg,#fffaf6,#fdf3ee)!important}
 
 </style>
 </head><body>
@@ -5588,7 +5595,7 @@ V.manage=function(){const mo=(typeof finPayrollNow=="function"?finPayrollNow().t
  <div class="c"><h3>Finances</h3><div class="kv"><div><small>Balance</small><b>${yen(S.money)}</b></div><div><small>Total income</small><b>${yen(S.inc)}</b></div><div><small>Total expenses</small><b>${yen(S.exp)}</b></div><div><small>Monthly salaries</small><b>${yen(mo)}</b></div></div><div class="row"><button class="b s" onclick="goView('finances')">Open ledger</button></div></div>
  <div class="c"><h3>Save & Load</h3><p class="st">Progress is stored in this browser and saved automatically every 5 minutes, when you press Next day or +7, and after important actions (confirming a single, Senbatsu, costumes, events and other confirmations).${ui.savedAt?' Last manual save: '+ui.savedAt+'.':''}</p><div class="row"><button class="b p" onclick="uiSave()">Save Game</button><button class="b" onclick="uiLoad()">Load Game</button><button class="b" onclick="ui.t=true;render()">Title screen</button></div><div class="row"><button class="b s" onclick="uiExport()">Export save file</button><label class="b s" style="cursor:pointer">Import save file<input type="file" accept="application/json,.json" style="display:none" onchange="uiImport(this)"></label></div><p class="st">Export/Import copies the exact same save data as the browser autosave (backup or move between devices).</p></div>
  <div class="c"><h3>Game settings</h3><div class="row"><span class="lbl">Trainee status label</span><span class="tag">${esc(TL())}</span><button class="b s" onclick="goView('groups')">Change in Groups</button></div><div class="row"><span class="lbl">Audition odds</span><button class="b s" onclick="goView('audset')">Probability settings</button></div>
- <h3 style="margin-top:8px">Display</h3><div class="row"><span class="lbl">Scenery</span><button class="b s ${UIP.scene!='soft'?'on':''}" onclick="uiPref('scene','vivid')">Vivid</button><button class="b s ${UIP.scene=='soft'?'on':''}" onclick="uiPref('scene','soft')">Soft</button></div><div class="row"><span class="lbl">Animations</span><button class="b s ${UIP.motion!='off'?'on':''}" onclick="uiPref('motion','on')">On</button><button class="b s ${UIP.motion=='off'?'on':''}" onclick="uiPref('motion','off')">Off</button></div><div class="row"><span class="lbl">Card density</span><button class="b s ${UIP.dens!='compact'?'on':''}" onclick="uiPref('dens','cozy')">Cozy</button><button class="b s ${UIP.dens=='compact'?'on':''}" onclick="uiPref('dens','compact')">Compact</button></div><p class="st">Display options are stored separately and never change your save.</p></div></div>`};
+ <h3 style="margin-top:8px">Display</h3><div class="row"><span class="lbl">Scenery</span><button class="b s ${UIP.scene!='soft'?'on':''}" onclick="uiPref('scene','vivid')">Vivid</button><button class="b s ${UIP.scene=='soft'?'on':''}" onclick="uiPref('scene','soft')">Soft</button></div><div class="row"><span class="lbl">Animations</span><button class="b s ${UIP.motion!='off'?'on':''}" onclick="uiPref('motion','on')">On</button><button class="b s ${UIP.motion=='off'?'on':''}" onclick="uiPref('motion','off')">Off</button></div><div class="row"><span class="lbl">Lite mode</span><button class="b s ${UIP.lite?'on':''}" onclick="uiPref('lite',1)">On</button><button class="b s ${!UIP.lite?'on':''}" onclick="uiPref('lite',0)">Off</button></div><p class="st">Lite mode turns off animations, shadows and the drawn scenery behind pages so the game runs smoothly on phones and older computers.</p><div class="row"><span class="lbl">Card density</span><button class="b s ${UIP.dens!='compact'?'on':''}" onclick="uiPref('dens','cozy')">Cozy</button><button class="b s ${UIP.dens=='compact'?'on':''}" onclick="uiPref('dens','compact')">Compact</button></div><p class="st">Display options are stored separately and never change your save.</p></div></div>`};
 
 // ---- Music Production · Single Production: see js/ui/single-planning.js (unified planning page) ----
 
@@ -25884,6 +25891,11 @@ let ADVL_GEN=0;
 {const f=tick;tick=function(){ADVL_GEN++;try{return f.apply(this,arguments)}finally{ADVL_GEN++}}}
 try{['pointerdown','click','change','input','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ADVL_GEN++},true))}catch(e){}
 {const f=cost;let C=null;cost=function(p){if(!p||!S)return f.apply(this,arguments);if(C&&C.p===p&&C.g===ADVL_GEN&&C.d===S.day)return{L:C.r.L.map(x=>x.slice()),u:new Set(C.r.u),t:C.r.t};const r=f.apply(this,arguments);try{C={p,g:ADVL_GEN,d:S.day,r:{L:r.L.map(x=>x.slice()),u:new Set(r.u),t:r.t}}}catch(e){C=null}return r}}
+// ---- Lite mode (Management › Display): no animations, shadows or drawn scenery; on by default on phones / tablets ----------
+try{if(UIP.lite==null){UIP.lite=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)?1:0;localStorage.setItem('iv48ui',JSON.stringify(UIP))}}catch(e){}
+{const f=applyPrefs;applyPrefs=function(){const r=f.apply(this,arguments);try{document.body.classList.toggle('lite',!!UIP.lite)}catch(e){}return r}}
+try{document.body.classList.toggle('lite',!!UIP.lite)}catch(e){}
+try{Object.assign(I18N_TH,{'Lite mode':'โหมดประหยัด','Lite mode turns off animations, shadows and the drawn scenery behind pages so the game runs smoothly on phones and older computers.':'โหมดประหยัดจะปิดแอนิเมชัน เงา และฉากวาดด้านหลังหน้าจอ ให้เกมลื่นขึ้นบนมือถือและคอมรุ่นเก่า'})}catch(e){}
 
 </script>
 <script>

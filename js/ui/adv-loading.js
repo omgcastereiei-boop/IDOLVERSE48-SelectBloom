@@ -28,3 +28,8 @@ let ADVL_GEN=0;
 {const f=tick;tick=function(){ADVL_GEN++;try{return f.apply(this,arguments)}finally{ADVL_GEN++}}}
 try{['pointerdown','click','change','input','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ADVL_GEN++},true))}catch(e){}
 {const f=cost;let C=null;cost=function(p){if(!p||!S)return f.apply(this,arguments);if(C&&C.p===p&&C.g===ADVL_GEN&&C.d===S.day)return{L:C.r.L.map(x=>x.slice()),u:new Set(C.r.u),t:C.r.t};const r=f.apply(this,arguments);try{C={p,g:ADVL_GEN,d:S.day,r:{L:r.L.map(x=>x.slice()),u:new Set(r.u),t:r.t}}}catch(e){C=null}return r}}
+// ---- Lite mode (Management › Display): no animations, shadows or drawn scenery; on by default on phones / tablets ----------
+try{if(UIP.lite==null){UIP.lite=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)?1:0;localStorage.setItem('iv48ui',JSON.stringify(UIP))}}catch(e){}
+{const f=applyPrefs;applyPrefs=function(){const r=f.apply(this,arguments);try{document.body.classList.toggle('lite',!!UIP.lite)}catch(e){}return r}}
+try{document.body.classList.toggle('lite',!!UIP.lite)}catch(e){}
+try{Object.assign(I18N_TH,{'Lite mode':'โหมดประหยัด','Lite mode turns off animations, shadows and the drawn scenery behind pages so the game runs smoothly on phones and older computers.':'โหมดประหยัดจะปิดแอนิเมชัน เงา และฉากวาดด้านหลังหน้าจอ ให้เกมลื่นขึ้นบนมือถือและคอมรุ่นเก่า'})}catch(e){}

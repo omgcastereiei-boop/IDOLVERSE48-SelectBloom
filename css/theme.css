@@ -2060,3 +2060,10 @@ details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(s
 #advload{background:rgba(40,16,64,.72)!important}
 .tcast svg.chf,.vnart svg.chf{animation:none!important}
 .mc.rUR .mart::after{animation:sh 3.4s linear 1!important}
+/* ---- Lite mode ---- */
+body.lite *,body.lite *::before,body.lite *::after{animation:none!important;transition:none!important;box-shadow:none!important;text-shadow:none!important}
+body.lite svg.chf,body.lite .mvxbig,body.lite .cvx svg{filter:none!important}
+body.lite #scene{display:none!important}
+body.lite{background:#f6ece3!important}
+/* header without blur: solid background so the page does not show through */
+.hd{background:linear-gradient(180deg,#fffaf6,#fdf3ee)!important}
