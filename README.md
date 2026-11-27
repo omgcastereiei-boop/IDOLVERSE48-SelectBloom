@@ -1222,3 +1222,11 @@ Extends the existing designer, library and save format (no new editor):
 - Summer & Lace pattern groups, **Pattern spacing** slider, optional **Transparency** slider (sheer fabrics and lace only, default 0).
 - 12 summer presets (Marine, Tropical Idol, Beach Festival, Summer Festival, Sailor Summer, Cute, Elegant, Resort, Sundress, swimsuits, kimono cover-up).
 - MV planner: per-member costume from the Costume Library (independent of the stage/song costume). CD cover: existing per-member picker lists every library design.
+
+## Special Releases (Special Single · Special Album)
+Music Production › **Special Releases** (`js/ui/special-rel.js`):
+- Create any number of Special Singles / Special Albums, as **Physical CD** (Types, editions, CD covers, CD sales) or **Digital** (one Digital artwork, no Types / inventory / CD costs; downloads use the existing sales curve booked as *Digital sales* with a platform fee).
+- Each Special Release is its own project: while you edit it, it temporarily takes the place of the Regular project, so the existing Senbatsu / Center, costume, cover studio, MV planner, production schedule and release code are reused. The Regular single/album keeps going on its own; it is never blocked or renumbered (Regular pre-orders do not block a Special Release).
+- Never numbered, never handshake tickets. After release the record lives with its project (not in the Regular single/album lists).
+- Members: Special songs appear in each member's history and **count as Center**, but never as Senbatsu (A/B-side counts, streaks, first-time records, Senbatsu record). Feelings are calculated only for members of the main song and coupling songs.
+- Charts: Special releases enter the existing weekly charts (digital via downloads + streams). Discography: filter All / Singles / Special Singles / Albums / Special Albums.

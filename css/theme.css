@@ -2070,3 +2070,12 @@ body.lite{background:#f6ece3!important}
 /* ---- summer collection: MV costumes ---- */
 .czsmv .row{gap:6px;align-items:center;flex-wrap:wrap}.czsmvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-top:6px}
 .czsmvm{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);border-radius:12px;padding:4px;background:#fffdf8}.czsmvm b{font:700 11px Quicksand;text-align:center}.czsmvm select{width:100%;font-size:11px}
+/* ---- Special Releases ---- */
+.srxtag{background:linear-gradient(135deg,#ffd36a,#ff8fb7)!important;color:#5a2340!important}
+.srxbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:2px dashed #ff8fb7}
+.srxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.srxcard{display:flex;gap:10px;align-items:flex-start;margin:0}.srxcv{cursor:pointer;flex:none}.srxinfo{flex:1;min-width:0}.srxinfo .row{gap:4px;margin:4px 0}
+.srxtr{margin:4px 0 6px;padding-left:18px;font-size:12px}
+.srxst.rel{background:#d8f5e1;color:#1f6b3a}.srxst.up{background:#fff1c9;color:#7a5a00}.srxst.prod{background:#e6ddff;color:#4b3a8a}.srxst.plan{background:#eee;color:#555}
+.srxfmts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:8px 0}.srxfmts .b{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;height:auto;padding:10px}.srxfmts small{font-weight:500;opacity:.8}
+.srxtabs{gap:4px;flex-wrap:wrap;margin-bottom:6px}
