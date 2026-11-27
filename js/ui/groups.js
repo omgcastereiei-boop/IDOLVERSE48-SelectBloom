@@ -40,7 +40,7 @@ const gsMem=gid=>S.members.filter(m=>gsIn(m,gid));
 const gsSis=(m,gid)=>!!m&&S.groups.length>1&&gid==(gsMain()||{}).id&&gsGid(m)!=gid&&(m.status=='trainee'||(isAct(m)&&!!m.tid)); // full members and Trainees of a sister group
 const gsJoin=(m,gid)=>gsIn(m,gid)||gsSis(m,gid);
 const gsJoinMem=gid=>S.members.filter(m=>gsJoin(m,gid));
-function gsElig(o){const gid=gsAg(),M=gsJoinMem(gid);if(!(o&&o.tm))return M;return M.filter(m=>m.team==o.tm||(m.kn&&m.kn.gid==gid&&((gsTeam(m.kn.tid)||{}).t||{}).name==o.tm))}
+function gsElig(o){const gid=gsAg(),M=gsJoinMem(gid);if(!(o&&o.tm))return M;if(o.tm=='@trainee')return M.filter(tmTrainee);return M.filter(m=>m.team==o.tm||(m.kn&&m.kn.gid==gid&&((gsTeam(m.kn.tid)||{}).t||{}).name==o.tm))}
 const gsStat=(m,gid)=>m.status=='graduated'?'Graduated':m.kn&&m.kn.gid==gid&&gsGid(m)!=gid?'Concurrent Member':m.status=='trainee'?'Trainee / Kenkyuusei':'Full Member';
 // the theater pool of a team includes its concurrent members
 {const f=thPool;thPool=function(key){const r=f.apply(this,arguments),K=thK(key);if(!K||K.kind!='team')return r;const add=S.members.filter(m=>m.kn&&m.kn.tid==K.tid&&isAct(m)&&m.status!='graduated'&&!r.includes(m));return[...r,...add]}}
