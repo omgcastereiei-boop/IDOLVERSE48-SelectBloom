@@ -24120,12 +24120,20 @@ function ghFill(gid){let n=0;const run=()=>{const p=S.pj;if(!p||!p.ge||!(p.statu
   const ranked=((e&&e.final&&e.final.rows)||[]).filter(r=>r.rank).sort((a,b)=>a.rank-b.rank).map(r=>get(r.id)).filter(ok);
   songs.forEach(o=>{const ord=slotOrder(o.fm).map(k=>o.fm.sl[k]).filter(z=>!z.m||!ok(get(z.m)));if(!ord.length)return;const E=new Set(elig(o).map(m=>m.id));
    ord.forEach(z=>{const c=ranked.find(m=>!used.has(m.id)&&E.has(m.id))||elig(o).filter(m=>!used.has(m.id)).sort((a,b)=>b.pop-a.pop)[0];if(!c)return;z.m=c.id;used.add(c.id);n++;try{hev(c,{t:'ge_fill',txt:`Took an empty position in “${p.title||o.title}” (election single)`})}catch(x){}});
-   try{fmSync(o,!fmCheck(o).length)}catch(x){console.error(x)}});
+   // nobody left to take it: the empty position is removed (an election single's lineup cannot be edited by hand)
+   const left=o.fm.sl.filter(z=>!z.m||!ok(get(z.m)));if(left.length){o.fm.sl=o.fm.sl.filter(z=>z.m&&ok(get(z.m)));const rows=[...new Set(o.fm.sl.map(z=>z.r))].sort((a,b)=>a-b);
+    o.fm.sl.forEach(z=>{z.r=rows.indexOf(z.r)});rows.forEach((_,r)=>o.fm.sl.filter(z=>z.r==r).sort((a,b)=>a.i-b.i).forEach((z,i)=>{z.i=i}));try{fmRenum(o.fm.sl)}catch(x){}
+    o.fm.size=o.fm.sl.length;o.fm.nc=o.fm.sl.filter(z=>z.c).length;o.fm.ge0=1;n+=left.length}
+   try{fmSync(o,true)}catch(x){console.error(x)}});
   if(n){try{if(typeof syncSaved=='function')syncSaved()}catch(x){}CTQ.push(`<div class="ctbd">${esc(GH_T(`An empty position in “${p.title}” was filled by the next election ranking, so the single can be released.`,`ตำแหน่งว่างใน “${p.title}” ได้คนจากอันดับเลือกตั้งถัดไปมาแทนแล้ว ปล่อยซิงเกิลได้ตามปกติ`))}</div>`)}};
  try{gid==null?(S.groups||[]).forEach(g=>gsWith(g.id,run)):gsWith(gid,run)}catch(e){console.error(e)}return n}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
 {const f=startSingle;startSingle=function(){try{if(S.pj&&S.pj.ge)ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
+
+// an election single never waits for positions nobody can fill
+{const f=fmCheck;fmCheck=function(o){const r=f.apply(this,arguments);try{const p=S.pj;if(p&&p.ge&&o&&usedSongs(p).includes(o.id))return r.filter(x=>!/still empty|Invalid Senbatsu size|Invalid number of centers|Center slots do not match/.test(x))}catch(e){}return r}}
+{const f=reqs;reqs=function(p){try{if(p&&p.ge&&p===S.pj)ghFill(gsAg())}catch(e){}const r=f.apply(this,arguments);try{if(p&&p.ge)return r.filter(x=>!/position\(s\) still empty|Invalid Senbatsu size|save the lineup|Center slots do not match|Invalid number of centers/.test(x))}catch(e){}return r}}
 
 </script>
 <script>
