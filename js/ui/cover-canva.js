@@ -342,3 +342,7 @@ async function cvFontFaceCss(fams,chars){const links=[...document.querySelectorA
 {const old=exportCov;exportCov=async function(d,sz){try{const T=(d.layers||[]).filter(l=>l.t=='x'&&!l.hide),fams=[...new Set(T.map(l=>l.font||'M PLUS Rounded 1c'))],chars=T.map(l=>String(l.txt||'')).join('')+' ';
   const css=T.length?await cvFontFaceCss(fams,chars):'';const h=Math.round(sz*cvHt(d)/512);let svg=coverSvg(d,{size:sz});svg=svg.replace(/<svg([^>]*)>/,(m,a)=>`<svg${a.replace(/style="[^"]*"/,'')}><defs><style>${css}</style></defs>`);
   const img=new Image();img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);await img.decode();const cv=document.createElement('canvas');cv.width=sz;cv.height=h;cv.getContext('2d').drawImage(img,0,0,sz,h);return cv.toDataURL('image/png')}catch(e){console.warn('cover export fallback',e);return old.apply(this,arguments)}}}
+// covers shown outside the editor (history, discography, library…) load the fonts their text layers use
+const CVF_ON=new Set();
+function cvFontNeed(d){try{const L=(d&&d.layers)||[];L.forEach(l=>{const n=l&&l.font;if(!n||CVF_ON.has(n))return;CVF_ON.add(n);if(CVX.fontsOn)return;const F=CVF.find(f=>f[0]==n);if(!F||F[3]==null)return;if(document.querySelector(`link[data-cvf="${n}"]`))return;const w=F[3],k=document.createElement('link');k.rel='stylesheet';k.href=`https://fonts.googleapis.com/css2?family=${n.replace(/ /g,'+')}${w?':wght@'+w:''}&display=swap`;k.dataset.cvf=n;document.head.appendChild(k);})}catch(e){}}
+{const f=coverSvg;coverSvg=function(d){cvFontNeed(d);return f.apply(this,arguments)}}
