@@ -52,7 +52,8 @@ const spSess=(p,a)=>p>=SPR.READY?0:Math.ceil(Math.log((100-SPR.READY)/Math.max(1
 
 // ---- what each member has to learn (Theater performances in the next 45 days) ------------------------------------------
 let SPN={k:null,v:null};
-function spNeeds(){let key;try{key=S.day+'|'+thS().sh.length+'|'+thS().sh.filter(x=>x.st=='sched').map(x=>x.id+':'+JSON.stringify(x.rp||{})+JSON.stringify(x.sw||{})).join(',').length+'|'+(S.members||[]).length}catch(e){return{list:[],u:[]}}
+let SPN_Q={g:-1,d:-1,n:-1}; // the key below is rebuilt at most once per day / screen update / change in the number of shows
+function spNeeds(){try{const g=typeof ADVL_GEN!='undefined'?ADVL_GEN:0,n=thS().sh.length;if(SPN.v&&SPN_Q.g===g&&SPN_Q.d===S.day&&SPN_Q.n===n&&g)return SPN.v;SPN_Q={g,d:S.day,n}}catch(e){}let key;try{key=S.day+'|'+thS().sh.length+'|'+thS().sh.filter(x=>x.st=='sched').map(x=>x.id+':'+JSON.stringify(x.rp||{})+JSON.stringify(x.sw||{})).join(',').length+'|'+(S.members||[]).length}catch(e){return{list:[],u:[]}}
  if(SPN.k==key)return SPN.v;const list=[],seen={},U=[],uSeen=new Set();
  try{const sh=thS().sh.filter(x=>x.st=='sched'&&x.day>S.day&&x.day<=S.day+SPR.HOR).sort((a,b)=>a.day-b.day||(a.sl=='a'?-1:1));const firstOf={};
   const SC={};sh.forEach(x=>{const man=(x.rp&&Object.keys(x.rp).length)||(x.sw&&Object.keys(x.sw).length);let C;if(x.day<=S.day+7||man)C=thCheck(x);else{const T=thOf(x.k),s0=thStageFor(T,x);if(!s0)return;if(SC[x.k+'|'+s0.id])return;SC[x.k+'|'+s0.id]=1;C={s:s0,miss:[],rp:{}}}const s=C.s;if(!s)return;const out=new Set(C.miss.map(z=>z.id));if(!firstOf[x.k])firstOf[x.k]={x,s,C};

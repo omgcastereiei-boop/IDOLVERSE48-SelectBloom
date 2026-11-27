@@ -18,7 +18,7 @@ try{Object.assign(CFG.aud.street,{base:300000,per:3000});Object.assign(CFG.aud.c
 try{EV.handshake.cost=600000;EV.concert.cost=1500000;EV.election.cost=1500000;EV.anniv.cost=2500000;EV.janken.cost=600000}catch(e){}
 try{CFG.rs.venue={1:400000,2:800000,3:1500000}}catch(e){}
 const FIN_COSTUME=45000; // one stage outfit (design, fabric, sewing, fittings)
-{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;if(p&&p.status!='draft'&&p._fcn!=null)n=p._fcn;else{(typeof usedSongs=='function'?usedSongs(p):[]).forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(p&&p.status!='draft')p._fcn=n}if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
+{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;if(p&&p.status!='draft'&&p._fcn!=null)n=p._fcn;else{[...new Set([p.mainId,...(r&&r.u?[...r.u]:(p.types||[]).flatMap(t=>t.songs))])].forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(p&&p.status!='draft')p._fcn=n}if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
 // external work: fees at market level (the old formula paid 4–5× the going rate)
 {const f=xePay;xePay=function(r){return Math.max(30000,Math.round(f.apply(this,arguments)*.2/10000)*10000)}}
 // roadshows: a release event venue holds only so many people per day

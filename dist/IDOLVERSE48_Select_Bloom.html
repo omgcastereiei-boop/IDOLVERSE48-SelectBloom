@@ -2163,6 +2163,7 @@ body.lite{background:#f6ece3!important}
 .srxst.rel{background:#d8f5e1;color:#1f6b3a}.srxst.up{background:#fff1c9;color:#7a5a00}.srxst.prod{background:#e6ddff;color:#4b3a8a}.srxst.plan{background:#eee;color:#555}
 .srxfmts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:8px 0}.srxfmts .b{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;height:auto;padding:10px}.srxfmts small{font-weight:500;opacity:.8}
 .srxtabs{gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.srxth{border-radius:6px;flex:none;display:block}
 
 </style>
 </head><body>
@@ -22630,7 +22631,8 @@ const spSess=(p,a)=>p>=SPR.READY?0:Math.ceil(Math.log((100-SPR.READY)/Math.max(1
 
 // ---- what each member has to learn (Theater performances in the next 45 days) ------------------------------------------
 let SPN={k:null,v:null};
-function spNeeds(){let key;try{key=S.day+'|'+thS().sh.length+'|'+thS().sh.filter(x=>x.st=='sched').map(x=>x.id+':'+JSON.stringify(x.rp||{})+JSON.stringify(x.sw||{})).join(',').length+'|'+(S.members||[]).length}catch(e){return{list:[],u:[]}}
+let SPN_Q={g:-1,d:-1,n:-1}; // the key below is rebuilt at most once per day / screen update / change in the number of shows
+function spNeeds(){try{const g=typeof ADVL_GEN!='undefined'?ADVL_GEN:0,n=thS().sh.length;if(SPN.v&&SPN_Q.g===g&&SPN_Q.d===S.day&&SPN_Q.n===n&&g)return SPN.v;SPN_Q={g,d:S.day,n}}catch(e){}let key;try{key=S.day+'|'+thS().sh.length+'|'+thS().sh.filter(x=>x.st=='sched').map(x=>x.id+':'+JSON.stringify(x.rp||{})+JSON.stringify(x.sw||{})).join(',').length+'|'+(S.members||[]).length}catch(e){return{list:[],u:[]}}
  if(SPN.k==key)return SPN.v;const list=[],seen={},U=[],uSeen=new Set();
  try{const sh=thS().sh.filter(x=>x.st=='sched'&&x.day>S.day&&x.day<=S.day+SPR.HOR).sort((a,b)=>a.day-b.day||(a.sl=='a'?-1:1));const firstOf={};
   const SC={};sh.forEach(x=>{const man=(x.rp&&Object.keys(x.rp).length)||(x.sw&&Object.keys(x.sw).length);let C;if(x.day<=S.day+7||man)C=thCheck(x);else{const T=thOf(x.k),s0=thStageFor(T,x);if(!s0)return;if(SC[x.k+'|'+s0.id])return;SC[x.k+'|'+s0.id]=1;C={s:s0,miss:[],rp:{}}}const s=C.s;if(!s)return;const out=new Set(C.miss.map(z=>z.id));if(!firstOf[x.k])firstOf[x.k]={x,s,C};
@@ -26078,7 +26080,7 @@ try{Object.assign(CFG.aud.street,{base:300000,per:3000});Object.assign(CFG.aud.c
 try{EV.handshake.cost=600000;EV.concert.cost=1500000;EV.election.cost=1500000;EV.anniv.cost=2500000;EV.janken.cost=600000}catch(e){}
 try{CFG.rs.venue={1:400000,2:800000,3:1500000}}catch(e){}
 const FIN_COSTUME=45000; // one stage outfit (design, fabric, sewing, fittings)
-{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;if(p&&p.status!='draft'&&p._fcn!=null)n=p._fcn;else{(typeof usedSongs=='function'?usedSongs(p):[]).forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(p&&p.status!='draft')p._fcn=n}if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
+{const f=cost;cost=function(p){const r=f.apply(this,arguments);try{let n=0;if(p&&p.status!='draft'&&p._fcn!=null)n=p._fcn;else{[...new Set([p.mainId,...(r&&r.u?[...r.u]:(p.types||[]).flatMap(t=>t.songs))])].forEach(i=>{const o=S.songs[i];if(o)n+=(o.slots||[]).filter(x=>x!=null).length});if(p&&p.status!='draft')p._fcn=n}if(n){const a=n*FIN_COSTUME;r.L.push([`Costume production ×${n} outfits`,a]);r.t+=a}}catch(e){}return r}}
 // external work: fees at market level (the old formula paid 4–5× the going rate)
 {const f=xePay;xePay=function(r){return Math.max(30000,Math.round(f.apply(this,arguments)*.2/10000)*10000)}}
 // roadshows: a release event venue holds only so many people per day
@@ -26398,10 +26400,13 @@ function srxNoSp(fn){const L=[...(S.members||[]),...(S.alumni||[])],keep=[];L.fo
 function srxAllRel(){const out=[];(S.singles||[]).forEach((x,i)=>{if(x.kind!='album')out.push({c:'single',x,i,d:x.relDay??x.day})});(S.albums||[]).forEach(a=>out.push({c:'album',x:a,d:a.relDay??a.day}));
  (srxS().list||[]).filter(sp=>sp.st=='released'&&sp.rec).forEach(sp=>out.push({c:sp.kind=='album'?'salbum':'ssingle',x:sp.rec,sp,d:sp.rec.relDay??sp.rec.day}));return out.sort((a,b)=>(b.d??0)-(a.d??0))}
 const SRX_CATS=[['all','All releases','ทั้งหมด'],['single','Singles','ซิงเกิล'],['ssingle','Special Singles','ซิงเกิลพิเศษ'],['album','Albums','อัลบั้ม'],['salbum','Special Albums','อัลบั้มพิเศษ']];
+// discography thumbnails: a released cover never changes, so it is drawn once and shown as a cached image (a full inline cover is thousands of page elements)
+const SRX_IMG=new WeakMap();
+function srxThumb(cv,w){if(!cv)return'';let M=SRX_IMG.get(cv);if(!M){M={};SRX_IMG.set(cv,M)}if(M[w])return M[w];let h;try{let svg=coverSvg(cv,{size:w});if(!/xmlns=/.test(svg.slice(0,300)))svg=svg.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"');const u=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));h=`<img class="srxth" src="${u}" width="${w}" height="${w}" alt="" decoding="async">`}catch(e){h=coverSvg(cv,{size:w})}M[w]=h;return h}
 function srxDiscHtml(){const t=ui.srxdt||'all',L=srxAllRel().filter(r=>t=='all'||r.c==t),N={single:SRX_T('Single','ซิงเกิล'),album:SRX_T('Album','อัลบั้ม'),ssingle:SRX_T('Special Single','ซิงเกิลพิเศษ'),salbum:SRX_T('Special Album','อัลบั้มพิเศษ')};
  return`<div class="row srxtabs">${SRX_CATS.map(([k,en,th])=>`<button class="b s ${t==k?'on p':''}" onclick="ui.srxdt='${k}';render()">${SRX_T(en,th)}</button>`).join('')}</div>${L.map(r=>{const x=r.x,sp=r.sp,cv=r.c=='single'?fc(x):(x.covers&&(x.covers['Album Cover']||Object.values(x.covers)[0])),units=sp&&sp.fmt=='digital'?((x.dig&&x.dig.units)||x.sales||0):(x.sales||0);
   const click=r.c=='single'?`showEds(${r.i})`:sp?`srxShow('${sp.id}')`:'';
-  return`<div class="row disc" ${click?`onclick="${click}"`:''}>${cv?coverSvg(cv,{size:46}):`<span class="cover" style="width:34px;height:34px;background:${x.color||'#cdbdf5'}"></span>`}<span class="tag ${r.c=='single'||r.c=='ssingle'?'tmain':'tcoup'} ${sp?'srxtag':''}">${N[r.c]}</span>${sp?`<span class="tag">${srxFmtN(sp)}</span>`:`#${x.num||''}`} ${esc(String(x.title||'').replace(/^Album: /,''))} – ${units.toLocaleString()} ${sp&&sp.fmt=='digital'?SRX_T('downloads','ดาวน์โหลด'):SRX_T('sold','ขายแล้ว')}${r.d!=null?` · ${SRX_T('released','วางจำหน่าย')} ${jd(r.d)}`:''}</div>`}).join('')||`<p class="st">${SRX_T('No releases yet.','ยังไม่มีผลงาน')}</p>`}`}
+  return`<div class="row disc" ${click?`onclick="${click}"`:''}>${cv?srxThumb(cv,46):`<span class="cover" style="width:34px;height:34px;background:${x.color||'#cdbdf5'}"></span>`}<span class="tag ${r.c=='single'||r.c=='ssingle'?'tmain':'tcoup'} ${sp?'srxtag':''}">${N[r.c]}</span>${sp?`<span class="tag">${srxFmtN(sp)}</span>`:`#${x.num||''}`} ${esc(String(x.title||'').replace(/^Album: /,''))} – ${units.toLocaleString()} ${sp&&sp.fmt=='digital'?SRX_T('downloads','ดาวน์โหลด'):SRX_T('sold','ขายแล้ว')}${r.d!=null?` · ${SRX_T('released','วางจำหน่าย')} ${jd(r.d)}`:''}</div>`}).join('')||`<p class="st">${SRX_T('No releases yet.','ยังไม่มีผลงาน')}</p>`}`}
 function srxShow(id){const sp=srxGet(id);if(!sp)return;const x=sp.rec,songs=srxSongs(sp),dig=sp.fmt=='digital';const C=x?x.covers||{}:sp.cov||{};
  const tr=songs.map((o,k)=>{const cen=(o.centers&&o.centers.length?o.centers:o.center!=null?[o.center]:[]).map(get).filter(Boolean);const n=(o.slots||[]).filter(Boolean).length;return`<li><b>${esc(o.title)}</b> <span class="tag ${o.id==(x||sp.pj||{}).mainId?'tmain':'tcoup'}">${o.id==(x||sp.pj||{}).mainId?SRX_T('Main song','เพลงหลัก'):SRX_T('Secondary song','เพลงรอง')}</span> <span class="st">${n} ${SRX_T('members','คน')}${cen.length?' · Center '+cen.map(m=>esc(m.name)).join(', '):''}</span></li>`}).join('');
  const st=srxStatus(sp);ui.mod={t:'html',h:`<h2 class="ht">${esc(srxTitle(sp))}</h2><div class="row"><span class="tag srxtag">${srxKindN(sp)}</span><span class="tag">${srxFmtN(sp)}</span><span class="tag srxst ${st[0]}">${st[1]}</span></div>
@@ -26409,7 +26414,7 @@ function srxShow(id){const sp=srxGet(id);if(!sp)return;const x=sp.rec,songs=srxS
  ${x?`<p class="st">${SRX_T('Released','วางจำหน่าย')} ${jd(x.relDay??x.day)} · ${dig?`${((x.dig&&x.dig.units)||x.sales||0).toLocaleString()} ${SRX_T('downloads','ดาวน์โหลด')}`:`${(x.sales||0).toLocaleString()} ${SRX_T('CDs sold','ซีดีที่ขายได้')}`} · ${SRX_T('no handshake tickets','ไม่มีบัตรจับมือ')}</p>`:''}
  <div class="c"><h3>${sp.kind=='album'?SRX_T('Tracklist','รายชื่อเพลง'):SRX_T('Songs','เพลง')}</h3><ol class="ms">${tr}</ol></div>${x&&x.sale&&typeof seSaleBox=='function'&&!dig?seSaleBox(x):''}`};render()}
 function srxCard(sp){const st=srxStatus(sp),cv=srxCover(sp),d=srxRelDay(sp),songs=srxSongs(sp);
- return`<div class="c srxcard"><div class="srxcv" onclick="srxOpen('${sp.id}')">${cv?coverSvg(cv,{size:110}):`<div class="cover empty-cover" style="width:110px;height:110px">${SRX_T('No artwork','ยังไม่มีปก')}</div>`}</div><div class="srxinfo"><b>${esc(srxTitle(sp))}</b>
+ return`<div class="c srxcard"><div class="srxcv" onclick="srxOpen('${sp.id}')">${cv?(sp.st=='released'?srxThumb(cv,110):coverSvg(cv,{size:110})):`<div class="cover empty-cover" style="width:110px;height:110px">${SRX_T('No artwork','ยังไม่มีปก')}</div>`}</div><div class="srxinfo"><b>${esc(srxTitle(sp))}</b>
  <div class="row"><span class="tag">${srxFmtN(sp)}</span><span class="tag srxst ${st[0]}">${st[1]}</span></div><div class="st">${d!=null?(sp.st=='released'?SRX_T('Released ','วางจำหน่าย ')+jd(d):SRX_T('Release day ','วันวางจำหน่าย ')+jd(d)):SRX_T('Release day not set yet','ยังไม่กำหนดวันวางจำหน่าย')}</div>
  <${sp.kind=='album'?'ol':'ul'} class="ms srxtr">${songs.slice(0,10).map(o=>`<li>${esc(o.title)}${o.id==(sp.rec||sp.pj||{}).mainId?' <span class="tag tmain">'+SRX_T('Main','หลัก')+'</span>':''}</li>`).join('')}</${sp.kind=='album'?'ol':'ul'}>
  <div class="row"><button class="b s p" onclick="srxOpen('${sp.id}')">${sp.st=='released'?SRX_T('View','ดู'):SRX_T('Open','เปิด')}</button>${sp.st=='draft'?`<button class="b s" onclick="srxDel('${sp.id}')">${SRX_T('Delete draft','ลบร่าง')}</button>`:''}</div></div></div>`}
