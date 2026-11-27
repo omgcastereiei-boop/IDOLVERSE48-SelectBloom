@@ -1199,3 +1199,7 @@ Part of the Fan Community: a drama is a normal thread whose replies come from se
 - Each performance can be put on any date and slot (days may be apart); two performances never share a date and slot; only performance days are rented / booked.
 - Confirmed concerts can be postponed (+7 / +14 / +21 / +30 days, all performances together).
 - Protection: duplicate slots are separated automatically; an unconfirmed concert whose date arrives is moved forward with a notice; ticket sales never open after the first performance; a cancelled Request Hour concert can be organized again from the Request Hour results (the ranking is kept).
+
+## Scheduled songs & Concert Premiere (cc-premiere.js)
+- Songs of a single / album in production (release day fixed) appear in the Concert and Stage song pickers with their release date. A concert performance that sings one must be on or after the release day; a Stage that uses one must have its first performance on or after it (Stages already performing can add it once released).
+- Concert Premiere (Single Production): choose a performance of a concert being prepared; the release day becomes that day, every song of the single / album must be in that performance's setlist, and the release picture is that concert performance at its venue. A moved concert moves the release; a cancelled one ends the premiere (normal release).
