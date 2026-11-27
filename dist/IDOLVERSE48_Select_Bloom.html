@@ -7550,8 +7550,8 @@ function geApplyNext(){const e=geS().list.find(z=>z.st=='done'&&z.next&&!z.next.
  LS.slice(1).forEach(L=>{if(p.coup.length>=CFG.maxTypes*(CFG.maxPerType-1))return;const o=mkSong('Coupling',{title:`${L.name} Song`});geSetLine(o,L.ids,e,L);p.coup.push(o.id);let t=p.types.find(t=>t.songs.length<CFG.maxPerType);if(!t&&p.types.length<CFG.maxTypes){t={name:'Type '+String.fromCharCode(65+p.types.length),songs:[p.mainId]};p.types.push(t)}if(t)t.songs.push(o.id)});
  p.geNext=e.id;e.next.applied=true;e.next.day=S.day;e.next.songs=[p.mainId,...p.coup.filter(id=>S.songs[id]&&S.songs[id].ge)];syncSaved();try{syncEds()}catch(x){}toast(`${e.name}: the ranking groups are now the locked lineups of this single.`);return true}
 const _geNewPj=newPj;newPj=function(){const r=_geNewPj.apply(this,arguments);try{geApplyNext()}catch(x){console.error(x)}return r};
-// the lineups of election songs can be edited like any song; only removing an election song from the single stays locked
-const geBlock=(id,hard)=>{const o=geSong(id);if(hard&&o&&(S.pj&&S.pj.status=='draft')){toast(`🔒 "${o.title}" uses the ${o.ge.ed} results (${o.ge.name}); it cannot be removed from this single.`,'err');return true}return false};
+// election songs: the lineup, formation and Center come from the final results and cannot be edited or removed
+const geBlock=(id,hard)=>{const o=geSong(id);if(o&&S.pj&&S.pj.status=='draft'&&[S.pj.mainId,...(S.pj.coup||[])].includes(o.id)){const th=typeof UIP!='undefined'&&UIP.lang=='th';toast(hard?(th?`🔒 “${o.title}” ใช้ผลจาก ${o.ge.ed} (${o.ge.name}) จึงนำออกจากซิงเกิลนี้ไม่ได้`:`🔒 "${o.title}" uses the ${o.ge.ed} results (${o.ge.name}); it cannot be removed from this single.`):(th?`🔒 ไลน์อัพ โฟเมชั่น และเซ็นเตอร์ของ “${o.title}” มาจากผล ${o.ge.ed} (${o.ge.name}) แก้ไขไม่ได้`:`🔒 The lineup, formation and Center of "${o.title}" come from the ${o.ge.ed} results (${o.ge.name}) and cannot be edited.`),'err');return true}return false};
 const geCurSong=()=>ui.es;
 [['fmAssign',0],['fmRemove',0],['fmSwap',0],['fmClear',0],['fmRandom',0],['autoAdv',0],['setSize',0],['setNc',0],['applyReshape',0],['rowAdj',0],['addRow',0],['rmRow',0],['resetForm',0],['fmDrop',0],['fmSave',0]].forEach(([n])=>{const f=window[n];if(typeof f!='function')return;window[n]=function(){if(geBlock(geCurSong()))return render();return f.apply(this,arguments)}});
 {const f=editLine;editLine=function(id){if(geBlock(id))return render();return f.apply(this,arguments)}}
@@ -10522,6 +10522,8 @@ function geProfRank(m){if(!m||!S||!S.groups)return null;let best=null;S.groups.f
 {const f=profHtml;profHtml=function(m,cand){let h=f.apply(this,arguments);try{if(cand)return h;const P=geProfRank(m);if(!P)return h;const lab={'1':'Kami 7 · 1st place','2':'Kami 7 · 2nd place','3':'Kami 7 · 3rd place',k7:'Kami 7',sen:'Senbatsu',rk:''}[P.k];
  const badge=`<div class="gepfb gepfb-${P.k}"><span class="gepfr">TOP ${P.row.rank}</span><span>${esc(P.e.name)}${S.groups.length>1?' · '+esc(P.g.name):''}${lab?` · <b>${lab}</b>`:''}</span></div>`;
  if(P.k!='rk')h=h.replace('<div class="pf">',`<div class="pf gefr gefr-${P.k}">`);h=h.replace('</h2>','</h2>'+badge)}catch(e){console.error(e)}return h}}
+// election songs: no Senbatsu / formation editing buttons; the lineup comes from the final results
+{const f=plSenBox;plSenBox=function(p,o,dis,sum){if(o&&o.ge&&p&&p.status=='draft'){const th=typeof UIP!='undefined'&&UIP.lang=='th',n=(o.slots||[]).filter(Boolean).length;return`<div class="plsenb">${sum(o)}<div class="row"><span class="tag">🔒 ${esc(o.ge.name)}</span><span class="st">${th?`ไลน์อัพ ${n} คน โฟเมชั่น และเซ็นเตอร์มาจากผล ${esc(o.ge.ed||'')} แก้ไขไม่ได้`:`${n} members, formation and Center come from the ${esc(o.ge.ed||'')} results and cannot be edited.`}</span></div></div>`}return f.apply(this,arguments)}}
 
 </script>
 <script>
