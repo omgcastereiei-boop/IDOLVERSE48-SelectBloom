@@ -22,3 +22,11 @@ function ccAddMCEnc(){const s=ce2Set();if(!s)return;const ids=new Set(s.items.ma
   // the encore block goes after the main buttons (bottom of the card)
   const pe=rest.indexOf('<p class="st">Tap a song');if(pe>=0)rest=rest.slice(0,pe)+encBlock+rest.slice(pe);else rest=encBlock+rest;
   h=h.slice(0,a)+`<ol class="thtl cctl">${main||`<li class="st">The setlist is empty.</li>`}</ol>`+rest}catch(e){console.error(e)}return h}}
+// ---- round 2 --------------------------------------------------------------------------------------------------------------
+// new songs: from "Add Encore songs" → always the LAST Encore song; from "Add songs" → never Encore (main setlist, before the Encore)
+{const f=ccAddSong;ccAddSong=function(){const C=ccCur(),s=C&&C.sets[ui.ccs];if(!s||(C&&C.rh))return f.apply(this,arguments);const enc=!!s.encMode,before=new Set(s.items.map(x=>x.id));const r=f.apply(this,arguments);
+ try{const nw=s.items.filter(x=>!before.has(x.id));nw.forEach(x=>{if(enc)x.enc=1;else delete x.enc});if(enc&&nw.length)s.items=s.items.filter(x=>!nw.includes(x)).concat(nw);ccEncSort(s)}catch(e){console.error(e)}return r}}
+// Encore mode lasts only while the song picker opened by "Add Encore songs" is open
+{const f=render;render=function(){try{if(S&&!(ui.mod&&ui.mod.ccpk)&&typeof ccS=='function'&&ui.cc){const C=ccGet(ui.cc),s=C&&C.sets&&C.sets[ui.ccs];if(s&&s.encMode)s.encMode=0}}catch(e){}return f.apply(this,arguments)}}
+// no "EN" button on each song: songs enter the Encore only through "Add Encore songs"
+{const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{h=h.replace(/<button[^>]*onclick="ccEncTog\('[^']*'\)"[^>]*>EN<\/button>/g,'')}catch(e){}return h}}
