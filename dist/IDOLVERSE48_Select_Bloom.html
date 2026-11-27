@@ -32206,13 +32206,13 @@ const I18N={cache:new Map(),re:null};
 function i18nLang(){if(!UIP.lang)UIP.lang=/^th/i.test(navigator.language||'')?'th':'en';return UIP.lang}
 function i18nBuild(){if(I18N.re)return;const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  const keys=Object.keys(I18N_TH).filter(k=>/[^A-Za-z]/.test(k)&&/[A-Za-z]{2}/.test(k)&&k.length>3).sort((a,b)=>b.length-a.length);
- I18N.re=new RegExp('(^|[^A-Za-z])('+keys.map(esc).join('|')+')(?![A-Za-z])','g'); // no lookbehind: older Safari (iOS < 16.4) cannot parse it
- I18N.tpl=(typeof I18N_TH_TPL!='undefined'?I18N_TH_TPL:[]).flatMap(([e,t])=>{const l=(e.match(I18N_SYM)||[''])[0];return l&&l.length<e.length&&t.startsWith(l)&&/[A-Za-z]{3}/.test(e.slice(l.length).replace(/\{\d\}/g,''))?[[e,t],[e.slice(l.length),t.slice(l.length)]]:[[e,t]]}).map(([e,t])=>{const raw=new Set([...e.matchAll(/[“"]\{(\d)\}[”"]/g)].map(m=>+m[1]));const num=/^\{0\} [^{}]*$/.test(e)&&e.split(' ').length<=3;const dot=e.includes(' · ');let r=esc(e).replace(/\\\{(\d)\\\}/g,dot?'(.+?)':'((?:(?! · ).)+?)');if(num)r=r.replace(/^\(\(\?:\(\?! · \)\.\)\+\?\)/,'([\\d][\\d,./%]*)');return[new RegExp('^'+r+'$'),t,dot,raw]});
+ I18N.re=true;I18N.kx=new Map();keys.forEach(k=>{const h=k.slice(0,2);let L=I18N.kx.get(h);if(!L)I18N.kx.set(h,L=[]);L.push(k)}); // phrase index by first two characters (longest first) — the same matches as one big regex, without its cost
+ I18N.tpl=(typeof I18N_TH_TPL!='undefined'?I18N_TH_TPL:[]).flatMap(([e,t])=>{const l=(e.match(I18N_SYM)||[''])[0];return l&&l.length<e.length&&t.startsWith(l)&&/[A-Za-z]{3}/.test(e.slice(l.length).replace(/\{\d\}/g,''))?[[e,t],[e.slice(l.length),t.slice(l.length)]]:[[e,t]]}).map(([e,t])=>{const raw=new Set([...e.matchAll(/[“"]\{(\d)\}[”"]/g)].map(m=>+m[1]));const num=/^\{0\} [^{}]*$/.test(e)&&e.split(' ').length<=3;const dot=e.includes(' · ');let r=esc(e).replace(/\\\{(\d)\\\}/g,dot?'(.+?)':'((?:(?! · ).)+?)');if(num)r=r.replace(/^\(\(\?:\(\?! · \)\.\)\+\?\)/,'([\\d][\\d,./%]*)');const an=e.split(/\{\d\}/).sort((x,y)=>y.length-x.length)[0]||'';return[new RegExp('^'+r+'$'),t,dot,raw,an]}); // an: its longest fixed text — a sentence without it cannot match, so the regex is skipped
  const M=Object.keys(I18N_TH_MON).join('|');I18N.dRe=[[new RegExp('\\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun), ','g'),(m,d)=>I18N_TH_DAY[d]+' '],[new RegExp('\\b('+M+') (\\d{1,2}), (\\d{4})','g'),(m,a,b,c)=>`${b} ${I18N_TH_MON[a]} ${c}`],[new RegExp('\\b('+M+') (\\d{4})\\b','g'),(m,a,b)=>`${I18N_TH_MON[a]} ${b}`],[new RegExp('\\b('+M+') (\\d{1,2})\\b','g'),(m,a,b)=>`${b} ${I18N_TH_MON[a]}`]]}
 const I18N_SYM=/^[^A-Za-z0-9"'(¥~@]+/;
 function i18nCap(c){if(c==null)return'';c=c.replace(/^(\d+)(st|nd|rd|th)$/,'$1');return I18N_TH[c]!=null?I18N_TH[c]:/[A-Za-z]{2}/.test(c)?trCore(c):c}
 // one sentence (or a run of sentences) found in the dictionary or matching a sentence template; a template blank never spans a sentence break
-function i18nExact(s){const D=I18N_TH;if(D[s]!=null)return D[s];i18nBuild();for(const[re,t,,raw]of I18N.tpl){const m=s.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?](?:[”"])?\s|…\s/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null}
+function i18nExact(s){const D=I18N_TH;if(D[s]!=null)return D[s];i18nBuild();for(const[re,t,,raw,an]of I18N.tpl){if(an&&!s.includes(an))continue;const m=s.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?](?:[”"])?\s|…\s/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null}
 // speech and notes made of several sentences joined together: translate the longest known run of sentences at each point
 function i18nSent(k){if(k.length<12||!/[.!?…][”"]?\s+\S/.test(k))return null;const P=k.replace(/([.!?…][”"]?)\s+/g,'$1\u0001').split('\u0001');if(P.length<2||P.length>40)return null;
  const out=[];let hit=0;for(let i=0;i<P.length;){let done=0;for(let j=P.length;j>i;j--){const seg=P.slice(i,j).join(' '),q=seg.match(/^([“"]?)([\s\S]*?)([”"]?)$/),r=i18nExact(seg)??(q[1]||q[3]?i18nExact(q[2]):null);if(r!=null){out.push(I18N_TH[seg]!=null||!(q[1]||q[3])||i18nExact(seg)!=null?r:q[1]+r+q[3]);hit++;i=j;done=1;break}}if(!done){out.push(P[i]);i++}}
@@ -32220,7 +32220,7 @@ function i18nSent(k){if(k.length<12||!/[.!?…][”"]?\s+\S/.test(k))return null
 function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
  {const q=k.match(/^([“"])([^“”"]+)([”"])$/);if(q){const r=i18nExact(q[2])??i18nSent(q[2]);if(r!=null)return q[1]+r+q[3]}}
  {const r=i18nSent(k);if(r!=null)return r}
- const T=dotOnly=>{for(const[re,t,dot,raw]of I18N.tpl){if(dotOnly&&!dot)continue;const m=k.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?][”"]?\s+[A-Z“"]/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null};
+ const T=dotOnly=>{for(const[re,t,dot,raw,an]of I18N.tpl){if(dotOnly&&!dot)continue;if(an&&!k.includes(an))continue;const m=k.match(re);if(m&&!m.slice(1).some(g=>g&&/[.!?][”"]?\s+[A-Z“"]/.test(g)))return t.replace(/\{(\d)\}/g,(_,i)=>raw&&raw.has(+i)?m[+i+1]:i18nCap(m[+i+1]))}return null};
  const lead=(k.match(I18N_SYM)||[''])[0];if(lead&&lead.length<k.length){{const r=T(k.includes(' · ')?1:0);if(r!=null)return r}const core=k.slice(lead.length),r=trCore(core);return lead+r}
  if(k.includes(' · ')){const r=T(1);if(r!=null)return r;{const q=i18nSent(k);if(q!=null)return q}return k.split(' · ').map(p=>p.trim()?trCore(p.trim()):p).join(' · ')}
  {const r=T(0);if(r!=null)return r}
@@ -32228,7 +32228,10 @@ function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
  {const r=i18nSent(k);if(r!=null)return r}
  let out=k;for(const[r,v]of I18N_TH_RX)out=out.replace(r,v);for(const[r,f]of I18N.dRe)out=out.replace(r,f);
  out=out.replace(/(^|[^A-Za-z])([A-Z][a-z]+(?:(?: \/ | )[A-Z][a-z]+)?)(?= [\d¥~#+×]|:? ?\d)/g,(m0,pre,w)=>pre+(D[w]??w.split(' / ').map(x=>D[x]??x).join(' / ')));
- return out.replace(I18N.re,(m,pre,w)=>pre+(D[w]??w))}
+ return i18nPhr(out)}
+// replace every known phrase that stands on its own (not inside a longer word), leftmost and longest first
+const I18N_LT=c=>(c>=65&&c<=90)||(c>=97&&c<=122);
+function i18nPhr(s){const D=I18N_TH,X=I18N.kx,n=s.length;let out='',last=0,prev=0;for(let i=0;i<=n-4;i++){if(!(i==0||(i-1>=prev&&!I18N_LT(s.charCodeAt(i-1)))))continue;const L=X.get(s.substr(i,2));if(!L)continue;for(const k of L){if(s.startsWith(k,i)&&!I18N_LT(s.charCodeAt(i+k.length))){out+=s.slice(last,i)+(D[k]??k);last=prev=i+k.length;i=prev-1;break}}}return last?out+s.slice(last):s}
 // names the player chose (members, songs, singles, albums, groups, teams, units, stages, concerts) are never translated
 const I18N_NM={t:0,k:'',re:null,set:new Set()},I18N_NM_KEEP=new Set(['Center','Senbatsu','Theater','Single','Album','Concert','Main','Team','Under Girls','Trainee','Solo','Duet','Unit']);
 function i18nNames(){if(typeof S=='undefined'||!S||!S.members)return null;const now=Date.now();if(I18N_NM.re!==null&&now-I18N_NM.t<1500)return I18N_NM;I18N_NM.t=now;
