@@ -1993,3 +1993,31 @@ body.cvfs{overflow:hidden}body.cvfs .mod{z-index:80}
 .cdlv.l1{background:#8882;color:#666}.cdlv.l2{background:#e0a23a26;color:#a06c10}.cdlv.l3{background:#e05a5a26;color:#c03030}.cdlv.l4{background:#c0303a;color:#fff}
 .cdbar{margin:4px 0 10px;padding:10px;border-radius:12px;background:#00000008}.cdbar .row{gap:8px;align-items:center}.cdbar small{opacity:.75}
 .cdsplit{display:flex;height:8px;border-radius:999px;overflow:hidden;margin:6px 0;background:#0000000d}.cdsplit i{display:block;background:#e05a8a}.cdsplit i.b{background:#5a8ae0}.cdsplit i.n{background:#9aa}
+/* ---- Cover Studio round 3 ---- */
+.cv3tools{flex:1 0 100%;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 0 2px;align-items:center}.cv3tools::-webkit-scrollbar{display:none}
+.cv3tools .cvchip{flex:none;white-space:nowrap;font-size:12px;padding:6px 10px}.cv3sel{flex:none;max-width:190px;font-size:12px;padding:6px 8px;border-radius:999px}.cv3sep{flex:none;width:1px;align-self:stretch;background:var(--line)}
+.cvx.cvmob .cvtop .cvback span,.cvx.cvmob .cvtop .cvfsb span{display:none}.cvx.cvmob .cvtop .cvback,.cvx.cvmob .cvtop .cvfsb{flex:none!important;padding:0 8px}
+.cvx.cvmob .cvtop .cv3tools{order:99}
+details.cvdet{margin:8px 0;border:1.5px solid #f0bfd4;border-radius:14px;background:#fff7fb;overflow:hidden}
+details.cvdet>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#ffeaf3,#f6efff)}
+details.cvdet>summary::-webkit-details-marker{display:none}
+details.cvdet>summary .cv3chev{width:22px;height:22px;border-radius:50%;background:#e05a8a;flex:none;position:relative;transition:transform .15s}
+details.cvdet>summary .cv3chev::after{content:'';position:absolute;left:7px;top:6px;width:6px;height:6px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg)}
+details.cvdet[open]>summary .cv3chev{transform:rotate(180deg)}
+details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(summary){margin-left:10px;margin-right:10px}
+/* ---- MV round 2 ---- */
+.mv2sec h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mv2n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#ff8fc4,#b48cff);color:#fff;font:800 13px Quicksand;flex:none}
+.mv2sty{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.mv2one .mvxwrap{grid-template-columns:1fr!important}
+.mv2cats{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:thin}
+.mv2cat{flex:none;border:1px solid #f3c2d8;background:#fff;border-radius:999px;padding:7px 12px;font:700 12px Quicksand;color:var(--ink);cursor:pointer;min-height:36px;white-space:nowrap}
+.mv2cat.on{background:linear-gradient(135deg,#ff8fc4,#b48cff);color:#fff;border-color:transparent}
+.mv2act{gap:6px;align-items:center;flex-wrap:nowrap}.mv2act .mvscq{margin:0;flex:1;min-width:0}
+.mv2ovs{display:inline-flex;align-items:center;gap:4px}
+.mv2back{margin-top:6px}.mv2sort{gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.mv2hero{background:linear-gradient(135deg,#fff0f7,#f1ebff)}
+/* ---- concert encore block ---- */
+.ce2enc{margin-top:12px;border:2px dashed #f0b6d6;border-radius:16px;padding:8px;background:linear-gradient(180deg,#fff4fa,#fff)}
+.ce2hd{display:flex;align-items:center;gap:8px;margin-bottom:6px}.ce2hd b{letter-spacing:3px;color:#c25a9a;font:800 14px Quicksand}
+.ce2pk{margin:0 0 6px;text-align:center}

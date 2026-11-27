@@ -52,7 +52,7 @@ const evImgOf=id=>{const cal=(S.cal||[]).find(e=>e.id==id&&e.img);if(cal)return 
 // depth: smaller and higher), with a contact shadow under the feet.
 const EV_SVG=new WeakMap();
 const evT=s=>typeof tr=='function'?tr(s):s;
-const EV_POSES=[2,1,6,8,5,4,9,14,0,7,12,2,1,6];   // standing performance poses (no sitting / kneeling)
+const EV_POSES=[2,1,6,8,5,4,9,14,3,7,12,2,1,6];   // standing performance poses (no sitting / kneeling)
 function evFoot(z){try{return 80+94*dz({id:z.id,hue:z.h,ap:z.ap}).lf+9.4}catch(e){return 183}}
 function evFigOne(sp,z,pose,ex,cx,fy,s,shadow=1){const mem={id:z.id,name:z.n,hue:z.h,ap:z.ap,_x:1},cd=z.c!=null&&sp.cd?sp.cd[z.c]:null;let g='';
  try{g=fig(mem,{pose,of:z.of!=null?z.of:z.ap.of,oh:z.oh!=null?z.oh:z.ap.oh,ac:z.ap.ac,ex,...(cd?{cd}:{})})}catch(e){g=''}

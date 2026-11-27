@@ -19,7 +19,7 @@ function rcCvDesign(p,fp,rnd){const sel=p.tracks?p.tracks.map(t=>t.i):p.sel,perf
  // hsl colours are converted to hex so the colour pickers keep working
  const hx=c=>{const m=/hsl\((\d+),(\d+)%,(\d+)%\)/.exec(c);if(!m)return c;const H=+m[1]/360,Sx=+m[2]/100,L=+m[3]/100,f=k=>{const q=L<.5?L*(1+Sx):L+Sx-L*Sx,pp=2*L-q;let t=H+k;if(t<0)t++;if(t>1)t--;const v=t<1/6?pp+(q-pp)*6*t:t<1/2?q:t<2/3?pp+(q-pp)*(2/3-t)*6:pp;return Math.round(v*255).toString(16).padStart(2,'0')};return'#'+f(1/3)+f(0)+f(-1/3)};d.bg.c1=hx(d.bg.c1);d.bg.c2=hx(d.bg.c2);
  const order=thArr(ids),sp=n<=1?0:Math.min(110,360/(n-1)),sc=n<=1?2.3:n<=3?2:1.7;
- order.forEach((id,k)=>{const l=mkM(id);l.x=Math.round(256+(k-(n-1)/2)*sp);l.y=n<=1?300:310+Math.abs(k-(n-1)/2)*6;l.s=sc;l.pose=rnd?Math.floor(Math.random()*POSES.length):(id==ids[0]?3:0);const cz=rcCzOf(fp,id,sel);if(cz)l.cd=cz;d.layers.push(l)});
+ order.forEach((id,k)=>{const l=mkM(id);l.x=Math.round(256+(k-(n-1)/2)*sp);l.y=n<=1?300:310+Math.abs(k-(n-1)/2)*6;l.s=sc;l.pose=rnd?poseRnd():(id==ids[0]?3:0);const cz=rcCzOf(fp,id,sel);if(cz)l.cd=cz;d.layers.push(l)});
  const ttl=mkT('Title',fp.stName,256,64,46),grpT=mkT('Group Name',(grp(fp.gid)||{}).name||'',256,458,30),lbl=mkT('Edition Label','Studio Recording',400,494,18),no=mkT('Release Number',`${fp.team}${fp.stNo?' · '+ordN(fp.stNo)+' Stage':''}`,256,108,20);
  if(rnd){const pal=['#ffffff','#fff6a8','#ffe0ef','#1e1a28'];ttl.col=R(pal);ttl.olc=R(['#ff7eb6','#7a62c8','#2b2b5b','#f27aa6']);ttl.y=R([64,90,430]);grpT.y=ttl.y>400?40:458}
  d.layers.push(ttl,grpT,lbl,no);return d}

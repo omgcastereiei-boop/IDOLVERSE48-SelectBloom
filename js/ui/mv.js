@@ -139,7 +139,7 @@ function mvStyleArt(k,w){const s=MV_STY[k],id='mva'+(++PTC[0]),c=s.col,A={
 const mvLocArt=(L,w)=>mvScene(L.kind,L.ovs?'#c9b6ff':'#ffe3ef',L.ovs?'#6fb3e4':'#9fd3ff',w,L.n);
 // a thumbnail with the song's Senbatsu (centre members) wearing the song's costume in front of the location
 // cover poses: a random pose per member and MV, stable so the cover never changes between views
-const mvPose=(o,id)=>{const h=thHashS(o.id+':'+id+':'+((o.mv&&o.mv.style)||''));return parseInt(h,36)%NPOSE.length};
+const mvPose=(o,id)=>{const h=thHashS(o.id+':'+id+':'+((o.mv&&o.mv.style)||''));return POSE_OK[parseInt(h,36)%POSE_OK.length]};
 function mvThumb(o,w=160){const v=mvOf(o),L=mvLoc(v.loc),F=v.film,ids=(F?F.mem:mvSen(o).map(m=>m.id)).slice(0,7),cen=F?F.cen:(o.centers||[]);const ord=[...ids].sort((a,b)=>(cen.includes(b)?1:0)-(cen.includes(a)?1:0));const show=[];ord.forEach((id,i)=>{if(i%2==0)show.push(id);else show.unshift(id)});
  const figs=show.map((id,i)=>{const m=get(id);if(!m)return'';const a=ap(m),p=F&&F.cz[id]?S.mvCz[F.cz[id]]:czFor(o,id),x=80+(i-(show.length-1)/2)*Math.min(22,140/Math.max(1,show.length)),c=cen.includes(id);const fw=c?34:28;return`<svg x="${(x-fw/2).toFixed(1)}" y="${c?16:22}" width="${fw}" height="${fw*2.5}" viewBox="10 -2 80 200">${fig(m,{pose:mvPose(o,id),of:a.of,oh:a.oh,ac:a.ac,ex:2,...(p?{cd:p}:{})})}</svg>`}).join('');
  return`<svg class="mvth" viewBox="0 0 160 90" width="${w}" xmlns="http://www.w3.org/2000/svg">${mvScene(L.kind,L.ovs?'#c9b6ff':'#ffe3ef',L.ovs?'#6fb3e4':'#9fd3ff',160).replace(/^<svg[^>]*>/,'<g>').replace(/<\/svg>$/,'</g>')}${figs}<rect x="0" y="0" width="160" height="10" fill="#000" opacity=".35"/><text x="5" y="8" font-size="6.5" fill="#fff">▶ ${esc(MV_STY[v.style].n)}</text></svg>`}

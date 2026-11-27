@@ -157,7 +157,7 @@ function plCoverRand(ed){const p=S.pj;if(!p)return;const cur=S.cov[ed];const go=
   const d=newDesign(ed);d.bg={type:R(BGT),c1:R(pal),c2:R(pal),pc:R(['#ffffff','#fff6a8','#ffd3e6']),int:+(0.3+Math.random()*.5).toFixed(2),seed:rnd(1,99)};d.layers=d.layers.filter(l=>l.t!='m');
   const cen=(mn.centers||[]).filter(id=>ids.includes(id)),rest=ids.filter(id=>!cen.includes(id)).sort(()=>Math.random()-.5),pickN=Math.min(ids.length,R([1,2,3,3,5,5])),ms=[...cen,...rest].slice(0,pickN);
   const P={1:[[256,290,1.7]],2:[[330,270,1.4],[190,320,1.6]],3:[[256,250,1.3],[160,340,1.45],[352,340,1.45]],5:[[256,330,1.6],[180,250,1.1],[332,250,1.1],[110,350,1.35],[402,350,1.35]]}[ms.length]||[[256,290,1.7]];
-  const L=ms.map((id,i)=>{const l=mkM(id);inh(l,d);l.pose=rnd(0,POSES.length-1);const q=P[i]||P[0];l.x=q[0];l.y=q[1];l.s=q[2];return l});d.layers.unshift(...L.reverse());
+  const L=ms.map((id,i)=>{const l=mkM(id);inh(l,d);l.pose=poseRnd();const q=P[i]||P[0];l.x=q[0];l.y=q[1];l.s=q[2];return l});d.layers.unshift(...L.reverse());
   const pr=R(PRE);d.layers.filter(l=>l.t=='x').forEach(l=>{l.font=pr[1];l.col=pr[2];l.ol=pr[3];l.olc=pr[4];l.ls=pr[5];if(l.name=='Release Number')l.txt=(plAlb(p)?'Album #':'Single #')+p.num;if(l.name=='Single Title')l.txt=p.title||mn.title});
   const K=Object.keys(STK);for(let i=0;i<rnd(0,3);i++){const s=mkS(R(K));s.x=R([70,440,90,420]);s.y=R([110,150,400,430]);s.col=R(pal);s.s=+(1+Math.random()).toFixed(1);d.layers.push(s)}
   try{cvTextRand(d)}catch(e){}d.status='draft';S.cov[ed]=d;initCov(ed);view='cover';toast(`Random cover for ${ed} created. Edit anything, then save or confirm it.`);render()};

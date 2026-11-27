@@ -86,7 +86,7 @@ function cvRandPos(){const M=cvMs();if(!M.length)return toast('There is no membe
  const ord=M.slice().sort(()=>Math.random()-.5);ord.forEach((l,i)=>{const q=P[i]||P[0];l.x=Math.round(q[0]);l.y=Math.round(q[1]);l.s=q[2]});
  // draw back members first
  {const Ls=ui.cd.layers,ix=[];Ls.forEach((l,i)=>{if(l.t=='m')ix.push(i)});const ms=ix.map(i=>Ls[i]).sort((a,b)=>a.y-b.y);ix.forEach((i,k)=>Ls[i]=ms[k])}toast('Member positions shuffled.');render()}
-function cvRandPose(){const M=cvMs();if(!M.length)return toast('There is no member on this cover yet.','err');snap();M.forEach(l=>l.pose=rnd(0,POSES.length-1));toast('New poses for every member.');render()}
+function cvRandPose(){const M=cvMs();if(!M.length)return toast('There is no member on this cover yet.','err');snap();M.forEach(l=>l.pose=poseRnd());toast('New poses for every member.');render()}
 function cvRandText(){if(!ui.cd)return;snap();cvTextRand(ui.cd);toast('Texts moved.');render()}
 {const f=V.cover;V.cover=function(){const h=f.apply(this,arguments);return h.replace('<div class="row" style="justify-content:center"><button class="b s" onclick="undo()">Undo</button>',`<div class="row cvrand" style="justify-content:center"><button class="b s" onclick="cvRandMem()">🎲 Random members</button><button class="b s" onclick="cvRandPos()">🎲 Random positions</button><button class="b s" onclick="cvRandPose()">🎲 Random poses</button><button class="b s" onclick="cvRandText()">🎲 Move texts</button></div><div class="row" style="justify-content:center"><button class="b s" onclick="undo()">Undo</button>`)}}
 // ---- Theater notices: short reasons ("Busy: Filming MV — names"), substitutes by name only (details in the summary) --------
