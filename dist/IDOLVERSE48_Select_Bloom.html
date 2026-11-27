@@ -25681,6 +25681,24 @@ function ccAddMCEnc(){const s=ce2Set();if(!s)return;const ids=new Set(s.items.ma
 {const f=render;render=function(){try{if(S&&!(ui.mod&&ui.mod.ccpk)&&typeof ccS=='function'&&ui.cc){const C=ccGet(ui.cc),s=C&&C.sets&&C.sets[ui.ccs];if(s&&s.encMode)s.encMode=0}}catch(e){}return f.apply(this,arguments)}}
 // no "EN" button on each song: songs enter the Encore only through "Add Encore songs"
 {const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{h=h.replace(/<button[^>]*onclick="ccEncTog\('[^']*'\)"[^>]*>EN<\/button>/g,'')}catch(e){}return h}}
+// ---- round 3 --------------------------------------------------------------------------------------------------------------
+// "+▲ / +▼" (add above / below a song): the new song is placed exactly there. (The older code moved the last item of the list,
+// which is an Encore song once an Encore exists.) A song added next to an Encore song joins the Encore; next to a main song it is a main song.
+{const f=ccAddSong;ccAddSong=function(){const C=ccCur(),s=C&&C.sets[ui.ccs],I=ui.ccins;if(!s||(C&&C.rh)||!I)return f.apply(this,arguments);
+ const before=new Set(s.items.map(x=>x.id));ui.ccins=null;let r;try{r=f.apply(this,arguments)}finally{ui.ccins=I}
+ try{const nw=s.items.filter(x=>!before.has(x.id));if(nw.length){const L=s.items.filter(x=>!nw.includes(x)),j=L.findIndex(x=>x.id==I.iid);if(j>=0){const ref=L[j],enc=!!ref.enc;nw.forEach(x=>{if(enc)x.enc=1;else delete x.enc});L.splice(I.below?j+1:j,0,...nw);s.items=L;ccEncSort(s);ui.ccins={iid:nw[nw.length-1].id,below:1}}}}catch(e){console.error(e)}return r}}
+// ▲ on the first Encore song moves it out of the Encore (it becomes the last main song); ▼ on the last main song does not enter
+// the Encore (songs enter the Encore only through "Add Encore songs")
+{const f=ccItemMove;ccItemMove=function(iid,d){const C=ccCur(),r=C&&ccItem(C,iid);if(!r||!ccEdit(C)||(C&&C.rh)||r.it.k!='song')return f.apply(this,arguments);const L=r.s.items,i=L.indexOf(r.it);
+ if(d<0&&r.it.enc){let k=i-1;while(k>=0&&L[k].enc&&L[k].k!='song')k--;if(k<0||!L[k].enc){delete r.it.enc;L.splice(i,1);const firstEnc=L.findIndex(x=>x.enc);L.splice(firstEnc<0?L.length:firstEnc,0,r.it);ccEncSort(r.s);toast(CE2_T(`“${r.it.title}” moved out of the Encore.`,`ย้าย “${r.it.title}” ออกจากอังกอร์แล้ว`));render();return}}
+ if(d>0&&!r.it.enc){let k=i+1;while(k<L.length&&!L[k].enc&&L[k].k!='song')k++;if(k<L.length&&L[k].enc){toast(CE2_T('Songs join the Encore only with “Add Encore songs”.','เพลงจะเข้าอังกอร์ได้ผ่านปุ่ม “เพิ่มเพลงอังกอร์” เท่านั้น'),'err');return}}
+ return f.apply(this,arguments)}}
+// the "No. …" position list: a song moved into the main part leaves the Encore; a main song cannot be moved into the Encore
+function ccItemTo2(iid,to){const C=ccCur(),r=C&&ccItem(C,iid);if(!ccEdit(C)||!r)return;if(C.rh)return ccItemTo(iid,to);const L=r.s.items,i=L.indexOf(r.it);to=Math.max(0,Math.min(L.length-1,(+to|0)-1));if(to==i)return;
+ L.splice(i,1);const firstEnc=L.findIndex(x=>x.enc);const inEnc=firstEnc>=0&&to>firstEnc-(to>i?0:0)&&to>=firstEnc;
+ if(r.it.k=='song'){if(inEnc&&!r.it.enc){L.splice(i,0,r.it);return toast(CE2_T('Songs join the Encore only with “Add Encore songs”.','เพลงจะเข้าอังกอร์ได้ผ่านปุ่ม “เพิ่มเพลงอังกอร์” เท่านั้น'),'err')}if(!inEnc)delete r.it.enc}else{if(inEnc)r.it.enc=1;else delete r.it.enc}
+ L.splice(to,0,r.it);ccEncSort(r.s);toast(CE2_T(`“${r.it.title||r.it.name}” moved to No. ${L.indexOf(r.it)+1}.`,`ย้าย “${r.it.title||r.it.name}” ไปลำดับ ${L.indexOf(r.it)+1} แล้ว`));render()}
+{const f=ccSetHtml;ccSetHtml=function(C){let h=f.apply(this,arguments);try{if(!C.rh)h=h.replace(/onchange="ccItemTo\(/g,'onchange="ccItemTo2(')}catch(e){}return h}}
 
 </script>
 <script>
