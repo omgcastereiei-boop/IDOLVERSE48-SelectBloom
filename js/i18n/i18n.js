@@ -42,8 +42,8 @@ function i18nNames(){if(typeof S=='undefined'||!S||!S.members)return null;const 
   (S.groups||[]).forEach(g=>{add(g.name);(g.teams||[]).forEach(t=>add(t.name));const ctx=k=>g.id==S.ag?S[k]:(g.ctx||{})[k];Object.values(ctx('songs')||{}).forEach(o=>o&&add(o.title));(ctx('singles')||[]).forEach(x=>x&&add(x.title));(ctx('albums')||[]).forEach(x=>x&&add(x.title))});
   Object.values((S.th&&S.th.st)||{}).forEach(x=>x&&add(x.name));((S.cc&&S.cc.list)||[]).forEach(x=>x&&add(x.name))}catch(e){}
  const L=[...N].sort((a,b)=>b.length-a.length),key=L.length+'|'+L.slice(0,40).join('\u0001')+'|'+L.reduce((a,x)=>(a*31+x.length)%1000003,7);if(key===I18N_NM.k)return I18N_NM;
- const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');I18N_NM.k=key;I18N_NM.set=N;I18N_NM.re=L.length?new RegExp('(^|[^A-Za-z0-9])('+L.map(esc).join('|')+')(?![A-Za-z0-9])','g'):null;I18N.cache.clear();return I18N_NM}
-function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;const NM=i18nNames();let c=I18N.cache.get(s);if(c!=null)return c;
+ const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');I18N_NM.k=key;I18N_NM.set=N;I18N_NM.re=L.length&&L.length<=2500?new RegExp('(^|[^A-Za-z0-9])('+L.map(esc).join('|')+')(?![A-Za-z0-9])','g'):null;I18N.cache.clear();return I18N_NM}
+function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;let NM=null;try{NM=i18nNames()}catch(e){NM=null}let c=I18N.cache.get(s);if(c!=null)return c;
  let out;try{if(NM&&NM.set.has(k))out=s;else if(NM&&NM.re){const keep=[];const mk=k.replace(NM.re,(m0,pre,w)=>{keep.push(w);return pre+'\uE000'+String.fromCharCode(0xE100+keep.length-1)+'\uE001'});
    if(!keep.length)out=s.replace(k,trCore(k));else{const t=/[A-Za-z]{2}/.test(mk)?trCore(mk):mk;out=s.replace(k,t.replace(/\uE000([\uE100-\uEFFF])\uE001/g,(_,ch)=>keep[ch.charCodeAt(0)-0xE100]??''))}}
   else out=s.replace(k,trCore(k))}catch(e){out=s}
@@ -54,7 +54,7 @@ function i18nApply(root){const th=i18nLang()=='th',lg=th?'th':'en';if(document.d
  root.querySelectorAll('[placeholder],[title],[aria-label]').forEach(e=>{if(e.closest('svg'))return;['placeholder','title','aria-label'].forEach(a=>{const v=e.getAttribute(a);if(v&&/[A-Za-z]/.test(v)){const t=tr(v);if(t!==v)e.setAttribute(a,t)}})})}
 // hooks: every render, every toast
 const _i18nRender=render;render=function(){_i18nRender.apply(this,arguments);try{i18nApply()}catch(e){}};
-const _i18nToast=toast;toast=function(t,k){_i18nToast(tr(t),k)};
+const _i18nToast=toast;toast=function(t,k){let x=t;try{x=tr(t)}catch(e){}_i18nToast(x,k)};
 function setLang(l){uiPref('lang',l)}
 const langSwitch=()=>`<div class="langsw" data-notr role="group" aria-label="Language / ภาษา"><span>🌐</span><button class="${i18nLang()=='th'?'on':''}" onclick="setLang('th')">ไทย</button><button class="${i18nLang()=='en'?'on':''}" onclick="setLang('en')">English</button></div>`;
 const _i18nTitle=titleScreen;titleScreen=function(ok){return _i18nTitle(ok).replace('<div class="title">','<div class="title">'+langSwitch())};

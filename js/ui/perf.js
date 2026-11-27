@@ -13,6 +13,7 @@
 const SVP={lsOff:false,tm:null,dirty:false,n:0};
 try{SVP.lsOff=localStorage.getItem('iv48_lsoff')=='1'}catch(e){}
 save=function(){try{moneyOk()}catch(e){}if(!S||!svValid(S)){if(S)SV.warn='The game could not be saved because part of the game state is invalid. Export a save file from Management › Save & Load and report this.';return}SVP.dirty=false;clearTimeout(SVP.tm);SVP.tm=null;SVP.at=Date.now();let j;try{S._ts=Date.now();S._sv=SAVE_V;j=JSON.stringify(S);SVP.sz=j.length}catch(e){SV.lastErr='The game state could not be saved: '+e.message;console.error(e);return}
+ if(!SVP.lsOff&&j.length>4.5e6&&SV.db){SVP.lsOff=true;try{localStorage.removeItem(KEY)}catch(e){}try{localStorage.setItem('iv48_lsoff','1')}catch(e){}} // bigger than the browser's localStorage limit: IndexedDB only (no slow, memory-heavy failed write)
  let ok=false;const skip=!SVP.lsOff&&SV.dbOk&&!SVP.now&&SVP.n%10!=9;if(skip)ok=true;else if(!SVP.lsOff){try{localStorage.setItem(KEY,j);ok=true}catch(e){ok=false}}
  SV.idbMain=j;SVP.n++;clearTimeout(SV.t);const put=()=>svPut('main',j).then(r=>{
   SV.dbOk=!!r;if(!r&&skip){try{localStorage.setItem(KEY,j)}catch(e){}}
@@ -35,4 +36,4 @@ try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted(
 {const f=tick;tick=function(){try{moneyOk()}catch(e){}const r=f.apply(this,arguments);try{moneyOk()}catch(e){}return r}}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{moneyOk()}catch(e){}return r}}
 // phones may stop the page right after it is hidden, before the IndexedDB write finishes: keep a synchronous copy too
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden')return;try{if(S&&!ui.t&&SVP.lsOff&&SV.idbMain)localStorage.setItem(KEY,SV.idbMain)}catch(e){}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!='hidden')return;try{if(S&&!ui.t&&SVP.lsOff&&SV.idbMain&&SV.idbMain.length<4.5e6)localStorage.setItem(KEY,SV.idbMain)}catch(e){}});
