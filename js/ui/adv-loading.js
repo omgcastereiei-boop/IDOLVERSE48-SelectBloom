@@ -13,3 +13,8 @@ function advUI(n){n=Math.max(1,n|0);if(ADVL_ON||!S)return;ADVL_ON=1;let el=docum
 // faster days: a group's fan count is counted once per day state (it loops over every fan cohort and is asked many times)
 let ADVL_FC=null;
 if(typeof fdGroupFans=='function'){const f=fdGroupFans;fdGroupFans=function(gid){if(typeof PD_IN=='undefined'||!PD_IN||!S||!S.fb||!S.fb.segs||arguments.length>1)return f.apply(this,arguments);const k=S.day+'|'+S.fb.segs.length+'|'+(S.fans|0)+'|'+(S.fb.ver|0);if(!ADVL_FC||ADVL_FC.k!==k)ADVL_FC={k,m:new Map()};if(!ADVL_FC.m.has(gid))ADVL_FC.m.set(gid,f.apply(this,arguments));return ADVL_FC.m.get(gid)}}
+// smaller save: finished / expired / declined external events older than 120 days are removed (music programs stay:
+// they are part of each single's history). Their money is in the ledger and the fans / experience they gave are kept.
+function advlPruneXe(){try{const X=xeS(),lim=S.day-120,n=X.list.length;X.list=X.list.filter(r=>!(['done','expired','cancelled','declined'].includes(r.status)&&r.ch!='mp'&&(r.end??r.dl??r.day??S.day)<lim));return n-X.list.length}catch(e){return 0}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);advlPruneXe();return r}}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(dt().getDate()==1)advlPruneXe()}catch(e){}return r}}

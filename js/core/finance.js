@@ -67,11 +67,11 @@ function finPost(o){if(!S)return null;let a=Math.round(+o.a);if(!isFinite(a)||a=
  S.money+=cash;if(cash>=0){if(!FIN_FIN[cat])S.inc=(+S.inc||0)+cash}else{if(!FIN_FIN[cat])S.exp=(+S.exp||0)-cash}S.mOk=S.money;
  const F=finLedger(),id='TX'+(++F.seq);let gid=o.gid!=null?o.gid:FIN_GID;if(gid==null){try{gid=typeof GS_TXG!='undefined'&&GS_TXG!=null?GS_TXG:(typeof gsAg=='function'?gsAg():S.ag)}catch(e){gid=S.ag}}
  const proj=o.proj!==undefined?o.proj:finProjOf(l);
- const tx={id,co:S.co,gid,type:o.type||(typeof gsType=='function'?gsType(l):cat),io:cash>=0?'in':'out',amt:Math.abs(cash),day:S.day,desc:l,cat,src:o.src||finSrcOf(cat,l),v:2};
- if(gross!=null){tx.gross=gross;tx.ded=ded;tx.dl=opt.dl||o.dl||'Deductions'}if(o.mid!=null)tx.mid=o.mid;if(proj)tx.proj=proj;if(key)tx.key=key;if(o.rev)tx.rev=o.rev;if(o.units)tx.units=o.units;if(o.note)tx.note=o.note;
- F.tx.push(tx);if(F.tx.length>60000)F.tx.splice(0,F.tx.length-60000);
+ const tx={id,gid,type:o.type||(typeof gsType=='function'?gsType(l):cat),io:cash>=0?'in':'out',amt:Math.abs(cash),day:S.day,desc:l,cat,v:2};
+ if(gross!=null){tx.gross=gross;tx.ded=ded}if(o.ms)tx.ms=o.ms;if(o.mid!=null)tx.mid=o.mid;if(proj)tx.proj=proj;if(key)tx.key=key;if(o.rev)tx.rev=o.rev;if(o.units)tx.units=o.units;if(o.note)tx.note=o.note;
+ F.tx.push(tx);
  S.led.unshift({d:S.day,l,a:cash,_t:1,id});S.led.length=Math.min(S.led.length,80);
- if(key)X.keys[key]=id;
+ if(key)X.keys[key]=S.day;
  // monthly aggregate
  const ym=finYM(S.day),M=X.mon[ym]=X.mon[ym]||{inc:{},exp:{},fin:{},gross:0,ded:0,n:0};M.n++;
  if(FIN_FIN[cat])M.fin[cat]=(M.fin[cat]||0)+cash;else if(cash>=0)M.inc[cat]=(M.inc[cat]||0)+cash;else M.exp[cat]=(M.exp[cat]||0)-cash;if(gross!=null){M.gross+=gross;M.ded+=ded}
@@ -106,7 +106,9 @@ function finGroupsOf(m){if(!m||!S)return[];const out=[],grad=m.status=='graduate
  (S.groups||[]).forEach(g=>{if(finRealGroup(g)){if(grad)return;const main=(typeof gsGid=='function'?gsGid(m):m.group)==g.id,kn=m.kn&&m.kn.gid==g.id;if(main||kn)out.push(g)}else if((g.type=='unit'||g.type=='solo')&&finUnitActive(g)&&finRoster(g).includes(m.id))out.push(g)});return out}
 function finSalaryOf(m,day){const y=finYears(m,day),inc=y*FIN_SEN;const rows=finGroupsOf(m).map(g=>{const pos=finPosIn(m,g),base=FIN_SAL[pos]||FIN_SAL.member;return{gid:g.id,gn:g.name,pos,pn:FIN_POSN[pos],base,inc,amt:base+inc}});return{y,inc,rows,total:rows.reduce((a,r)=>a+r.amt,0)}}
 // member earnings (kept apart from the company's money)
-function finMemPay(m,k,a,l,o){if(!m||!(a>0))return;const E=m.earn=m.earn&&typeof m.earn=='object'?m.earn:{sal:0,job:0,ge:0};E[k]=(E[k]||0)+a;m.payH=Array.isArray(m.payH)?m.payH:[];m.payH.unshift({d:S.day,k,a,l,...(o||{})});if(m.payH.length>150)m.payH.length=150}
+function finMemPay(m,k,a,l,o){if(!m||!(a>0))return;const E=m.earn=m.earn&&typeof m.earn=='object'?m.earn:{sal:0,job:0,ge:0};E[k]=(E[k]||0)+a;m.payH=Array.isArray(m.payH)?m.payH:[];const h={d:S.day,k,a,l};if(o&&o.gid!=null)h.gid=o.gid;m.payH.unshift(h);
+ // salaries: last 12 months; jobs: last 40; revenue shares: all
+ const sal=m.payH.filter(x=>x.k=='sal'),job=m.payH.filter(x=>x.k=='job');if(sal.length>24||job.length>40){const ds=new Set([...sal.slice(24),...job.slice(40)]);m.payH=m.payH.filter(x=>!ds.has(x))}}
 // everyone who may receive a salary: current members + graduated members in an active unit / solo
 function finPayees(){const L=S.members.slice(),seen=new Set(L.map(m=>m.id));(S.groups||[]).forEach(g=>{if((g.type=='unit'||g.type=='solo')&&finUnitActive(g))finRoster(g).forEach(id=>{if(seen.has(id))return;const m=finMem(id);if(m){L.push(m);seen.add(id)}})});return L}
 function finPayroll(ym){let n=0,t=0;finPayees().forEach(m=>{const P=finSalaryOf(m);P.rows.forEach(r=>{const tx=finPost({a:-r.amt,l:`Member salaries: ${m.name} (${r.gn} · ${r.pn})`,cat:'msal',key:`sal:${ym}:${m.id}:${r.gid}`,mid:m.id,gid:r.gid,proj:null});if(tx){n++;t+=r.amt;finMemPay(m,'sal',r.amt,`Salary ${ym} · ${r.gn} · ${r.pn}`,{gid:r.gid,pos:r.pos,base:r.base,inc:r.inc,ym})}})});return{n,t}}
@@ -114,10 +116,17 @@ function finPayroll(ym){let n=0,t=0;finPayees().forEach(m=>{const P=finSalaryOf(
 // [label, base per unit (yen)] — unit = song recorded, filming day, performance, event day, appearance
 const FIN_JOB={rec:['Recording',12000],mv:['MV filming',20000],concert:['Concert performance',25000],theater:['Theater performance',8000],special:['Special Stage performance',8000],road:['Roadshow',15000],hs:['Handshake event',10000],xe:['External work',20000],mp:['Music program',20000],award:['Awards ceremony',15000],drama:['Drama',30000],ge:['Election ceremony',15000],reunion:['Special appearance',40000]};
 // pay = base × units (+ extra yen for workload); one transaction per member; the key prevents paying the same work twice
-function finJob(ids,kind,o){o=o||{};const J=FIN_JOB[kind];if(!J)return 0;let t=0;[...new Set(ids||[])].forEach(id=>{const m=finMem(id);if(!m)return;const units=Math.max(1,+(typeof o.units=='function'?o.units(id):o.units)||1),extra=Math.round(+(typeof o.extra=='function'?o.extra(id):o.extra)||0);
-  let a=Math.round(J[1]*units+extra);if(o.min)a=Math.max(a,o.min);if(!(a>0))return;const grad=m.status=='graduated'||!S.members.includes(m);
-  const tx=finPost({a:-a,l:`Job payment · ${o.lbl||J[0].toLowerCase()}: ${o.desc||''}${grad?' (special appearance)':''} — ${m.name}`,cat:'mjob',key:`job:${o.key}:${id}`,mid:id,gid:o.gid,proj:o.proj||null});
-  if(tx){t+=a;finMemPay(m,'job',a,`${J[0]}: ${o.desc||''}`,{kind,units})}});return t}
+function finJob(ids,kind,o){o=o||{};const J=FIN_JOB[kind];if(!J)return 0;const X=finS(),K='job:'+o.key;if(X.keys[K])return 0;const ms=[],who=[];
+ [...new Set(ids||[])].forEach(id=>{const m=finMem(id);if(!m||X.keys[K+':'+id])return;const units=Math.max(1,+(typeof o.units=='function'?o.units(id):o.units)||1),extra=Math.round(+(typeof o.extra=='function'?o.extra(id):o.extra)||0);
+  let a=Math.round(J[1]*units+extra);if(o.min)a=Math.max(a,o.min);if(!(a>0))return;ms.push([id,a]);who.push([m,a,units])});if(!ms.length)return 0;
+ const t=ms.reduce((x,y)=>x+y[1],0),one=who.length==1?who[0][0]:null,grad=one&&(one.status=='graduated'||!S.members.includes(one));
+ const tx=finPost({a:-t,l:`Job payment · ${o.lbl||J[0].toLowerCase()}: ${o.desc||''}${grad?' (special appearance)':''} — ${one?one.name:ms.length+' members'}`,cat:'mjob',key:K,mid:one?one.id:undefined,ms,gid:o.gid,proj:o.proj||null});
+ if(!tx)return 0;who.forEach(([m,a,units])=>finMemPay(m,'job',a,`${J[0]}: ${o.desc||''}`));return t}
+// keep the save small: transactions older than 400 days are folded into a per-group archive total (monthly reports and
+// project reports keep their totals); dedupe keys of finished work older than 400 days are dropped (the work itself is flagged)
+function finTrim(){const F=finLedger(),X=finS(),lim=S.day-400;if(!F.tx.length||F.tx[0].day>=lim)return;F.arch=F.arch||{};let n=0;
+ while(n<F.tx.length&&F.tx[n].day<lim){const t=F.tx[n],A=F.arch[t.gid]=F.arch[t.gid]||{inc:0,exp:0};if(t.io=='in')A.inc+=t.amt;else A.exp+=t.amt;n++}F.tx.splice(0,n);
+ for(const k in X.keys){const v=X.keys[k];if(typeof v!='number'){X.keys[k]=S.day;continue}if(v<lim)delete X.keys[k]}}
 // ---- operating costs (monthly, by size of the company) ------------------------------------------------------------------
 function finOpsPlan(){const act=S.members.filter(m=>m.status!='graduated'),N=act.length,real=(S.groups||[]).filter(finRealGroup),G=Math.max(1,real.length),T=real.reduce((a,g)=>a+((g.teams||[]).length),0),U=(S.groups||[]).filter(g=>(g.type=='unit'||g.type=='solo')&&finUnitActive(g)).length;
  const staffN=4+Math.ceil(N/3)+2*G+2*T+U,thL=(()=>{try{const P=(S.th&&S.th.pf)||[];return new Set(P.filter(p=>p.day>S.day-60).map(p=>String(p.k).split(':')[0])).size?G:0}catch(e){return 0}})(),fans=Math.max(0,S.fans||0);return{N,G,T,U,staffN,rows:[
@@ -146,7 +155,7 @@ function finTaxYearEnd(fy){const X=finS(),T=X.tax;if(T.hist.some(h=>h.fy==fy)||(
 function finTaxPay(){const T=finS().tax;T.due=T.due.filter(d=>{if(S.day<d.due)return true;finPost({a:-d.amt,l:`Corporate tax: fiscal year ${d.fy}`,cat:'tax',key:'tax:'+d.fy,proj:null});const h=T.hist.find(x=>x.fy==d.fy);if(h)h.paid=d.amt;return false})}
 // ---- the monthly accounting cycle (1st of each month; runs once per month) -------------------------------------------------
 function finMonthly(){if(!S)return;const X=finS(),ym=finYM(S.day);if(X.lastMon==ym)return;X.lastMon=ym;
- const pr=finPayroll(ym),op=finOps(ym);finLoanMonth(ym);
+ const pr=finPayroll(ym),op=finOps(ym);finLoanMonth(ym);try{finTrim()}catch(e){console.error(e)}
  const t=finDate(S.day);if(t.getMonth()==3)finTaxYearEnd(t.getFullYear()-1); // April 1: close the fiscal year that just ended
  finTaxPay();
  // Normal difficulty: a company that cannot cover its obligations receives an automatic bank loan (24 months, 3%/year)

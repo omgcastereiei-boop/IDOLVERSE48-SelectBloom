@@ -3,8 +3,9 @@
 //  (costumes, Senbatsu / formation, single production, cover, concerts, MV, events, bookings, contracts, stages …).
 //  The write goes through the normal debounced autosave, so several quick actions produce one save.
 // =====================================================================================
-let SVA_T=null;
-function svAct(){if(!S||!S.members||!S.members.length||ui.t)return;clearTimeout(SVA_T);SVA_T=setTimeout(()=>{try{SV_ADV++;try{svAuto()}finally{SV_ADV--}}catch(e){console.error(e)}},400)}
+let SVA_T=null,SVA_AT=0;
+// a big save (phones) is written at most once a minute after actions; the 5-minute timer and Next day still save
+function svAct(){if(!S||!S.members||!S.members.length||ui.t)return;const big=(typeof SVP!='undefined'&&(SVP.sz||0)>8e6);if(big&&Date.now()-SVA_AT<60000)return;SVA_AT=Date.now();clearTimeout(SVA_T);SVA_T=setTimeout(()=>{try{SV_ADV++;try{svAuto()}finally{SV_ADV--}}catch(e){console.error(e)}},400)}
 // a confirmed dialog = the player committed to something
 {const f=ask;ask=function(t,fn){const a=[...arguments];if(typeof fn=='function'){const g=fn;a[1]=function(){const r=g.apply(this,arguments);try{svAct()}catch(e){}return r}}return f.apply(this,a)}}
 ['czSave','ccDrSave','gczSave','pczSave','thCzSave','plCzSave','hzSave','xmSave','apSave','applyWard','cpApply','czAssignMain',

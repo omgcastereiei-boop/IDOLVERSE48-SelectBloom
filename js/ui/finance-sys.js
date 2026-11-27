@@ -71,7 +71,9 @@ function finMigrate(){if(!S)return;const X=finS();S.members.forEach(m=>finEmpSta
   try{(xeS().list||[]).forEach(r=>{if(r.status=='done')r.fj=1;else if(r.status=='open'||r.status=='accepted'){if(r.pay)r.pay=Math.max(30000,Math.round(r.pay*.2/10000)*10000)}})}catch(e){}
   finCtx(()=>{(S.singles||[]).forEach(x=>x.fj=1);Object.values(S.songs||{}).forEach(o=>{if(o.mv&&o.mv.film)o.mv.fj=1});((S.ge&&S.ge.list)||[]).forEach(e=>{if(e.st=='done'){e.fj=1;e.share=e.share||{legacy:1}}})});
   try{(drS().list||[]).forEach(p=>{if(['air','done'].includes(p.status))p.fj=1})}catch(e){}try{Object.values((S.aw&&S.aw.years)||{}).forEach(Y=>{if(Y.done)Y.fj=1})}catch(e){}}}
-{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{finMigrate()}catch(e){console.error('finance migrate',e)}return r}}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{finMigrate();finTrim()}catch(e){console.error('finance migrate',e)}return r}}
+// all-time group totals include the archived (older than 400 days) transactions
+{const f=gsFinOf;gsFinOf=function(gid,from){const r=f.apply(this,arguments);try{if(from==null){const A=gsFin().arch||{};Object.entries(A).forEach(([g,a])=>{if(gid==null||g==String(gid)){r.inc+=a.inc;r.exp+=a.exp}});r.net=r.inc-r.exp}}catch(e){}return r}}
 // ---- 7. loans, facilities -----------------------------------------------------------------------------------------------------
 const FIN_LOANS=[[10000000,24,.025],[30000000,36,.028],[100000000,60,.032]];
 function finLoanAsk(i){const[P,n,r]=FIN_LOANS[i];ask(FT(`Borrow ${yen(P)} for ${n} months at ${(r*100).toFixed(1)}% a year? Monthly repayment ${yen(finLoanPay(P,r,n))}.`,`กู้ ${yen(P)} ${n} เดือน ดอกเบี้ย ${(r*100).toFixed(1)}% ต่อปี? ผ่อนเดือนละ ${yen(finLoanPay(P,r,n))}`),()=>{finLoanTake(P,n,r,'Bank loan');render()},FT('Borrow','กู้'))}
