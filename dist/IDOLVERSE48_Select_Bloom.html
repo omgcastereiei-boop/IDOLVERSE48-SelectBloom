@@ -2136,6 +2136,14 @@ details.cvdet[open]>summary{border-bottom:1px solid #f0bfd4}details.cvdet>:not(s
 @keyframes advlsp{to{transform:rotate(360deg)}}
 .advlbar{width:100%;height:6px;border-radius:6px;background:#efe3f7;overflow:hidden;margin:4px 0}.advlbar i{display:block;width:40%;height:100%;border-radius:6px;background:linear-gradient(90deg,#ff8fc4,#b48cff);animation:advlbr 1.1s ease-in-out infinite;will-change:transform}
 @keyframes advlbr{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+/* ---- performance: no live blur behind bars / pop-ups (it is redrawn on every scroll frame and is very heavy on phones),
+   no endless animations on large character pictures, ---- */
+*,*::before,*::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.mod{background:rgba(50,32,72,.72)!important}
+.gpov{background:rgba(40,16,64,.7)!important}
+#advload{background:rgba(40,16,64,.72)!important}
+.tcast svg.chf,.vnart svg.chf{animation:none!important}
+.mc.rUR .mart::after{animation:sh 3.4s linear 1!important}
 
 </style>
 </head><body>
