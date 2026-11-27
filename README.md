@@ -1168,3 +1168,15 @@ Extends the existing character art engine and Character Creator; no separate sys
 - Per-song history (previous, best, years, streak, #1 / Top 3 / Top 10 / Top 25 years, years not ranked) in the results and in the song info pop-up; NEW / RETURN / movement badges.
 - Any single can be the Request Hour single, including General Election singles (CDs carry a ballot and a Request Hour code; the election's daily sales feed the voting codes), election-results singles and Janken singles; albums cannot (rh-ui.js).
 - Request Hour presentation: stage poster, five-step event timeline, launch card and a banner on the Concerts page (rh-ui.js).
+
+## Units & Solo Artists (units.js)
+Management › Units / Solo Artists. A unit (Permanent / Special / Shuffle, 2–12 members from any team or sister group, no Trainees) or a Solo Artist is its own production context in `S.groups` (`type:'unit'|'solo'`), so the normal single / album pipeline works for it through **Production**. Members keep their group and team; leaving the company removes them from rosters (history kept); disbanding is manual and stops new releases. Releases enter the same CD chart (artist tag Main / Sister / Unit / Solo) with demand from the members' own unique fans; awards: release categories for all, no group categories for solo artists, units not in main-group categories. No Senbatsu records or reactions for unit releases.
+
+## Fan Community (community-tpl.js, community.js) — replaces the old News system
+Fan Community section: All / Main Group / Sister Groups / Trending, threads with replies, fan campaigns.
+- Posts come only from real, public events found by a daily scan (announced Senbatsu, releases, first-week sales, MV view milestones, concerts, theater shows, roadshows, handshakes, elections, Request Hour, promotions, captains, awards, birthdays, special stages, graduation announcements, anniversaries, units) or from speculation built on public history (past lineups, centers, genres). Unannounced decisions are never mentioned.
+- Fan accounts belong to one group; who they support comes from the fan economy's Kami Oshi counts. Six writing styles; accounts rest between posts.
+- Anti-repetition: one post per meaning per event, same meaning about the same subject at most once in 21 days, per-line cool-downs, exact-text and similarity checks (names removed), reply meanings unique per thread. When nothing new can be said, nothing is posted.
+- Trending from the last 3 days' engagement (accounts, replies, likes, recency, relevance); campaigns start only after the same concern came back in separate discussions and end after 3 weeks or when the wish comes true.
+- Impact: aggregated and rate-limited, through the existing `gainPop` (medium: +0.3 at most weekly per member; high: a trending campaign, +0.8 at most every 3 weeks). Comments never touch fan counts directly.
+- English and Thai lines are written separately (not translated). Data in `S.cm` with retention limits; older saves initialise safely.
