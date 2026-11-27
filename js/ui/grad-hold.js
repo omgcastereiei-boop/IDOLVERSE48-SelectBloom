@@ -14,7 +14,7 @@ const ghSongs=x=>[x.mainId,...(x.coup||[]),...((x.tracks||[]).map(t=>t&&t.id))].
 const ghSelling=x=>!!(x&&x.sale&&(x.sale.eds||[]).some(e=>e.st=='selling'||e.st=='open'||e.st=='upcoming'));
 // what keeps her: singles in production she sings in; election singles of hers still on sale
 function ghHolds(m){const out=[];if(!m)return out;(S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const p=S.pj,inS=ids=>ids.some(i=>((S.songs[i]||{}).slots||[]).includes(m.id)||(((S.songs[i]||{}).fm||{}).sl||[]).some(z=>z&&z.m==m.id));
-  if(p&&p.status=='producing'&&inS(usedSongs(p)))out.push({k:'rel',t:p.title||'',gid:g.id});
+  if(p&&(p.status=='producing'||(p.status=='draft'&&p.ge))&&inS(usedSongs(p)))out.push({k:'rel',t:p.title||'',gid:g.id});
   (S.singles||[]).forEach(x=>{if(x.ge&&ghSelling(x)&&inS(ghSongs(x)))out.push({k:'sale',t:x.title||'',gid:g.id})})})}catch(e){console.error(e)}});return out}
 const ghTxt=h=>h.k=='rel'?GH_T(`release of “${h.t}”`,`การปล่อยซิงเกิล “${h.t}”`):GH_T(`CD sales of “${h.t}”`,`การขายซีดี “${h.t}”`);
 {const f=ctComplete;ctComplete=function(m,o){o=o||{};try{const G=m&&m.grad;if(G&&G.kind!='dismiss'&&!o.dismiss&&!o.ghForce){const H=ghHolds(m);if(H.length){const first=!G.hold;G.hold={since:(G.hold&&G.hold.since)||S.day,o:{...o},L:H.map(ghTxt)};
@@ -24,7 +24,7 @@ const ghTxt=h=>h.k=='rel'?GH_T(`release of “${h.t}”`,`การปล่อ�
 // the day nothing holds her any more, she graduates as planned
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S&&S.members)S.members.slice().forEach(m=>{const G=m.grad;if(!G||!G.hold||!S.members.includes(m))return;if(ghHolds(m).length)return;const o={...(G.hold.o||{}),ghForce:1};delete G.hold;ctComplete(m,o)})}catch(e){console.error(e)}return r}}
 // ---- repair: members who graduated during their election single's production come back -------------------------------------
-function ghRepair(){let n=0;if(!S||!S.groups)return 0;(S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const p=S.pj;if(!p||p.status!='producing'||!p.ge)return;const e=typeof geGet=='function'?geGet(p.ge):null;if(!e||!e.final||!e.final.rows)return;
+function ghRepair(){let n=0;if(!S||!S.groups)return 0;(S.groups||[]).forEach(g=>{try{gsWith(g.id,()=>{const p=S.pj;if(!p||!(p.status=='producing'||p.status=='draft')||!p.ge)return;const e=typeof geGet=='function'?geGet(p.ge):null;if(!e||!e.final||!e.final.rows)return;
   const from=e.vStart??p.startDay??0,rk=new Map(e.final.rows.filter(r=>r.rank).map(r=>[r.id,r.rank]));
   const seats=usedSongs(p).reduce((a,i)=>a+((((S.songs[i]||{}).fm||{}).sl||[]).length),0);
   const back=(S.alumni||[]).filter(m=>m&&rk.has(m.id)&&rk.get(m.id)<=seats&&m.dep&&m.dep.kind=='grad'&&(m.gradDay??0)>=from).sort((a,b)=>rk.get(a.id)-rk.get(b.id));if(!back.length)return;
@@ -48,3 +48,19 @@ const HX_RIDG=new Map();function hxRidGid(rid){if(rid==null)return null;if(HX_RI
 if(typeof apEff=='function'){const f=apEff;apEff=function(m){const a=f.apply(this,arguments);try{const A=typeof HX_AT!='undefined'?HX_AT:null;if(!A||!m||m._x||A.day==null)return a;const own=typeof gsGid=='function'?gsGid(m):m.group,cur=typeof gsAg=='function'?gsAg():null;if(own==null||own==cur)return a;
   const L=[...(m.czHist||[]),...(m.profCz?[m.profCz]:[])].filter(z=>z&&z.p&&(z.day??0)<=A.day);if(A.rid!=null&&L.some(z=>z.rid==A.rid))return a;
   const mine=L.filter(z=>z.rid==null?z.kind!='single':hxRidGid(z.rid)==own).sort((p,q)=>(q.day??0)-(p.day??0))[0];if(mine)return{...a,cd:mine.p}}catch(e){}return a}}
+
+// ---- last resort: an election single can always be released. A position left empty by a member who cannot come back
+//      (dismissed, or no record left) is taken by the best-ranked election participant who is not in the single yet;
+//      if nobody is left, by the best eligible member. --------------------------------------------------------------
+function ghFill(gid){let n=0;const run=()=>{const p=S.pj;if(!p||!p.ge||!(p.status=='producing'||p.status=='draft'))return;const e=typeof geGet=='function'?geGet(p.ge):null;
+  const songs=usedSongs(p).map(i=>S.songs[i]).filter(o=>o&&o.fm&&o.fm.sl);const used=new Set(songs.flatMap(o=>o.fm.sl.map(z=>z.m).filter(Boolean)));
+  const ok=m=>m&&S.members.includes(m)&&m.status!='graduated'&&!(m.grad&&!m.grad.hold&&m.grad.kind=='dismiss');
+  const ranked=((e&&e.final&&e.final.rows)||[]).filter(r=>r.rank).sort((a,b)=>a.rank-b.rank).map(r=>get(r.id)).filter(ok);
+  songs.forEach(o=>{const ord=slotOrder(o.fm).map(k=>o.fm.sl[k]).filter(z=>!z.m||!ok(get(z.m)));if(!ord.length)return;const E=new Set(elig(o).map(m=>m.id));
+   ord.forEach(z=>{const c=ranked.find(m=>!used.has(m.id)&&E.has(m.id))||elig(o).filter(m=>!used.has(m.id)).sort((a,b)=>b.pop-a.pop)[0];if(!c)return;z.m=c.id;used.add(c.id);n++;try{hev(c,{t:'ge_fill',txt:`Took an empty position in “${p.title||o.title}” (election single)`})}catch(x){}});
+   try{fmSync(o,!fmCheck(o).length)}catch(x){console.error(x)}});
+  if(n){try{if(typeof syncSaved=='function')syncSaved()}catch(x){}CTQ.push(`<div class="ctbd">${esc(GH_T(`An empty position in “${p.title}” was filled by the next election ranking, so the single can be released.`,`ตำแหน่งว่างใน “${p.title}” ได้คนจากอันดับเลือกตั้งถัดไปมาแทนแล้ว ปล่อยซิงเกิลได้ตามปกติ`))}</div>`)}};
+ try{gid==null?(S.groups||[]).forEach(g=>gsWith(g.id,run)):gsWith(gid,run)}catch(e){console.error(e)}return n}
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
+{const f=startSingle;startSingle=function(){try{if(S.pj&&S.pj.ge)ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
