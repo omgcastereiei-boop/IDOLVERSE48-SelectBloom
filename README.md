@@ -1194,3 +1194,8 @@ Part of the Fan Community: a drama is a normal thread whose replies come from se
 - Anti-repetition: the same conflict waits 30 days; line cool-downs, exact-text checks, each line once per thread, accounts at most twice per thread.
 - Impact: engagement, trending, fandom mood and "how fans see management" (descriptive). Level 3+ gives at most +0.15 popularity awareness per member per 30 days. No fan-count changes, no penalties.
 - Content stays on lineups, songs, performances and chances: no allegations, rumors or personal attacks.
+
+## Request Hour concert scheduling (rh-cc-fix.js)
+- Each performance can be put on any date and slot (days may be apart); two performances never share a date and slot; only performance days are rented / booked.
+- Confirmed concerts can be postponed (+7 / +14 / +21 / +30 days, all performances together).
+- Protection: duplicate slots are separated automatically; an unconfirmed concert whose date arrives is moved forward with a notice; ticket sales never open after the first performance; a cancelled Request Hour concert can be organized again from the Request Hour results (the ranking is kept).
