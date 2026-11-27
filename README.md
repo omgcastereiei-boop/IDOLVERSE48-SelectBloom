@@ -1203,3 +1203,6 @@ Part of the Fan Community: a drama is a normal thread whose replies come from se
 ## Scheduled songs & Concert Premiere (cc-premiere.js)
 - Songs of a single / album in production (release day fixed) appear in the Concert and Stage song pickers with their release date. A concert performance that sings one must be on or after the release day; a Stage that uses one must have its first performance on or after it (Stages already performing can add it once released).
 - Concert Premiere (Single Production): choose a performance of a concert being prepared; the release day becomes that day, every song of the single / album must be in that performance's setlist, and the release picture is that concert performance at its venue. A moved concert moves the release; a cancelled one ends the premiere (normal release).
+
+## Install on a phone (PWA)
+The site is an installable web app (manifest.webmanifest, icons/, sw.js). iPhone: open in **Safari** › Share › **Add to Home Screen**. Android: Chrome › ⋮ › **Install app / Add to Home screen**. It opens full screen like an app. The service worker is network-first (always the newest version online; the last copy only when offline). Note: on iPhone the home-screen app has its own storage — move a save with Export / Import.
