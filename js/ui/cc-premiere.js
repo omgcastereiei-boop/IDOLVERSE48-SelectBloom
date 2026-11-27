@@ -12,8 +12,8 @@
 const CP_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
 // ---- scheduled songs (public: production started, release day fixed) ------------------------------------------------------
 let CP_PC={k:null,M:new Map()};
-function cpPend(){const k=S.day+'|'+S.sid+'|'+(S.groups||[]).map(g=>{const p=gsCtx(g.id,'pj');return p?p.status+(p.releaseDay??''):''}).join(',');if(CP_PC.k===k)return CP_PC.M;const M=new Map();
- (S.groups||[]).forEach(g=>{try{const p=gsCtx(g.id,'pj');if(!p||p.status!='producing'||p.releaseDay==null)return;gsWith(g.id,()=>usedSongs(p).forEach(id=>{const o=S.songs[id];if(o&&!o.rel&&o.relDay==null)M.set(g.id+':'+id,{R:p.releaseDay,t:p.title||'',gid:g.id})}))}catch(e){}});
+function cpPend(){const k=S.day+'|'+S.sid+'|'+(S.groups||[]).map(g=>{const p=gsCtx(g.id,'pj');return p?p.status+(p.releaseDay??'')+(p.ccPrem?p.ccPrem.c+p.ccPrem.p:'')+(p.types||[]).map(t=>(t.songs||[]).join('.')).join('/'):''}).join(',');if(CP_PC.k===k)return CP_PC.M;const M=new Map();
+ (S.groups||[]).forEach(g=>{try{const p=gsCtx(g.id,'pj');if(!p)return;let R=null;if(p.status=='producing'&&p.releaseDay!=null)R=p.releaseDay;else if(p.status=='draft'&&p.ccPrem){const P=cpPremOf(p);if(P&&!P.bad)R=P.day}if(R==null)return;gsWith(g.id,()=>usedSongs(p).forEach(id=>{const o=S.songs[id];if(o&&!o.rel&&o.relDay==null)M.set(g.id+':'+id,{R,t:p.title||'',gid:g.id})}))}catch(e){}});
  CP_PC={k,M};return M}
 const cpRelOf=(gid,id)=>{const z=cpPend().get(gid+':'+id);return z?z.R:null};
 // ---- concerts ---------------------------------------------------------------------------------------------------------------
@@ -59,3 +59,6 @@ function cpPremSpec(p,P,ids){const set=ccSetOf(P.C,P.pf),gid=gsAg();let idx=set?
 {const f=holdConcert;holdConcert=function(p,x){const P=cpPremOf(p);const ev=f.apply(this,arguments);try{if(ev&&P&&!P.bad){ev.img=cpPremSpec(p,P,(ev.result&&ev.result.members)||ev.members);ev.title=`${CP_T('Premiere','เปิดตัว')} — ${P.C.name}`;if(x){x.prem={c:P.C.id,p:P.pf.id,day:S.day}}}}catch(e){console.error(e)}return ev}}
 try{if(typeof plAlbumRelease=='function'){const f=plAlbumRelease;plAlbumRelease=function(){const p=S.pj,P=cpPremOf(p),n=(S.albums||[]).length;const r=f.apply(this,arguments);try{if(P&&!P.bad){const x=(S.albums||[])[(S.albums||[]).length-1]||null;if(x&&(S.albums||[]).length>n){x.prem={c:P.C.id,p:P.pf.id,day:S.day};x.promo=x.promo||[];x.promo.push({id:'pm'+(++S.sid),type:'concert',day:S.day,title:`${CP_T('Premiere','เปิดตัว')} — ${P.C.name}`,img:cpPremSpec(p,P,(P.C.parts||[]).slice(0,16))})}}}catch(e){console.error(e)}return r}}}catch(e){}
 {const f=evImgSvg;evImgSvg=function(sp){if(sp&&sp.k=='ccprem'){try{const C=ccGet(sp.c),pf=C&&C.pf.find(z=>z.id==sp.p),set=C&&pf&&ccSetOf(C,pf);if(set&&sp.idx>=0)return ccStageSvg(C,pf,set,sp.idx)}catch(e){console.error(e)}}return f.apply(this,arguments)}}
+// the picker's Single tab: the upcoming single / album first, with its release day
+{const f=ccPickData;ccPickData=function(){const D=f.apply(this,arguments);try{const all=ccSongsAll(),by={};cpPend().forEach((z,k)=>{const x=all.find(y=>y.gid+':'+y.o.id==k);if(!x)return;const b=by[z.gid+'|'+z.t]=by[z.gid+'|'+z.t]||{h:`${z.t} · ${CP_T('upcoming','กำลังจะปล่อย')}`,sub:`${(grp(z.gid)||{}).name||''} · ${CP_T('release','ปล่อย')} ${jd(z.R)}`,L:[]};b.L.push(x)});
+ const L=Object.values(by);L.forEach(b=>b.L.sort((a,c)=>(a.o.role=='Main'?0:1)-(c.o.role=='Main'?0:1)));if(L.length&&D&&Array.isArray(D.single))D.single.unshift(...L)}catch(e){console.error(e)}return D}}
