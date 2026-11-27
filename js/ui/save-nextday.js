@@ -6,6 +6,6 @@
 let SV_ADV=0;
 {const f=svAuto;svAuto=function(){if(!SV_ADV)return;return f.apply(this,arguments)}}
 {const f=adv;adv=function(){SV_ADV++;try{return f.apply(this,arguments)}finally{SV_ADV--}}}
-// …and every 10 minutes of play (in case the player stays on one day for a long time)
-const SV_EVERY=10*60*1000;
+// …and every 5 minutes of play (in case the player stays on one day for a long time)
+const SV_EVERY=5*60*1000;
 setInterval(()=>{try{if(!S||!S.members||!S.members.length)return;SV_ADV++;try{svAuto()}finally{SV_ADV--}}catch(e){console.error(e)}},SV_EVERY);
