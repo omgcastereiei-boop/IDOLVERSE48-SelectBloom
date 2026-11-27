@@ -70,13 +70,13 @@ function ghFill(gid){let n=0;const run=()=>{const p=S.pj;if(!ghGePj(p)||!(p.stat
  try{gid==null?(S.groups||[]).forEach(g=>gsWith(g.id,run)):gsWith(gid,run)}catch(e){console.error(e)}return n}
 {const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
 {const f=tick;tick=function(){const r=f.apply(this,arguments);try{ghFill()}catch(e){console.error(e)}return r}}
-{const f=startSingle;startSingle=function(){try{if(ghGePj(S.pj))ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
+{const f=startSingle;startSingle=function(){return f.apply(this,arguments)}}
 
 // an election single never waits for positions nobody can fill
 {const f=fmCheck;fmCheck=function(o){const r=f.apply(this,arguments);try{const p=S.pj;if(o&&(ghGeSong(o)||(ghGePj(p)&&usedSongs(p).includes(o.id))))return r.filter(x=>!/still empty|Invalid Senbatsu size|Invalid number of centers|Center slots do not match/.test(x))}catch(e){}return r}}
-{const f=reqs;reqs=function(p){try{if(p===S.pj&&ghGePj(p))ghFill(gsAg())}catch(e){}const r=f.apply(this,arguments);try{if(ghGePj(p))return r.filter(x=>!/position\(s\) still empty|Invalid Senbatsu size|save the lineup|Center slots do not match|Invalid number of centers/.test(x))}catch(e){}return r}}
+{const f=reqs;reqs=function(p){const r=f.apply(this,arguments);try{if(ghGePj(p))return r.filter(x=>!/position\(s\) still empty|Invalid Senbatsu size|save the lineup|Center slots do not match|Invalid number of centers/.test(x))}catch(e){}return r}}
 
 // release readiness: an election song is ready once its lineup is filled (or reduced) — never waits for an impossible position
-{const f=readiness;readiness=function(p){try{if(p===S.pj&&ghGePj(p))ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
+{const f=readiness;readiness=function(p){return f.apply(this,arguments)}}
 // the planning page builds its own check list: run the repair before every render of the music page
-{const f=V.music;V.music=function(){try{if(S&&ghGePj(S.pj)&&S.pj.status=='draft')ghFill(gsAg())}catch(e){}return f.apply(this,arguments)}}
+{const f=V.music;V.music=function(){return f.apply(this,arguments)}}

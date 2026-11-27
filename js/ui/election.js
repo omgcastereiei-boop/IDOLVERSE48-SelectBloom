@@ -126,17 +126,18 @@ function geApplyNext(){const e=geS().list.find(z=>z.st=='done'&&z.next&&!z.next.
  LS.slice(1).forEach(L=>{if(p.coup.length>=CFG.maxTypes*(CFG.maxPerType-1))return;const o=mkSong('Coupling',{title:`${L.name} Song`});geSetLine(o,L.ids,e,L);p.coup.push(o.id);let t=p.types.find(t=>t.songs.length<CFG.maxPerType);if(!t&&p.types.length<CFG.maxTypes){t={name:'Type '+String.fromCharCode(65+p.types.length),songs:[p.mainId]};p.types.push(t)}if(t)t.songs.push(o.id)});
  p.geNext=e.id;e.next.applied=true;e.next.day=S.day;e.next.songs=[p.mainId,...p.coup.filter(id=>S.songs[id]&&S.songs[id].ge)];syncSaved();try{syncEds()}catch(x){}toast(`${e.name}: the ranking groups are now the locked lineups of this single.`);return true}
 const _geNewPj=newPj;newPj=function(){const r=_geNewPj.apply(this,arguments);try{geApplyNext()}catch(x){console.error(x)}return r};
-const geBlock=id=>{const o=geSong(id);if(o&&(S.pj&&S.pj.status=='draft')){toast(`🔒 "${o.title}" uses the ${o.ge.ed} results (${o.ge.name}); its members and Center cannot be changed.`,'err');return true}return false};
+// the lineups of election songs can be edited like any song; only removing an election song from the single stays locked
+const geBlock=(id,hard)=>{const o=geSong(id);if(hard&&o&&(S.pj&&S.pj.status=='draft')){toast(`🔒 "${o.title}" uses the ${o.ge.ed} results (${o.ge.name}); it cannot be removed from this single.`,'err');return true}return false};
 const geCurSong=()=>ui.es;
 [['fmAssign',0],['fmRemove',0],['fmSwap',0],['fmClear',0],['fmRandom',0],['autoAdv',0],['setSize',0],['setNc',0],['applyReshape',0],['rowAdj',0],['addRow',0],['rmRow',0],['resetForm',0],['fmDrop',0],['fmSave',0]].forEach(([n])=>{const f=window[n];if(typeof f!='function')return;window[n]=function(){if(geBlock(geCurSong()))return render();return f.apply(this,arguments)}});
 {const f=editLine;editLine=function(id){if(geBlock(id))return render();return f.apply(this,arguments)}}
 {const f=plCenter;plCenter=function(id){if(geBlock(id))return render();return f.apply(this,arguments)}}
 {const f=plAuto;plAuto=function(id){if(geBlock(id))return render();return f.apply(this,arguments)}}
-{const f=rmCoup;rmCoup=function(id){if(geBlock(id))return render();return f.apply(this,arguments)}}
+{const f=rmCoup;rmCoup=function(id){if(geBlock(id,1))return render();return f.apply(this,arguments)}}
 {const f=applyIds;applyIds=function(o){if(o&&geBlock(o.id))return;return f.apply(this,arguments)}}
 {const f=fmClone;fmClone=function(b){if(b&&geBlock(b.id))return;return f.apply(this,arguments)}}
 if(typeof plMakeTitle=='function'){const f=plMakeTitle;plMakeTitle=function(id){if(S.pj&&S.pj.geNext)return toast('The election Senbatsu stays the title track of this single.','err');return f.apply(this,arguments)}}
-if(typeof tRm=='function'){const f=tRm;tRm=function(i,j){const p=S.pj,id=p&&p.types[i]&&p.types[i].songs[j];if(id&&geSong(id)&&p.types.filter(t=>t.songs.includes(id)).length<=1&&geBlock(id))return render();return f.apply(this,arguments)}}
+if(typeof tRm=='function'){const f=tRm;tRm=function(i,j){const p=S.pj,id=p&&p.types[i]&&p.types[i].songs[j];if(id&&geSong(id)&&p.types.filter(t=>t.songs.includes(id)).length<=1&&geBlock(id,1))return render();return f.apply(this,arguments)}}
 
 // ---- ceremony reactions (existing wellness / mood / passion / loyalty) --------------------------
 const GE_SP={
@@ -322,7 +323,7 @@ const _geProf=profHtml;profHtml=function(m,cand){let h=_geProf.apply(this,argume
 // ---- Single Production banners -------------------------------------------------------------------
 const _geMusic=V.music;V.music=function(){try{geApplyNext()}catch(x){console.error(x)}const h=_geMusic.apply(this,arguments),p=S.pj;let b='';
  if(p&&p.ge){const e=geGet(p.ge);if(e)b=`<div class="c gebanner"><span class="geprb">GENERAL ELECTION SINGLE</span><b>${esc(e.name)}</b><span class="st">Every CD sold becomes a voting token. Voting runs for 2 months from Release Day${p.releaseDay!=null?` (${longDate(p.releaseDay)} – ${longDate(geEnd(p.releaseDay))})`:''}.</span>${p.status=='draft'?'<button class="b s" onclick="goView(\'ge\')">Election settings</button>':''}</div>`}
- if(p&&p.geNext){const e=geGet(p.geNext),G=[p.mainId,...p.coup].map(id=>S.songs[id]).filter(o=>o&&o.ge);if(e)b+=`<div class="c gebanner lock"><span class="geprb">🔒 ELECTION LINEUPS</span><b>${esc(e.name)}</b><span class="st">${G.map(o=>`${esc(o.ge.name)} → “${esc(o.title)}” (Center ${esc((get(o.center)||{}).name||'—')})`).join(' · ')}. These members and Centers come from the final results and cannot be changed. Other songs use the normal Senbatsu system.</span></div>`}
+ if(p&&p.geNext){const e=geGet(p.geNext),G=[p.mainId,...p.coup].map(id=>S.songs[id]).filter(o=>o&&o.ge);if(e)b+=`<div class="c gebanner lock"><span class="geprb">ELECTION LINEUPS</span><b>${esc(e.name)}</b><span class="st">${G.map(o=>`${esc(o.ge.name)} → “${esc(o.title)}” (Center ${esc((get(o.center)||{}).name||'—')})`).join(' · ')}. These members and Centers come from the final results and cannot be changed. Other songs use the normal Senbatsu system.</span></div>`}
  return b+h};
 
 // ---- navigation, notices, overlay, migration ------------------------------------------------------
