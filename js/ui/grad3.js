@@ -123,7 +123,7 @@ ctGradDlg=function(mid,why){const m=get(mid);if(!m)return;if(m.grad)return toast
 {const f=ctAgreeP;ctAgreeP=function(m){return cl(f.apply(this,arguments)+(motPress(m).P-20)/150,.05,.97)}}
 ctGradGo=function(mid){const m=get(mid),D=ui.ctd;if(!m||!D||m.grad)return;const c=m.ct;if(D.why=='prop'){if(m.ctProp!=null&&S.day-m.ctProp<30)return toast(`${m.name} refused recently. Propose again after ${jd(m.ctProp+30)}.`,'err');
   if(Math.random()>ctAgreeP(m)){m.ctProp=S.day;m.mor=cl(m.mor-6);m.loy=cl((m.loy??50)-3);hev(m,{t:'ct_gprop_no'});ui.ctd=null;ui.mod={t:'html',h:`<h2 class="ht">${esc(m.name)} wants to stay</h2><p class="ctsay">“I'm sorry, Producer… I'm not ready to graduate yet.”</p><p class="st">You can propose again after ${jd(S.day+30)}.</p>`};return render()}}
- const est=D.why=='exp'?Math.max(c.end,S.day+14):S.day+120,early=D.why!='exp'&&S.day+90<c.end-30;ctAnnounce(m,{reason:D.why,target:est,early:early?D.early:null});if(m.grad){m.grad.fee=early&&D.early=='fee'?ctFee(m,ctMonths(S.day+90,c.end),D.why):0}ui.ctd=null;render()};
+ const est=D.why=='exp'?Math.max(c.end,S.day+14):S.day+120,early=D.why!='exp'&&S.day+90<c.end-30;ctAnnounce(m,{reason:D.why,target:est,early:early?D.early:null});if(m.grad){m.grad.fee=early&&m.grad.early=='fee'?ctFee(m,ctMonths(S.day+90,c.end),D.why):0}ui.ctd=null;render()};
 // contract-expiry / unanswered requests use the same path (no duplicate announcements)
 // ---- General Election: the confirmation date decides -------------------------------------------------------------------------
 {const f=startSingle;startSingle=function(){const p=S.pj;const r=f.apply(this,arguments);try{if(p&&p.ge){const e=geGet(p.ge);if(e&&e.st=='producing'&&e.conf==null){e.conf=S.day;geGradFilter(e)}}}catch(x){console.error(x)}return r}}
