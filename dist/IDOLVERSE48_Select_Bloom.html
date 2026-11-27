@@ -12402,8 +12402,8 @@ function muKindOf(sel){const n=sel.options.length;if(n<40)return null;let c={g:0
  el.querySelectorAll('.gpo').forEach(b=>{const x=MUI[k][b.dataset.v];if(!x)return;b.dataset.f=x.f;b.insertAdjacentHTML('beforeend',`<small class="mud">${esc(x.d)}</small><em class="muf">${esc(FAM[x.f]||'')}</em>`)});
  const bar=document.createElement('div');bar.className='muchips';bar.innerHTML=`<button type="button" class="on" data-f="">All</button>`+Object.entries(FAM).map(([a,n])=>`<button type="button" data-f="${a}">${esc(n)}</button>`).join('');el.querySelector('.gpl').before(bar);
  bar.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;e.stopPropagation();bar.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===b));el.querySelectorAll('.gpo').forEach(o=>{o.hidden=!!b.dataset.f&&o.dataset.f!=b.dataset.f})});
- const t=el.querySelector('.gphd b');if(t)t.textContent={g:'Genre library',c:'Concept library',l:'Lyrics library'}[k]+` (${sel.options.length})`}catch(e){console.error(e)}return r}}
-function muDecorate(){try{document.querySelectorAll('select').forEach(sel=>{const k=muKindOf(sel);if(!k)return;const host=sel.closest('label')||sel;let d=host.nextElementSibling;if(!d||!d.classList||!d.classList.contains('mudesc')){d=document.createElement('small');d.className='mudesc';host.after(d)}d.textContent=muDesc(k,sel.value)})}catch(e){}}
+ const t=el.querySelector('.gphd b');if(t)t.textContent={g:'Genre library',c:'Concept library',l:'Lyrics library'}[k]+` (${sel.options.length})`;try{if(typeof i18nApply=='function')i18nApply(el)}catch(e){}}catch(e){console.error(e)}return r}}
+function muDecorate(){try{document.querySelectorAll('select').forEach(sel=>{const k=muKindOf(sel);if(!k)return;const host=sel.closest('label')||sel;let d=host.nextElementSibling;if(!d||!d.classList||!d.classList.contains('mudesc')){d=document.createElement('small');d.className='mudesc';host.after(d)}d.textContent=typeof tr=='function'?tr(muDesc(k,sel.value)):muDesc(k,sel.value)})}catch(e){}}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{muDecorate()}catch(e){}return r}}
 // ---- fan music tastes (stored on the existing fan cohorts) ------------------------------------------------------------------
 const MU_FAMS={g:Object.keys(MU_GF),c:Object.keys(MU_CF),l:Object.keys(MU_LF)},MU_LIB={g:MU_G,c:MU_C,l:MU_L};
@@ -15948,7 +15948,7 @@ function pfSenHtml(m){const rel=h=>S.singles.find(x=>x.rid==h.rid)||(S.albums||[
  const H=(m.hist||[]).filter(h=>!reused(h)).slice().sort((a,b)=>(a.day??0)-(b.day??0)||plRidNo(a.rid)-plRidNo(b.rid));
  const isA=h=>{const r=rel(h);return h.cat=='main'||!!(r&&r.kind=='album'&&r.mainId==h.song)};
  const mainOf=h=>{const r=rel(h);if(!r)return h.rel||'';if(r.kind=='album')return'Album: '+(r.title||'');const o=S.songs[r.mainId];return o?o.title:(r.title||'')};
- const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${h.center?' <span class="tag rrUR">Center</span>':h.pt?` <span class="tag">${h.pt=='solo'?'Solo':'Duet'}</span>`:''}</li>`};
+ const li=(h,b)=>{const r=rel(h),alb=r&&r.kind=='album';return`<li><b>${esc(h.title)}</b>${b?` <span class="st">(${esc(mainOf(h))})</span>`:alb?' <span class="st">(Album)</span>':''} <span class="st">· ${ym(h.day)}</span>${(()=>{const T=typeof sbuHistTag=='function'?sbuHistTag(m,h):null;if(!T)return h.center?' <span class="tag rrUR">Center</span>':h.pt?` <span class="tag">${h.pt=='solo'?'Solo':'Duet'}</span>`:'';return(T.cen?' <span class="tag rrUR">Center</span>':'')+(T.tag?` <span class="st pfdu" data-notr>${esc(T.tag)}</span>`:'')})()}</li>`};
  // her own group first, then every other group in company order
  const gidOf=h=>h.gid!=null?h.gid:m.group,own=m.group,ids=[...new Set(H.map(gidOf))].sort((a,b)=>(a==own?-1:0)-(b==own?-1:0)||(S.groups||[]).findIndex(g=>g.id==a)-(S.groups||[]).findIndex(g=>g.id==b));
  const tot=H.length,A0=H.filter(isA).length;
@@ -17992,12 +17992,12 @@ function f10PostponeAll(){try{const H=thS();if(!H||!H.sh)return;H.sh.filter(x=>x
 
 // ---- 5. Units in the profile ---------------------------------------------------------------------------------------------------------
 function f10Tag(n,cen){return n==1?'Solo':n==2?'Duet':cen?'Center':''}
-function f10Units(m){const st=[],cc=[];try{const H=thS();Object.values(H.st||{}).filter(s=>s.no||s.debut!=null).sort((a,b)=>(a.debut||0)-(b.debut||0)).forEach(s=>{const L=[];const add=(items,units)=>(items||[]).forEach(it=>{if(it.k!='song'||it.pt!='unit')return;const u=(units||s.units||[]).find(z=>z.id==it.unit);const ids=(u&&u.ids)||it.mem||[];if(!ids.includes(m.id))return;const t=it.title||(gsWith(gsGid(m),()=>S.songs[it.song])||{}).title||'';if(!t||L.some(z=>z.t==t))return;L.push({t,tag:f10Tag(ids.length,it.center==m.id||it.c2==m.id)})});
+function f10Units(m){const st=[],cc=[];try{const H=thS();Object.values(H.st||{}).filter(s=>s.no||s.debut!=null).sort((a,b)=>(a.debut||0)-(b.debut||0)).forEach(s=>{const L=[];const add=(items,units)=>(items||[]).forEach(it=>{if(it.k!='song'||it.pt!='unit')return;const u=(units||s.units||[]).find(z=>z.id==it.unit);const ids=(u&&u.ids)||it.mem||[];if(!ids.includes(m.id))return;const t=it.title||(gsWith(gsGid(m),()=>S.songs[it.song])||{}).title||'';if(!t||L.some(z=>z.t==t))return;L.push({t,tag:f10Tag(ids.length,it.center==m.id||it.c2==m.id,ids,m.id)})});
   add(s.orig,s.origUnits);add(s.items,s.units);if(L.length)st.push({h:`${thLabel(s.k)} ${s.no?ordN(s.no)+' ':''}Stage`,n:s.name,L})})}catch(e){console.error(e)}
- try{ccS().list.filter(C=>C.status!='plan'&&C.status!='cancel').sort((a,b)=>((a.pf[0]||{}).d||0)-((b.pf[0]||{}).d||0)).forEach(C=>{const L=[];Object.values(C.sets||{}).forEach(s=>(s.items||[]).forEach(it=>{if(it.k!='song'||!it.unit)return;const P=(it.pos||[]).filter(z=>z.m!=null),me=P.find(z=>z.m==m.id);if(!me||L.some(z=>z.t==it.title))return;L.push({t:it.title||'',tag:f10Tag(P.length,!!me.c)})}));if(L.length)cc.push({h:C.name,n:C.status=='done'?'':'upcoming',L})})}catch(e){}
+ try{ccS().list.filter(C=>C.status!='plan'&&C.status!='cancel').sort((a,b)=>((a.pf[0]||{}).d||0)-((b.pf[0]||{}).d||0)).forEach(C=>{const L=[];Object.values(C.sets||{}).forEach(s=>(s.items||[]).forEach(it=>{if(it.k!='song'||!it.unit)return;const P=(it.pos||[]).filter(z=>z.m!=null),me=P.find(z=>z.m==m.id);if(!me||L.some(z=>z.t==it.title))return;L.push({t:it.title||'',tag:f10Tag(P.length,!!me.c,P.map(z=>z.m),m.id)})}));if(L.length)cc.push({h:C.name,n:C.status=='done'?'':'upcoming',L})})}catch(e){}
  return{st,cc}}
 function f10UnitsHtml(m){const U=f10Units(m);if(!U.st.length&&!U.cc.length)return'';const th=typeof UIP!='undefined'&&UIP.lang=='th';
- const blk=L=>L.map(g=>`<li class="f10ug"><b>${esc(g.h)}</b>${g.n?` <span class="st">(${esc(g.n)})</span>`:''}<ul>${g.L.map(z=>`<li>${esc(z.t)}${z.tag?` <span class="st">(${z.tag})</span>`:''}</li>`).join('')}</ul></li>`).join('');
+ const blk=L=>L.map(g=>`<li class="f10ug"><b>${esc(g.h)}</b>${g.n?` <span class="st">(${esc(g.n)})</span>`:''}<ul>${g.L.map(z=>`<li>${esc(z.t)}${z.tag?` <span class="st" data-notr>(${z.tag})</span>`:''}</li>`).join('')}</ul></li>`).join('');
  return`<h3>Units</h3>${U.st.length?`<h4>${th?'ยูนิตสเตจ':'Stage Units'}</h4><ul class="pfl f10u">${blk(U.st)}</ul>`:''}${U.cc.length?`<h4>${th?'ยูนิตคอนเสิร์ต':'Concert Units'}</h4><ul class="pfl f10u">${blk(U.cc)}</ul>`:''}`}
 {const f=histHtml;histHtml=function(m){const h=f.apply(this,arguments);try{return h+f10UnitsHtml(m)}catch(e){return h}}}
 
@@ -24900,6 +24900,37 @@ V.community=function(){const C=cmS(),tab=ui.cmt||'all',main=cmMainId(),sis=cmRea
 </script>
 <script>
 // =====================================================================================
+//  IDOLVERSE48: Select Bloom! — Single / Album formation & member history update
+// -------------------------------------------------------------------------------------
+//  · A song may have no Center: "No Center" in the Centers selector (fm.nc = 0, no center slot in Row 1).
+//  · Member history: 1 member → (Solo) · 2 members → (Duet with <name>) · double Center → Center (Duet with <name>)
+//    · 3+ Centers → Center (1 in N Centers). The same Duet label for 2-member unit songs of theater stages / concerts.
+// =====================================================================================
+const SBU_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+// ---- No Center ------------------------------------------------------------------------------------------------------------------
+{const f=setNc;setNc=function(n){if(+n!==0)return f.apply(this,arguments);const o=cur(),F=o&&o.fm;if(!F)return;if(lockedSong(o.id))return toast('Production is already confirmed.','err');if(F.nc===0)return;
+ const R=isDef(F)?defRows(F.size,0):rowsOf(F.sl);applyReshape(o,R,0,SBU_T('No Center: every member stands in the formation without a Center position.','ไม่มีเซ็นเตอร์: ทุกคนยืนในฟอร์เมชันโดยไม่มีตำแหน่งเซ็นเตอร์'))}}
+{const f=fmCheck;fmCheck=function(o){const r=f.apply(this,arguments);try{if(o&&o.fm&&o.fm.nc===0)return r.filter(x=>x!='Invalid number of centers.'&&x!='Center slots do not match the center count.'||o.fm.sl.some(z=>z.c))}catch(e){}return r}}
+// the Centers selector gets a "No Center" choice (shown first; selected when the song has none)
+{const f=chrome;chrome=function(inner){try{if(typeof inner=='string'&&inner.includes('onchange="setNc(this.value)">')){const o=typeof cur=='function'?cur():null,nc=o&&o.fm?o.fm.nc:1;
+  inner=inner.split('onchange="setNc(this.value)">').join(`onchange="setNc(this.value)"><option value="0" ${nc===0?'selected':''}>No Center</option>`);
+  if(nc===0)inner=inner.replace(/· Centers 0 \(max (\d+)\)/,'· No Center (max $1)').replace(/ · 0\/0 centers filled/,'')}}catch(e){}return f.call(this,inner)}}
+// ---- labels for the member history ----------------------------------------------------------------------------------------------
+const SBU_SC=new Map();
+function sbuSong(gid,sid){const k=gid+':'+sid+':'+(S&&S.day);if(SBU_SC.has(k))return SBU_SC.get(k);let o=null;try{o=gsWith(gid,()=>{const x=S.songs[sid];return x?{slots:(x.slots||[]).filter(Boolean),cen:(x.centers&&x.centers.length?x.centers:(x.center!=null?[x.center]:[])).filter(v=>v!=null)}:null})}catch(e){}if(SBU_SC.size>4000)SBU_SC.clear();SBU_SC.set(k,o);return o}
+const sbuNm=id=>{const m=get(id)||(S.alumni||[]).find(x=>x.id==id);return m?m.name:''};
+// {cen:true|false, tag:'(Solo)'|'(Duet with X)'|'(1 in 3 Centers)'|''}
+function sbuTag(mid,ids,cens){ids=(ids||[]).filter(v=>v!=null);cens=(cens||[]).filter(v=>v!=null);const n=ids.length;
+ if(n==1)return{cen:false,tag:'(Solo)'};if(n==2){const o=ids.find(x=>x!=mid);return{cen:false,tag:`(Duet with ${sbuNm(o)})`}}
+ if(!cens.includes(mid))return{cen:false,tag:''};if(cens.length==2){const o=cens.find(x=>x!=mid);return{cen:true,tag:`(Duet with ${sbuNm(o)})`}}if(cens.length>=3)return{cen:true,tag:`(1 in ${cens.length} Centers)`};return{cen:true,tag:''}}
+function sbuHistTag(m,h){const gid=h.gid!=null?h.gid:m.group,o=sbuSong(gid,h.song);if(!o)return h.center?{cen:true,tag:''}:h.pt=='solo'?{cen:false,tag:'(Solo)'}:h.pt=='duet'?{cen:false,tag:'(Duet)'}:{cen:false,tag:''};return sbuTag(m.id,o.slots,o.cen)}
+// stage / concert unit songs: 2 members → Duet with <name>
+if(typeof f10Tag=='function'){f10Tag=function(n,cen,ids,mid){if(n==1)return'Solo';if(n==2&&ids&&mid!=null){const o=ids.find(x=>x!=mid);return`Duet with ${sbuNm(o)}`}return n==2?'Duet':cen?'Center':''}}
+try{if(typeof I18N_TH!='undefined'&&I18N_TH['No Center']==null)I18N_TH['No Center']='ไม่มีเซ็นเตอร์';if(typeof I18N_TH!='undefined'&&I18N_TH['No Center (max {0})']==null)I18N_TH_TPL.push(['· No Center (max {0})','· ไม่มีเซ็นเตอร์ (สูงสุด {0})'])}catch(e){}
+
+</script>
+<script>
+// =====================================================================================
 //  IDOLVERSE48: Select Bloom!  —  Thai translation (ภาษาไทย)
 //  English text -> Thai. Used by js/i18n/i18n.js. Proper nouns (idol names, cities,
 //  countries, generated song titles) are intentionally kept as they are.
@@ -30743,8 +30774,19 @@ function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
  let out=k;for(const[r,v]of I18N_TH_RX)out=out.replace(r,v);for(const[r,f]of I18N.dRe)out=out.replace(r,f);
  out=out.replace(/(^|[^A-Za-z])([A-Z][a-z]+(?:(?: \/ | )[A-Z][a-z]+)?)(?= [\d¥~#+×]|:? ?\d)/g,(m0,pre,w)=>pre+(D[w]??w.split(' / ').map(x=>D[x]??x).join(' / ')));
  return out.replace(I18N.re,(m,pre,w)=>pre+(D[w]??w))}
-function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;let c=I18N.cache.get(s);if(c!=null)return c;
- let out;try{out=s.replace(k,trCore(k))}catch(e){out=s}
+// names the player chose (members, songs, singles, albums, groups, teams, units, stages, concerts) are never translated
+const I18N_NM={t:0,k:'',re:null,set:new Set()},I18N_NM_KEEP=new Set(['Center','Senbatsu','Theater','Single','Album','Concert','Main','Team','Under Girls','Trainee','Solo','Duet','Unit']);
+function i18nNames(){if(typeof S=='undefined'||!S||!S.members)return null;const now=Date.now();if(I18N_NM.re!==null&&now-I18N_NM.t<1500)return I18N_NM;I18N_NM.t=now;
+ const N=new Set(),add=v=>{if(typeof v!='string')return;v=v.trim();if(v.length>=3&&/[A-Za-z]{2}/.test(v)&&!I18N_NM_KEEP.has(v))N.add(v)};
+ try{[...(S.members||[]),...(S.alumni||[])].forEach(m=>{if(!m)return;add(m.name);add(m.real);add(m.stage)});add(S.co);add(S.producer&&(S.producer.name||S.producer));
+  (S.groups||[]).forEach(g=>{add(g.name);(g.teams||[]).forEach(t=>add(t.name));const ctx=k=>g.id==S.ag?S[k]:(g.ctx||{})[k];Object.values(ctx('songs')||{}).forEach(o=>o&&add(o.title));(ctx('singles')||[]).forEach(x=>x&&add(x.title));(ctx('albums')||[]).forEach(x=>x&&add(x.title))});
+  Object.values((S.th&&S.th.st)||{}).forEach(x=>x&&add(x.name));((S.cc&&S.cc.list)||[]).forEach(x=>x&&add(x.name))}catch(e){}
+ const L=[...N].sort((a,b)=>b.length-a.length),key=L.length+'|'+L.slice(0,40).join('\u0001')+'|'+L.reduce((a,x)=>(a*31+x.length)%1000003,7);if(key===I18N_NM.k)return I18N_NM;
+ const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');I18N_NM.k=key;I18N_NM.set=N;I18N_NM.re=L.length?new RegExp('(^|[^A-Za-z0-9])('+L.map(esc).join('|')+')(?![A-Za-z0-9])','g'):null;I18N.cache.clear();return I18N_NM}
+function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;const NM=i18nNames();let c=I18N.cache.get(s);if(c!=null)return c;
+ let out;try{if(NM&&NM.set.has(k))out=s;else if(NM&&NM.re){const keep=[];const mk=k.replace(NM.re,(m0,pre,w)=>{keep.push(w);return pre+'\uE000'+String.fromCharCode(0xE100+keep.length-1)+'\uE001'});
+   if(!keep.length)out=s.replace(k,trCore(k));else{const t=/[A-Za-z]{2}/.test(mk)?trCore(mk):mk;out=s.replace(k,t.replace(/\uE000([\uE100-\uEFFF])\uE001/g,(_,ch)=>keep[ch.charCodeAt(0)-0xE100]??''))}}
+  else out=s.replace(k,trCore(k))}catch(e){out=s}
  if(I18N.cache.size>20000)I18N.cache.clear();I18N.cache.set(s,out);return out}
 function i18nApply(root){const th=i18nLang()=='th',lg=th?'th':'en';if(document.documentElement.lang!==lg)document.documentElement.lang=lg;if(document.body.classList.contains('lang-th')!==th)document.body.classList.toggle('lang-th',th);if(!th)return;root=root||document.getElementById('app');if(!root)return;
  const W=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;if(!p||p.closest('svg,script,style,textarea,[data-notr]'))return NodeFilter.FILTER_REJECT;return/[A-Za-z]/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});

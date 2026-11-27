@@ -34,8 +34,19 @@ function trCore(k){const D=I18N_TH;if(D[k]!=null)return D[k];i18nBuild();
  let out=k;for(const[r,v]of I18N_TH_RX)out=out.replace(r,v);for(const[r,f]of I18N.dRe)out=out.replace(r,f);
  out=out.replace(/(^|[^A-Za-z])([A-Z][a-z]+(?:(?: \/ | )[A-Z][a-z]+)?)(?= [\d¥~#+×]|:? ?\d)/g,(m0,pre,w)=>pre+(D[w]??w.split(' / ').map(x=>D[x]??x).join(' / ')));
  return out.replace(I18N.re,(m,pre,w)=>pre+(D[w]??w))}
-function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;let c=I18N.cache.get(s);if(c!=null)return c;
- let out;try{out=s.replace(k,trCore(k))}catch(e){out=s}
+// names the player chose (members, songs, singles, albums, groups, teams, units, stages, concerts) are never translated
+const I18N_NM={t:0,k:'',re:null,set:new Set()},I18N_NM_KEEP=new Set(['Center','Senbatsu','Theater','Single','Album','Concert','Main','Team','Under Girls','Trainee','Solo','Duet','Unit']);
+function i18nNames(){if(typeof S=='undefined'||!S||!S.members)return null;const now=Date.now();if(I18N_NM.re!==null&&now-I18N_NM.t<1500)return I18N_NM;I18N_NM.t=now;
+ const N=new Set(),add=v=>{if(typeof v!='string')return;v=v.trim();if(v.length>=3&&/[A-Za-z]{2}/.test(v)&&!I18N_NM_KEEP.has(v))N.add(v)};
+ try{[...(S.members||[]),...(S.alumni||[])].forEach(m=>{if(!m)return;add(m.name);add(m.real);add(m.stage)});add(S.co);add(S.producer&&(S.producer.name||S.producer));
+  (S.groups||[]).forEach(g=>{add(g.name);(g.teams||[]).forEach(t=>add(t.name));const ctx=k=>g.id==S.ag?S[k]:(g.ctx||{})[k];Object.values(ctx('songs')||{}).forEach(o=>o&&add(o.title));(ctx('singles')||[]).forEach(x=>x&&add(x.title));(ctx('albums')||[]).forEach(x=>x&&add(x.title))});
+  Object.values((S.th&&S.th.st)||{}).forEach(x=>x&&add(x.name));((S.cc&&S.cc.list)||[]).forEach(x=>x&&add(x.name))}catch(e){}
+ const L=[...N].sort((a,b)=>b.length-a.length),key=L.length+'|'+L.slice(0,40).join('\u0001')+'|'+L.reduce((a,x)=>(a*31+x.length)%1000003,7);if(key===I18N_NM.k)return I18N_NM;
+ const esc=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');I18N_NM.k=key;I18N_NM.set=N;I18N_NM.re=L.length?new RegExp('(^|[^A-Za-z0-9])('+L.map(esc).join('|')+')(?![A-Za-z0-9])','g'):null;I18N.cache.clear();return I18N_NM}
+function tr(s){if(i18nLang()!='th'||s==null)return s;s=String(s);const k=s.trim();if(!k||!/[A-Za-z]{2}/.test(k))return s;const NM=i18nNames();let c=I18N.cache.get(s);if(c!=null)return c;
+ let out;try{if(NM&&NM.set.has(k))out=s;else if(NM&&NM.re){const keep=[];const mk=k.replace(NM.re,(m0,pre,w)=>{keep.push(w);return pre+'\uE000'+String.fromCharCode(0xE100+keep.length-1)+'\uE001'});
+   if(!keep.length)out=s.replace(k,trCore(k));else{const t=/[A-Za-z]{2}/.test(mk)?trCore(mk):mk;out=s.replace(k,t.replace(/\uE000([\uE100-\uEFFF])\uE001/g,(_,ch)=>keep[ch.charCodeAt(0)-0xE100]??''))}}
+  else out=s.replace(k,trCore(k))}catch(e){out=s}
  if(I18N.cache.size>20000)I18N.cache.clear();I18N.cache.set(s,out);return out}
 function i18nApply(root){const th=i18nLang()=='th',lg=th?'th':'en';if(document.documentElement.lang!==lg)document.documentElement.lang=lg;if(document.body.classList.contains('lang-th')!==th)document.body.classList.toggle('lang-th',th);if(!th)return;root=root||document.getElementById('app');if(!root)return;
  const W=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;if(!p||p.closest('svg,script,style,textarea,[data-notr]'))return NodeFilter.FILTER_REJECT;return/[A-Za-z]/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});

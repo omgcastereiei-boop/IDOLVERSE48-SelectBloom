@@ -1180,3 +1180,8 @@ Fan Community section: All / Main Group / Sister Groups / Trending, threads with
 - Trending from the last 3 days' engagement (accounts, replies, likes, recency, relevance); campaigns start only after the same concern came back in separate discussions and end after 3 weeks or when the wish comes true.
 - Impact: aggregated and rate-limited, through the existing `gainPop` (medium: +0.3 at most weekly per member; high: a trending campaign, +0.8 at most every 3 weeks). Comments never touch fan counts directly.
 - English and Thai lines are written separately (not translated). Data in `S.cm` with retention limits; older saves initialise safely.
+
+## Formation & history labels (sb-update.js)
+- Centers selector has **No Center** (fm.nc = 0): no center slot, the song releases with no Center.
+- Member history: 1 member (Solo) · 2 members (Duet with name) · double Center: Center (Duet with name) · 3+ Centers: Center (1 in N Centers). Theater / concert 2-member unit songs: Duet with name.
+- Thai: names chosen by the player (members, songs, singles, albums, groups, teams, units, stages, concerts) are never translated; genre / concept / lyrics descriptions in the library picker and under the selectors are translated.
