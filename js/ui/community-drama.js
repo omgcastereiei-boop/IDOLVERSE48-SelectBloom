@@ -35,9 +35,9 @@ const CD_L={
   B:{en:["Every gen was new once. {b} deserves her moment","Fresh faces bring new fans. That's good for everyone"],th:["ทุกรุ่นก็เคยเป็นรุ่นใหม่มาก่อน {b} ก็ควรได้มีช่วงเวลาของตัวเอง","หน้าใหม่ดึงแฟนใหม่เข้ามา ดีกับทุกคนนะ"]},
   N:{en:["A mix of both gens is the healthiest","Next single might swing the other way, it usually does"],th:["ผสมทั้งสองรุ่นแบบพอดีๆ แหละดีที่สุด","ซิงหน้าอาจจะกลับกันก็ได้ เป็นแบบนี้ตลอด"]},
   ch:{en:["Okay, the old and new gen parts in {t} actually blend well. Maybe I overreacted"],th:["โอเค พาร์ทรุ่นเก่ารุ่นใหม่ใน {t} เข้ากันดีจริง สงสัยเราคิดมากไปเอง"]}},
- team:{root:{en:["{tm} has {k} members in senbatsu, {tm2} has {k2}. Is that balanced?","Team favoritism is real this single. {tm2} fans, how are we feeling"],th:["ทีม {tm} ติดเซ็ม {k} คน ทีม {tm2} แค่ {k2} คน แบบนี้บาลานซ์ไหม","ซิงนี้ค่ายเทให้ทีมเดียวชัดๆ แฟนทีม {tm2} รู้สึกยังไงกันบ้าง"]},
-  A:{en:["{tm} has been putting on the best theater shows lately. It shows","Spots go to performance, not team quotas"],th:["ทีม {tm} ทำเธียเตอร์ดีที่สุดช่วงนี้ ก็เห็นผลแหละ","ที่ในเซ็มให้ตามผลงาน ไม่ได้แบ่งโควตาทีมนะ"]},
-  B:{en:["{tm2} works just as hard. They need more exposure","Every team should get a fair shot at the title track"],th:["ทีม {tm2} ก็ขยันไม่แพ้กัน ควรได้ออกสื่อมากกว่านี้","ทุกทีมควรได้โอกาสในเพลงหลักเท่าๆ กัน"]},
+ team:{root:{en:["{tm} has {k} members in senbatsu, {tm2} has {k2}. Is that balanced?","Team favoritism is real this single. {tm2} fans, how are we feeling"],th:["{tm} ติดเซ็ม {k} คน {tm2} แค่ {k2} คน แบบนี้บาลานซ์ไหม","ซิงนี้ค่ายเทให้ทีมเดียวชัดๆ แฟน {tm2} รู้สึกยังไงกันบ้าง"]},
+  A:{en:["{tm} has been putting on the best theater shows lately. It shows","Spots go to performance, not team quotas"],th:["{tm} ทำเธียเตอร์ดีที่สุดช่วงนี้ ก็เห็นผลแหละ","ที่ในเซ็มให้ตามผลงาน ไม่ได้แบ่งโควตาทีมนะ"]},
+  B:{en:["{tm2} works just as hard. They need more exposure","Every team should get a fair shot at the title track"],th:["{tm2} ก็ขยันไม่แพ้กัน ควรได้ออกสื่อมากกว่านี้","ทุกทีมควรได้โอกาสในเพลงหลักเท่าๆ กัน"]},
   N:{en:["Team counts change every single, give it time"],th:["จำนวนคนแต่ละทีมเปลี่ยนทุกซิงอยู่แล้ว รอดูไปก่อน"]},ch:{en:[],th:[]}},
  sis:{root:{en:["{a} from {g2} is in the {g} senbatsu while {b} is out. Main group fans, thoughts?","Why are {g2} members taking {g} title track spots?"],th:["{a} จาก {g2} ได้ติดเซ็ม {g} แต่ {b} หลุด แฟนวงหลักว่ายังไงกันบ้าง","ทำไมเมมวง {g2} มาได้ที่ในเพลงหลักของ {g} อะ"]},
   A:{en:["{a} earned it. The sister groups are part of the same family","{g2} fans finally get to see her on a big stage, let us have this"],th:["{a} ได้มาด้วยผลงาน วงน้องก็ครอบครัวเดียวกันนะ","แฟน {g2} เพิ่งได้เห็นน้องบนเวทีใหญ่ ปล่อยให้ดีใจหน่อยเถอะ"]},
@@ -67,7 +67,8 @@ const CD_L={
   B:{en:["Hard disagree, {a} works better with a lower voice next to her","Cute pair, but I'd rather see {b} lead her own unit"],th:["ไม่เห็นด้วยเลย {a} เข้ากับคนเสียงต่ำกว่านี้มากกว่า","คู่นี้น่ารักแหละ แต่อยากเห็น {b} นำยูนิตของตัวเองมากกว่า"]},
   N:{en:["Every combination has its fans. That's the fun of theater units"],th:["ทุกคู่ก็มีแฟนของตัวเอง นี่แหละเสน่ห์ของยูนิตเธียเตอร์"]},ch:{en:[],th:[]}}};
 const CD_CALM={en:["Can we all calm down a bit? It's one single","Disagreeing is fine. Insulting members is not","Not everything needs to be a war, everyone","Let's argue about the lineup, not the girls"],th:["ใจเย็นๆ กันก่อนนะ แค่ซิงเดียวเอง","เห็นต่างได้ แต่ด่าเมมเบอร์ไม่ได้นะ","ไม่ต้องทำทุกเรื่องให้เป็นสงครามก็ได้ทุกคน","เถียงเรื่องไลน์อัปได้ แต่อย่าไปลงที่น้องๆ"]};
-const CD_ESC={en:["This thread is turning into a full fan war","Both sides need a breather, this is getting heated","Oh no, not these two fandoms again lol","The replies under this are wild"],th:["กระทู้นี้กลายเป็นสงครามด้อมไปแล้ว","ทั้งสองฝั่งพักหายใจกันก่อน เริ่มร้อนแรงแล้ว","โอ๊ย สองด้อมนี้อีกแล้ว 555","รีพลายใต้โพสต์นี้ดุเดือดมาก"]};
+const CD_ESC={en:["This thread is turning into a full fan war","Both sides need a breather, this is getting heated","The replies under this are wild"],th:["กระทู้นี้กลายเป็นสงครามด้อมไปแล้ว","ทั้งสองฝั่งพักหายใจกันก่อน เริ่มร้อนแรงแล้ว","รีพลายใต้โพสต์นี้ดุเดือดมาก"]};
+const CD_ESC2={en:["Oh no, not these two fandoms again lol","Every time these two fandoms meet, the timeline catches fire"],th:["โอ๊ย สองด้อมนี้อีกแล้ว 555","สองด้อมนี้เจอกันทีไร ไทม์ไลน์ลุกเป็นไฟทุกที"]};
 const CD_BIG={en:["Even casual fans are talking about this now. Management should say something","This is all over the timeline today"],th:["ขนาดแฟนจรยังพูดถึงเลย ค่ายควรออกมาพูดอะไรบ้าง","วันนี้เรื่องนี้เต็มไทม์ไลน์ไปหมด"]};
 const CD_END={en:["Glad this calmed down. Back to supporting everyone","Good, everyone made up. Back to streaming"],th:["ดีที่จบกันด้วยดี กลับไปซัพทุกคนต่อ","ดีแล้วที่คืนดีกัน กลับไปสตรีมเพลงกันต่อ"]};
 function cdS(){const C=cmS();if(!Array.isArray(C.dr))C.dr=[];C.drk=C.drk||{};C.mood=C.mood||{};if(!Array.isArray(C.mp))C.mp=[];C.drq=Array.isArray(C.drq)?C.drq:[];return C}
@@ -75,7 +76,7 @@ const cdNm=id=>{const m=get(id)||(S.alumni||[]).find(x=>x.id==id);return m?cmFir
 function cdFans(id){const m=get(id);if(!m)return 0;try{return typeof fdSupFresh=='function'?fdSupFresh(m,'fans'):+m.fans||0}catch(e){return+m.fans||0}}
 // ---- lines -------------------------------------------------------------------------------------------------------------------
 function cdLine(d,key,arr,lang){const C=cdS();d.used=d.used||[];const free=arr.map((s,i)=>i).filter(i=>{const k=lang+':'+key+':'+i;return!d.used.includes(k)&&!(C.vc['cd:'+k]!=null&&S.day-C.vc['cd:'+k]<25)});if(!free.length)return null;const i=cmR(free);return{i,s:arr[i],k:lang+':'+key+':'+i}}
-function cdText(d,part,acc){const L=part=='calm'?CD_CALM:part=='esc'?CD_ESC:part=='big'?CD_BIG:part=='end'?CD_END:(CD_L[d.cat]||{})[part];if(!L||!L.en.length)return null;
+function cdText(d,part,acc){const L=part=='calm'?CD_CALM:part=='esc'?(['center','sis','oshi','team'].includes(d.cat)&&Math.random()<.5?CD_ESC2:CD_ESC):part=='big'?CD_BIG:part=='end'?CD_END:(CD_L[d.cat]||{})[part];if(!L||!L.en.length)return null;
  const e=cdLine(d,d.cat+part,L.en,'en'),t=cdLine(d,d.cat+part,L.th,'th');if(!e||!t)return null;
  const v={...d.v,a:d.a!=null?cdNm(d.a):'',b:d.b!=null?cdNm(d.b):''},nong=s=>s;const fill=(s,lang)=>s.replace(/\{(\w+)\}/g,(_,k)=>{let x=v[k];if(x==null)return'';if(lang=='th'&&acc&&acc.nong&&(k=='a'||k=='b')&&x)x='น้อง'+x;return String(x)});
  const en=fill(e.s,'en'),th=cmTh(fill(t.s,'th'));const C=cdS(),he=nwHash(en),ht=nwHash(th);if(C.fp.some(f=>f.he==he||f.ht==ht))return null;
@@ -101,16 +102,16 @@ function cdSeed(E){const C=cdS(),out=[];E.forEach(ev=>{try{
    for(let i=0;i+1<Math.min(R.length,10);i++){const x=R[i],y=R[i+1],dv=(x.votes||0)-(y.votes||0);if(x.votes&&dv>=0&&dv<=Math.max(300,x.votes*.02)){out.push({cat:'oshi',a:x.id,b:y.id,imp:2,v:{k:dv.toLocaleString('en-US')},src:ev.key});break}}}
   if(ev.cat=='th'){const u=ev.its.find(i=>i.i=='thUnit');if(u)out.push({cat:'ship',a:u.v.m,b:u.v.m2,imp:1,v:{st:ev.v.st},src:ev.key})}}catch(e){console.error('drama seed',e)}});
  // at most one or two new dramas a day; the same conflict waits 30 days
- out.sort(()=>Math.random()-.5).sort((a,b)=>b.imp-a.imp);let n=0;out.forEach(s=>{if(n>=2)return;const key=s.cat+':'+(s.sk||[s.a,s.b].filter(v=>v!=null).sort().join('-'));if(C.drk[key]!=null&&S.day-C.drk[key]<30)return;
-  const gid=s.gid??(E.find(e=>e.key==s.src)||{}).gid;if(gid==null)return;if(C.dr.filter(d=>d.gid==gid&&d.st=='open').length>=3)return;const pr={center:.75,mgmt:.8,sen:.5,gen:.45,team:.45,sis:.7,song:.45,ge:.7,oshi:.5,ship:.3}[s.cat]||.4;if(Math.random()>pr)return;
+ out.sort(()=>Math.random()-.5).sort((a,b)=>b.imp-a.imp);let n=0;out.forEach(s=>{if(n>=2)return;const key=s.cat+':'+(s.sk||[s.a,s.b].filter(v=>v!=null).sort().join('-'));if(C.drk[key]!=null&&S.day-C.drk[key]<30)return;if(s.cat=='ship'&&C.dr.some(d=>d.cat=='ship'&&S.day-d.d0<20))return;
+  const gid=s.gid??(E.find(e=>e.key==s.src)||{}).gid;if(gid==null)return;if(C.dr.filter(d=>d.gid==gid&&d.st=='open').length>=3)return;const pr={center:.75,mgmt:.8,sen:.5,gen:.45,team:.45,sis:.7,song:.45,ge:.7,oshi:.5,ship:.12}[s.cat]||.4;if(Math.random()>pr)return;
   C.drk[key]=S.day;C.dr.push({id:'dr'+(++C.seq),key,cat:s.cat,gid,gids:s.gids||[gid],g2:s.g2,gcut:s.gcut,a:s.a,b:s.b,v:s.v,imp:s.imp,src:s.src,d0:S.day,dl:S.day,heat:0,lv:0,max:0,st:'new',post:null,cnt:{},side:{A:0,B:0,N:0,C:0},used:[]});n++})}
 // ---- the daily life of a drama -----------------------------------------------------------------------------------------------
 function cdReply(d,p,want,part){const a=cdPick(d,want);if(!a)return 0;const tx=cdText(d,part||want,a);if(!tx)return 0;d.cnt[a.id]=(d.cnt[a.id]||0)+1;a.last=S.day;
  const lk=Math.round((4+a.cl*2.5)*(.5+d.heat/40)*cmRnd(.5,1.5));p.rp.push({a:a.id,h:a.h,gid:a.gid,en:tx.en,th:tx.th,lk,d:S.day,hr:Math.min(23,Math.floor(cmRnd(9,23))),sd:want});d.side[want]=(d.side[want]||0)+1;return 1}
-function cdLevel(d){const sc=cmScale(d.gid),big=sc>=.85&&['center','mgmt','sen','sis','ge'].includes(d.cat)&&d.imp>=3;let lv=d.heat<25?1:d.heat<50?2:d.heat<75?3:4;if(lv==4&&!big)lv=3;return lv}
+function cdLevel(d){const sc=cmScale(d.gid),big=sc>=.85&&['center','mgmt','sen','sis','ge'].includes(d.cat)&&d.imp>=3;let lv=d.heat<25?1:d.heat<50?2:d.heat<75?3:4;if(lv==4&&!big)lv=3;return Math.min(lv,d.imp<=1?2:d.imp==2?3:4)}
 function cdDaily(){const C=cdS();
  // opinions change with real new information (first-week sales, MV milestones)
- C.drq.splice(0).forEach(q=>{C.dr.filter(d=>S.day-d.d0<=45&&d.post&&((q.t&&d.v.t==q.t)||(q.s&&d.v.s==q.s))&&!d.chd).forEach(d=>{const p=C.posts.find(x=>x.id==d.post);if(!p)return;if(d.cat=='song'&&q.n)d.v.n=q.n;if(cdReply(d,p,'B','ch')){d.chd=S.day;d.dl=S.day;p.d=Math.max(p.d,S.day-1)}})});
+ C.drq.splice(0).forEach(q=>{C.dr.filter(d=>S.day-d.d0<=45&&d.post&&(d.cat=='song'?(q.s&&q.n&&d.v.s==q.s):(q.t&&d.v.t==q.t))&&!d.chd).forEach(d=>{const p=C.posts.find(x=>x.id==d.post);if(!p)return;if(d.cat=='song'&&q.n)d.v.n=q.n;if(cdReply(d,p,'B','ch')){d.chd=S.day;d.dl=S.day;p.d=Math.max(p.d,S.day-1)}})});
  C.dr.filter(d=>d.st=='new'||d.st=='open').forEach(d=>{const sc=cmScale(d.gid),stake=d.a!=null||d.b!=null?Math.min(1.6,.6+((cdFans(d.a)+cdFans(d.b))/2)/Math.max(1,(S.fans||1)/40)):1;
   if(d.st=='new'){d.heat=Math.min(70,(10+d.imp*7)*sc*stake*cmRnd(.6,1.4));d.st='open';
    const a=cdPick(d,d.cat=='song'||d.cat=='mgmt'||d.cat=='team'||d.cat=='gen'?'B':d.cat=='sis'?'B':'B')||cdPick(d,'N');if(!a){d.st='faded';return}const tx=cdText(d,'root',a);if(!tx){d.st='faded';return}d.cnt[a.id]=1;a.last=S.day;

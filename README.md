@@ -1185,3 +1185,12 @@ Fan Community section: All / Main Group / Sister Groups / Trending, threads with
 - Centers selector has **No Center** (fm.nc = 0): no center slot, the song releases with no Center.
 - Member history: 1 member (Solo) · 2 members (Duet with name) · double Center: Center (Duet with name) · 3+ Centers: Center (1 in N Centers). Theater / concert 2-member unit songs: Duet with name.
 - Thai: names chosen by the player (members, songs, singles, albums, groups, teams, units, stages, concerts) are never translated; genre / concept / lyrics descriptions in the library picker and under the selectors are translated.
+
+## Fandom Drama & Fan Wars (community-drama.js)
+Part of the Fan Community: a drama is a normal thread whose replies come from several accounts on different sides (defend / other side / neutral / calming).
+- Seeds only from real events: announced Senbatsu (Center War, Senbatsu Dispute, Generation Debate, Team Rivalry, Sister Group Debate when a sister-group member takes a Main Group spot, Management Backlash when the same Center returns 3+ times), a title song in a new genre (Song & Concept Debate), election results (Election Dispute, close-rank Oshi Rivalry), theater unit pairs (Combination Debate).
+- Escalation: heat = topic importance × fandom size × members' fans × daily engagement, decaying daily. Levels: Minor Disagreement, Growing Argument, Fan War, Major Backlash (big fandoms + lineup / management / election topics only; small topics stop at level 2). Many threads fade at level 1; heated ones end with a calming reply.
+- Opinions change only with real new facts (stronger first-week sales, MV view milestones).
+- Anti-repetition: the same conflict waits 30 days; line cool-downs, exact-text checks, each line once per thread, accounts at most twice per thread.
+- Impact: engagement, trending, fandom mood and "how fans see management" (descriptive). Level 3+ gives at most +0.15 popularity awareness per member per 30 days. No fan-count changes, no penalties.
+- Content stays on lineups, songs, performances and chances: no allegations, rumors or personal attacks.

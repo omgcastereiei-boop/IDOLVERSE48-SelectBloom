@@ -50,7 +50,7 @@ function cmStreakOut(H,mid){let k=0;for(let i=H.length-1;i>=0;i--){if(!cmIn(H[i]
 // ---- text --------------------------------------------------------------------------------------------------------------------------
 function cmName(v,lang,a){const m=typeof v=='number'?(get(v)||(S.alumni||[]).find(x=>x.id==v)):null;if(!m)return String(v??'');const n=cmFirst(m);return lang=='th'&&a&&a.nong?'น้อง'+n:n}
 function cmFill(str,vars,lang,a){return str.replace(/\{(\w+)\}/g,(_,k)=>{const v=vars[k];if(v==null)return'';if(k=='m'||k=='m2')return cmName(v,lang,a);return String(v)})}
-function cmTh(s){return s.replace(/([\u0E00-\u0E7F]) น้อง/g,'$1น้อง').replace(/([฀-๿])([A-Za-z0-9#])/g,'$1 $2').replace(/([A-Za-z0-9!?)])([฀-๿])/g,'$1 $2').replace(/\s+/g,' ').trim()}
+function cmTh(s){return s.replace(/(ของ|กับ|ให้|ดู|วันเกิด|ชม|คู่|เป็น|จาก|ถึง|แต่|ว่า|เรื่อง) น้อง/g,'$1น้อง').replace(/([฀-๿])([A-Za-z0-9#])/g,'$1 $2').replace(/([A-Za-z0-9!?)])([฀-๿])/g,'$1 $2').replace(/\s+/g,' ').trim()}
 const CM_CG=new Set(['firstSen','firstCenter','returnee','promote','captain','award','soloDebut','geWin','geUp','bday','debutGroup','unitNew','gradThanks']);
 const CM_TURN=new Set(['firstSen','firstCenter','geWin','geUp','award','promote','captain','returnee']);
 function cmDecor(core,st,tone,lang,startsName,it){if(/^camp/.test(it||''))return core;const D0=((CM_DEC[st]||{})[lang]||{})[tone];if(!D0)return core;
