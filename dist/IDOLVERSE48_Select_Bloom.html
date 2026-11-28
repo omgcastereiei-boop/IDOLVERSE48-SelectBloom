@@ -2269,6 +2269,62 @@ body.lite{background:#f6ece3!important}
 #blpop.on{transform:translate(-50%,0);opacity:1;pointer-events:auto}
 .blpopin{background:linear-gradient(135deg,#2b1745,#7c3a8f 60%,#e0679f);color:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 12px 32px rgba(60,20,90,.4);display:flex;flex-direction:column;gap:6px}
 .blpopin b{font:800 16px 'M PLUS Rounded 1c',Quicksand,sans-serif;letter-spacing:.5px}.blpopin span{font-size:12.5px;opacity:.95}.blpopin .b:not(.p){background:rgba(255,255,255,.85)}
+/* ===================== Group Media (group-media*.js) ===================== */
+.gmhome{position:relative;border-radius:22px;overflow:hidden;min-height:230px;margin:8px 0 12px;box-shadow:var(--sh);background:#2a1548}
+.gmhb{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr}.gmhb i{background-size:cover;background-position:center}.gmhb i:nth-child(1){background-image:var(--gmb1)}.gmhb i:nth-child(2){background-image:var(--gmb2)}.gmhb i:nth-child(3){background-image:var(--gmb3)}
+.gmhome::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,10,40,.85),rgba(25,10,40,.35) 70%,rgba(25,10,40,.1))}
+.gmhtx{position:relative;z-index:1;padding:22px 20px;color:#fff;max-width:620px}.gmhtx small{font:800 11px Quicksand;letter-spacing:4px;color:#ffd96a}.gmhtx h2{margin:4px 0;font:800 24px 'M PLUS Rounded 1c',Quicksand,sans-serif;color:#fff}.gmhtx p{opacity:.92;font-size:13px;margin:0 0 10px}
+.gmtabs{gap:6px;margin:6px 0 10px}
+.gmprogs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.gmcard{display:flex;flex-direction:column;border:0;padding:0;border-radius:16px;overflow:hidden;background:var(--card,#fff);box-shadow:var(--sh);cursor:pointer;text-align:left;color:inherit;font:inherit}
+.gmcard img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:#2a1548}.gmcard.end{opacity:.7}
+.gmcb{display:flex;flex-direction:column;gap:2px;padding:8px 10px 10px}.gmcb b{font-size:14px}.gmcb small{font-size:11px;color:var(--mut)}
+.gmst{align-self:flex-start;font:800 10.5px Quicksand;padding:2px 9px;border-radius:999px;background:#dff5e6;color:#1f7a45}.gmst.hold{background:#fff1cf;color:#8a6200}.gmst.end{background:#eee;color:#666}
+.gmhero{position:relative;border-radius:22px;overflow:hidden;min-height:170px;background-size:cover;background-position:center;margin:8px 0 12px;box-shadow:var(--sh)}
+.gmhero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(20,8,30,.45))}
+.gmherox{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:12px;min-height:170px;flex-wrap:wrap}.gmherox .b{align-self:flex-start}
+.gmlogo svg{display:block;max-width:60vw;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+.gmprog{display:grid;grid-template-columns:200px 1fr;gap:12px;align-items:start}
+.gmposter{width:100%;border-radius:16px;box-shadow:var(--sh);background:#2a1548}
+@media(max-width:640px){.gmprog{grid-template-columns:1fr}.gmposter{max-width:220px;margin:0 auto;display:block}}
+.gmkv{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:8px 0}.gmkv span{display:flex;flex-direction:column;font-size:11px;color:var(--mut);background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:12px;padding:6px 9px}.gmkv b{font-size:13px;color:var(--ink)}
+.gmkv2{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin:8px 0}.gmkv2 span{color:var(--mut)}
+.gmsec{align-items:center;gap:10px;margin-top:14px}
+.gmeps{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.gmep{display:flex;gap:10px;background:var(--card,#fff);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 2px 8px rgba(120,90,150,.08)}
+.gmep img{width:150px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:#2a1548}.gmepb{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.gmepb small{font-size:11.5px}.gmepc{color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:560px){.gmep{flex-direction:column}.gmep img{width:100%}}
+.gmes{font:800 10.5px Quicksand;padding:2px 9px;border-radius:999px;background:#eee;color:#555;margin-left:auto}.gmes.sched{background:#e3ecff;color:#2c55b8}.gmes.film{background:#ffe1ec;color:#c0306a}.gmes.ready{background:#fff1cf;color:#8a6200}.gmes.done{background:#dff5e6;color:#1f7a45}.gmes.live{background:#ff3b3b;color:#fff}
+.gmwarn{color:#c0392b;font-size:12px;font-weight:700;margin:2px 0}
+.gmmp{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:6px;max-height:330px;overflow:auto;padding:2px}
+.gmmb{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 3px;border:2px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;color:inherit;font:inherit;min-width:0}
+.gmmb b{font-size:11px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gmmb small{font-size:9.5px;color:var(--mut)}.gmmb.on{border-color:#e05a8a;background:#fff0f6;box-shadow:0 0 0 2px rgba(224,90,138,.2)}.gmmb.busy{opacity:.55}.gmmb .gmbusy{color:#c0392b}
+.gmcast{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.gmcc{display:inline-flex;flex-direction:column;padding:3px 9px;border-radius:10px;background:#f3eefb;font-size:12px;font-weight:700}.gmcc small{font-size:9.5px;font-weight:600;color:var(--mut)}.gmcc.reg{background:#ffe9f2}.gmcc.rnd{background:#e6f4ff}.gmcc.rep{background:#fff3d6}.gmcc.empty{background:#eee;text-decoration:line-through}
+.gmregfix{background:#fff6f4;border:1px solid #f3c6bd;border-radius:12px;padding:8px;margin:6px 0}.gmregfix .row{gap:6px;align-items:center}
+.gmlogos{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}.gmlogos button{border:2px solid var(--line);border-radius:12px;background:#2a1548;padding:4px;cursor:pointer}.gmlogos button.on{border-color:#e05a8a}.gmlogos svg{width:100%;height:auto;display:block}
+.gmplat{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gmpl{display:flex;flex-direction:column;gap:3px;text-align:left;padding:10px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;color:inherit;font:inherit}.gmpl.on{border-color:#e05a8a;background:#fff0f6}.gmpl small{font-size:11.5px;color:var(--mut)}
+@media(max-width:520px){.gmplat{grid-template-columns:1fr}}
+.gmbar{gap:8px;margin-top:10px;flex-wrap:wrap}
+.gmsongs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;max-height:280px;overflow:auto}.gmsong{display:flex;flex-direction:column;text-align:left;padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;color:inherit;font:inherit}.gmsong small{font-size:10.5px;color:var(--mut)}.gmsong:hover{border-color:#e05a8a}
+.gmsegs{list-style:none;padding:0;margin:8px 0;display:flex;flex-direction:column;gap:4px}.gmsegs li{display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:10px;background:#f6f1fb}.gmsegs li span{flex:1;font-size:13px;font-weight:700}.gmsegs li.perf{background:linear-gradient(90deg,#ffe3ea,#fff3e0)}
+.gmstage{border-radius:14px;overflow:hidden;background-size:cover;background-position:center;padding:10% 3% 2%;margin:6px 0}.gmstage img{width:100%;display:block}
+.gmprev{max-width:760px}.gmprevimg img,.gmresh img{width:100%;max-width:420px;border-radius:12px;display:block}
+.gmresh{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:12px;align-items:start}@media(max-width:640px){.gmresh{grid-template-columns:1fr}}
+.gmrk{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0}.gmrk div{background:linear-gradient(135deg,#fff,#fdf0f6);border:1px solid var(--line);border-radius:14px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}.gmrk small{font-size:11px;color:var(--mut)}.gmrk b{font:800 20px Quicksand}
+.gmbarv{height:6px;border-radius:3px;background:#eee;overflow:hidden}.gmbarv i{display:block;height:100%;background:var(--grad)}
+.gmconv{display:flex;flex-wrap:wrap;gap:6px}.gmconv span{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;background:#fff3f8;border:1px solid #f6cfe0;font-size:12.5px}.gmconv em{font-style:normal;font-weight:800;color:#c0306a}.gmconv em.k{color:#7a3ad0}
+.gmlive{position:relative;border-radius:22px;overflow:hidden;background-size:cover;background-position:center;min-height:70vh;padding:16px;display:flex;flex-direction:column;gap:12px;color:#fff;margin:8px 0}
+.gmlive::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,10,.25),rgba(20,10,10,.72))}.gmlive>*{position:relative;z-index:1}
+.gmonairb{align-self:center;display:flex;align-items:center;gap:10px;background:#1a0505;border:3px solid #ff3b3b;color:#ff4747;font:400 30px 'Dela Gothic One','M PLUS Rounded 1c',sans-serif;letter-spacing:6px;padding:6px 22px;border-radius:14px;box-shadow:0 0 24px rgba(255,59,59,.55);animation:gmglow 1.6s ease-in-out infinite}
+.gmdot{width:14px;height:14px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 10px #ff3b3b}
+@keyframes gmglow{50%{box-shadow:0 0 40px rgba(255,59,59,.85)}}
+body.nomo .gmonairb{animation:none}
+.gmlivehd{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.gmlivehd b{font-size:15px;text-shadow:0 2px 6px #000}
+.gmlivecast{display:flex;gap:10px;flex-wrap:wrap}.gmlivecast span{display:flex;flex-direction:column;align-items:center;font-size:11px;background:rgba(0,0,0,.35);border-radius:12px;padding:5px}
+.gmlines{flex:1;display:flex;flex-direction:column;gap:6px;background:rgba(15,8,6,.55);border-radius:14px;padding:12px;max-height:44vh;overflow:auto}.gmlines p{margin:0;font-size:14px;opacity:.7}.gmlines p.on{opacity:1;font-weight:700}
+#gmpop{position:fixed;left:14px;bottom:86px;z-index:60;width:min(340px,calc(100vw - 28px));background:#fffaf3;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(80,50,110,.28);padding:10px 12px;display:flex;flex-direction:column;gap:6px;transform:translateY(20px);opacity:0;pointer-events:none;transition:.28s}
+#gmpop.on{transform:none;opacity:1;pointer-events:auto}.gmpophd{display:flex;align-items:center}.gmpophd b{flex:1}.gmpopi{text-align:left;border:1px solid #f1e4d0;border-radius:12px;background:#fff;padding:6px 9px;font:inherit;font-size:12px;cursor:pointer;color:inherit}
+@media(min-width:1000px){#gmpop{left:calc(var(--nav) + 20px);bottom:20px}}
 
 </style>
 </head><body>
@@ -5028,6 +5084,120 @@ const DOCBG=(()=>{
   if(!s){const f=B[k]||B.title;s=`<svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${f(seed|0)}</svg>`.replace(/id="(\w+)"/g,`id="db${k}_$1"`).replace(/url\(#(\w+)\)/g,`url(#db${k}_$1)`)}
   if(C.size>60)C.clear();C.set(key,s);return s}
  return{svg,keys:[...Object.keys(B),...Object.keys(GRADE)]}})();
+
+</script>
+<script>
+// =====================================================================================
+//  Group Media — original illustrated studio backgrounds, program logos and posters (SVG).
+//  GMART.bg(key) → 1200×675 SVG string (cached): 'var' colourful variety studio (LED wall, quiz podiums,
+//  buzzers, props, lighting rig) · 'mus' music theater stage (red curtains, spotlights, LED screens) ·
+//  'talk' interview corner (sofa, lamp, backstage wall) · 'radio' FM radio booth (mics, mixer, acoustic
+//  panels, wooden desk, ON AIR sign). Variants v (0..2) shift the palette.
+//  GMART.logo(p,w) program logo · GMART.poster(p,mids) poster · built only from shapes + the game's character art.
+// =====================================================================================
+const GMART=(()=>{
+ const C={};let U=0;const uid=()=>'gma'+(++U);
+ const R=(s)=>{let x=s>>>0||1;return()=>((x=Math.imul(x^x>>>15,2246822507)^Math.imul(x^x>>>13,3266489909))>>>0)/4294967296};
+ const rect=(x,y,w,h,f,o='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${o}/>`;
+ // ---- variety studio ---------------------------------------------------------------------------------
+ function vr(v){const r=R(11+v*7),id=uid(),P=[['#ff5fa2','#ffd23f','#3fa9ff','#ff4d4d'],['#7c5cff','#ffcf3a','#22c7a9','#ff6b9a'],['#ff8a3d','#47c6ff','#ff4fae','#ffe066']][v%3];
+  let s=`<defs><linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1548"/><stop offset="1" stop-color="#4b2a7a"/></linearGradient><radialGradient id="${id}s" cx=".5" cy=".2" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4c9e4"/><stop offset="1" stop-color="#b98ad6"/></linearGradient></defs>`;
+  s+=rect(0,0,1200,675,`url(#${id}w)`);
+  // lighting truss
+  s+=rect(0,26,1200,14,'#9aa3b8')+[...Array(24)].map((_,i)=>`<path d="M${i*50} 26l25 14l25-14" stroke="#6f7790" stroke-width="2" fill="none"/>`).join('');
+  for(let i=0;i<9;i++){const x=70+i*132,c=P[i%4];s+=`<path d="M${x} 40l-70 430h140z" fill="${c}" opacity=".10"/><rect x="${x-12}" y="38" width="24" height="20" rx="4" fill="#2c2f3a"/><circle cx="${x}" cy="60" r="7" fill="${c}"/>`}
+  // LED wall: grid of tiles + big heart/star
+  s+=`<g>`+rect(220,80,760,300,'#120a24','rx="14"');for(let y=0;y<10;y++)for(let x=0;x<25;x++){const c=P[(x+y+v)%4];s+=rect(226+x*30.2,86+y*29.2,28,27,c,`opacity="${(.18+r()*.5).toFixed(2)}" rx="3"`)}
+  s+=`<path d="M600 150c-40-48-120-12-92 46c18 36 92 80 92 80s74-44 92-80c28-58-52-94-92-46z" fill="#fff" opacity=".85"/><path d="M600 168c-30-34-86-8-66 32c13 25 66 57 66 57s53-32 66-57c20-40-36-66-66-32z" fill="${P[0]}"/></g>`;
+  // side screens
+  [[40,120],[1010,120]].forEach(([x,y],k)=>{s+=rect(x,y,150,220,'#160c2c','rx="10"')+rect(x+8,y+8,134,204,P[(k+1)%4],'opacity=".5" rx="6"');for(let i=0;i<6;i++)s+=rect(x+20,y+24+i*30,110*r()+10,10,'#fff','opacity=".5" rx="5"')});
+  // floor
+  s+=`<path d="M0 470h1200v205H0z" fill="url(#${id}f)"/>`;for(let i=0;i<14;i++)s+=`<path d="M${i*92-60} 675L${600+(i-7)*30} 470" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>`;
+  s+=`<ellipse cx="600" cy="560" rx="420" ry="70" fill="${P[1]}" opacity=".35"/><ellipse cx="600" cy="560" rx="300" ry="46" fill="#fff" opacity=".25"/>`;
+  // quiz podiums with buzzers
+  for(let i=0;i<5;i++){const x=150+i*200,c=P[i%4];s+=`<g><path d="M${x} 470h140l-12 120h-116z" fill="${c}"/><path d="M${x} 470h140v18h-140z" fill="#fff" opacity=".55"/><rect x="${x+30}" y="${510}" width="80" height="34" rx="8" fill="#1d1430" opacity=".75"/><text x="${x+70}" y="534" font-size="20" text-anchor="middle" fill="#fff" font-family="Quicksand,sans-serif" font-weight="800">${i+1}</text><ellipse cx="${x+70}" cy="466" rx="22" ry="8" fill="#333"/><path d="M${x+52} 466a18 14 0 0 1 36 0z" fill="#ff3b3b"/></g>`}
+  // props: giant dice + question cards + confetti
+  s+=`<g transform="translate(70 520) rotate(-12)"><rect width="70" height="70" rx="12" fill="#fff"/><circle cx="20" cy="20" r="7" fill="#ff4d6d"/><circle cx="50" cy="50" r="7" fill="#ff4d6d"/><circle cx="35" cy="35" r="7" fill="#ff4d6d"/></g>`;
+  s+=`<g transform="translate(1060 510) rotate(10)"><rect width="80" height="100" rx="10" fill="${P[2]}"/><text x="40" y="70" font-size="60" text-anchor="middle" fill="#fff" font-family="Quicksand,sans-serif" font-weight="800">?</text></g>`;
+  for(let i=0;i<60;i++)s+=rect(r()*1200,r()*420,6,10,P[i%4],`transform="rotate(${r()*90} ${r()*1200} ${r()*420})" opacity=".7"`);
+  s+=rect(0,0,1200,675,`url(#${id}s)`);return s}
+ // ---- music theater stage --------------------------------------------------------------------------
+ function mu(v){const id=uid(),r=R(31+v*5),ac=['#ff3d7f','#7c6cff','#ffb22e'][v%3];
+  let s=`<defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14060f"/><stop offset="1" stop-color="#3b0d1e"/></linearGradient><linearGradient id="${id}c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a0b1c"/><stop offset=".5" stop-color="#c8183a"/><stop offset="1" stop-color="#6d0918"/></linearGradient><radialGradient id="${id}l" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></radialGradient><linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1a24"/><stop offset="1" stop-color="#100509"/></linearGradient></defs>`;
+  s+=rect(0,0,1200,675,`url(#${id}b)`);
+  // LED screens (back)
+  s+=rect(330,70,540,250,'#0b0612','rx="10"');for(let y=0;y<8;y++)for(let x=0;x<18;x++)s+=rect(336+x*29.6,76+y*30,27,28,ac,`opacity="${(.12+r()*.45).toFixed(2)}" rx="2"`);
+  s+=`<text x="600" y="215" font-size="64" text-anchor="middle" fill="#fff" opacity=".9" font-family="'Dela Gothic One','M PLUS Rounded 1c',sans-serif" letter-spacing="6">LIVE</text>`;
+  [[120,110],[930,110]].forEach(([x,y])=>{s+=rect(x,y,150,200,'#0b0612','rx="8"');for(let i=0;i<5;i++)for(let j=0;j<4;j++)s+=rect(x+8+j*35,y+8+i*38,32,34,ac,`opacity="${(.15+r()*.4).toFixed(2)}" rx="2"`)});
+  // spotlights
+  [[200,'#fff3c4'],[420,'#ffd0e8'],[780,'#d8d0ff'],[1000,'#fff3c4']].forEach(([x,c])=>{s+=`<path d="M${x} 0l-130 600h260z" fill="${c}" opacity=".12"/><circle cx="${x}" cy="8" r="16" fill="#ddd"/>`});
+  s+=`<ellipse cx="600" cy="20" rx="700" ry="420" fill="url(#${id}l)"/>`;
+  // stage floor with lights rows
+  s+=`<path d="M0 470h1200v205H0z" fill="url(#${id}f)"/><path d="M60 470h1080l60 40H0z" fill="#5a2232"/>`;for(let i=0;i<30;i++)s+=`<circle cx="${30+i*40}" cy="520" r="4" fill="${i%2?ac:'#ffe7a3'}" opacity=".8"/>`;
+  s+=`<ellipse cx="600" cy="590" rx="380" ry="50" fill="#ffe7a3" opacity=".12"/>`;
+  // red curtains: side drapes + valance
+  const drape=(x,dir)=>{let d='';for(let i=0;i<6;i++){const xx=x+dir*i*22;d+=`<path d="M${xx} 0c${dir*14} 160 ${dir*-10} 340 ${dir*18} 560" stroke="#4d0611" stroke-opacity=".35" stroke-width="5" fill="none"/>`}return`<path d="M${x} 0h${dir*170}c${dir*-50} 200 ${dir*-90} 380 ${dir*-30} 560c${dir*-60} 10 ${dir*-110} 0 ${dir*-140} -20z" fill="url(#${id}c)"/>`+d};
+  s+=drape(0,1)+drape(1200,-1);
+  s+=`<path d="M0 0h1200v58c-50 26-100 26-150 0c-50 26-100 26-150 0c-50 26-100 26-150 0c-50 26-100 26-150 0c-50 26-100 26-150 0c-50 26-100 26-150 0c-50 26-100 26-150 0c-50 26-100 26-150 0z" fill="url(#${id}c)"/><path d="M0 58h1200" stroke="#f3c35c" stroke-width="4" opacity=".7"/>`;
+  return s}
+ // ---- interview corner ------------------------------------------------------------------------------
+ function tk(v){const id=uid(),r=R(51+v),c=['#f6d6e4','#dfe6fb','#fbe6cf'][v%3];
+  let s=`<defs><linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="#fff7ef"/></linearGradient><radialGradient id="${id}g" cx=".3" cy=".3" r=".6"><stop offset="0" stop-color="#fff3c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></radialGradient></defs>`;
+  s+=rect(0,0,1200,675,`url(#${id}w)`);
+  // wall panels + framed photos (backstage wall)
+  for(let i=0;i<8;i++)s+=rect(i*150+6,40,138,380,'#fff','opacity=".45" rx="8"');
+  for(let i=0;i<6;i++){const x=90+i*180,y=90+(i%2)*40;s+=rect(x,y,110,80,'#fff','rx="4"')+rect(x+6,y+6,98,68,['#f5a3c4','#a9c4f5','#f6d28a','#b9e3c6'][i%4],'opacity=".8"')}
+  s+=`<ellipse cx="330" cy="200" rx="360" ry="260" fill="url(#${id}g)"/>`;
+  // floor + rug
+  s+=rect(0,430,1200,245,'#c99b74')+[...Array(12)].map((_,i)=>rect(0,430+i*21,1200,2,'#a7795a','opacity=".5"')).join('');
+  s+=`<ellipse cx="600" cy="560" rx="430" ry="70" fill="#e9b7c8" opacity=".75"/>`;
+  // sofa
+  s+=`<path d="M300 400h600a30 30 0 0 1 30 30v110h-660v-110a30 30 0 0 1 30-30z" fill="#e57aa6"/><path d="M270 470h660v60H270z" fill="#d1608f"/><rect x="250" y="440" width="60" height="110" rx="24" fill="#c95687"/><rect x="890" y="440" width="60" height="110" rx="24" fill="#c95687"/>`;
+  for(let i=0;i<3;i++)s+=rect(340+i*190,420,150,60,'#f39ac0','rx="22"');
+  // floor lamp + plant + side table with mic
+  s+=`<path d="M150 600V260" stroke="#4a3b30" stroke-width="6"/><path d="M110 260h80l-18-60h-44z" fill="#fff1c2"/><ellipse cx="150" cy="603" rx="40" ry="8" fill="#4a3b30"/>`;
+  s+=`<path d="M1050 600c-30-90-60-140-10-200c20 60 40 110 10 200z" fill="#5aa46c"/><path d="M1070 600c20-80 60-120 40-190c-40 60-50 110-40 190z" fill="#4c915d"/><rect x="1030" y="580" width="70" height="40" rx="8" fill="#b07a54"/>`;
+  s+=`<rect x="930" y="520" width="90" height="12" rx="4" fill="#8b6a4f"/><path d="M975 520v-46" stroke="#555" stroke-width="5"/><rect x="964" y="450" width="22" height="34" rx="11" fill="#333"/>`;
+  s+=`<g opacity=".9"><rect x="40" y="60" width="200" height="50" rx="25" fill="#fff"/><text x="140" y="94" font-size="24" text-anchor="middle" fill="#e05a8a" font-family="Quicksand,sans-serif" font-weight="800">TALK</text></g>`;
+  return s}
+ // ---- radio booth ----------------------------------------------------------------------------------
+ function ra(v){const id=uid(),r=R(71+v),w=['#3b2b2a','#2d3242','#3a2f3e'][v%3];
+  let s=`<defs><linearGradient id="${id}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${w}"/><stop offset="1" stop-color="#1c1514"/></linearGradient><radialGradient id="${id}g" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="#ffcf8a" stop-opacity=".45"/><stop offset="1" stop-color="#ffcf8a" stop-opacity="0"/></radialGradient><linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b98457"/><stop offset="1" stop-color="#7a4f2f"/></linearGradient></defs>`;
+  s+=rect(0,0,1200,675,`url(#${id}w)`);
+  // acoustic panels
+  for(let y=0;y<4;y++)for(let x=0;x<10;x++){const px=40+x*114,py=40+y*92;s+=rect(px,py,104,82,['#5b4a45','#4c3f3c','#6a5550'][(x+y)%3],'rx="6"');for(let k=0;k<4;k++)s+=rect(px+8+k*24,py+8,16,66,'#000','opacity=".12" rx="4"')}
+  // window to control room
+  s+=rect(720,90,380,200,'#1a2a36','rx="10"')+rect(730,100,360,180,'#24435a','rx="6" opacity=".9"');for(let i=0;i<8;i++)s+=rect(745+i*42,220,30,40,'#9ad0ff','opacity=".25" rx="3"');
+  // ON AIR sign
+  s+=`<g><rect x="430" y="40" width="300" height="80" rx="14" fill="#1a0a0a" stroke="#ff3b3b" stroke-width="4"/><text x="580" y="98" font-size="46" text-anchor="middle" fill="#ff4747" font-family="'Dela Gothic One','M PLUS Rounded 1c',sans-serif" letter-spacing="6" class="gmonair">ON AIR</text></g>`;
+  s+=`<ellipse cx="600" cy="330" rx="620" ry="380" fill="url(#${id}g)"/>`;
+  // wooden desk
+  s+=`<path d="M60 470h1080l40 205H20z" fill="url(#${id}d)"/><path d="M60 470h1080v18H60z" fill="#d6a679"/>`;
+  // mixer
+  s+=`<g><rect x="470" y="490" width="260" height="110" rx="10" fill="#2b2b33"/>`;for(let i=0;i<10;i++){s+=rect(486+i*24,505,14,70,'#16161c','rx="3"')+rect(484+i*24,510+r()*50,18,10,'#ddd','rx="2"')+`<circle cx="${493+i*24}" cy="590" r="4" fill="${i%3?'#4be37a':'#ffb02e'}"/>`}s+=`</g>`;
+  // mics on boom arms + headphones
+  [[230,'#3a3a44'],[970,'#3a3a44']].forEach(([x,c],k)=>{s+=`<path d="M${x+(k?80:-80)} 470L${x} 330" stroke="#555" stroke-width="8"/><rect x="${x-22}" y="270" width="44" height="80" rx="22" fill="${c}"/><rect x="${x-26}" y="300" width="52" height="10" fill="#777"/><g transform="translate(${x+(k?-140:90)} 500)"><path d="M0 30a40 40 0 0 1 80 0" stroke="#222" stroke-width="10" fill="none"/><rect x="-8" y="26" width="22" height="34" rx="8" fill="#e05a8a"/><rect x="66" y="26" width="22" height="34" rx="8" fill="#e05a8a"/></g>`});
+  s+=`<rect x="1040" y="420" width="70" height="50" rx="6" fill="#f2efe8"/><path d="M1052 432h46M1052 444h40M1052 456h30" stroke="#999" stroke-width="3"/>`;
+  return s}
+ const B={var:vr,mus:mu,talk:tk,radio:ra};
+ function bg(key,v=0){const k=key+'|'+v;if(!C[k])C[k]=`<svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">${(B[key]||vr)(v)}</svg>`;return C[k]}
+ const URLS={};function url(svg,key){if(key&&URLS[key])return URLS[key];let u='';try{u=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}))}catch(e){}if(key)URLS[key]=u;return u}
+ const bgUrl=(key,v=0)=>url(bg(key,v),'bg|'+key+'|'+v);
+ // ---- logo ------------------------------------------------------------------------------------------
+ const LOGO_ST=[['#ff5fa2','#ffd23f'],['#3fa9ff','#ff6bcb'],['#ff4d4d','#ffe066'],['#7c5cff','#5ce1e6'],['#22c7a9','#ffcf3a'],['#ff8a3d','#ff4fae']];
+ function logo(p,w=260){const st=(p.logo&&p.logo.st)|0,[a,b]=LOGO_ST[st%LOGO_ST.length],id=uid(),t=String(p.name||'').replace(/[<>&"]/g,'').slice(0,28),sz=t.length>18?30:t.length>12?38:46,shape=((p.logo&&p.logo.sh)|0)%4;
+  const bgS=shape==0?`<rect x="8" y="14" width="384" height="112" rx="56" fill="url(#${id})"/>`:shape==1?`<path d="M30 20h340l-20 100H10z" fill="url(#${id})"/>`:shape==2?`<path d="M200 6l40 30h130l-30 50 30 40H240l-40 20-40-20H30l30-40-30-50h130z" fill="url(#${id})"/>`:`<rect x="10" y="20" width="380" height="100" rx="14" fill="url(#${id})"/><circle cx="40" cy="20" r="18" fill="${b}"/><circle cx="360" cy="120" r="14" fill="${a}"/>`;
+  const sub={var:'VARIETY',mus:'MUSIC SHOW',radio:'RADIO'}[p.type]||'';
+  return`<svg viewBox="0 0 400 140" width="${w}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>${bgS}<text x="200" y="${72+sz/3}" font-size="${sz}" text-anchor="middle" ${t.length*sz*.66>350?'textLength="350" lengthAdjust="spacingAndGlyphs"':''} fill="#fff" stroke="#3a1a40" stroke-width="5" paint-order="stroke" font-family="'Dela Gothic One','M PLUS Rounded 1c',sans-serif">${t}</text><text x="200" y="128" font-size="15" text-anchor="middle" fill="#fff" font-family="Quicksand,sans-serif" font-weight="800" letter-spacing="5">${sub}</text></svg>`}
+ // ---- poster / thumbnail ----------------------------------------------------------------------------
+ function embed(svg,x,y,w,h){return String(svg).replace(/^\s*<svg([^>]*)>/,(m,at)=>`<svg x="${x}" y="${y}" width="${w}" height="${h}"${at.replace(/\s(width|height|x|y)="[^"]*"/g,'')}>`)}
+ function poster(p,mids,W=300){const bgk={var:'var',mus:'mus',radio:'radio'}[p.type]||'var',v=((p.logo&&p.logo.st)|0)%3,L=(mids||[]).map(get).filter(Boolean).slice(0,5);
+  let figs='';const n=L.length;L.forEach((m,i)=>{const w=n<=2?260:n<=3?220:180,x=600-((n-1)*w*.72)/2+i*w*.72-w/2;try{figs+=embed(CHAR_ASSETS.half(m,w),x,330-(i%2)*14,w,w*1.4)}catch(e){}});
+  return`<svg viewBox="0 0 1200 1600" width="${W}" xmlns="http://www.w3.org/2000/svg"><svg x="-500" y="0" width="2200" height="1240" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice">${(B[bgk])(v)}</svg><rect y="1100" width="1200" height="500" fill="#1d1030"/><rect y="1060" width="1200" height="60" fill="#1d1030" opacity=".6"/>${figs}${embed(logo(p,900),150,1170,900,315)}</svg>`}
+ function thumb(p,ep,mids,W=320){const bgk=ep&&ep.seg=='talk'?'talk':({var:'var',mus:'mus',radio:'radio'}[p.type]||'var'),v=(ep?ep.no:0)%3,L=(mids||[]).map(get).filter(Boolean).slice(0,3);
+  let figs='';L.forEach((m,i)=>{const w=300,x=600-((L.length-1)*240)/2+i*240-w/2;try{figs+=embed(CHAR_ASSETS.half(m,w),x,250,w,w*1.4)}catch(e){}});
+  return`<svg viewBox="0 0 1200 675" width="${W}" xmlns="http://www.w3.org/2000/svg">${(B[bgk])(v)}${figs}<rect x="0" y="560" width="1200" height="115" fill="#000" opacity=".55"/>${embed(logo(p,360),24,550,360,126)}<text x="1170" y="640" font-size="64" text-anchor="end" fill="#fff" font-family="'Dela Gothic One','M PLUS Rounded 1c',sans-serif">EP.${String(ep?ep.no:0).padStart(2,'0')}</text></svg>`}
+ return{bg,bgUrl,url,logo,poster,thumb,LOGO_ST}})();
 
 </script>
 <script>
@@ -27300,6 +27470,424 @@ function nvGcolBars(){if(!NV_DESK())return;document.querySelectorAll('.gcolbar')
  b.querySelectorAll('button').forEach(x=>x.remove());for(let n=3;n<=10;n++){const x=document.createElement('button');x.textContent=n;x.className=n==cur?'on':'';x.setAttribute('aria-pressed',n==cur);x.setAttribute('onclick',`gcolSet('${k}',${n})`);b.appendChild(x)}})}
 {const f=render;render=function(){const r=f.apply(this,arguments);try{if(S&&!ui.t)nvGcolBars()}catch(e){console.error(e)}return r}}
 {let w=null;window.addEventListener('resize',()=>{const d=NV_DESK();if(w!==null&&d!==w&&S&&!ui.t)render();w=d})}
+
+</script>
+<script>
+// =====================================================================================
+//  IDOLVERSE48: Select Bloom! — GROUP MEDIA (side feature): the group's own Variety shows, Music programs
+//  and Radio programs.  State: S.gm = {v, seq, progs:[program], ki:{mid:interest}, cq:[aired today]}
+//  · Program {id, gid, type var|mus|radio, name, fmt, concept, plat yt|tv, day (weekday 0–6 or null),
+//    time (radio slot), logo{st,sh}, regs[], sel{reg,rot,rnd,n}, st on|hold|end, eps[], log[]}
+//  · Episode {id,no,title,topic,acts[],cast[{m,src}],empty[],perf[],segs[],film,slot,bc,st,filmed,paid,res,
+//    radio: host,co,guests[],day}.  Statuses — Variety/Music: plan · sched · (Filming on the filming day) ·
+//    ready · aired.  Radio: sched · live · done (never filmed / ready).
+//  Reuses: member schedules (gsCommits + thForbid), Energy (m.en), the Song Library (ccSongsAll / ccSongPop),
+//  costumes (czFor / czLib / czD), the stage renderer (thStageSvg / fxRows), the fan economy (fan3 cohorts:
+//  Oshi o / interest u / Kami k via fdInterest / fdMoveKami / fbAcquire), pairing (prSpark), Finance (finOut /
+//  earn) and the Fan Community (new intents in CM_I, events fed through cmCollect → cmEmit).
+// =====================================================================================
+const GMD_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+const GMD_TYPES={var:['Variety Show','วาไรตี้โชว์'],mus:['Music Program','รายการเพลง'],radio:['Radio Program','รายการวิทยุ']};
+const GMD_PLAT={yt:['YouTube','YouTube'],tv:['TV','ทีวี']},GMD_PLATR={yt:['YouTube Live','YouTube Live'],tv:['Radio Station','สถานีวิทยุ']};
+const GMD_FMT={var:[['quiz','Quiz Show','ควิซโชว์'],['game','Game Show','เกมโชว์'],['talk','Talk Show','ทอล์กโชว์'],['chal','Challenge','ชาเลนจ์'],['cook','Cooking','ทำอาหาร'],['travel','Travel','ท่องเที่ยว'],['member','Member Variety','วาไรตี้เมมเบอร์'],['special','Special Variety','วาไรตี้พิเศษ'],['bts','Behind the Scenes','เบื้องหลัง']],
+ mus:[['show','Music Show','มิวสิกโชว์'],['live','Studio Live','สตูดิโอไลฟ์'],['request','Fan Request','ตามคำขอแฟน'],['retro','Throwback Songs','ย้อนเพลงเก่า']],
+ radio:[['solo','Solo Radio','วิทยุเดี่ยว'],['duo','Duo Radio','วิทยุคู่'],['group','Group Radio','วิทยุกลุ่ม'],['guest','Guest Radio','วิทยุรับแขก'],['special','Special Radio','วิทยุพิเศษ']]};
+const GMD_TPL=[['var','quiz','{g} QUIZ ARENA','Members battle with buzzers in quick quizzes about music, the group and the world.','เมมแข่งตอบคำถามด้วยปุ่มกด ทั้งเรื่องเพลง เรื่องวง และความรู้รอบตัว'],['var','game','{g} GAME PARTY','Team games, punishments and silly props every week.','เกมทีม บทลงโทษ และพร็อพตลก ๆ ทุกสัปดาห์'],['var','member','{g} ROOM','The members as they really are: talks, small challenges and surprises.','ตัวตนจริงของเมม ทั้งพูดคุย ชาเลนจ์เล็ก ๆ และเซอร์ไพรส์'],['var','cook','{g} KITCHEN','Cooking battles judged by the other members.','แข่งทำอาหาร ให้เมมคนอื่นเป็นกรรมการ'],['var','travel','{g} ON THE ROAD','Day trips with a few members at a time.','ทริปไปเที่ยวกับเมมทีละไม่กี่คน'],
+ ['mus','show','{g} SHOW','A weekly music show: up to three stages with talk corners in between.','มิวสิกโชว์รายสัปดาห์: สูงสุด 3 สเตจ คั่นด้วยช่วงพูดคุย'],['mus','retro','{g} SONG BOOK','Old songs on stage again, chosen by the members.','นำเพลงเก่ากลับมาแสดงใหม่ เมมเป็นคนเลือก'],
+ ['radio','group','{g} RADIO NIGHT','A late-night live radio show with letters from fans.','รายการวิทยุสดตอนดึก อ่านจดหมายจากแฟน'],['radio','duo','{g} TALK TALK RADIO','Two members, one microphone each, no script.','เมมสองคน คนละไมค์ ไม่มีสคริปต์']];
+const GMD_ACTS=[['quiz','Quiz competition','แข่งตอบคำถาม'],['team','Team competition','แข่งเป็นทีม'],['chal','Special challenge','ชาเลนจ์พิเศษ'],['disc','Member discussion','เมมคุยกัน'],['fanq','Fan questions','ตอบคำถามแฟน'],['inter','Member interactions','กิจกรรมคู่เมม']];
+const GMD_TOPICS={var:[['music','Music & songs','เพลงและดนตรี'],['group','Group trivia','เรื่องของวง'],['food','Food','อาหาร'],['skill','Hidden talents','ความสามารถพิเศษ'],['school','School days','สมัยเรียน'],['season','Seasonal special','พิเศษตามฤดูกาล'],['fear','Fears & dares','ความกลัวและคำท้า'],['fashion','Fashion','แฟชั่น']],
+ mus:[['latest','Latest single','ซิงเกิลล่าสุด'],['memories','Memories of the songs','ความทรงจำของเพลง'],['center','Center talk','คุยกับเซ็นเตอร์'],['practice','Practice stories','เรื่องการซ้อม']],
+ radio:[['talk','Member Talk','คุยเรื่องเมม'],['letters','Fan Letters','จดหมายจากแฟน'],['qa','Questions from Fans','คำถามจากแฟน'],['story','Personal Stories','เรื่องส่วนตัว'],['memory','Group Memories','ความทรงจำของวง'],['rel','Member Relationships','ความสัมพันธ์ของเมม'],['special','Special Topic','หัวข้อพิเศษ']]};
+const GMD_SEGS=[['open','Opening Talk','ทอล์กเปิดรายการ'],['iv','Member Interview','สัมภาษณ์เมม'],['talk','Talk Segment','ช่วงพูดคุย'],['close','Closing Talk','ทอล์กปิดรายการ']];
+const GMD_SLOT=[[570,750],[780,960],[990,1170]],GMD_RTIME=[[1260,1320,'21:00'],[1320,1380,'22:00'],[1380,1440,'23:00']];
+const GMD_LEAD={yt:7,tv:14},GMD_EN={var:12,mus:18,radio:6};
+const GMD_COST={var:{yt:600000,tv:4500000},mus:{yt:900000,tv:6000000},radio:{yt:150000,tv:800000}};
+const GMD_DOW=[['Sunday','อาทิตย์'],['Monday','จันทร์'],['Tuesday','อังคาร'],['Wednesday','พุธ'],['Thursday','พฤหัสบดี'],['Friday','ศุกร์'],['Saturday','เสาร์']];
+const gmdN=a=>GMD_T(a[0],a[1]),gmdFmtN=(t,k)=>{const f=(GMD_FMT[t]||[]).find(x=>x[0]==k);return f?GMD_T(f[1],f[2]):k};
+const gmdDow=d=>GMD_T(GMD_DOW[d][0],GMD_DOW[d][1]);
+function gmdS(){if(!S)return null;if(!S.gm||typeof S.gm!='object')S.gm={v:1,seq:0,progs:[],ki:{},cq:[]};const G=S.gm;G.progs=Array.isArray(G.progs)?G.progs:[];G.ki=G.ki||{};G.cq=Array.isArray(G.cq)?G.cq:[];G.seq=+G.seq||0;return G}
+const gmdId=p=>p+(++gmdS().seq);
+const gmdP=id=>gmdS().progs.find(p=>p.id==id)||null;
+const gmdE=(p,id)=>p&&p.eps.find(e=>e.id==id)||null;
+const gmdIso=d=>{const t=dayDate(d);return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`};
+const gmdFromIso=v=>{if(!v)return null;const t=new Date(v+'T00:00:00');return isNaN(t)?null:dateDay(t)};
+const gmdLead=p=>GMD_LEAD[p.plat]||7;
+const gmdStat=(m,k)=>{let v=0;try{v=+sv(m,k)}catch(e){v=+m[k]||0}return v>100?v/10:v};
+const gmdMem=id=>{const m=get(id);return m&&S.members.includes(m)&&m.status!='graduated'?m:null};
+const gmdPool=()=>S.members.filter(m=>m.status!='graduated'&&(isAct(m)||m.status=='trainee'));
+const gmdNm=id=>{const m=get(id)||(S.alumni||[]).find(x=>x.id==id);return m?(m.stage||m.name):'?'};
+
+// ---- schedule: the existing member schedule (gsCommits) + group-wide blocked days (thForbid) ------------------------------
+function gmdWin(p,e){if(p.type=='radio'){const t=GMD_RTIME[p.time|0]||GMD_RTIME[1];return[t[0],t[1]]}return GMD_SLOT[e.slot|0]||GMD_SLOT[0]}
+function gmdDayOf(p,e){return p.type=='radio'?e.day:e.film}
+function gmdBusy(mid,day,s,e,exceptId){const out=[];try{gsCommits(mid,day,day).forEach(c=>{if(c.id==exceptId)return;if((c.s??0)<e&&s<(c.e??1440))out.push(c)})}catch(x){}return out}
+function gmdWhy(p,e,mid,day){const m=gmdMem(mid);if(!m)return GMD_T('not an active member','ไม่ใช่เมมที่ยังทำกิจกรรม');if(day==null)return null;const[s,en]=gmdWin(p,e),B=gmdBusy(mid,day,s,en,e.id);if(B.length)return(B[0].label||B[0].type||GMD_T('another activity','งานอื่น'));
+ if(day==S.day&&(m.en||0)<GMD_EN[p.type])return GMD_T(`not enough Energy (${Math.round(m.en||0)})`,`พลังงานไม่พอ (${Math.round(m.en||0)})`);return null}
+function gmdDayBlock(day){try{const r=thForbid(day);return r||null}catch(e){return null}}
+function gmdFilmCount(day,exceptId){let n=0;gmdS().progs.forEach(p=>{if(p.type=='radio')return;p.eps.forEach(e=>{if(e.id!=exceptId&&e.film==day&&['sched','ready','aired'].includes(e.st)&&(e.st=='sched'||e.filmed==day))n++})});return n}
+function gmdFreeSlot(day,exceptId){const used=new Set();gmdS().progs.forEach(p=>{if(p.type!='radio')p.eps.forEach(e=>{if(e.id!=exceptId&&e.film==day&&(e.st=='sched'||e.filmed==day))used.add(e.slot|0)})});for(let i=0;i<3;i++)if(!used.has(i))return i;return-1}
+// Group Media work appears in every member's schedule, so other systems see it as a commitment
+{const f=gsCommits;gsCommits=function(mid,from,to){const L=f.apply(this,arguments);try{const G=S&&S.gm;if(!G||!G.progs.length)return L;from=from??S.day;to=to??(S.day+400);
+ G.progs.forEach(p=>p.eps.forEach(e=>{const d=gmdDayOf(p,e);if(d==null||d<from||d>to)return;const on=p.type=='radio'?e.st=='sched':e.st=='sched';if(!on)return;if(!gmdCast(p,e).includes(mid))return;const[s,en]=gmdWin(p,e);
+  L.push({src:'gm',id:e.id,gid:p.gid,type:'media',label:`${p.name} ${p.type=='radio'?GMD_T('live radio','วิทยุสด'):GMD_T('filming','ถ่ายทำ')} EP.${String(e.no).padStart(2,'0')}`,day:d,s,e:en})}))}catch(x){}return L}}
+
+// ---- cast ----------------------------------------------------------------------------------------------------------------
+function gmdCast(p,e){if(p.type=='radio')return[e.host,e.co,...(e.guests||[])].filter(x=>x!=null);if(p.type=='mus'){const s=new Set();(e.perf||[]).forEach(x=>(x.mids||[]).forEach(id=>s.add(id)));(e.cast||[]).forEach(c=>s.add(c.m));return[...s]}return(e.cast||[]).map(c=>c.m)}
+function gmdUse(p){const U={};p.eps.forEach(e=>gmdCast(p,e).forEach(id=>U[id]=(U[id]||0)+1));return U}
+// random cast: available on the filming day, spread over popularity tiers, fewest appearances first
+function gmdRandom(p,e,n,exclude){const day=e.film,U=gmdUse(p),ex=new Set(exclude||[]),A=gmdPool().filter(m=>!ex.has(m.id)&&(day==null||!gmdWhy(p,e,m.id,day)));if(!A.length)return[];
+ const srt=A.slice().sort((a,b)=>b.pop-a.pop),T=[srt.slice(0,Math.ceil(srt.length/3)),srt.slice(Math.ceil(srt.length/3),Math.ceil(srt.length*2/3)),srt.slice(Math.ceil(srt.length*2/3))];const out=[];let t=Math.floor(Math.random()*3);
+ while(out.length<n&&T.some(x=>x.length)){const L=T[t%3];t++;if(!L.length)continue;L.sort((a,b)=>(U[a.id]||0)-(U[b.id]||0)+(Math.random()-.5)*1.2);out.push(L.shift().id)}return out}
+function gmdRandFill(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e||!gmdEditable(e))return;if(e.film==null)return toast(GMD_T('Choose the filming date first: random members are picked from those available that day.','เลือกวันถ่ายทำก่อน ระบบจะสุ่มจากเมมที่ว่างในวันนั้น'),'err');
+ const n=Math.max(1,Math.min(12,+((ui.gm&&ui.gm.rn)||p.sel.n||3)));e.cast=e.cast.filter(c=>c.src!='rnd');const pick=gmdRandom(p,e,n,e.cast.map(c=>c.m).concat(e.empty||[]));pick.forEach(id=>e.cast.push({m:id,src:'rnd'}));
+ if(pick.length<n)toast(GMD_T(`Only ${pick.length} member(s) are available that day.`,`วันนั้นมีเมมว่างแค่ ${pick.length} คน`),'err');render()}
+function gmdCastTog(pid,eid,mid,src){const p=gmdP(pid),e=gmdE(p,eid);if(!e||!gmdEditable(e))return;mid=+mid;const i=e.cast.findIndex(c=>c.m==mid);if(i>=0)e.cast.splice(i,1);else e.cast.push({m:mid,src:src||'rot'});e.empty=(e.empty||[]).filter(x=>x!=mid);render()}
+function gmdRegFix(pid,eid,mid,act,rep){const p=gmdP(pid),e=gmdE(p,eid);if(!e)return;mid=+mid;
+ if(act=='replace'){rep=+rep;if(!rep)return;const c=e.cast.find(c=>c.m==mid);if(c){c.m=rep;c.src='rep';c.for=mid}toast(GMD_T('Replaced for this episode only.','เปลี่ยนตัวเฉพาะตอนนี้แล้ว'))}
+ if(act=='empty'){e.cast=e.cast.filter(c=>c.m!=mid);e.empty=[...new Set([...(e.empty||[]),mid])];toast(GMD_T('The slot stays empty for this episode.','เว้นที่ว่างไว้สำหรับตอนนี้'))}
+ if(act=='cancel')return gmdCancelFilm(pid,eid);render()}
+function gmdCancelFilm(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e)return;if(p.type=='radio'){e.st='sched';e.day=null;e.issue=null}else{e.st='plan';e.film=null;e.slot=null;e.issue=null;if(p.plat=='yt')e.bc=null}toast(GMD_T('Filming cancelled. Everything you set up is kept: choose a new date when ready.','ยกเลิกการถ่ายทำแล้ว การตั้งค่าทั้งหมดยังอยู่ เลือกวันใหม่ได้เมื่อพร้อม'));render()}
+
+// ---- programs ----------------------------------------------------------------------------------------------------------------
+function gmdNewDraft(type){const g=grp(gsAg())||{name:'Group'},T=GMD_TPL.find(t=>t[0]==(type||'var'));ui.gm={pg:'new',d:{type:type||'var',name:T?T[2].replace('{g}',String(g.name).toUpperCase()):'',fmt:T?T[1]:GMD_FMT[type||'var'][0][0],concept:T?GMD_T(T[3],T[4]):'',plat:'yt',day:null,time:1,logo:{st:0,sh:0},regs:[],sel:{reg:1,rot:0,rnd:0,n:3}}};render()}
+function gmdTpl(i){const T=GMD_TPL[+i],d=ui.gm&&ui.gm.d;if(!T||!d)return;const g=grp(gsAg())||{name:'Group'};Object.assign(d,{type:T[0],fmt:T[1],name:T[2].replace('{g}',String(g.name).toUpperCase()),concept:GMD_T(T[3],T[4])});render()}
+function gmdDSet(k,v){const d=ui.gm&&ui.gm.d;if(!d)return;if(k=='name')v=String(v).replace(/[<>"`\\]/g,'').slice(0,28);if(k=='concept')v=String(v).replace(/[<>`\\]/g,'').slice(0,200);if(k=='day')v=v===''?null:+v;if(k=='time')v=+v;
+ if(k=='type'){d.fmt=GMD_FMT[v][0][0];d.regs=[]}if(k=='plat'&&v=='tv'&&d.day==null)d.day=6;d[k]=v;render()}
+function gmdDSel(k,v){const d=ui.gm.d;d.sel[k]=k=='n'?Math.max(1,Math.min(12,+v||3)):!!v;render()}
+function gmdDReg(mid){const d=ui.gm.d;mid=+mid;const i=d.regs.indexOf(mid);if(i>=0)d.regs.splice(i,1);else d.regs.push(mid);render()}
+function gmdCreate(){const d=ui.gm&&ui.gm.d;if(!d)return;if(!String(d.name||'').trim())return toast(GMD_T('Enter a program name.','ตั้งชื่อรายการก่อน'),'err');
+ if(d.plat=='tv'&&d.day==null)return toast(GMD_T('A TV program needs a fixed broadcast day.','รายการทีวีต้องมีวันออกอากาศประจำ'),'err');
+ if(d.type=='radio'&&d.plat=='tv'&&d.day==null)return toast(GMD_T('Choose the weekly live day.','เลือกวันออกอากาศสดประจำสัปดาห์'),'err');
+ if(gmdS().progs.some(p=>p.gid==gsAg()&&p.st!='end'&&p.name.toLowerCase()==d.name.trim().toLowerCase()))return toast(GMD_T('A program with this name already exists.','มีรายการชื่อนี้อยู่แล้ว'),'err');
+ const p={id:gmdId('gp'),gid:gsAg(),type:d.type,name:d.name.trim(),fmt:d.fmt,concept:d.concept,plat:d.plat,day:d.day,time:d.time|0,logo:{...d.logo},regs:d.regs.slice(),sel:{...d.sel},st:'on',created:S.day,eps:[],log:[]};
+ if(p.type=='radio'){p.sel={reg:1,rot:1,rnd:0,n:2}}gmdS().progs.push(p);ui.gm={pg:'prog',pid:p.id};toast(GMD_T(`“${p.name}” created.`,`สร้างรายการ “${p.name}” แล้ว`));render()}
+function gmdProgSet(pid,k,v){const p=gmdP(pid);if(!p)return;if(k=='st'){if(p.st=='end')return;if(v=='end'){return ask(GMD_T(`End “${p.name}”? It stays in the history with all its episodes. Unfilmed episodes are dropped.`,`จบรายการ “${p.name}”? รายการและตอนทั้งหมดยังดูย้อนหลังได้ ตอนที่ยังไม่ถ่ายจะถูกยกเลิก`),()=>{p.st='end';p.ended=S.day;p.eps=p.eps.filter(e=>e.st=='aired'||e.st=='done');render()},GMD_T('End program','จบรายการ'))}p.st=v}
+ if(k=='day'){if(p.plat=='tv'&&(v===''||v==null))return toast(GMD_T('TV programs must keep a fixed broadcast day.','รายการทีวีต้องมีวันออกอากาศประจำ'),'err');p.day=v===''?null:+v}
+ if(k=='time')p.time=+v;if(k=='name'){v=String(v).replace(/[<>"`\\]/g,'').trim().slice(0,28);if(v)p.name=v}if(k=='concept')p.concept=String(v).replace(/[<>`\\]/g,'').slice(0,200);render()}
+function gmdRegTog(pid,mid){const p=gmdP(pid);if(!p)return;mid=+mid;const i=p.regs.indexOf(mid);if(i>=0)p.regs.splice(i,1);else p.regs.push(mid);render()}
+
+// ---- episodes ------------------------------------------------------------------------------------------------------------------
+const gmdEditable=e=>e&&(e.st=='plan'||e.st=='sched');
+function gmdNewEp(pid){const p=gmdP(pid);if(!p||p.st=='end')return;const no=Math.max(0,...p.eps.map(e=>e.no))+1;
+ const e={id:gmdId('ge'),no,title:'',topic:(GMD_TOPICS[p.type]||[[null]])[0][0],acts:p.type=='var'?['quiz']:[],cast:[],empty:[],perf:[],segs:p.type=='mus'?['open','p1','iv','p2','talk','p3']:[],film:null,slot:null,bc:null,st:p.type=='radio'?'sched':'plan',created:S.day};
+ if(p.type=='radio'){e.fmt=p.fmt;e.host=p.regs[0]??null;e.co=p.regs[1]??null;e.guests=[];e.day=null;e.st='plan'}
+ else if(p.sel.reg)p.regs.filter(gmdMem).forEach(id=>e.cast.push({m:id,src:'reg'}));
+ if(p.type=='mus')e.perf=[];p.eps.push(e);ui.gm={pg:'ep',pid,eid:e.id};render()}
+function gmdESet(pid,eid,k,v){const p=gmdP(pid),e=gmdE(p,eid);if(!e)return;if(!gmdEditable(e))return toast(GMD_T('This episode is already filmed.','ตอนนี้ถ่ายทำแล้ว'),'err');
+ if(k=='no'){v=Math.max(1,+v|0);if(p.eps.some(x=>x!==e&&x.no==v))return toast(GMD_T('That episode number is used.','เลขตอนนี้ถูกใช้แล้ว'),'err')}
+ if(k=='title')v=String(v).replace(/[<>"`\\]/g,'').slice(0,60);
+ if(k=='film'||k=='day'){v=gmdFromIso(v);if(v!=null&&v<=S.day-(k=='day'?1:1)&&v<S.day)return toast(GMD_T('Choose today or a later date.','เลือกวันนี้หรือหลังจากนี้'),'err')}
+ if(k=='bc'){v=gmdFromIso(v)}
+ if(k=='film'&&v!=null){const b=gmdDayBlock(v);if(b)return toast(GMD_T(`No filming on that day: ${b}.`,`ถ่ายทำวันนั้นไม่ได้: ${b}`),'err');if(gmdFilmCount(v,e.id)>=3)return toast(GMD_T('Three episodes are already filmed on that day (Variety + Music combined).','วันนั้นมีถ่ายทำครบ 3 ตอนแล้ว (นับรวมวาไรตี้และรายการเพลง)'),'err');e.slot=gmdFreeSlot(v,e.id);if(p.plat=='yt'&&e.bc!=null&&e.bc<v+gmdLead(p))e.bc=null}
+ if(k=='day'&&v!=null){const b=gmdDayBlock(v);if(b)return toast(GMD_T(`No live broadcast on that day: ${b}.`,`ออกอากาศสดวันนั้นไม่ได้: ${b}`),'err');if(p.plat=='tv'&&p.day!=null&&dowOf(v)!=p.day)return toast(GMD_T(`This program is live every ${gmdDow(p.day)}.`,`รายการนี้ออกอากาศสดทุกวัน${gmdDow(p.day)}`),'err')}
+ if(k=='bc'&&v!=null){if(e.film==null)return toast(GMD_T('Choose the filming date first.','เลือกวันถ่ายทำก่อน'),'err');if(v<e.film+gmdLead(p))return toast(GMD_T(`YouTube episodes must be filmed at least 7 days before the broadcast (latest broadcast-ready filming for this date: ${jd(v-7)}).`,`ตอน YouTube ต้องถ่ายเสร็จก่อนออกอากาศอย่างน้อย 7 วัน (ถ้าออกวันนี้ ต้องถ่ายไม่เกิน ${jd(v-7)})`),'err');if(gmdS().progs.some(q=>q===p&&q.eps.some(x=>x!==e&&x.bc==v&&x.st!='aired')))return toast(GMD_T('Another episode already airs that day.','วันนั้นมีตอนอื่นออกอากาศแล้ว'),'err')}
+ if(k=='topic'||k=='fmt')v=String(v);if(k=='rn'){ui.gm.rn=Math.max(1,Math.min(12,+v||3));return render()}
+ if((k=='host'||k=='co')&&v!=null){e.guests=(e.guests||[]).filter(x=>x!=v);if(k=='host'&&e.co==v)e.co=null;if(k=='co'&&e.host==v)return toast(GMD_T('Already the Main Host.','เป็นพิธีกรหลักอยู่แล้ว'),'err')}
+ e[k]=v;if(e.st=='sched'&&(k=='film'||k=='day'||k=='bc'))e.st=p.type=='radio'?'plan':'plan';render()}
+function gmdActTog(pid,eid,a){const p=gmdP(pid),e=gmdE(p,eid);if(!gmdEditable(e))return;const i=e.acts.indexOf(a);if(i>=0)e.acts.splice(i,1);else e.acts.push(a);render()}
+function gmdSegMv(pid,eid,i,d){const p=gmdP(pid),e=gmdE(p,eid);if(!gmdEditable(e))return;const j=i+d;if(j<0||j>=e.segs.length)return;[e.segs[i],e.segs[j]]=[e.segs[j],e.segs[i]];render()}
+function gmdSegTog(pid,eid,k){const p=gmdP(pid),e=gmdE(p,eid);if(!gmdEditable(e))return;const i=e.segs.indexOf(k);if(i>=0)e.segs.splice(i,1);else{const pi=e.segs.findIndex(x=>/^p/.test(x));e.segs.splice(k=='open'?0:k=='close'?e.segs.length:Math.max(0,pi+1),0,k)}render()}
+// music: performances (≤3) from the Song Library; members, center and costume per performance
+function gmdSongs(){let L=[];try{L=ccSongsAll()}catch(e){}return L.map(({gid,o})=>({gid,o,cat:gmdSongCat(o)}))}
+function gmdSongCat(o){if(o.sp||o.srx)return GMD_T('Special','พิเศษ');if(o.unit||o.uid)return GMD_T('Unit','ยูนิต');if(o.solo)return GMD_T('Solo','โซโล');if(o.th&&!o.rel)return GMD_T('Theater Stage','เธียเตอร์สเตจ');if(o.rel&&/^Album/.test(o.rel))return GMD_T('Album','อัลบั้ม');if(o.role=='Main')return GMD_T('Single','ซิงเกิล');if(o.rel)return GMD_T('Coupling','เพลงรอง');return GMD_T('Other','อื่น ๆ')}
+function gmdPerfAdd(pid,eid,key){const p=gmdP(pid),e=gmdE(p,eid);if(!gmdEditable(e))return;if(e.perf.length>=3)return toast(GMD_T('At most 3 performances per episode.','สูงสุด 3 การแสดงต่อตอน'),'err');const[gid,id]=String(key).split('|');const o=ccSong(+gid,id);if(!o)return;
+ const orig=(o.slots||[]).filter(x=>gmdMem(x)),mids=orig.length?orig.slice(0,16):e.cast.map(c=>c.m).slice(0,8);e.perf.push({gid:+gid,id,mids,cen:(o.center&&mids.includes(o.center))?o.center:mids[0]??null,cz:{mode:'orig',did:null}});
+ const k='p'+e.perf.length;if(!e.segs.includes(k))e.segs.push(k);ui.gm.pf=e.perf.length-1;render()}
+function gmdPerfDel(pid,eid,i){const p=gmdP(pid),e=gmdE(p,eid);if(!gmdEditable(e))return;e.perf.splice(i,1);e.segs=e.segs.filter(s=>!/^p\d$/.test(s)||+s.slice(1)<=e.perf.length);render()}
+function gmdPerfMem(pid,eid,i,mid){const p=gmdP(pid),e=gmdE(p,eid),x=e&&e.perf[i];if(!x||!gmdEditable(e))return;mid=+mid;const j=x.mids.indexOf(mid);if(j>=0)x.mids.splice(j,1);else{if(x.mids.length>=24)return toast(GMD_T('At most 24 performers.','สูงสุด 24 คน'),'err');x.mids.push(mid)}if(!x.mids.includes(x.cen))x.cen=x.mids[0]??null;render()}
+function gmdPerfSet(pid,eid,i,k,v){const p=gmdP(pid),e=gmdE(p,eid),x=e&&e.perf[i];if(!x||!gmdEditable(e))return;if(k=='cen')x.cen=+v;if(k=='cz'){x.cz=v?{mode:'lib',did:v}:{mode:'orig',did:null}}render()}
+function gmdCzOf(x,mid){const o=ccSong(x.gid,x.id);if(x.cz&&x.cz.mode=='lib'){const d=czD(x.cz.did);if(d)return d.p}try{const p=czFor(o,mid);if(p)return p}catch(e){}try{const d=czMain(o);return d&&d.p}catch(e){return null}}
+// validation (setup complete, schedules, energy, daily limit, lead time)
+function gmdCheck(p,e,film){const err=[],warn=[],reg=[],cast=gmdCast(p,e);
+ if(p.type=='radio'){if(e.host==null)err.push(GMD_T('Choose the Main Host.','เลือกพิธีกรหลัก'));if(e.day==null)err.push(GMD_T('Choose the live broadcast date.','เลือกวันออกอากาศสด'));if(!e.topic)err.push(GMD_T('Choose a topic.','เลือกหัวข้อ'))}
+ else{if(!cast.length)err.push(GMD_T('Select the participating members.','เลือกเมมที่ร่วมรายการ'));if(e.film==null)err.push(GMD_T('Set the filming date.','กำหนดวันถ่ายทำ'));if(p.type=='mus'&&!e.perf.length&&!e.segs.some(s=>!/^p/.test(s)))err.push(GMD_T('Add at least one performance or talk segment.','เพิ่มการแสดงหรือช่วงพูดคุยอย่างน้อย 1 ช่วง'));
+  if(p.type=='mus')e.perf.forEach((x,i)=>{if(!x.mids.length)err.push(GMD_T(`Performance ${i+1}: choose the performers.`,`การแสดงที่ ${i+1}: เลือกเมมที่แสดง`))});
+  if(p.type=='var'&&!e.acts.length)err.push(GMD_T('Choose at least one activity.','เลือกกิจกรรมอย่างน้อย 1 อย่าง'));
+  if(e.film!=null){if(gmdFilmCount(e.film,e.id)>=3)err.push(GMD_T('Three episodes are already filmed on that day.','วันนั้นมีถ่ายทำครบ 3 ตอนแล้ว'));const b=gmdDayBlock(e.film);if(b)err.push(GMD_T(`No filming on ${jd(e.film)}: ${b}.`,`ถ่ายทำ ${jd(e.film)} ไม่ได้: ${b}`));
+   if(p.plat=='yt'&&e.bc!=null&&e.bc<e.film+7)err.push(GMD_T('The broadcast date is less than 7 days after filming.','วันออกอากาศห่างจากวันถ่ายไม่ถึง 7 วัน'));
+   if(p.plat=='tv'){const b2=gmdTvNext(p,e.film+14);warn.push(GMD_T(`First possible TV broadcast: ${jd(b2)} (${gmdDow(p.day)}, at least 14 days after filming).`,`ออกอากาศทีวีได้เร็วสุด ${jd(b2)} (วัน${gmdDow(p.day)} หลังถ่ายอย่างน้อย 14 วัน)`))}}}
+ const day=gmdDayOf(p,e);if(day!=null)cast.forEach(id=>{const w=gmdWhy(p,e,id,day);if(w){const c=(e.cast||[]).find(c=>c.m==id);const isReg=p.type!='radio'&&c&&c.src=='reg';(isReg?reg:err).push(isReg?id:GMD_T(`${gmdNm(id)} is unavailable on ${jd(day)}: ${w}.`,`${gmdNm(id)} ไม่ว่างวันที่ ${jd(day)}: ${w}`))}});
+ if(reg.length)err.push(GMD_T(`${reg.length} regular member(s) are unavailable: replace, leave the slot empty or cancel filming.`,`เมมประจำ ${reg.length} คนไม่ว่าง: เปลี่ยนตัว เว้นที่ว่าง หรือยกเลิกการถ่ายทำ`));
+ if(p.type=='radio'&&e.day!=null&&(gmdS().progs.some(q=>q.type=='radio'&&q.eps.some(x=>x!==e&&x.day==e.day&&x.st=='sched'&&(q.time|0)==(p.time|0)))))err.push(GMD_T('Another live radio uses this time.','มีวิทยุสดอีกรายการในเวลานี้'));
+ if(film&&day!=null)cast.forEach(id=>{const m=gmdMem(id);if(m&&(m.en||0)<GMD_EN[p.type])err.push(GMD_T(`${gmdNm(id)} does not have enough Energy.`,`${gmdNm(id)} พลังงานไม่พอ`))});
+ return{err,warn,reg}}
+function gmdTvNext(p,from){let d=Math.max(from,S.day+1);for(let i=0;i<8;i++){if(dowOf(d)==p.day)return d;d++}return d}
+function gmdPreview(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e)return;ui.gm={...ui.gm,pg:'prev',pid,eid};render()}
+function gmdConfirm(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e||!gmdEditable(e))return;const c=gmdCheck(p,e);if(c.err.length)return toast(c.err[0],'err');
+ if(p.type!='radio'&&e.slot==null)e.slot=gmdFreeSlot(e.film,e.id);if(p.type!='radio'&&e.slot<0)return toast(GMD_T('No free filming slot that day.','วันนั้นไม่มีช่วงเวลาถ่ายทำว่าง'),'err');
+ if(!e.title)e.title=gmdAutoTitle(p,e);e.st='sched';e.issue=null;ui.gm={pg:'prog',pid};toast(p.type=='radio'?GMD_T(`EP.${e.no} scheduled live on ${jd(e.day)}.`,`EP.${e.no} กำหนดออกอากาศสด ${jd(e.day)}`):GMD_T(`EP.${e.no} scheduled: filming on ${jd(e.film)}.`,`EP.${e.no} กำหนดถ่ายทำ ${jd(e.film)}`));render()}
+function gmdUnconfirm(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e||e.st!='sched')return;e.st='plan';ui.gm={pg:'ep',pid,eid};render()}
+function gmdDelEp(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e||!gmdEditable(e))return;ask(GMD_T(`Delete EP.${e.no}?`,`ลบ EP.${e.no}?`),()=>{p.eps=p.eps.filter(x=>x!==e);ui.gm={pg:'prog',pid};render()},GMD_T('Delete','ลบ'))}
+function gmdAutoTitle(p,e){const t=(GMD_TOPICS[p.type]||[]).find(x=>x[0]==e.topic),c=gmdCast(p,e);if(p.type=='mus'){const o=e.perf[0]&&ccSong(e.perf[0].gid,e.perf[0].id);return o?`${GMD_T('Stage','สเตจ')} “${o.title}”${e.perf.length>1?' +'+(e.perf.length-1):''}`:(t?GMD_T(t[1],t[2]):'Talk')}
+ if(p.type=='radio')return`${t?GMD_T(t[1],t[2]):''} · ${gmdNm(e.host)}${e.guests&&e.guests.length?' & '+e.guests.map(gmdNm).join(', '):''}`;const a=GMD_ACTS.find(x=>x[0]==e.acts[0]);return`${t?GMD_T(t[1],t[2]):''}${a?' · '+GMD_T(a[1],a[2]):''}`}
+
+// ---- filming (Variety & Music) ---------------------------------------------------------------------------------------------
+function gmdFilm(pid,eid,manual){const p=gmdP(pid),e=gmdE(p,eid);if(!e||e.st!='sched'||p.type=='radio')return false;if(e.film!=S.day){if(manual)toast(GMD_T('Filming happens on the filming date.','ถ่ายทำได้ในวันถ่ายทำเท่านั้น'),'err');return false}
+ // random members who became unavailable are swapped automatically
+ e.cast.forEach(c=>{if(c.src=='rnd'&&gmdWhy(p,e,c.m,e.film)){const r=gmdRandom(p,e,1,gmdCast(p,e).concat(e.empty||[]));if(r[0]){c.was=c.m;c.m=r[0]}}});
+ const c=gmdCheck(p,e,true);if(c.err.length){e.issue={day:S.day,msg:c.err.slice(0,3),reg:c.reg};if(manual)toast(c.err[0],'err');else GMD_Q.push({pid,eid,msg:GMD_T(`${p.name} EP.${e.no}: filming could not start — ${c.err[0]}`,`${p.name} EP.${e.no}: เริ่มถ่ายทำไม่ได้ — ${c.err[0]}`)});return false}
+ const cast=gmdCast(p,e);cast.forEach(id=>{const m=gmdMem(id);if(m)m.en=Math.max(0,(m.en||0)-GMD_EN[p.type])});
+ if(!e.paid){finOut(GMD_COST[p.type][p.plat],`Production: Group Media ${p.name} EP.${e.no} (${GMD_PLAT[p.plat][0]})`,{gid:p.gid});e.paid=S.day}
+ try{for(let i=0;i<cast.length;i++)for(let j=i+1;j<cast.length&&j<i+4;j++)prSpark(cast[i],cast[j],'variety',p.type=='var'?.5:.3,`${p.name} EP.${e.no}`)}catch(x){}
+ e.st='ready';e.filmed=S.day;e.issue=null;e.cast0=cast.slice();if(p.plat=='tv')e.bc=null;if(manual){toast(GMD_T(`EP.${e.no} filmed — it is Ready for broadcast.`,`ถ่ายทำ EP.${e.no} เสร็จแล้ว พร้อมออกอากาศ`));render()}return true}
+// ---- broadcast & results ----------------------------------------------------------------------------------------------------
+const gmdFansOf=gid=>{try{return S.groups.length>1?fdGroupFans(gid):(S.fans||0)}catch(e){return S.fans||0}};
+function gmdQuality(p,e,cast){const M=cast.map(gmdMem).filter(Boolean);if(!M.length)return .3;const avg=a=>a.reduce((x,y)=>x+y,0)/Math.max(1,a.length);let q;
+ if(p.type=='var'){const vv=avg(M.map(m=>gmdStat(m,'variety'))),ch=avg(M.map(m=>gmdStat(m,'cha'))),fit=e.acts.length?Math.min(1,.55+.12*e.acts.length):.5,mix=new Set(M.map(m=>m.pers)).size/Math.max(1,M.length);
+  let chem=0;try{for(let i=0;i<M.length;i++)for(let j=i+1;j<M.length;j++){const P=prGet(M[i].id,M[j].id);if(P)chem=Math.max(chem,(P.chem||0)/100)}}catch(x){}
+  const rep=p.eps.filter(x=>x.st=='aired').slice(-3).filter(x=>x.topic==e.topic).length*.05;q=vv/100*.42+ch/100*.18+fit*.14+mix*.1+chem*.1+.06-rep}
+ else if(p.type=='mus'){const P=e.perf.map(x=>{const o=ccSong(x.gid,x.id);let sp=40;try{sp=ccSongPop(x.gid,x.id)}catch(z){}const PM=x.mids.map(gmdMem).filter(Boolean),sk=avg(PM.map(m=>(gmdStat(m,'sing')+gmdStat(m,'dance'))/2)),cen=gmdMem(x.cen);return sp/100*.35+sk/100*.4+(cen?cen.pop/100*.15:0)+(x.cz.mode=='lib'?.06:.04)});
+  const talk=e.segs.filter(s=>!/^p/.test(s)).length;q=(P.length?avg(P):.35)*.85+Math.min(.12,talk*.03)}
+ else{const H=gmdMem(e.host),G=[e.co,...(e.guests||[])].map(gmdMem).filter(Boolean);const hv=H?(gmdStat(H,'variety')*.6+gmdStat(H,'cha')*.4)/100:.3;let rel=0;try{G.forEach(g=>{const P=prGet(H.id,g.id);if(P)rel=Math.max(rel,(P.chem||0)/100,(P.tr||0)/100)})}catch(x){}
+  q=hv*.55+rel*.2+(G.length?.1:.05)+(['letters','qa'].includes(e.topic)?.08:.05)}
+ return Math.max(.12,Math.min(.98,q*(.85+Math.random()*.3)))}
+function gmdApplyFans(p,e,cast,q,aud){const fb=S.fb;if(!fb||!Array.isArray(fb.segs))return{oshi:{},kami:{},nf:0};const ids=new Set(fdAct().map(m=>m.id)),O={},K={},tv=p.plat=='tv';
+ const lead=p.type=='radio'?e.host:p.type=='mus'?(e.perf[0]&&e.perf[0].cen):null,W=cast.map(id=>[id,id==lead?1.6:1]),WS=W.reduce((a,b)=>a+b[1],0)||1;const F0=S.fans||0;
+ W.forEach(([mid,w])=>{if(!ids.has(mid))return;const m=get(mid),share=w/WS,base=aud*q*share*(tv?.010:.014)*(.6+Math.random()*.8);let left=Math.round(base);if(left<=0)return;
+  // fans who already noticed her (u) or support the group: some add her as an Oshi (≤5 Oshi per fan, never their Kami Oshi)
+  const g=fdGrpOf(mid),pool=fb.segs.filter(s=>s.k!=mid&&s.ft!='dormant'&&fdSegHas(s,g)).map(s=>[s,(s.u&&s.u[mid]||0)*3+(s.n-(s.o[mid]||0))*(.2+(s.eng||30)/100)*Math.random()]).sort((a,b)=>b[1]-a[1]).slice(0,8);let got=0;
+  pool.forEach(([s])=>{if(left<=0)return;s.o=s.o||{};s.u=s.u||{};const cur=s.o[mid]||0,room=FD_OMAX*s.n-Object.values(s.o).reduce((a,b)=>a+b,0),c=Math.max(0,Math.min(left,s.n-cur,room,Math.ceil(s.n*.06)));if(!c)return;s.o[mid]=cur+c;if(s.u[mid])s.u[mid]=Math.max(0,Math.min(s.u[mid]-c,s.n-s.o[mid]));left-=c;got+=c});
+  if(got)O[mid]=got;try{fdInterest(m,Math.round(base*.6),`Group Media ${tv?'TV':'YouTube'}: ${p.name}`)}catch(x){}
+  // Kami Oshi: only after interest accumulated over several episodes, and only some fans move
+  const G=gmdS();G.ki[mid]=(G.ki[mid]||0)+q*share*cast.length*(tv?1.2:1)*(p.type=='radio'&&mid==e.host?1.3:1);
+  if(G.ki[mid]>=3){G.ki[mid]-=3;const C=fb.segs.filter(s=>s.k!=mid&&(s.o[mid]||0)>0&&(s.loy??50)<72&&s.ft!='hardcore'&&s.ft!='dormant').sort(()=>Math.random()-.5).slice(0,2);
+   C.forEach(s=>{const n=Math.round((s.o[mid]||0)*(.015+Math.random()*.035));if(n>0){try{if(fdMoveKami(s,n,mid,.7))K[mid]=(K[mid]||0)+n}catch(x){}}})}});
+ // existing fans of the cast stay more engaged (existing cohort activity / loyalty)
+ const cs=new Set(cast);fb.segs.forEach(s=>{if(cs.has(s.k)||Object.keys(s.o||{}).some(j=>cs.has(+j)&&s.o[j]>0)){s.eng=Math.min(100,(s.eng||30)+q*1.5);s.loy=Math.min(100,(s.loy??50)+q*.3);s.last=S.day}});
+ try{fdFixAll();fdWrite()}catch(x){}
+ // a few viewers who did not follow the group before (secondary effect; TV reaches further)
+ const gen=Math.round((tv?aud*.006:aud*.0025)*q*(.5+Math.random()));if(gen>0)try{fbAcquire(gen,{org:`Group Media ${tv?'TV':'YouTube'}: ${p.name}`,mid:lead??cast[0]})}catch(x){}
+ return{oshi:O,kami:K,nf:Math.max(0,(S.fans||0)-F0)}}
+function gmdResults(p,e){const cast=gmdCast(p,e).filter(gmdMem),F=gmdFansOf(p.gid),q=gmdQuality(p,e,cast),tv=p.plat=='tv';
+ const fanView=F*(p.type=='radio'?.05:tv?.12:.16)*(.5+q),gen=tv?(p.type=='radio'?12000:60000)*(.4+q*1.6)*(.7+Math.random()*.6):(p.type=='radio'?800:4000)*(.3+q)*(.6+Math.random()*.8);
+ const aud=Math.round(fanView+gen),pop0={};cast.forEach(id=>pop0[id]=get(id).pop);
+ const fx=gmdApplyFans(p,e,cast,q,aud);cast.forEach(id=>{const m=get(id);if(q>.55&&Math.random()<q)try{gainPop(m,1)}catch(x){}});const pop={};cast.forEach(id=>{const d=(get(id).pop||0)-(pop0[id]||0);if(d)pop[id]=d});
+ const songs={};if(p.type=='mus')e.perf.forEach(x=>{const o=ccSong(x.gid,x.id);if(!o)return;const old=o.relDay!=null&&S.day-o.relDay>180,d=Math.round(q*3+(old?2:0));o.thPop=(o.thPop||0)+d*.5;o.thBuzz=Math.min(30,(o.thBuzz||0)+d);songs[x.gid+'|'+x.id]={t:o.title,d,old}});
+ const rel=[];if(p.type=='radio'||p.type=='var'){try{for(let i=0;i<cast.length&&rel.length<4;i++)for(let j=i+1;j<cast.length&&rel.length<4;j++){const P=prSpark(cast[i],cast[j],'variety',p.type=='radio'?.6:.35,`${p.name} EP.${e.no}`);if(P)rel.push([cast[i],cast[j]])}}catch(x){}}
+ const eng=Math.round(30+q*65);let rev=0;if(p.plat=='yt'){rev=Math.round(aud*.35);if(rev>0)earn(rev,`Streaming views: ${p.name} EP.${e.no}`)}else{rev=Math.round(aud*(p.type=='radio'?12:16)*(.55+q*.7));if(rev>0)earn(rev,`TV ads: ${p.name} EP.${e.no}`)}
+ if(p.type=='radio'&&!e.paid){finOut(GMD_COST.radio[p.plat],`Production: Group Media ${p.name} EP.${e.no} (live)`,{gid:p.gid});e.paid=S.day}
+ return{q:Math.round(q*100),aud,eng,oshi:fx.oshi,kami:fx.kami,nf:fx.nf,pop,songs,rel,rev,cost:GMD_COST[p.type][p.plat],cast,ret:Math.round(eng*.6+q*30)}}
+function gmdAir(p,e){e.res=gmdResults(p,e);e.st=p.type=='radio'?'done':'aired';e.bc=S.day;gmdS().cq.push({pid:p.id,eid:e.id,gid:p.gid,d:S.day});GMD_Q.push({pid:p.id,eid:e.id,res:1,msg:p.type=='radio'?GMD_T(`${p.name} EP.${e.no} went live: ${e.res.aud.toLocaleString()} listeners.`,`${p.name} EP.${e.no} ออกอากาศสดแล้ว: ผู้ฟัง ${e.res.aud.toLocaleString()} คน`):GMD_T(`${p.name} EP.${e.no} aired: ${e.res.aud.toLocaleString()} viewers.`,`${p.name} EP.${e.no} ออกอากาศแล้ว: ผู้ชม ${e.res.aud.toLocaleString()} คน`)})}
+// ---- radio (live only) --------------------------------------------------------------------------------------------------------------------
+function gmdLiveOpen(pid,eid){const p=gmdP(pid),e=gmdE(p,eid);if(!e||p.type!='radio'||e.st!='sched')return;if(e.day!=S.day)return toast(GMD_T('A live broadcast can only start on its date.','ออกอากาศสดได้เฉพาะวันที่กำหนด'),'err');if(p.st!='on')return toast(GMD_T('The program is on hold.','รายการพักอยู่'),'err');
+ const c=gmdCheck(p,e,true);if(c.err.length){e.issue={day:S.day,msg:c.err.slice(0,3)};render();return toast(c.err[0],'err')}e.st='live';ui.gm={pg:'live',pid,eid,i:0,L:gmdRadioLines(p,e)};render()}
+function gmdLiveNext(){const g=ui.gm;if(!g||g.pg!='live')return;g.i=Math.min(g.L.length-1,g.i+1);render()}
+function gmdLiveEnd(){const g=ui.gm;if(!g||g.pg!='live')return;const p=gmdP(g.pid),e=gmdE(p,g.eid);if(!e||e.st!='live')return;e.cast0=gmdCast(p,e);e.lines=g.L.slice(0,12);gmdCast(p,e).forEach(id=>{const m=gmdMem(id);if(m)m.en=Math.max(0,(m.en||0)-GMD_EN.radio)});gmdAir(p,e);GMD_Q.pop();gmdCmEmit();ui.gm={pg:'res',pid:p.id,eid:e.id};render()}
+const GMD_RL={talk:[["{a}: Tonight it's just us talking, so get comfortable!","{a}: คืนนี้คุยกันสบาย ๆ นะ ทำตัวตามสบายเลย"],["{b}: Wait, are we really live? My heart is racing.","{b}: เดี๋ยว นี่สดจริงเหรอ ใจเต้นแรงมาก"],["{a}: Let's talk about what everyone did on their day off.","{a}: มาคุยกันว่าวันหยุดทุกคนทำอะไรกันบ้าง"]],
+ letters:[["{a}: A letter from a listener: 'I started supporting the group this spring…'","{a}: จดหมายจากผู้ฟัง: 'เพิ่งเริ่มเชียร์วงตอนฤดูใบไม้ผลินี้…'"],["{b}: That's so sweet. Thank you for writing to us!","{b}: น่ารักมาก ขอบคุณที่เขียนมานะ"],["{a}: Next one asks for advice about exams. {b}, you go first.","{a}: ฉบับต่อไปขอคำแนะนำเรื่องสอบ {b} ตอบก่อนเลย"]],
+ qa:[["{a}: Question from a fan: what is your comfort food?","{a}: คำถามจากแฟน: อาหารปลอบใจของแต่ละคนคืออะไร"],["{b}: Easy — the convenience-store pudding. Every time.","{b}: ง่ายมาก พุดดิ้งเซเว่น ทุกครั้งเลย"],["{a}: Rapid-fire round! Cats or dogs?","{a}: รอบตอบเร็ว! แมวหรือหมา"]],
+ story:[["{a}: I've never said this on air, but I almost quit once.","{a}: ไม่เคยพูดออกอากาศเลย แต่ครั้งหนึ่งเคยเกือบจะเลิก"],["{b}: Really? I never knew…","{b}: จริงเหรอ ไม่เคยรู้เลย…"],["{a}: What kept me going was the theater crowd.","{a}: สิ่งที่ทำให้ไปต่อได้คือคนดูที่เธียเตอร์"]],
+ memory:[["{a}: Do you remember our first stage? I forgot the choreography!","{a}: จำสเตจแรกได้ไหม ลืมท่าเต้นเลย!"],["{b}: You hid it so well, nobody noticed.","{b}: ปิดเนียนมาก ไม่มีใครรู้เลย"],["{a}: {g} has come so far since then.","{a}: {g} มาไกลมากเลยนะตั้งแต่ตอนนั้น"]],
+ rel:[["{a}: People say we're close. Is that true, {b}?","{a}: คนชอบบอกว่าเราสนิทกัน จริงไหม {b}"],["{b}: We text every night, so… yes?","{b}: เราแชตกันทุกคืนเลย ก็… ใช่มั้ง"],["{a}: Let's reveal one secret about each other!","{a}: มาเปิดความลับของกันและกันคนละเรื่อง!"]],
+ special:[["{a}: Special night! We prepared a little surprise.","{a}: คืนพิเศษ! เราเตรียมเซอร์ไพรส์เล็ก ๆ ไว้"],["{b}: No spoilers yet, okay?","{b}: ยังห้ามสปอยล์นะ"],["{a}: Let's count down together, everyone!","{a}: มานับถอยหลังพร้อมกันนะทุกคน!"]]};
+const GMD_RTONE={Genki:["{x}: Haha! That's the best!","{x}: ฮ่า ๆ ดีที่สุดเลย!"],Cool:["{x}: …Fine, I'll admit it was fun.","{x}: …ก็ได้ ยอมรับว่าสนุก"],Shy:["{x}: U-um… I'm a bit embarrassed…","{x}: อ-เอ่อ… เขินนิดหน่อย…"],Elegant:["{x}: How lovely. Thank you, everyone.","{x}: น่ารักจังเลย ขอบคุณทุกคนนะคะ"],Airhead:["{x}: Wait, what were we talking about?","{x}: เดี๋ยวนะ เมื่อกี้คุยเรื่องอะไรกันอยู่"],Serious:["{x}: Let me answer that properly.","{x}: ขอตอบให้ดี ๆ นะ"]};
+function gmdRadioLines(p,e){const A=gmdMem(e.host),Bm=[e.co,...(e.guests||[])].map(gmdMem).filter(Boolean),b=Bm[0]||A,g=(grp(p.gid)||{}).name||'',th=UIP.lang=='th',T=GMD_RL[e.topic]||GMD_RL.talk,used=(gmdS().rlu=gmdS().rlu||{});
+ const fill=s=>s.replace(/\{a\}/g,A?A.stage||A.name:'').replace(/\{b\}/g,b?b.stage||b.name:'').replace(/\{g\}/g,g);const L=[fill(th?`{a}: สวัสดีค่ะ ที่นี่ ${p.name} คืนนี้ออกอากาศสดนะคะ`:`{a}: Good evening, this is ${p.name}, live tonight!`)];
+ T.forEach(x=>L.push(fill(x[th?1:0])));[A,...Bm].filter(Boolean).forEach(m=>{const t=GMD_RTONE[m.pers]||GMD_RTONE.Genki,k=m.id+'|'+e.topic;if((used[k]||0)>S.day-30&&Math.random()<.5)return;used[k]=S.day;L.splice(1+Math.floor(Math.random()*(L.length)),0,t[th?1:0].replace('{x}',m.stage||m.name))});
+ L.push(fill(th?`{a}: ขอบคุณที่ฟังนะคะ แล้วพบกันใหม่สัปดาห์หน้า!`:`{a}: Thank you for listening — see you next week!`));return L}
+
+// ---- daily progression --------------------------------------------------------------------------------------------------------------------
+let GMD_Q=[];
+function gmdDaily(){const G=S&&S.gm;if(!G||!G.progs.length)return;G.cq=G.cq.filter(x=>S.day-x.d<=2);
+ G.progs.forEach(p=>{try{gsWith(p.gid,()=>{
+  if(p.type=='radio'){p.eps.forEach(e=>{if(e.st=='sched'&&e.day!=null&&e.day<S.day){e.issue={day:S.day,msg:[GMD_T('The live date passed: reschedule.','เลยวันออกอากาศสดแล้ว: กำหนดวันใหม่')]};e.st='plan';GMD_Q.push({pid:p.id,eid:e.id,msg:GMD_T(`${p.name} EP.${e.no}: the live broadcast did not happen — choose a new date.`,`${p.name} EP.${e.no}: ไม่ได้ออกอากาศสด — เลือกวันใหม่`)})}
+    else if(e.st=='sched'&&e.day==S.day&&p.st=='on'){const c=gmdCheck(p,e,true);if(c.err.length){e.issue={day:S.day,msg:c.err.slice(0,3)};GMD_Q.push({pid:p.id,eid:e.id,msg:GMD_T(`${p.name} EP.${e.no}: live broadcast blocked — ${c.err[0]}`,`${p.name} EP.${e.no}: ออกอากาศสดไม่ได้ — ${c.err[0]}`)})}else{e.lines=gmdRadioLines(p,e).slice(0,12);e.cast0=gmdCast(p,e);gmdCast(p,e).forEach(id=>{const m=gmdMem(id);if(m)m.en=Math.max(0,(m.en||0)-GMD_EN.radio)});gmdAir(p,e)}}});return}
+  p.eps.forEach(e=>{if(e.st=='sched'&&e.film!=null&&e.film<S.day){e.st='plan';e.issue={day:S.day,msg:[GMD_T('The filming date passed.','เลยวันถ่ายทำแล้ว')]};GMD_Q.push({pid:p.id,eid:e.id,msg:GMD_T(`${p.name} EP.${e.no}: filming did not happen — choose a new date.`,`${p.name} EP.${e.no}: ไม่ได้ถ่ายทำ — เลือกวันใหม่`)})}
+   else if(e.st=='sched'&&e.film==S.day)gmdFilm(p.id,e.id,false)});
+  if(p.st!='on')return;
+  if(p.plat=='yt'){p.eps.forEach(e=>{if(e.st=='ready'&&e.bc!=null&&e.bc==S.day&&e.filmed!=null&&e.filmed<=S.day-7)gmdAir(p,e);else if(e.st=='ready'&&e.bc!=null&&e.bc<S.day){e.bc=null}});
+   // optional regular day: the oldest Ready episode without a date airs on that day
+   if(p.day!=null&&dowOf(S.day)==p.day&&!p.eps.some(e=>e.bc==S.day&&e.st=='aired')){const r=p.eps.filter(e=>e.st=='ready'&&e.bc==null&&e.filmed<=S.day-7).sort((a,b)=>a.no-b.no)[0];if(r)gmdAir(p,r)}}
+  else if(p.day!=null&&dowOf(S.day)==p.day){const r=p.eps.filter(e=>e.st=='ready'&&e.filmed!=null&&e.filmed<=S.day-14).sort((a,b)=>a.no-b.no)[0];if(r)gmdAir(p,r);else{p.log.push({d:S.day,t:'none'});if(p.log.length>60)p.log.shift();GMD_Q.push({pid:p.id,msg:GMD_T(`${p.name}: no new episode this week (nothing Ready 14 days before).`,`${p.name}: สัปดาห์นี้ไม่มีตอนใหม่ (ไม่มีตอนที่ถ่ายเสร็จก่อน 14 วัน)`)})}}
+ })}catch(x){console.error('group media',x)}})}
+{const f=tick;tick=function(){const r=f.apply(this,arguments);try{if(S){gmdDaily();gmdCmEmit()}}catch(e){console.error('group media',e)}return r}}
+{const f=adv;adv=function(){GMD_Q=[];const r=f.apply(this,arguments);try{if(GMD_Q.length)setTimeout(gmdPop,250)}catch(e){}return r}}
+function gmdPop(){const Q=GMD_Q.splice(0);if(!Q.length)return;let el=document.getElementById('gmpop');if(!el){el=document.createElement('div');el.id='gmpop';document.body.appendChild(el)}
+ el.innerHTML=`<div class="gmpophd"><b>${GMD_T('Group Media','กรุ๊ปมีเดีย')}</b><button class="cmpopx" onclick="document.getElementById('gmpop').classList.remove('on')" aria-label="close">×</button></div>${Q.slice(-4).map(x=>`<button class="gmpopi" onclick="document.getElementById('gmpop').classList.remove('on');gmdGo('${x.pid}','${x.eid||''}',${x.res?1:0})">${esc(x.msg)}</button>`).join('')}`;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),12000)}
+function gmdGo(pid,eid,res){ui.gm=eid?{pg:res?'res':'ep',pid,eid}:{pg:'prog',pid};const p=gmdP(pid);if(p&&p.gid!=gsAg())try{gsSelect(p.gid)}catch(e){}view='gmedia';render();try{window.scrollTo(0,0)}catch(e){}}
+
+// ---- Fan Community: discussions about aired episodes (existing generator, new meanings) ------------------------------------------------
+Object.assign(CM_I,{
+ gmdPraise:{tone:'p',who:'oshi',en:["{m} carried {p} tonight. Every time the camera found her, something funny happened","Watching {p} just to see {m} react to everything","{m} on {p} is exactly the energy I needed this week","Clipping every {m} moment from {p}. There are a lot"],th:["{m} แบกรายการ {p} คืนนี้จริง กล้องจับทีไรมีเรื่องฮาทุกที","ดู {p} เพราะอยากเห็นรีแอคของ {m} ล้วน ๆ","{m} ใน {p} คือพลังที่ต้องการในสัปดาห์นี้เลย","นั่งตัดคลิป {m} จาก {p} อยู่ เยอะมากกก"]},
+ gmdFunny:{tone:'p',who:'any',en:["{m} and {m2} in {p} had me crying laughing","The way {m2} looked at {m} after that answer on {p}… iconic","{p} needs a whole corner just for {m} and {m2}","{m} vs {m2} on {p} was the best part, no contest"],th:["{m} กับ {m2} ใน {p} ขำจนน้ำตาไหล","สายตาที่ {m2} มอง {m} หลังตอบคำถามใน {p}… ตำนาน","{p} ควรมีช่วงพิเศษให้ {m} กับ {m2} เลย","{m} ปะทะ {m2} ใน {p} คือช่วงที่ดีที่สุด"]},
+ gmdShip:{tone:'p',who:'any',en:["{m} and {m2} sitting together on {p} again. I see what the staff is doing","Adding {p} EP.{k} to the {m}×{m2} archive","{m} fixing {m2}'s hair mid-segment on {p}. I'm fine. totally fine"],th:["{m} กับ {m2} นั่งข้างกันใน {p} อีกแล้ว ทีมงานรู้ใจ","เก็บ {p} EP.{k} เข้าคลังคู่ {m}×{m2}","{m} จัดผมให้ {m2} กลางรายการ {p} ไม่ไหวแล้ว"]},
+ gmdDiscover:{tone:'p',who:'any',en:["Never paid attention to {m} before {p}. She's actually hilarious","{p} made me look up {m}'s theater clips. I think I have a new oshi","Who is {m}?? Saw her on {p} and now I need to know everything","{m} was quietly the funniest person on {p}"],th:["ไม่เคยสังเกต {m} มาก่อนจนได้ดู {p} ตลกมากจริง","ดู {p} แล้วต้องไปหาคลิปเธียเตอร์ของ {m} ต่อ น่าจะได้โอชิใหม่แล้ว","{m} คือใคร?? เห็นใน {p} แล้วอยากรู้ทุกอย่าง","{m} เงียบ ๆ แต่ฮาที่สุดใน {p}"]},
+ gmdSong:{tone:'p',who:'mus',en:["{s} on {p} sounded better than I remembered","Didn't expect {p} to bring back {s}. Adding it to my playlist again","{p} performing {s}… this song deserved this","The {s} stage on {p} is going on repeat"],th:["{s} ใน {p} เพราะกว่าที่จำได้อีก","ไม่คิดว่า {p} จะหยิบ {s} กลับมา เพิ่มเข้าเพลย์ลิสต์อีกรอบ","{p} แสดง {s}… เพลงนี้สมควรได้รับแบบนี้","สเตจ {s} ใน {p} ต้องวนดูซ้ำ"]},
+ gmdCostume:{tone:'u',who:'perf',en:["The costumes for {s} on {p} were a choice. A good one, I think?","Whoever styled {p} this week, please keep that job","Not sure the {s} outfits fit the song on {p}, but the stage was fun"],th:["ชุดเพลง {s} ใน {p} กล้าดี น่าจะดีนะ","ใครเป็นสไตลิสต์ {p} สัปดาห์นี้ ขอให้ทำต่อไป","ชุดเพลง {s} ใน {p} อาจไม่เข้ากับเพลง แต่สเตจสนุก"]},
+ gmdCrit:{tone:'n',who:'any',en:["{p} felt a bit flat this week. Same jokes, same setup","Love the members but {p} needs better editing","Half of {p} was the same people talking again","{p} had potential this episode and didn't use it"],th:["{p} สัปดาห์นี้แบนไปหน่อย มุกเดิม ๆ","รักเมมนะ แต่ {p} ต้องตัดต่อให้ดีกว่านี้","ครึ่งรายการ {p} ก็คนเดิมพูดอีกแล้ว","{p} ตอนนี้มีของ แต่ใช้ไม่สุด"]},
+ gmdRequest:{tone:'u',who:'oshi',en:["Please put {m} on {p} next time. She'd be perfect for this","{p} staff, we're waiting for {m}","Still no {m} on {p}? I'll keep asking every week"],th:["ครั้งหน้าขอ {m} ใน {p} หน่อย เหมาะมาก","ทีมงาน {p} พวกเรารอ {m} อยู่นะ","ยังไม่มี {m} ใน {p} อีกเหรอ จะขอทุกสัปดาห์"]},
+ gmdDebate:{tone:'u',who:'ana',en:["Interesting cast choice on {p}. Mixing older and newer members works better than I expected","Is {p} picking members at random? Some faces barely show up","{p} keeps giving airtime to the same few. Spread it out"],th:["การเลือกเมม {p} น่าสนใจ ผสมรุ่นพี่รุ่นน้องแล้วเวิร์กกว่าที่คิด","{p} สุ่มเมมเหรอ บางคนแทบไม่ได้ออก","{p} ให้เวลาออกอากาศแค่ไม่กี่คนเดิม ๆ ช่วยกระจายหน่อย"]},
+ gmdRadio:{tone:'p',who:'oshi',en:["{m}'s voice on {p} at night is so calming","Stayed up for {p} live and {m} read my letter?!","{m} talking about the early days on {p}… I teared up","{p} live with {m} was unscripted chaos and I loved it"],th:["เสียง {m} ใน {p} ตอนดึกฟังแล้วสบายใจมาก","อดนอนฟัง {p} สด แล้ว {m} อ่านจดหมายเรา?!","{m} เล่าเรื่องช่วงแรก ๆ ใน {p}… น้ำตาซึม","{p} สดกับ {m} ไม่มีสคริปต์ วุ่นวายแต่ชอบมาก"]},
+ gmdRival:{tone:'u',who:'ana',en:["{g2} fans watching {p} too? The comments are full of them","Honestly {p} is better than what {g2} is doing on TV right now","{g} has their own show now ({p}). {g2} should take notes"],th:["แฟน {g2} ก็มาดู {p} ด้วยเหรอ คอมเมนต์เต็มเลย","บอกตรง ๆ {p} สนุกกว่ารายการทีวีของ {g2} ตอนนี้อีก","{g} มีรายการของตัวเองแล้ว ({p}) {g2} ควรจดไว้"]}});
+try{if(typeof CM_INT=='object')CM_INT.gm='ev'}catch(e){}
+function gmdCmEvents(){const E=[];try{const G=S.gm;if(!G||!G.cq.length)return E;const C=cmS();
+ G.cq.filter(x=>x.d==S.day).forEach(x=>{const p=gmdP(x.pid),e=gmdE(p,x.eid);if(!p||!e||!e.res)return;const key='gm:'+e.id;if(C.seen[key]!=null)return;const R=e.res,cast=(R.cast||[]).filter(id=>get(id)),g=grp(p.gid)||{};if(!cast.length)return;
+  const O=Object.entries(R.oshi||{}).sort((a,b)=>b[1]-a[1]).map(z=>+z[0]),top=O[0]??cast[0],low=cast.slice().sort((a,b)=>get(a).pop-get(b).pop)[0],its=[],v={p:p.name,g:g.name,k:e.no};
+  its.push({i:p.type=='radio'?'gmdRadio':'gmdPraise',sub:top,v:{m:top},w:3});if(cast.length>1){const b=cast.find(id=>id!=top);its.push({i:'gmdFunny',sub:top+'-'+b,v:{m:top,m2:b},w:2});
+   try{const pr=cast.flatMap((a,i)=>cast.slice(i+1).map(b=>[a,b,(prGet(a,b)||{}).chem||0])).sort((a,b)=>b[2]-a[2])[0];if(pr&&pr[2]>=35)its.push({i:'gmdShip',sub:pr[0]+'-'+pr[1],v:{m:pr[0],m2:pr[1]},w:1.5})}catch(z){}}
+  if(low!=null&&low!=top)its.push({i:'gmdDiscover',sub:low,v:{m:low},w:2.2});
+  if(p.type=='mus')Object.values(R.songs||{}).slice(0,2).forEach(s=>{its.push({i:'gmdSong',sub:s.t,v:{s:s.t},w:2});if(Math.random()<.5)its.push({i:'gmdCostume',sub:s.t,v:{s:s.t},w:1})});
+  if(R.q<55||Math.random()<.3)its.push({i:'gmdCrit',sub:p.id,v:{},w:R.q<45?2:.8});const out=gmdPool().filter(m=>!cast.includes(m.id)).sort((a,b)=>b.pop-a.pop)[Math.floor(Math.random()*5)];if(out)its.push({i:'gmdRequest',sub:out.id,v:{m:out.id},w:1});
+  if(cast.length>=3&&Math.random()<.45)its.push({i:'gmdDebate',sub:p.id,v:{},w:1});
+  const sis=(typeof cmReal=='function'?cmReal():[]).filter(z=>z.id!=p.gid),gids=[p.gid];if(sis.length&&Math.random()<.5){const s2=sis[Math.floor(Math.random()*sis.length)];gids.push(s2.id);its.push({i:'gmdRival',sub:p.id+':'+s2.id,v:{g2:s2.name},w:.8})}
+  E.push({key,cat:'gm',gid:p.gid,gids,imp:p.plat=='tv'?3:2,v,its,lb:{en:`${p.name} EP.${e.no}`,th:`${p.name} EP.${e.no}`},hr0:20})})}catch(x){console.error(x)}return E}
+// emitted through the existing generator right after the broadcast (same budget, repetition and account rules)
+function gmdCmEmit(){try{if(typeof cmEmit!='function')return;gmdCmEvents().forEach(ev=>{try{cmEmit(ev,Math.round(4+Math.random()*4))}catch(x){console.error(x)}})}catch(x){console.error(x)}}
+
+// ---- save compatibility ------------------------------------------------------------------------------------------------------------------
+{const f=migrate;migrate=function(){const r=f.apply(this,arguments);try{if(S&&S.gm)gmdS()}catch(e){}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  Group Media — pages (Media › Group Media). One view, sub-pages in ui.gm.pg:
+//  home · new (program creation) · prog (program info, episodes, history) · ep (episode setup: topic,
+//  activities / performances / talk segments / hosts, members, filming or live date) · prev (episode
+//  preview) · live (radio ON AIR screen) · res (episode results).
+// =====================================================================================
+const GMI={};
+function gmdImg(key,mk){if(GMI[key])return GMI[key];const svg=mk();const u=GMART.url(svg);GMI[key]=u;const ks=Object.keys(GMI);if(ks.length>160){const k0=ks[0];try{URL.revokeObjectURL(GMI[k0])}catch(e){}delete GMI[k0]}return u}
+const gmdPosterUrl=p=>gmdImg(`po|${p.id}|${p.name}|${p.logo.st}|${p.logo.sh}|${p.regs.slice(0,5).join(',')}`,()=>GMART.poster(p,p.regs.length?p.regs:gmdPool().slice().sort((a,b)=>b.pop-a.pop).slice(0,3).map(m=>m.id),300));
+const gmdThumbUrl=(p,e)=>{const c=(e.cast0||gmdCast(p,e)).slice(0,3);return gmdImg(`th|${p.id}|${e.id}|${p.name}|${p.logo.st}|${c.join(',')}`,()=>GMART.thumb(p,e,c,320))};
+const gmdBgKey=p=>({var:'var',mus:'mus',radio:'radio'}[p.type]||'var');
+function gmdStLabel(p,e){if(p.type=='radio')return e.st=='plan'?[GMD_T('Setting up','กำลังตั้งค่า'),'plan']:e.st=='sched'?[GMD_T('Scheduled','กำหนดการแล้ว'),'sched']:e.st=='live'?[GMD_T('Live','กำลังออกอากาศ'),'live']:[GMD_T('Completed','จบแล้ว'),'done'];
+ if(e.st=='plan')return[GMD_T('Planned','วางแผน'),'plan'];if(e.st=='sched')return e.film==S.day?[GMD_T('Filming','กำลังถ่ายทำ'),'film']:[GMD_T('Scheduled','กำหนดการแล้ว'),'sched'];if(e.st=='ready')return[GMD_T('Ready','พร้อมออกอากาศ'),'ready'];return[GMD_T('Broadcasted','ออกอากาศแล้ว'),'done']}
+const gmdPS={on:['Ongoing','กำลังออกอากาศ'],hold:['On Hold','พักรายการ'],end:['Ended','จบแล้ว']};
+function gmdMemPick(sel,onclk,opt={}){const L=(opt.L||gmdPool()).slice().sort((a,b)=>b.pop-a.pop),day=opt.day,p=opt.p,e=opt.e;
+ return`<div class="gmmp">${L.map(m=>{const on=sel.includes(m.id),w=day!=null&&p&&e?gmdWhy(p,e,m.id,day):null;return`<button class="gmmb ${on?'on':''} ${w?'busy':''}" onclick="${onclk.replace('#',m.id)}" title="${esc(m.name)}${w?' — '+esc(w):''}">${ptc(m,44)}<b>${esc(m.stage||m.name.split(' ')[0])}</b>${w?`<small class="gmbusy">${esc(String(w).slice(0,22))}</small>`:`<small>${Math.round(m.en||0)} ${GMD_T('EN','EN')}</small>`}</button>`}).join('')}</div>`}
+const gmdDate=(val,on,min,max)=>`<input type="date" value="${val!=null?gmdIso(val):''}" ${min!=null?`min="${gmdIso(min)}"`:''} ${max!=null?`max="${gmdIso(max)}"`:''} onchange="${on}">`;
+function gmdHead(p,sub){return`<div class="gmhero gm-${p.type}" style="background-image:url('${GMART.bgUrl(gmdBgKey(p),(p.logo.st|0)%3)}')"><div class="gmherox"><button class="b s" onclick="ui.gm={pg:'${sub?'prog':'home'}'${sub?`,pid:'${p.id}'`:''}};render()">◀ ${sub?esc(p.name):GMD_T('Group Media','กรุ๊ปมีเดีย')}</button><div class="gmlogo">${GMART.logo(p,220)}</div></div></div>`}
+
+V.gmedia=function(){gmdS();const g=ui.gm=ui.gm||{pg:'home'};try{if(g.pg=='new')return gmdNewHtml();const p=g.pid&&gmdP(g.pid);if(g.pid&&!p){ui.gm={pg:'home'};return gmdHomeHtml()}
+ if(g.pg=='prog')return gmdProgHtml(p);const e=g.eid&&gmdE(p,g.eid);if(g.pg!='prog'&&g.eid&&!e){ui.gm={pg:'prog',pid:p.id};return gmdProgHtml(p)}
+ if(g.pg=='ep')return gmdEpHtml(p,e);if(g.pg=='prev')return gmdPrevHtml(p,e);if(g.pg=='live')return gmdLiveHtml(p,e);if(g.pg=='res')return gmdResHtml(p,e)}catch(x){console.error(x)}return gmdHomeHtml()};
+
+// ---- home ----------------------------------------------------------------------------------------------------------------
+function gmdHomeHtml(){const t=ui.gmt||'all',L=gmdS().progs.filter(p=>p.gid==gsAg()&&(t=='all'||p.type==t)).sort((a,b)=>(a.st=='end')-(b.st=='end')||b.created-a.created);
+ const tab=(k,n)=>`<button class="b s ${t==k?'on':''}" onclick="ui.gmt='${k}';render()">${n}</button>`;
+ return`<div class="gmhome" style="--gmb1:url('${GMART.bgUrl('var',0)}');--gmb2:url('${GMART.bgUrl('mus',0)}');--gmb3:url('${GMART.bgUrl('radio',0)}')"><div class="gmhb"><i></i><i></i><i></i></div><div class="gmhtx"><small>GROUP MEDIA</small><h2>${GMD_T('Your group’s own shows','รายการของวงเราเอง')}</h2><p>${GMD_T('Variety shows, music programs and live radio — help fans discover different members.','วาไรตี้ รายการเพลง และวิทยุสด ช่วยให้แฟนได้รู้จักเมมหลากหลายขึ้น')}</p>
+ <div class="row"><button class="b p" onclick="gmdNewDraft('var')">＋ ${GMD_T('Variety Show','วาไรตี้โชว์')}</button><button class="b p" onclick="gmdNewDraft('mus')">＋ ${GMD_T('Music Program','รายการเพลง')}</button><button class="b p" onclick="gmdNewDraft('radio')">＋ ${GMD_T('Radio Program','รายการวิทยุ')}</button></div></div></div>
+ <div class="row gmtabs">${tab('all',GMD_T('All','ทั้งหมด'))}${tab('var',GMD_T('Variety','วาไรตี้'))}${tab('mus',GMD_T('Music','รายการเพลง'))}${tab('radio',GMD_T('Radio','วิทยุ'))}</div>
+ ${L.length?`<div class="gmprogs">${L.map(gmdCardHtml).join('')}</div>`:`<div class="c"><p class="st">${GMD_T('No programs yet. Create one above.','ยังไม่มีรายการ สร้างได้จากปุ่มด้านบน')}</p></div>`}`}
+function gmdCardHtml(p){const nx=p.eps.filter(e=>e.st!='aired'&&e.st!='done').sort((a,b)=>a.no-b.no)[0],aired=p.eps.filter(e=>e.st=='aired'||e.st=='done').length;
+ return`<button class="gmcard ${p.st}" onclick="ui.gm={pg:'prog',pid:'${p.id}'};render()"><img src="${gmdPosterUrl(p)}" alt="" loading="lazy"><span class="gmcb"><b>${esc(p.name)}</b><small>${gmdN(GMD_TYPES[p.type])} · ${gmdN((p.type=='radio'?GMD_PLATR:GMD_PLAT)[p.plat])}${p.day!=null?' · '+gmdDow(p.day):''}</small><small>${aired} ${GMD_T('aired','ตอนที่ออกแล้ว')}${nx?` · ${GMD_T('next','ถัดไป')} EP.${nx.no} ${gmdStLabel(p,nx)[0]}`:''}</small><span class="gmst ${p.st}">${gmdN(gmdPS[p.st])}</span></span></button>`}
+
+// ---- program creation ------------------------------------------------------------------------------------------------------
+function gmdNewHtml(){const d=ui.gm.d,T=GMD_TPL.map((t,i)=>[t,i]).filter(([t])=>t[0]==d.type),pr={...d,id:'draft'},PL=d.type=='radio'?GMD_PLATR:GMD_PLAT;
+ const tb=(k,n)=>`<button class="b s ${d.type==k?'on':''}" onclick="gmdDSet('type','${k}')">${n}</button>`;
+ return`<div class="gmhero gm-${d.type}" style="background-image:url('${GMART.bgUrl(gmdBgKey(d),0)}')"><div class="gmherox"><button class="b s" onclick="ui.gm={pg:'home'};render()">◀ ${GMD_T('Group Media','กรุ๊ปมีเดีย')}</button><div class="gmlogo">${GMART.logo(pr,220)}</div></div></div>
+ <div class="c"><h3>${GMD_T('New program','สร้างรายการใหม่')}</h3><div class="row">${tb('var',gmdN(GMD_TYPES.var))}${tb('mus',gmdN(GMD_TYPES.mus))}${tb('radio',gmdN(GMD_TYPES.radio))}</div>
+ <h4>${GMD_T('Start from a template','เริ่มจากเทมเพลต')}</h4><div class="row">${T.map(([t,i])=>`<button class="b s" onclick="gmdTpl(${i})">${esc(t[2].replace('{g}',''))}</button>`).join('')||'<span class="st">—</span>'}</div>
+ <label class="fl">${GMD_T('Program name','ชื่อรายการ')}<input value="${esc(d.name)}" maxlength="28" onchange="gmdDSet('name',this.value)"></label>
+ <label class="fl">${GMD_T('Format','รูปแบบ')}<select onchange="gmdDSet('fmt',this.value)">${GMD_FMT[d.type].map(f=>`<option value="${f[0]}" ${d.fmt==f[0]?'selected':''}>${GMD_T(f[1],f[2])}</option>`).join('')}</select></label>
+ <label class="fl">${GMD_T('Concept (free text)','คอนเซปต์ (เขียนเองได้)')}<textarea rows="2" maxlength="200" onchange="gmdDSet('concept',this.value)">${esc(d.concept)}</textarea></label>
+ <h4>${GMD_T('Logo','โลโก้')}</h4><div class="gmlogos">${GMART.LOGO_ST.map((c,i)=>`<button class="${(d.logo.st|0)==i?'on':''}" onclick="ui.gm.d.logo.st=${i};render()">${GMART.logo({...pr,logo:{st:i,sh:d.logo.sh}},120)}</button>`).join('')}</div>
+ <div class="row"><span class="st">${GMD_T('Shape','ทรง')}</span>${[0,1,2,3].map(i=>`<button class="b s ${(d.logo.sh|0)==i?'on':''}" onclick="ui.gm.d.logo.sh=${i};render()">${i+1}</button>`).join('')}</div>
+ <h4>${GMD_T('Broadcast platform (permanent)','ช่องทางออกอากาศ (เปลี่ยนภายหลังไม่ได้)')}</h4><div class="gmplat">${['yt','tv'].map(k=>`<button class="gmpl ${d.plat==k?'on':''}" onclick="gmdDSet('plat','${k}')"><b>${gmdN(PL[k])}</b><small>${k=='yt'?GMD_T(`Lower cost (${yen(GMD_COST[d.type].yt)}/episode). Best for existing fans. Free broadcast dates; a weekly day is optional.`,`ต้นทุนต่ำ (${yen(GMD_COST[d.type].yt)}/ตอน) เหมาะกับแฟนเดิม เลือกวันออกอากาศเองได้ วันประจำไม่บังคับ`):GMD_T(`Higher cost (${yen(GMD_COST[d.type].tv)}/episode) and risk. Reaches a wider audience. Fixed weekly day required.`,`ต้นทุนสูง (${yen(GMD_COST[d.type].tv)}/ตอน) และเสี่ยงกว่า เข้าถึงคนดูกว้างกว่า ต้องมีวันออกอากาศประจำ`)}</small></button>`).join('')}</div>
+ <div class="row"><label class="st">${d.plat=='tv'?GMD_T('Broadcast day (required)','วันออกอากาศ (บังคับ)'):GMD_T('Regular day (optional)','วันประจำ (ไม่บังคับ)')} <select onchange="gmdDSet('day',this.value)">${d.plat=='tv'?'':`<option value="">${GMD_T('None — choose per episode','ไม่มี — เลือกเป็นตอน ๆ')}</option>`}${GMD_DOW.map((x,i)=>`<option value="${i}" ${d.day===i?'selected':''}>${gmdDow(i)}</option>`).join('')}</select></label>
+ ${d.type=='radio'?`<label class="st">${GMD_T('Live time','เวลาออกอากาศสด')} <select onchange="gmdDSet('time',this.value)">${GMD_RTIME.map((t,i)=>`<option value="${i}" ${(d.time|0)==i?'selected':''}>${t[2]}</option>`).join('')}</select></label>`:''}</div>
+ ${d.type=='var'?`<h4>${GMD_T('Member selection methods','วิธีเลือกเมม')}</h4><div class="row"><label class="st"><input type="checkbox" ${d.sel.reg?'checked':''} onchange="gmdDSel('reg',this.checked)"> ${GMD_T('Regular members','เมมประจำ')}</label><label class="st"><input type="checkbox" ${d.sel.rot?'checked':''} onchange="gmdDSel('rot',this.checked)"> ${GMD_T('Rotating members','เมมหมุนเวียน')}</label><label class="st"><input type="checkbox" ${d.sel.rnd?'checked':''} onchange="gmdDSel('rnd',this.checked)"> ${GMD_T('Random members','สุ่มเมม')}</label>${d.sel.rnd?`<label class="st">${GMD_T('How many','จำนวน')} <input type="number" min="1" max="12" value="${d.sel.n}" style="width:60px" onchange="gmdDSel('n',this.value)"></label>`:''}</div>`:''}
+ <h4>${d.type=='radio'?GMD_T('Regular hosts (first = Main Host)','พิธีกรประจำ (คนแรก = พิธีกรหลัก)'):GMD_T('Regular members','เมมประจำ')} (${d.regs.length})</h4>${gmdMemPick(d.regs,"gmdDReg(#)")}
+ <div class="row gmbar"><button class="b p" onclick="gmdCreate()">${GMD_T('Create program','สร้างรายการ')}</button><button class="b" onclick="ui.gm={pg:'home'};render()">${GMD_T('Cancel','ยกเลิก')}</button></div></div>`}
+
+// ---- program page ------------------------------------------------------------------------------------------------------------
+function gmdProgHtml(p){const E=p.eps.slice().sort((a,b)=>b.no-a.no),act=E.filter(e=>e.st!='aired'&&e.st!='done'),old=E.filter(e=>e.st=='aired'||e.st=='done'),PL=p.type=='radio'?GMD_PLATR:GMD_PLAT,ed=p.st!='end';
+ const sched=p.type=='radio'?`${p.day!=null?GMD_T('Every ','ทุกวัน')+gmdDow(p.day):GMD_T('No fixed day','ไม่มีวันประจำ')} · ${GMD_RTIME[p.time|0][2]} ${GMD_T('(live)','(สด)')}`:p.day!=null?(GMD_T('Every ','ทุกวัน')+gmdDow(p.day)):GMD_T('Broadcast date per episode','กำหนดวันออกอากาศเป็นตอน ๆ');
+ const log=(p.log||[]).filter(x=>x.t=='none').slice(-6).reverse();
+ return gmdHead(p,0)+`<div class="gmprog"><img class="gmposter" src="${gmdPosterUrl(p)}" alt=""><div class="c gminfo"><div class="row"><h2 class="ht">${esc(p.name)}</h2><span class="gmst ${p.st}">${gmdN(gmdPS[p.st])}</span></div>
+ <div class="gmkv"><span>${GMD_T('Type','ประเภท')}<b>${gmdN(GMD_TYPES[p.type])}</b></span><span>${GMD_T('Format','รูปแบบ')}<b>${esc(gmdFmtN(p.type,p.fmt))}</b></span><span>${GMD_T('Platform','ช่องทาง')}<b>${gmdN(PL[p.plat])}</b></span><span>${GMD_T('Schedule','ตารางออกอากาศ')}<b>${sched}</b></span><span>${GMD_T('Episodes','จำนวนตอน')}<b>${old.length}</b></span></div>
+ <p class="st">${esc(p.concept||'')}</p>
+ ${ed?`<div class="row">${p.st=='on'?`<button class="b s" onclick="gmdProgSet('${p.id}','st','hold')">${GMD_T('Put on hold','พักรายการ')}</button>`:`<button class="b s p" onclick="gmdProgSet('${p.id}','st','on')">${GMD_T('Resume','กลับมาออกอากาศ')}</button>`}<button class="b s" onclick="gmdProgSet('${p.id}','st','end')">${GMD_T('End program','จบรายการ')}</button><label class="st">${p.plat=='tv'?GMD_T('Broadcast day','วันออกอากาศ'):GMD_T('Regular day','วันประจำ')} <select onchange="gmdProgSet('${p.id}','day',this.value)">${p.plat=='tv'?'':`<option value="">${GMD_T('None','ไม่มี')}</option>`}${GMD_DOW.map((x,i)=>`<option value="${i}" ${p.day===i?'selected':''}>${gmdDow(i)}</option>`).join('')}</select></label>${p.type=='radio'?`<label class="st">${GMD_T('Time','เวลา')} <select onchange="gmdProgSet('${p.id}','time',this.value)">${GMD_RTIME.map((t,i)=>`<option value="${i}" ${(p.time|0)==i?'selected':''}>${t[2]}</option>`).join('')}</select></label>`:''}</div>`:''}
+ <details class="gmregs"><summary><b>${p.type=='radio'?GMD_T('Regular hosts','พิธีกรประจำ'):GMD_T('Regular members','เมมประจำ')}</b> · ${p.regs.filter(gmdMem).map(gmdNm).join(', ')||'—'}</summary>${ed?gmdMemPick(p.regs,`gmdRegTog('${p.id}',#)`):''}</details></div></div>
+ <div class="row gmsec"><h3>${GMD_T('Episodes','รายการตอน')}</h3>${ed?`<button class="b p" onclick="gmdNewEp('${p.id}')">＋ ${GMD_T('Create Episode','สร้างตอนใหม่')}</button>`:''}</div>
+ ${act.length?`<div class="gmeps">${act.map(e=>gmdEpCard(p,e)).join('')}</div>`:`<p class="st">${GMD_T('No upcoming episodes.','ยังไม่มีตอนที่กำลังจะมา')}</p>`}
+ <h3>${GMD_T('Broadcast history','ประวัติการออกอากาศ')}</h3>${old.length?`<div class="gmeps">${old.map(e=>gmdEpCard(p,e)).join('')}</div>`:`<p class="st">${GMD_T('Nothing aired yet.','ยังไม่มีตอนที่ออกอากาศ')}</p>`}
+ ${log.length?`<div class="c"><p class="st">${log.map(x=>`${jd(x.d)}: ${GMD_T('no new episode','ไม่มีตอนใหม่')}`).join(' · ')}</p></div>`:''}`}
+function gmdEpCard(p,e){const[sl,sk]=gmdStLabel(p,e),cast=e.cast0||gmdCast(p,e),songs=p.type=='mus'?(e.perf||[]).map(x=>(ccSong(x.gid,x.id)||{}).title).filter(Boolean):[];
+ const dt=p.type=='radio'?`${GMD_T('Live','สด')} ${e.day!=null?jd(e.day):'—'} ${GMD_RTIME[p.time|0][2]}`:`${GMD_T('Filming','ถ่ายทำ')} ${e.film!=null?jd(e.film):'—'}${e.bc!=null?` · ${GMD_T('Broadcast','ออกอากาศ')} ${jd(e.bc)}`:p.plat=='tv'&&e.film!=null&&e.st!='aired'?` · ${GMD_T('Broadcast','ออกอากาศ')} ≥ ${jd(gmdTvNext(p,(e.filmed??e.film)+14))}`:''}`;
+ let btn='';if(e.st=='plan'||e.st=='sched')btn+=`<button class="b s" onclick="ui.gm={pg:'ep',pid:'${p.id}',eid:'${e.id}'};render()">${GMD_T('Edit','แก้ไข')}</button>`;
+ if(e.st=='sched'&&p.type!='radio'&&e.film==S.day)btn+=`<button class="b s p" onclick="gmdFilm('${p.id}','${e.id}',1)">${GMD_T('Film now','ถ่ายทำเลย')}</button>`;
+ if(e.st=='sched'&&p.type=='radio'&&e.day==S.day)btn+=`<button class="b s p" onclick="gmdLiveOpen('${p.id}','${e.id}')">${GMD_T('Go live','เริ่มออกอากาศสด')}</button>`;
+ if(e.st=='ready'&&p.plat=='yt')btn+=`<label class="st">${GMD_T('Broadcast','ออกอากาศ')} ${gmdDate(e.bc,`gmdBcSet('${p.id}','${e.id}',this.value)`,Math.max(S.day+1,(e.filmed||0)+7))}</label>`;
+ if(e.res)btn+=`<button class="b s p" onclick="ui.gm={pg:'res',pid:'${p.id}',eid:'${e.id}'};render()">${GMD_T('Results','ผลลัพธ์')}</button>`;
+ return`<div class="gmep ${sk}"><img src="${gmdThumbUrl(p,e)}" alt="" loading="lazy"><div class="gmepb"><div class="row"><b>EP.${String(e.no).padStart(2,'0')} ${esc(e.title||gmdAutoTitle(p,e))}</b><span class="gmes ${sk}">${sl}</span></div><small class="st">${dt}</small><small class="gmepc">${cast.slice(0,10).map(gmdNm).map(esc).join(', ')}${songs.length?` · ♪ ${songs.map(esc).join(' / ')}`:''}</small>${e.issue?`<small class="gmwarn">${esc(e.issue.msg[0]||'')}</small>`:''}<div class="row">${btn}</div></div></div>`}
+function gmdBcSet(pid,eid,v){const p=gmdP(pid),e=gmdE(p,eid);if(!e||e.st!='ready')return;const d=gmdFromIso(v);if(d==null)return;if(d<(e.filmed||0)+7)return toast(GMD_T('At least 7 days after filming.','ต้องห่างจากวันถ่ายทำอย่างน้อย 7 วัน'),'err');if(d<=S.day)return toast(GMD_T('Choose a future date.','เลือกวันในอนาคต'),'err');if(p.eps.some(x=>x!==e&&x.bc==d&&x.st!='aired'))return toast(GMD_T('Another episode already airs that day.','วันนั้นมีตอนอื่นออกอากาศแล้ว'),'err');e.bc=d;render()}
+
+// ---- episode setup ---------------------------------------------------------------------------------------------------------------
+function gmdEpHtml(p,e){const ed=gmdEditable(e),T=GMD_TOPICS[p.type]||[],c=gmdCheck(p,e),day=gmdDayOf(p,e);
+ const top=`<div class="c"><div class="row"><h3>EP.${String(e.no).padStart(2,'0')} · ${GMD_T('Episode setup','ตั้งค่าตอน')}</h3><span class="gmes ${gmdStLabel(p,e)[1]}">${gmdStLabel(p,e)[0]}</span></div>
+ <div class="row"><label class="st">${GMD_T('Episode number','เลขตอน')} <input type="number" min="1" value="${e.no}" style="width:70px" onchange="gmdESet('${p.id}','${e.id}','no',this.value)"></label><label class="st" style="flex:1">${GMD_T('Title (optional)','ชื่อตอน (ไม่บังคับ)')} <input value="${esc(e.title||'')}" placeholder="${esc(gmdAutoTitle(p,e))}" maxlength="60" style="width:100%" onchange="gmdESet('${p.id}','${e.id}','title',this.value)"></label></div>
+ <div class="row"><span class="st">${GMD_T('Topic','หัวข้อ')}</span>${T.map(t=>`<button class="b s ${e.topic==t[0]?'on':''}" onclick="gmdESet('${p.id}','${e.id}','topic','${t[0]}')">${GMD_T(t[1],t[2])}</button>`).join('')}</div>
+ ${p.type=='radio'?`<div class="row"><span class="st">${GMD_T('Format','รูปแบบ')}</span>${GMD_FMT.radio.map(f=>`<button class="b s ${(e.fmt||p.fmt)==f[0]?'on':''}" onclick="gmdESet('${p.id}','${e.id}','fmt','${f[0]}')">${GMD_T(f[1],f[2])}</button>`).join('')}</div>`:''}
+ ${p.type=='var'?`<div class="row"><span class="st">${GMD_T('Activities','กิจกรรม')}</span>${GMD_ACTS.map(a=>`<button class="b s ${e.acts.includes(a[0])?'on':''}" onclick="gmdActTog('${p.id}','${e.id}','${a[0]}')">${GMD_T(a[1],a[2])}</button>`).join('')}</div>`:''}</div>`;
+ const date=p.type=='radio'?`<div class="c"><h3>${GMD_T('Live broadcast','ออกอากาศสด')}</h3><p class="st">${GMD_T('Radio is live only: it is never filmed in advance. Every host and guest must be free at the live time.','วิทยุออกอากาศสดเท่านั้น ไม่มีการอัดล่วงหน้า พิธีกรและแขกทุกคนต้องว่างในเวลาออกอากาศ')}</p><div class="row"><label class="st">${GMD_T('Date','วันที่')} ${gmdDate(e.day,`gmdESet('${p.id}','${e.id}','day',this.value)`,S.day)}</label><span class="st">${GMD_RTIME[p.time|0][2]}${p.day!=null?` · ${GMD_T('every','ทุกวัน')} ${gmdDow(p.day)}`:''}</span></div></div>`
+  :`<div class="c"><h3>${GMD_T('Filming schedule','ตารางถ่ายทำ')}</h3><div class="row"><label class="st">${GMD_T('Filming date','วันถ่ายทำ')} ${gmdDate(e.film,`gmdESet('${p.id}','${e.id}','film',this.value)`,S.day)}</label>${e.film!=null?`<span class="st">${GMD_T('Filming slot','ช่วงถ่ายทำ')} ${gsHM(GMD_SLOT[e.slot|0][0])}–${gsHM(GMD_SLOT[e.slot|0][1])} · ${gmdFilmCount(e.film,e.id)+1}/3 ${GMD_T('that day','ในวันนั้น')}</span>`:''}</div>
+  ${p.plat=='yt'?`<div class="row"><label class="st">${GMD_T('Broadcast date','วันออกอากาศ')} ${gmdDate(e.bc,`gmdESet('${p.id}','${e.id}','bc',this.value)`,e.film!=null?e.film+7:S.day+7)}</label><span class="st">${GMD_T('At least 7 days after filming.','หลังวันถ่ายทำอย่างน้อย 7 วัน')}${p.day!=null?' '+GMD_T(`Leave empty to air on the next free ${gmdDow(p.day)}.`,`เว้นว่างไว้เพื่อออกอากาศวัน${gmdDow(p.day)}ถัดไปที่ว่าง`):''}</span></div>`:`<p class="st">${GMD_T(`TV: airs on the next ${gmdDow(p.day)} at least 14 days after filming.`,`ทีวี: ออกอากาศวัน${gmdDow(p.day)}แรกที่ห่างจากวันถ่ายทำอย่างน้อย 14 วัน`)}${e.film!=null?' → '+jd(gmdTvNext(p,e.film+14)):''}</p>`}</div>`;
+ // members
+ let mem='';if(p.type=='radio'){const all=gmdPool(),opt=(v,none)=>`${none?`<option value="">${GMD_T('None','ไม่มี')}</option>`:''}${all.slice().sort((a,b)=>b.pop-a.pop).map(m=>`<option value="${m.id}" ${v==m.id?'selected':''}>${esc(m.name)}${day!=null&&gmdWhy(p,e,m.id,day)?' ⚠':''}</option>`).join('')}`;
+  mem=`<div class="c gmradiosel"><h3>${GMD_T('Hosts & guests','พิธีกรและแขกรับเชิญ')}</h3><div class="row"><label class="st">${GMD_T('Main Host','พิธีกรหลัก')} <select onchange="gmdESet('${p.id}','${e.id}','host',this.value?+this.value:null)">${opt(e.host,1)}</select></label><label class="st">${GMD_T('Co-host','พิธีกรร่วม')} <select onchange="gmdESet('${p.id}','${e.id}','co',this.value?+this.value:null)">${opt(e.co,1)}</select></label></div>
+  <h4>${GMD_T('Guests','แขกรับเชิญ')} (${(e.guests||[]).length})</h4>${gmdMemPick(e.guests||[],`gmdGuestTog('${p.id}','${e.id}',#)`,{p,e,day})}</div>`}
+ else if(p.type=='var'){const reg=c.reg||[];mem=`<div class="c"><h3>${GMD_T('Members','เมมที่ร่วมรายการ')} (${e.cast.length})</h3>
+  ${reg.length?`<div class="gmregfix">${reg.map(id=>`<div class="row"><b>${esc(gmdNm(id))}</b><span class="gmwarn">${esc(gmdWhy(p,e,id,day)||'')}</span><select onchange="if(this.value)gmdRegFix('${p.id}','${e.id}',${id},'replace',this.value)"><option value="">${GMD_T('Replace with…','เปลี่ยนเป็น…')}</option>${gmdPool().filter(m=>!gmdCast(p,e).includes(m.id)&&!gmdWhy(p,e,m.id,day)).map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('')}</select><button class="b s" onclick="gmdRegFix('${p.id}','${e.id}',${id},'empty')">${GMD_T('Leave slot empty','เว้นที่ว่าง')}</button><button class="b s" onclick="gmdRegFix('${p.id}','${e.id}',${id},'cancel')">${GMD_T('Cancel filming','ยกเลิกการถ่ายทำ')}</button></div>`).join('')}</div>`:''}
+  <div class="row">${p.sel.rnd||1?`<label class="st">${GMD_T('Random','สุ่ม')} <input type="number" min="1" max="12" value="${(ui.gm.rn)||p.sel.n||3}" style="width:56px" onchange="ui.gm.rn=+this.value"></label><button class="b s" onclick="gmdRandFill('${p.id}','${e.id}')">${GMD_T('Pick random members','สุ่มเมม')}</button>`:''}<span class="st">${GMD_T('Tap faces to add or remove (rotating cast). Grey = busy on the filming day.','แตะหน้าเพื่อเพิ่มหรือเอาออก (เมมหมุนเวียน) สีเทา = ไม่ว่างในวันถ่ายทำ')}</span></div>
+  <div class="gmcast">${e.cast.map(cc=>`<span class="gmcc ${cc.src}">${esc(gmdNm(cc.m))}<small>${{reg:GMD_T('Regular','ประจำ'),rot:GMD_T('Rotating','หมุนเวียน'),rnd:GMD_T('Random','สุ่ม'),rep:GMD_T('Replacement','ตัวแทน')}[cc.src]||''}</small></span>`).join('')}${(e.empty||[]).map(id=>`<span class="gmcc empty">${esc(gmdNm(id))}<small>${GMD_T('empty slot','เว้นว่าง')}</small></span>`).join('')}</div>
+  ${gmdMemPick(e.cast.map(c=>c.m),`gmdCastTog('${p.id}','${e.id}',#,'rot')`,{p,e,day})}</div>`}
+ else mem=gmdMusHtml(p,e,c,day);
+ const errs=c.err.length?`<div class="c gmerrs">${c.err.map(x=>`<p class="gmwarn">${esc(x)}</p>`).join('')}</div>`:'';
+ return gmdHead(p,1)+top+(p.type=='mus'?mem+date:date+mem)+errs+`<div class="row gmbar">${ed?`<button class="b p" onclick="gmdPreview('${p.id}','${e.id}')">${GMD_T('Episode preview','ดูตัวอย่างตอน')}</button>`:''}${e.st=='sched'?`<button class="b s" onclick="gmdCancelFilm('${p.id}','${e.id}')">${p.type=='radio'?GMD_T('Cancel live date','ยกเลิกวันออกอากาศสด'):GMD_T('Cancel filming','ยกเลิกการถ่ายทำ')}</button>`:''}${ed?`<button class="b s" onclick="gmdDelEp('${p.id}','${e.id}')">${GMD_T('Delete episode','ลบตอน')}</button>`:''}<button class="b" onclick="ui.gm={pg:'prog',pid:'${p.id}'};render()">${GMD_T('Back','กลับ')}</button></div>`}
+function gmdGuestTog(pid,eid,mid){const p=gmdP(pid),e=gmdE(p,eid);if(!gmdEditable(e))return;mid=+mid;e.guests=e.guests||[];const i=e.guests.indexOf(mid);if(i>=0)e.guests.splice(i,1);else{if(mid==e.host||mid==e.co)return;if(e.guests.length>=4)return toast(GMD_T('At most 4 guests.','แขกได้สูงสุด 4 คน'),'err');e.guests.push(mid)}render()}
+// music: performances + talk segments
+function gmdMusHtml(p,e,c,day){const SG=gmdSongs(),cats=[...new Set(SG.map(x=>x.cat))],f=ui.gm.sf||'all',q=(ui.gm.sq||'').toLowerCase(),i0=Math.min(ui.gm.pf|0,Math.max(0,e.perf.length-1)),x=e.perf[i0];
+ const L=SG.filter(s=>(f=='all'||s.cat==f)&&(!q||String(s.o.title).toLowerCase().includes(q))).slice(0,80);
+ const segs=`<div class="c"><h3>${GMD_T('Episode structure','โครงสร้างตอน')}</h3><div class="row">${GMD_SEGS.map(s=>`<button class="b s ${e.segs.includes(s[0])?'on':''}" onclick="gmdSegTog('${p.id}','${e.id}','${s[0]}')">${GMD_T(s[1],s[2])}</button>`).join('')}</div>
+ <ol class="gmsegs">${e.segs.map((s,i)=>{const P=/^p(\d)$/.exec(s),o=P&&e.perf[+P[1]-1]&&ccSong(e.perf[+P[1]-1].gid,e.perf[+P[1]-1].id),n=P?`${GMD_T('Performance','การแสดง')} ${P[1]}${o?': '+esc(o.title):''}`:GMD_T(...(GMD_SEGS.find(z=>z[0]==s)||[s,s,s]).slice(1));return`<li class="${P?'perf':'talk'}"><span>${n}</span><button class="b s" onclick="gmdSegMv('${p.id}','${e.id}',${i},-1)">▲</button><button class="b s" onclick="gmdSegMv('${p.id}','${e.id}',${i},1)">▼</button></li>`}).join('')}</ol><p class="st">${GMD_T('Talk segments are filmed in the interview corner, performances on the stage. None is mandatory.','ช่วงพูดคุยถ่ายที่มุมสัมภาษณ์ การแสดงถ่ายบนเวที ไม่บังคับทุกช่วง')}</p></div>`;
+ const pick=e.perf.length<3?`<div class="c"><h3>${GMD_T('Song selection','เลือกเพลง')} (${e.perf.length}/3)</h3><div class="row"><input placeholder="${GMD_T('Search song','ค้นหาเพลง')}" value="${esc(ui.gm.sq||'')}" onchange="ui.gm.sq=this.value;render()"><select onchange="ui.gm.sf=this.value;render()"><option value="all">${GMD_T('All categories','ทุกหมวด')}</option>${cats.map(k=>`<option ${f==k?'selected':''}>${esc(k)}</option>`).join('')}</select></div>
+  <div class="gmsongs">${L.map(s=>`<button class="gmsong" onclick="gmdPerfAdd('${p.id}','${e.id}','${s.gid}|${s.o.id}')"><b>${esc(s.o.title)}</b><small>${esc(s.cat)}${S.groups.length>1?' · '+esc((grp(s.gid)||{}).name||''):''}</small></button>`).join('')||`<p class="st">${GMD_T('No songs.','ไม่มีเพลง')}</p>`}</div></div>`:'';
+ const tabs=e.perf.length?`<div class="row">${e.perf.map((z,i)=>`<button class="b s ${i==i0?'on':''}" onclick="ui.gm.pf=${i};render()">${GMD_T('Performance','การแสดง')} ${i+1}</button>`).join('')}</div>`:'';
+ let perf='';if(x){const o=ccSong(x.gid,x.id),L2=czLib().ds.filter(d=>d.p);perf=`<div class="c"><div class="row"><h3>${esc(o?o.title:'?')}</h3><button class="b s" onclick="gmdPerfDel('${p.id}','${e.id}',${i0})">${GMD_T('Remove','เอาออก')}</button></div>
+  <div class="gmstage" style="background-image:url('${GMART.bgUrl('mus',(p.logo.st|0)%3)}')"><img src="${gmdPerfUrl(p,e,i0)}" alt=""></div>
+  <div class="row"><label class="st">${GMD_T('Center','เซ็นเตอร์')} <select onchange="gmdPerfSet('${p.id}','${e.id}',${i0},'cen',this.value)">${x.mids.map(id=>`<option value="${id}" ${x.cen==id?'selected':''}>${esc(gmdNm(id))}</option>`).join('')}</select></label>
+  <label class="st">${GMD_T('Costume','ชุด')} <select onchange="gmdPerfSet('${p.id}','${e.id}',${i0},'cz',this.value)"><option value="">${GMD_T('Song’s own costumes','ชุดของเพลงนี้')}</option>${L2.map(d=>`<option value="${d.id}" ${x.cz.did==d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></label></div>
+  <h4>${GMD_T('Performers','เมมที่แสดง')} (${x.mids.length})</h4>${gmdMemPick(x.mids,`gmdPerfMem('${p.id}','${e.id}',${i0},#)`,{p,e,day})}</div>`}
+ const talk=`<div class="c"><h3>${GMD_T('Talk & interview members','เมมช่วงพูดคุย/สัมภาษณ์')} (${e.cast.length})</h3><p class="st">${GMD_T('Members who appear only in talk segments (performers join the talks automatically).','เมมที่ร่วมเฉพาะช่วงพูดคุย (เมมที่แสดงร่วมพูดคุยได้อยู่แล้ว)')}</p>${gmdMemPick(e.cast.map(c=>c.m),`gmdCastTog('${p.id}','${e.id}',#,'rot')`,{p,e,day})}</div>`;
+ return segs+pick+tabs+perf+talk}
+function gmdPerfUrl(p,e,i){const x=e.perf[i];if(!x)return'';const o=ccSong(x.gid,x.id),ids=[x.cen,...x.mids.filter(id=>id!=x.cen)].filter(id=>gmdMem(id)),key=`pf|${e.id}|${i}|${x.gid}|${x.id}|${ids.join(',')}|${x.cz.mode}|${x.cz.did}`;
+ return gmdImg(key,()=>{let s='';try{s=thStageSvg(++PTC[0],ids,fxRows(Math.max(1,ids.length),1),ids.length>2?1:0,id=>gmdCzOf(x,id),()=>null,1,null,null)}catch(z){console.error(z)}if(!/xmlns=/.test(s.slice(0,300)))s=s.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"');return s})}
+
+// ---- preview --------------------------------------------------------------------------------------------------------------------
+function gmdPrevHtml(p,e){const c=gmdCheck(p,e),cast=gmdCast(p,e),PL=p.type=='radio'?GMD_PLATR:GMD_PLAT,bc=p.type=='radio'?e.day:p.plat=='tv'&&e.film!=null?gmdTvNext(p,e.film+14):e.bc;
+ const rows=[[GMD_T('Program','รายการ'),esc(p.name)],[GMD_T('Episode','ตอน'),'EP.'+String(e.no).padStart(2,'0')],[GMD_T('Concept','คอนเซปต์'),esc(e.title||gmdAutoTitle(p,e))],[GMD_T('Platform','ช่องทาง'),gmdN(PL[p.plat])],
+  ...(p.type!='radio'?[[GMD_T('Filming date','วันถ่ายทำ'),e.film!=null?jd(e.film):'—']]:[]),[p.type=='radio'?GMD_T('Live broadcast','ออกอากาศสด'):GMD_T('Broadcast date','วันออกอากาศ'),bc!=null?jd(bc)+(p.type=='radio'?' '+GMD_RTIME[p.time|0][2]:''):p.plat=='yt'&&p.day!=null?GMD_T(`next free ${gmdDow(p.day)}`,`วัน${gmdDow(p.day)}ถัดไปที่ว่าง`):'—'],
+  ...(p.type=='radio'?[[GMD_T('Main Host','พิธีกรหลัก'),esc(gmdNm(e.host))],[GMD_T('Co-host','พิธีกรร่วม'),e.co!=null?esc(gmdNm(e.co)):'—'],[GMD_T('Guests','แขกรับเชิญ'),(e.guests||[]).map(gmdNm).map(esc).join(', ')||'—']]:[[GMD_T('Members','เมม'),cast.map(gmdNm).map(esc).join(', ')||'—']]),
+  ...(p.type=='mus'?e.perf.map((x,i)=>{const o=ccSong(x.gid,x.id),d=x.cz.mode=='lib'&&czD(x.cz.did);return[`${GMD_T('Performance','การแสดง')} ${i+1}`,`${esc(o?o.title:'?')} · ${GMD_T('Center','เซ็นเตอร์')} ${esc(gmdNm(x.cen))} · ${d?esc(d.name):GMD_T('song costumes','ชุดของเพลง')}`]}):[])];
+ return gmdHead(p,1)+`<div class="c gmprev"><div class="gmprevimg"><img src="${gmdThumbUrl(p,e)}" alt=""></div><h3>${GMD_T('Episode preview','ตัวอย่างตอน')}</h3><div class="gmkv2">${rows.map(([a,b])=>`<span>${a}</span><b>${b}</b>`).join('')}</div>
+ ${c.warn.map(x=>`<p class="st">${esc(x)}</p>`).join('')}${c.err.map(x=>`<p class="gmwarn">${esc(x)}</p>`).join('')}
+ <div class="row gmbar"><button class="b p" ${c.err.length?'disabled':''} onclick="gmdConfirm('${p.id}','${e.id}')">${GMD_T('Confirm episode','ยืนยันตอนนี้')}</button><button class="b" onclick="ui.gm={pg:'ep',pid:'${p.id}',eid:'${e.id}'};render()">${GMD_T('Back to setup','กลับไปแก้ไข')}</button></div></div>`}
+
+// ---- radio live screen ----------------------------------------------------------------------------------------------------------------
+function gmdLiveHtml(p,e){const g=ui.gm,L=g.L||[],i=g.i|0,cast=gmdCast(p,e).map(gmdMem).filter(Boolean);
+ return`<div class="gmlive" style="background-image:url('${GMART.bgUrl('radio',(p.logo.st|0)%3)}')"><div class="gmonairb"><span class="gmdot"></span>ON AIR</div><div class="gmlivehd">${GMART.logo(p,200)}<b>EP.${String(e.no).padStart(2,'0')} · ${esc(e.title||gmdAutoTitle(p,e))}</b></div>
+ <div class="gmlivecast">${cast.map(m=>`<span>${ptc(m,56)}<small>${esc(m.stage||m.name.split(' ')[0])}${m.id==e.host?' · '+GMD_T('Host','พิธีกร'):''}</small></span>`).join('')}</div>
+ <div class="gmlines">${L.slice(0,i+1).map((s,k)=>`<p class="${k==i?'on':''}">${esc(s)}</p>`).join('')}</div>
+ <div class="row gmbar">${i<L.length-1?`<button class="b p" onclick="gmdLiveNext()">${GMD_T('Next','ถัดไป')} ▶</button>`:''}<button class="b ${i>=L.length-1?'p':''}" onclick="gmdLiveEnd()">${GMD_T('End broadcast','จบการออกอากาศ')}</button></div></div>`}
+
+// ---- results ---------------------------------------------------------------------------------------------------------------------------
+function gmdResHtml(p,e){const R=e.res;if(!R)return gmdProgHtml(p);const PL=p.type=='radio'?GMD_PLATR:GMD_PLAT,bar=(v)=>`<span class="gmbarv"><i style="width:${Math.max(3,Math.min(100,v))}%"></i></span>`;
+ const O=Object.entries(R.oshi||{}).sort((a,b)=>b[1]-a[1]),K=Object.entries(R.kami||{}),P=Object.entries(R.pop||{}),SO=Object.values(R.songs||{});
+ return gmdHead(p,1)+`<div class="c gmres"><div class="gmresh"><img src="${gmdThumbUrl(p,e)}" alt=""><div class="gmkv2"><span>${GMD_T('Program','รายการ')}</span><b>${esc(p.name)}</b><span>${GMD_T('Episode','ตอน')}</span><b>${String(e.no).padStart(2,'0')}</b><span>${GMD_T('Platform','ช่องทาง')}</span><b>${gmdN(PL[p.plat])}</b><span>${GMD_T('Status','สถานะ')}</span><b>${gmdStLabel(p,e)[0]}</b><span>${GMD_T('Broadcast','ออกอากาศ')}</span><b>${jd(e.bc)}</b></div></div>
+ <div class="gmrk"><div><small>${p.type=='radio'?GMD_T('Listeners','ผู้ฟัง'):GMD_T('Viewers','ผู้ชม')}</small><b>${R.aud.toLocaleString()}</b></div><div><small>${GMD_T('Audience engagement','การมีส่วนร่วม')}</small><b>${R.eng}</b>${bar(R.eng)}</div><div><small>${GMD_T('Program performance','คุณภาพรายการ')}</small><b>${R.q}</b>${bar(R.q)}</div><div><small>${GMD_T('Fan retention','การรักษาแฟน')}</small><b>${R.ret}</b>${bar(R.ret)}</div></div>
+ <h4>${GMD_T('Fan conversion','การเปลี่ยนใจของแฟน')}</h4>${O.length||K.length?`<div class="gmconv">${O.map(([id,n])=>`<span>${gmdMem(+id)?ptc(get(+id),34):''}<b>${esc(gmdNm(+id))}</b><em>+${n.toLocaleString()} Oshi</em>${R.kami&&R.kami[id]?`<em class="k">+${R.kami[id].toLocaleString()} Kami Oshi</em>`:''}</span>`).join('')}${K.filter(([id])=>!R.oshi[id]).map(([id,n])=>`<span><b>${esc(gmdNm(+id))}</b><em class="k">+${n.toLocaleString()} Kami Oshi</em></span>`).join('')}</div>`:`<p class="st">${GMD_T('No fan changed their Oshi this time.','ครั้งนี้ยังไม่มีแฟนเพิ่มโอชิ')}</p>`}
+ ${P.length?`<h4>${GMD_T('Member popularity','ความนิยมของเมม')}</h4><p class="st">${P.map(([id,d])=>`${esc(gmdNm(+id))} ${d>0?'+':''}${d}`).join(' · ')}</p>`:''}
+ ${SO.length?`<h4>${GMD_T('Song popularity','ความนิยมของเพลง')}</h4><p class="st">${SO.map(s=>`${esc(s.t)} +${s.d}${s.old?' · '+GMD_T('rediscovered','ถูกค้นพบอีกครั้ง'):''}`).join(' · ')}</p>`:''}
+ ${(R.rel||[]).length?`<h4>${GMD_T('Relationships','ความสัมพันธ์')}</h4><p class="st">${R.rel.map(([a,b])=>`${esc(gmdNm(a))} & ${esc(gmdNm(b))}`).join(' · ')}</p>`:''}
+ <h4>${GMD_T('New fans','แฟนใหม่')}</h4><p class="st">${R.nf>0?'+'+R.nf.toLocaleString():GMD_T('none this time','ครั้งนี้ไม่มี')}</p>
+ <h4>${GMD_T('Finance','การเงิน')}</h4><p class="st">${GMD_T('Production','ค่าผลิต')} ${yen(R.cost)} (${GMD_T('charged once','เรียกเก็บครั้งเดียว')}) · ${p.plat=='yt'?GMD_T('Streaming views','รายได้ยอดวิว'):GMD_T('TV ads','ค่าโฆษณาทีวี')} ${yen(R.rev)}</p>
+ ${(e.lines||[]).length?`<details><summary>${GMD_T('Broadcast transcript','บทสนทนาในรายการ')}</summary>${e.lines.map(s=>`<p class="st">${esc(s)}</p>`).join('')}</details>`:''}
+ <div class="row gmbar"><button class="b" onclick="ui.gm={pg:'prog',pid:'${p.id}'};render()">${GMD_T('Back to program','กลับไปที่รายการ')}</button><button class="b s" onclick="view='community';render()">${GMD_T('See fan reactions','ดูรีแอคชันแฟน')}</button></div></div>`}
+
+// ---- navigation: Media › Group Media --------------------------------------------------------------------------------------------------
+(function(){try{const M=SECS.find(s=>s.k=='media');if(M&&!M.v.some(x=>x[0]=='gmedia'))M.v.unshift(['gmedia','Group Media']);SUBLOC.gmedia='Media Center · Group Media';SC_VIEW.gmedia='studio';Object.assign(I18N_TH,{'Group Media':'กรุ๊ปมีเดีย','Media Center · Group Media':'ศูนย์มีเดีย · กรุ๊ปมีเดีย'})}catch(e){console.error(e)}})();
 
 </script>
 <script>

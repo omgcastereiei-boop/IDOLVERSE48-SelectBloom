@@ -1252,3 +1252,10 @@ Music Production › **Special Releases** (`js/ui/special-rel.js`):
 - **Events**: hub page (Roadshow, Concert, Request Hour, General Election, Janken) + those pages as tabs; the Election section is gone.
 - Recording & DVD → Theater. Units & Solo Artists → Group & Team.
 - Community: icon, unread badge, pop-up for new posts. Clearer sub-tab chips; compact desktop sidebar and wider desktop grids.
+
+## Group Media (group-media.js, group-media-ui.js, art/gm-art.js) — Media › Group Media
+- Variety Show / Music Program / Radio Program, each with name, format, concept, logo, poster, regular members and a permanent platform (YouTube: cheaper, free dates, optional weekly day · TV: costlier, fixed weekly day). Status Ongoing / On Hold / Ended.
+- Episodes: setup → preview → confirm. Variety/Music: Planned → Scheduled → Filming (on the day) → Ready → Broadcasted; ≤3 filmings per day across programs; YouTube airs ≥7 days and TV ≥14 days after filming; broadcasts use no Energy. Radio is live only: Scheduled → Live → Completed.
+- Members: regular / rotating / random (available that day, spread over popularity, fewest appearances first); unavailable regulars → Replace / Leave empty / Cancel filming (settings kept). Schedules via gsCommits + thForbid; Energy m.en.
+- Music: ≤3 performances from the Song Library, performers, Center, song or library costume, rendered with thStageSvg; talk segments.
+- Results after broadcast: viewers, engagement, quality, Oshi (fan3 cohorts), slow Kami Oshi moves (accumulated interest), interest, a few new fans, popularity, song popularity, pairings; production cost once (finOut), YouTube views / TV ads revenue (earn); fan posts through the existing Fan Community generator (new intents in CM_I).
