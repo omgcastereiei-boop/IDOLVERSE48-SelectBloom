@@ -2,6 +2,11 @@
 <html lang="en"><head><meta charset="utf-8"><title>IDOLVERSE48: Select Bloom!</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#e05a8a"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="IDOLVERSE48"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>/* game files that fail to download (weak mobile signal) would leave the game half-loaded: reload once, then ask */
+window.__ivMiss=[];addEventListener("error",function(e){var t=e.target;if(t&&t.tagName=="SCRIPT"&&t.src)window.__ivMiss.push(t.src.split("/").pop())},true);
+addEventListener("load",function(){if(!window.__ivMiss.length){try{sessionStorage.removeItem("ivRl")}catch(x){}return}var n=0;try{n=+sessionStorage.getItem("ivRl")||0;sessionStorage.setItem("ivRl",n+1)}catch(x){n=9}
+ if(n<1){location.reload();return}var d=document.createElement("div");d.style.cssText="position:fixed;left:8px;right:8px;top:8px;z-index:99999;background:#fff3f6;border:2px solid #e05a8a;border-radius:14px;padding:12px;font:600 14px sans-serif;color:#5a2340;box-shadow:0 6px 20px #0003";
+ d.innerHTML="Some game files did not load ("+window.__ivMiss.length+"). / โหลดไฟล์เกมไม่ครบ ("+window.__ivMiss.length+" ไฟล์)<br><button style=\"margin-top:8px;padding:8px 14px;border-radius:10px;border:0;background:#e05a8a;color:#fff;font-weight:700\" onclick=\"try{sessionStorage.removeItem('ivRl')}catch(x){}location.reload()\">Reload / โหลดใหม่</button>";document.body.appendChild(d)});</script>
 <script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
 <meta name="description" content="IDOLVERSE48: Select Bloom! — Choose Your Stars. Watch Them Bloom. A Japanese idol agency management simulation.">
 <meta name="theme-color" content="#f5a3c4">
@@ -2366,6 +2371,8 @@ function artMigrate(){if(S.artV>=2)return;const all=[...S.members,...(S.auds||[]
  const BK=pm(BKN.length,11),FT=pm(FTN.length,23),HCs=[...HC_NAT.slice(0,7),...HC_FAN],HP=pm(HCs.length,37),seen=new Set();
  all.forEach((m,i)=>{let t=0,a;do{a=newAp(m,t,{bk:BK[(i+t)%BK.length],ft:FT[(i*3+t)%FT.length],hc:HCs[HP[(i*5+t)%HP.length]]});t++}while(seen.has(a.bk+'/'+a.ft+'/'+a.hc)&&t<40);seen.add(a.bk+'/'+a.ft+'/'+a.hc);if(m.ap&&!m.apOld)m.apOld=m.ap;m.ap=a});S.artV=2;if(typeof ART!='undefined')ART.cache.clear()}
 function rapp(){return{bk:rnd(0,BKN.length-1),ft:rnd(0,FTN.length-1),hc:rnd(0,HC.length-1),ec:rnd(0,EC.length-1),ey:rnd(0,5),br:rnd(0,3),bc:-1,mo:rnd(0,4),of:rnd(0,6),oh:pick(OHS),ac:rnd(0,6),sk:rnd(0,4)}}
+// fallback: the "Next day" buttons call advUI(); js/ui/adv-loading.js replaces it with the version that shows the loading screen
+function advUI(n){return adv(n)}
 
 </script>
 <script>

@@ -81,3 +81,5 @@ function artMigrate(){if(S.artV>=2)return;const all=[...S.members,...(S.auds||[]
  const BK=pm(BKN.length,11),FT=pm(FTN.length,23),HCs=[...HC_NAT.slice(0,7),...HC_FAN],HP=pm(HCs.length,37),seen=new Set();
  all.forEach((m,i)=>{let t=0,a;do{a=newAp(m,t,{bk:BK[(i+t)%BK.length],ft:FT[(i*3+t)%FT.length],hc:HCs[HP[(i*5+t)%HP.length]]});t++}while(seen.has(a.bk+'/'+a.ft+'/'+a.hc)&&t<40);seen.add(a.bk+'/'+a.ft+'/'+a.hc);if(m.ap&&!m.apOld)m.apOld=m.ap;m.ap=a});S.artV=2;if(typeof ART!='undefined')ART.cache.clear()}
 function rapp(){return{bk:rnd(0,BKN.length-1),ft:rnd(0,FTN.length-1),hc:rnd(0,HC.length-1),ec:rnd(0,EC.length-1),ey:rnd(0,5),br:rnd(0,3),bc:-1,mo:rnd(0,4),of:rnd(0,6),oh:pick(OHS),ac:rnd(0,6),sk:rnd(0,4)}}
+// fallback: the "Next day" buttons call advUI(); js/ui/adv-loading.js replaces it with the version that shows the loading screen
+function advUI(n){return adv(n)}
