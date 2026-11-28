@@ -2080,3 +2080,5 @@ body.lite{background:#f6ece3!important}
 .srxfmts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:8px 0}.srxfmts .b{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;height:auto;padding:10px}.srxfmts small{font-weight:500;opacity:.8}
 .srxtabs{gap:4px;flex-wrap:wrap;margin-bottom:6px}
 .srxth{border-radius:6px;flex:none;display:block}
+.plpi{cursor:pointer;gap:8px;align-items:center}.plpi.on{background:#fff0f6;border-radius:10px}.plpi input{width:20px;height:20px;flex:none}
+.plpbar{position:sticky;bottom:0;background:var(--card,#fff);padding:8px 0;gap:8px;border-top:1px solid var(--line,#eee)}

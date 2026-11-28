@@ -2164,6 +2164,8 @@ body.lite{background:#f6ece3!important}
 .srxfmts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:8px 0}.srxfmts .b{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;height:auto;padding:10px}.srxfmts small{font-weight:500;opacity:.8}
 .srxtabs{gap:4px;flex-wrap:wrap;margin-bottom:6px}
 .srxth{border-radius:6px;flex:none;display:block}
+.plpi{cursor:pointer;gap:8px;align-items:center}.plpi.on{background:#fff0f6;border-radius:10px}.plpi input{width:20px;height:20px;flex:none}
+.plpbar{position:sticky;bottom:0;background:var(--card,#fff);padding:8px 0;gap:8px;border-top:1px solid var(--line,#eee)}
 
 </style>
 </head><body>
@@ -25844,7 +25846,7 @@ function cpPremOpts(){const p=S.pj,gid=gsAg(),min=typeof seRelMin=='function'?se
 function cpPremOf(p){if(!p||!p.ccPrem)return null;const C=ccGet(p.ccPrem.c),pf=C&&C.pf.find(z=>z.id==p.ccPrem.p);if(!C||!pf||['cancel','cancelled'].includes(C.status))return{bad:1};return{C,pf,day:C.start+pf.d}}
 function cpPremSet(v){const p=S.pj;if(!p)return;if(p.status!='draft')return toast(CP_T('The premiere is fixed once production has started.','เริ่มผลิตแล้ว เปลี่ยนงานเปิดตัวไม่ได้'),'err');if(!v){delete p.ccPrem;render();return}
  const[c,pid]=String(v).split('|'),C=ccGet(c),pf=C&&C.pf.find(z=>z.id==pid);if(!pf)return;p.ccPrem={c,p:pid};p.relPick=C.start+pf.d;toast(CP_T(`Premiere at “${C.name}” (${jd(p.relPick)}): the release day is that day.`,`เปิดตัวที่ “${C.name}” (${jd(p.relPick)}) วันวางขายคือวันนั้น`));render()}
-function cpMissing(p,P){const set=ccSetOf(P.C,P.pf),gid=gsAg(),have=new Set((set?set.items:[]).filter(it=>it.k=='song'&&it.gid==gid).map(it=>it.song));return usedSongs(p).filter(id=>!have.has(id)).map(id=>(S.songs[id]||{}).title||id)}
+function cpMissing(p,P){const set=ccSetOf(P.C,P.pf),gid=gsAg(),have=new Set((set?set.items:[]).filter(it=>it.k=='song'&&it.gid==gid).map(it=>it.song));return usedSongs(p).filter(id=>!have.has(id)&&!(S.songs[id]&&S.songs[id].rel)).map(id=>(S.songs[id]||{}).title||id)}
 {const f=reqs;reqs=function(p){const r=f.apply(this,arguments);try{if(p&&p.ccPrem){const P=cpPremOf(p);if(!P||P.bad)r.push(CP_T('The premiere concert no longer exists: choose another one or remove the premiere.','คอนเสิร์ตเปิดตัวไม่มีแล้ว เลือกคอนอื่นหรือยกเลิกการเปิดตัว'));
   else{if(p.status=='draft'&&seRel(p)!=P.day)p.relPick=P.day;/* songs may be added to the setlist later: if they are still missing when the premiere day comes, the premiere moves to the next performance (cpAutoMove) */}}}catch(e){console.error(e)}return r}}
 function cpPremHtml(){const p=S.pj;if(!p||(p.status!='draft'&&!p.ccPrem))return'';const O=cpPremOpts(),P=cpPremOf(p),cur=p.ccPrem?p.ccPrem.c+'|'+p.ccPrem.p:'',dis=p.status!='draft'?'disabled':'';
@@ -26467,6 +26469,37 @@ function srxOutside(v){if(SRX_VIEWS.includes(v))return false;try{const sec=SECS.
 try{Object.assign(I18N_TH,{'Special Releases':'งานพิเศษ','Recording Studio · Special Releases':'สตูดิโอบันทึกเสียง · งานพิเศษ','Download store & streaming platform fees':'ค่าธรรมเนียมร้านดาวน์โหลดและแพลตฟอร์มสตรีมมิง'})}catch(e){}
 // the Under Girls costume dresses every member outside the Title Track — a Special Release only concerns its participants
 {const f=reqs;reqs=function(p){const r=f.apply(this,arguments);try{if(p&&p.srx&&Array.isArray(r))return r.filter(x=>!/Under Girls/.test(String(x)))}catch(e){}return r}}
+
+</script>
+<script>
+// =====================================================================================
+//  Single / Album planning — "Add from the Song Library" as a picker (like the concert song picker):
+//  songs grouped by Single, by Theater Stage, or unreleased; tick several and add them in one go.
+//  Uses the same list (plLibChoices) and the same add function (plAddLib) as before.
+// =====================================================================================
+const PLP_T=(en,th)=>(typeof UIP!='undefined'&&UIP.lang=='th')?th:en;
+function plpData(){const p=S.pj;if(!p)return{single:[],stage:[],new:[]};const L=plLibChoices(p),idx=new Map(L.map(o=>[o.id,o])),by={single:[],stage:[],new:[]};
+ const R={};L.filter(o=>o.rel).forEach(o=>{(R[o.rel]=R[o.rel]||{d:o.relDay??1e9,L:[]}).L.push(o)});
+ Object.entries(R).sort((a,b)=>a[1].d-b[1].d).forEach(([t,r])=>by.single.push({h:t,sub:r.d<1e9?jd(r.d):'',L:r.L.sort((a,b)=>(a.role=='Main'?0:1)-(b.role=='Main'?0:1))}));
+ try{Object.values((S.th&&S.th.st)||{}).filter(s=>s.status!='draft'||thAll(s).length).sort((a,b)=>(a.no||99)-(b.no||99)).forEach(s=>{const SL=thAll(s).map(it=>idx.get(it.song)).filter(Boolean);if(SL.length)by.stage.push({h:`${s.no?ordN(s.no)+' Stage · ':''}${s.name}`,sub:thLabel(s.k),L:SL})})}catch(e){}
+ const N=L.filter(o=>!o.rel);if(N.length)by.new.push({h:PLP_T('Unreleased songs','เพลงที่ยังไม่วางขาย'),sub:'',L:N});return by}
+function plpOpen(){ui.plp=ui.plp||{tab:'single',q:'',sel:[]};ui.plp.sel=[];{const D=plpData();if(!(D[ui.plp.tab]||[]).length)ui.plp.tab=['single','stage','new'].find(k=>D[k].length)||'single'}ui.mod={t:'html',plp:1,h:plpHtml()};render()}
+function plpRe(){if(ui.mod&&ui.mod.plp){ui.mod.h=plpHtml();render()}}
+function plpTog(id){const P=ui.plp;const i=P.sel.indexOf(id);if(i>=0)P.sel.splice(i,1);else P.sel.push(id);plpRe()}
+function plpAll(ids,on){const P=ui.plp;ids.forEach(id=>{const i=P.sel.indexOf(id);if(on&&i<0)P.sel.push(id);if(!on&&i>=0)P.sel.splice(i,1)});plpRe()}
+function plpAdd(){const P=ui.plp,ids=P.sel.slice();if(!ids.length)return;const t0=toast,msg=[];let n=0;toast=function(m,k){if(k=='err')msg.push(String(m))};
+ try{ids.forEach(id=>{const before=plIn(id);plAddLib(id);if(!before&&plIn(id))n++})}finally{toast=t0}
+ ui.mod=null;P.sel=[];toast(PLP_T(`${n} song(s) added.`,`เพิ่มแล้ว ${n} เพลง`)+(msg.length?' · '+msg[0]:''),msg.length&&!n?'err':undefined);render()}
+function plpHtml(){const P=ui.plp||{tab:'single',q:'',sel:[]},D=plpData(),q=(P.q||'').toLowerCase(),sel=new Set(P.sel);
+ const T=[['single',PLP_T('Singles','ซิงเกิล')],['stage',PLP_T('Stages','สเตจ')],['new',PLP_T('Unreleased','ยังไม่วางขาย')]];
+ const blocks=(D[P.tab]||[]).map(b=>({...b,L:b.L.filter(o=>!q||o.title.toLowerCase().includes(q))})).filter(b=>b.L.length);
+ return`<h2 class="ht">${PLP_T('Add from the Song Library','เพิ่มจากคลังเพลง')}</h2><div class="row cctabs">${T.map(([k,n])=>`<button class="b s ${P.tab==k?'p':''}" onclick="ui.plp.tab='${k}';plpRe()">${n}</button>`).join('')}</div>
+ <input class="ccpkq" placeholder="${PLP_T('Search songs','ค้นหาเพลง')}" value="${esc(P.q||'')}" onchange="ui.plp.q=this.value;plpRe()">
+ <div class="ccpk">${blocks.map(b=>{const ids=b.L.map(o=>o.id),all=ids.every(i=>sel.has(i));return`<details open class="ccpkb"><summary><b>${esc(b.h)}</b> <small class="st">${esc(b.sub||'')}</small></summary>
+  <div class="row"><button class="b s" onclick='plpAll(${JSON.stringify(ids)},${all?0:1})'>${all?PLP_T('Unselect all','ยกเลิกทั้งหมด'):PLP_T('Select all','เลือกทั้งหมด')}</button></div>
+  ${b.L.map(o=>`<label class="row ccpki plpi ${sel.has(o.id)?'on':''}"><input type="checkbox" ${sel.has(o.id)?'checked':''} onchange="plpTog('${o.id}')"><div style="flex:1;min-width:0"><b>${esc(o.title)}</b><small class="st">${o.rel?esc(o.role=='Main'?PLP_T('Title Track','เพลงหลัก'):PLP_T('Coupling','เพลงรอง')):PLP_T('Unreleased','ยังไม่วางขาย')}${o.genre?' · '+esc(o.genre):''}${o.concept?' · '+esc(o.concept):''}</small></div></label>`).join('')}</details>`}).join('')||`<p class="st">${P.tab=='stage'?PLP_T('No Stage songs to add.','ไม่มีเพลงสเตจให้เพิ่ม'):PLP_T('No songs match.','ไม่มีเพลงที่ตรง')}</p>`}</div>
+ <div class="row plpbar"><button class="b p" ${P.sel.length?'':'disabled'} onclick="plpAdd()">＋ ${PLP_T('Add selected','เพิ่มที่เลือก')} (${P.sel.length})</button><button class="b" onclick="ui.mod=null;render()">${PLP_T('Close','ปิด')}</button></div>`}
+{const f=V.music;V.music=function(){let h=f.apply(this,arguments);try{h=h.replace(/<select onchange="if\(this\.value\)plAddLib\(this\.value\)"[^>]*>[\s\S]*?<\/select>/,`<button class="b" onclick="plpOpen()">＋ ${PLP_T('Add from the Song Library','เพิ่มจากคลังเพลง')}</button>`)}catch(e){}return h}}
 
 </script>
 <script>
