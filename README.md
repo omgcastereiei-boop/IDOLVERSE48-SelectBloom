@@ -1237,3 +1237,11 @@ Music Production › **Special Releases** (`js/ui/special-rel.js`):
 - A persistent tracker (`S.doc`) remembers events, narration lines and interviews already used and each category's coverage date — nothing is retold; when there is not enough new history no film is made.
 - Scenes: title, chapter cards, timelines, narration over event pictures, galleries, individual and pair interviews, credits. Pictures come from the event: single stages / MV / covers in **that single's costumes**, election photos, concert and Theater stages, rehearsal scenes in **practice wear**; interviews use the **current single costume**. Player: play/pause, previous/next, progress, chapter list.
 **Practice wear** (`js/art/cz-practice.js`): 10 practice tops and 10 bottoms in the Costume Designer, 11 ready-made practice outfits, a practice look per member (Training › practice room, documentary rehearsals).
+
+## My Collection (คลังของฉัน) — costumes & Stage setlists across saves
+- Kept on the device (IndexedDB, localStorage fallback), separate from every save.
+- Costume Designer › “My Collection” / “Save to My Collection”; Theater › Setlist / Stages › “My Collection”.
+- Export a `.json` file, copy a share code (`IV48C1:…`, compressed) or use the phone Share sheet; import a file or a code.
+- Setlists keep songs (title/genre/concept), Overture, MCs, Encore and every position's costume. “Create Stage” makes a new draft
+  Stage in the open theater: songs matched by title, missing ones become new Theater songs (team theaters only), costumes given in
+  formation order. Members, Center and formations are chosen in the target save. Imported data is sanitised.
