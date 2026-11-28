@@ -1245,3 +1245,10 @@ Music Production › **Special Releases** (`js/ui/special-rel.js`):
 - Setlists keep songs (title/genre/concept), Overture, MCs, Encore and every position's costume. “Create Stage” makes a new draft
   Stage in the open theater: songs matched by title, missing ones become new Theater songs (team theaters only), costumes given in
   formation order. Members, Center and formations are chosen in the target save. Imported data is sanitised.
+
+## Navigation v2 (nav-v2.js)
+- Company: Roster / Concurrent / Transfer tabs removed. Former members: Solo Idol / New Idol Group system removed.
+- One Group filter per list. New **Media** section (Documentaries + Drama Studio).
+- **Events**: hub page (Roadshow, Concert, Request Hour, General Election, Janken) + those pages as tabs; the Election section is gone.
+- Recording & DVD → Theater. Units & Solo Artists → Group & Team.
+- Community: icon, unread badge, pop-up for new posts. Clearer sub-tab chips; compact desktop sidebar and wider desktop grids.
