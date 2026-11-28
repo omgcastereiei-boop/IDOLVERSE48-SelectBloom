@@ -2259,11 +2259,16 @@ body.lite{background:#f6ece3!important}
  .nav button{padding:4px 8px;gap:9px;min-height:0}.nav button i{width:30px;height:30px;border-radius:10px}.nav button i svg{width:17px;height:17px}.nav button .ln{font-size:13px}
  main>*{max-width:1440px}
  .locb{display:flex;flex-direction:column;align-items:stretch}.locb .lt{flex:none}.locb .sub{justify-content:flex-start}
- .g.gcol-3{grid-template-columns:repeat(auto-fill,minmax(185px,1fr))!important}.g.gcol-4{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important}.g.gcol-5{grid-template-columns:repeat(auto-fill,minmax(122px,1fr))!important}
+ .g.gcol-3{grid-template-columns:repeat(3,minmax(0,1fr))!important}.g.gcol-4{grid-template-columns:repeat(4,minmax(0,1fr))!important}.g.gcol-5{grid-template-columns:repeat(5,minmax(0,1fr))!important}.g.gcol-6{grid-template-columns:repeat(6,minmax(0,1fr))!important}.g.gcol-7{grid-template-columns:repeat(7,minmax(0,1fr))!important}.g.gcol-8{grid-template-columns:repeat(8,minmax(0,1fr))!important}.g.gcol-9{grid-template-columns:repeat(9,minmax(0,1fr))!important}.g.gcol-10{grid-template-columns:repeat(10,minmax(0,1fr))!important} .g.gcol-8 .mc b,.g.gcol-9 .mc b,.g.gcol-10 .mc b{font-size:11px}.g.gcol-9 .mc small,.g.gcol-10 .mc small,.g.gcol-9 .mc .st,.g.gcol-10 .mc .st{font-size:9px}
 
  .row{gap:8px}
 }
 @media(min-width:1600px){main>*{max-width:1600px}}
+
+#blpop{position:fixed;left:50%;top:76px;z-index:61;width:min(420px,calc(100vw - 24px));transform:translate(-50%,-20px);opacity:0;pointer-events:none;transition:.3s}
+#blpop.on{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+.blpopin{background:linear-gradient(135deg,#2b1745,#7c3a8f 60%,#e0679f);color:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 12px 32px rgba(60,20,90,.4);display:flex;flex-direction:column;gap:6px}
+.blpopin b{font:800 16px 'M PLUS Rounded 1c',Quicksand,sans-serif;letter-spacing:.5px}.blpopin span{font-size:12.5px;opacity:.95}.blpopin .b:not(.p){background:rgba(255,255,255,.85)}
 
 </style>
 </head><body>
@@ -6044,7 +6049,7 @@ const prof=id=>`ui.ptab='stats';ui.mod={t:'prof',id:${id}};render()`;
 // ---- Producer Office ----
 V.dash=function(){const quick=[['members','Members','メンバー'],['training','Training','レッスン'],['music','Music','楽曲制作'],['events','Events','イベント'],['fans','Fans','ファン'],['charts','Charts','チャート'],['audition','Audition','オーディション'],['manage','Manage','管理']].map(([k,l,j])=>`<button class="app" onclick="goSec('${k}')"><i>${ico(k)}</i><b>${l}</b><small>${j}</small></button>`).join('');
  if(!S.members.length)return`<div class="ofc"><div class="vn empty-vn"><div class="vnbox"><span class="vnn">Assistant</span><p>Welcome to ${esc(S.co)}, Producer ${esc(S.producer||'')}! Our agency has no idols yet — let's hold an audition and find our first stars.</p><button class="b p" onclick="goSec('audition')">Go to the Audition Room ▶</button></div></div><div class="desk"><div class="st">Producer ${esc(S.producer||'')}</div><div class="co">${esc(S.co)}</div><div class="kv"><div><small>Date</small><b>${fd()}</b></div><div><small>Funds</small><b>${yen(S.money)}</b></div><div><small>Members</small><b>0</b></div></div></div></div>${onboard()}<div class="apps">${quick}</div>`;
- const top=[...S.members].sort((a,b)=>b.pop-a.pop),fm=get(S.sen.center)||top[0],c=S.cur,p=S.prod,ks=Object.keys(EV),fe=ks[Math.floor(S.day/7)%ks.length],hh=(ks.indexOf(fe)*47+300)%360,
+ const fv=m=>{try{const v=sv(m,'fans');return typeof v=='number'?v:+v||+m.fans||0}catch(e){return+m.fans||0}},top=[...S.members].filter(m=>m.status!='graduated').sort((a,b)=>fv(b)-fv(a)||b.pop-a.pop),fm=get(S.sen.center)||top[0],c=S.cur,p=S.prod,ks=Object.keys(EV),fe=ks[Math.floor(S.day/7)%ks.length],hh=(ks.indexOf(fe)*47+300)%360,
  rank=S.fans>=100000?'Legendary Producer':S.fans>=30000?'Star Producer':S.fans>=10000?'Rising Producer':'Rookie Producer',
  ms=[['Confirm a single production',S.singles.length>0||S.pj?.status=='producing'],['Release your first single',S.singles.length>0],['Reach 10,000 fans',S.fans>=10000],['Hold an event',S.led.some(e=>/Theater|Handshake|Concert|Appearance|Election|Janken|Anniversary/.test(e.l))]],
  tired=S.members.filter(m=>m.en<30).length,nt=[p?`"${p.title}" ${p.left?p.left+' days to go':'is ready to release!'}`:'No single in production.',tired?tired+' members are tired. Rest a day.':'Everyone is in good shape.',S.money<300000?'Funds are low!':'Finances are stable.'];
@@ -23254,7 +23259,7 @@ render=thScoped(render);
 //  IDOLVERSE48: Select Bloom! — BLOOM: THE IDOL PROJECT (annual survival show)
 // -------------------------------------------------------------------------------------
 //  One season per in-game year, titled "BLOOM: THE IDOL PROJECT <year>"  ·  S.bloom.seasons[year]
-//   March 1–31   applications: members decide for themselves whether to apply; the company approves or rejects
+//   Feb 1–Mar 31 applications: members decide for themselves whether to apply; the company approves or rejects
 //                (shared company quota of 10). A member with any company commitment between April 1 and EP.13
 //                (theater, events, releases, concerts, roadshows, bookings…) is ineligible and cannot be approved.
 //   April 1      the season starts: 60 contestants (approved members + generated contestants from other agencies,
@@ -23297,7 +23302,7 @@ const blN=h=>{ui.blN=ui.blN||[];ui.blN.push(h)};
 const blR=a=>a[Math.floor(Math.random()*a.length)],blG=()=>(Math.random()+Math.random()+Math.random()-1.5)/1.5,blC=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 function blS(){if(!S.bloom||typeof S.bloom!='object')S.bloom={seq:0,seasons:{},names:[]};const B=S.bloom;B.seasons=B.seasons||{};B.names=B.names||[];return B}
 const blYear=d=>dayDate(d??S.day).getFullYear();
-function blDates(Y){const a0=dateDay(new Date(Y,2,1)),a1=dateDay(new Date(Y,2,31)),apr=dateDay(new Date(Y,3,1));let e1=apr;while(dowOf(e1)!=0)e1++;const eps=[...Array(13)].map((_,i)=>e1+7*i);return{a0,a1,apr,eps,end:eps[12]}}
+function blDates(Y){const a0=dateDay(new Date(Y,1,1)),a1=dateDay(new Date(Y,2,31)),apr=dateDay(new Date(Y,3,1));let e1=apr;while(dowOf(e1)!=0)e1++;const eps=[...Array(13)].map((_,i)=>e1+7*i);return{a0,a1,apr,eps,end:eps[12]}}
 const blCur=()=>{const B=blS();return B.seasons[blYear()]||null};
 const blSeason=y=>blS().seasons[y]||null;
 const blDone=c=>c.out!=null;
@@ -23320,7 +23325,7 @@ function blWhy(m){const s=blSt({mid:m.id}),L=['prove','fans','rival','dream','da
 function blApplyRoll(Z,first){const Y=Z.y;S.members.forEach(m=>{if(m.status=='graduated'||Z.apps[m.id])return;const E=blElig(m,Y);if(!E.ok)return;let w={mh:60};try{w=wlOf(m)}catch(e){}
   const p=blC((first?.06:.02)+(m.pas||50)/(first?600:1500)+(m.age<=21?.03:-.02)+((m.pop||0)<45?.04:0)+(w.mh<35?-.05:0),0,.4);if(Math.random()<p)Z.apps[m.id]={st:'applied',day:S.day,why:blWhy(m)}})}
 function blApproved(Z){return Object.entries(Z.apps).filter(([id,a])=>a.st=='approved').map(([id])=>+id)}
-function blAppSet(mid,st){const Z=blCur();if(!Z||Z.st!='apply')return toast(BL_T('Applications are only handled in March.','จัดการใบสมัครได้เฉพาะเดือนมีนาคม'),'err');const a=Z.apps[mid],m=get(mid);if(!a||!m)return toast(BL_T('She has not applied. Members decide for themselves whether to apply.','เธอยังไม่ได้สมัคร เมมเบอร์ตัดสินใจสมัครเอง'),'err');
+function blAppSet(mid,st){const Z=blCur();if(!Z||Z.st!='apply')return toast(BL_T('Applications are only handled from February to March.','จัดการใบสมัครได้เฉพาะช่วงกุมภาพันธ์–มีนาคม'),'err');const a=Z.apps[mid],m=get(mid);if(!a||!m)return toast(BL_T('She has not applied. Members decide for themselves whether to apply.','เธอยังไม่ได้สมัคร เมมเบอร์ตัดสินใจสมัครเอง'),'err');
  if(st=='approved'){const E=blElig(m,Z.y);if(!E.ok)return toast(BL_T('Not eligible: ','ไม่มีสิทธิ์: ')+E.why[0],'err');if(blApproved(Z).length>=BL_Q&&a.st!='approved')return toast(BL_T(`The company quota is full (${BL_Q} contestants).`,`โควตาของบริษัทเต็มแล้ว (${BL_Q} คน)`),'err')}
  if(!['approved','rejected','applied'].includes(st))return;a.st=st;a.dec=S.day;render()}
 // ---- generated contestants ---------------------------------------------------------------------------------------------
@@ -23528,7 +23533,7 @@ function blPoster(Z,Y){return`<svg viewBox="0 0 640 220" class="blposter" xmlns=
  ${[...Array(26)].map((_,i)=>`<circle cx="${(i*97)%640}" cy="${(i*53)%220}" r="${2+(i%4)}" fill="#fff" opacity=".35"/>`).join('')}<g transform="translate(520 110)">${[0,72,144,216,288].map(r=>`<ellipse cy="-36" rx="22" ry="36" fill="#fff" opacity=".3" transform="rotate(${r})"/>`).join('')}<circle r="16" fill="#ffd86b"/></g>
  <text x="32" y="92" font-size="64" font-weight="900" fill="#fff" font-family="Quicksand,sans-serif" letter-spacing="4">BLOOM</text><text x="34" y="128" font-size="22" font-weight="800" fill="#fff" font-family="Quicksand,sans-serif" letter-spacing="3">THE IDOL PROJECT</text><text x="34" y="176" font-size="40" font-weight="900" fill="#ffd86b" font-family="Quicksand,sans-serif">${Y}</text>
  ${Z&&Z.cs.length?`<g transform="translate(250 30)">${Z.cs.filter(c=>c.mid!=null).slice(0,5).map((c,i)=>{const m=blObj(c),a=ap(m);let fg='';try{fg=fig(m,{pose:POSE_OK[i%POSE_OK.length],of:a.of,oh:a.oh,ac:a.ac,ex:1,cd:blCd(c.g2||c.g1||'B')})}catch(e){}return`<g transform="translate(${i*46} ${i%2?10:0}) scale(.9)">${fg}</g>`}).join('')}</g>`:''}</svg>`}
-function blStatus(Z,Y){const D=blDates(Y);if(!Z)return S.day<D.a0?BL_T(`Applications open on ${jd(D.a0)}.`,`เปิดรับสมัคร ${jd(D.a0)}`):BL_T(`The ${Y} season is closed (applications were in March). The next season opens on ${jd(blDates(Y+1).a0)}.`,`ซีซัน ${Y} ปิดแล้ว (รับสมัครในเดือนมีนาคม) ซีซันถัดไปเปิดรับ ${jd(blDates(Y+1).a0)}`);
+function blStatus(Z,Y){const D=blDates(Y);if(!Z)return S.day<D.a0?BL_T(`Applications open on ${jd(D.a0)}.`,`เปิดรับสมัคร ${jd(D.a0)}`):BL_T(`The ${Y} season is closed (applications were in February–March). The next season opens on ${jd(blDates(Y+1).a0)}.`,`ซีซัน ${Y} ปิดแล้ว (รับสมัครช่วงกุมภาพันธ์–มีนาคม) ซีซันถัดไปเปิดรับ ${jd(blDates(Y+1).a0)}`);
  if(Z.st=='apply')return BL_T(`Applications open until ${jd(D.a1)}. Filming starts ${jd(D.apr)}.`,`รับสมัครถึง ${jd(D.a1)} เริ่มถ่ายทำ ${jd(D.apr)}`);if(Z.st=='air')return Z.ep?BL_T(`EP.${String(Z.ep).padStart(2,'0')} aired. ${blAct(Z).length} contestants remain.${Z.ep<13?` Next: EP.${String(Z.ep+1).padStart(2,'0')} on ${jd(D.eps[Z.ep])}.`:''}`,`ออกอากาศ EP.${String(Z.ep).padStart(2,'0')} แล้ว เหลือ ${blAct(Z).length} คน${Z.ep<13?` ตอนต่อไป EP.${String(Z.ep+1).padStart(2,'0')} วันที่ ${jd(D.eps[Z.ep])}`:''}`):BL_T(`Filming. EP.01 airs ${jd(D.eps[0])}.`,`กำลังถ่ายทำ EP.01 ออกอากาศ ${jd(D.eps[0])}`);return BL_T('Season completed.','จบซีซันแล้ว')}
 V.bloom=function(){const B=blS(),Y=ui.blY||blYear(),Z=B.seasons[Y],D=blDates(Y),ys=[...new Set([...Object.keys(B.seasons).map(Number),blYear()])].sort((a,b)=>b-a);
  const tl=[[D.a0,BL_T('Applications','รับสมัคร'),`${jd(D.a0)} – ${jd(D.a1)}`],[D.apr,BL_T('Filming','ถ่ายทำ'),jd(D.apr)],...D.eps.map((d,i)=>[d,`EP.${String(i+1).padStart(2,'0')}`,jd(d)])];
@@ -23537,7 +23542,7 @@ V.bloom=function(){const B=blS(),Y=ui.blY||blYear(),Z=B.seasons[Y],D=blDates(Y),
  ${Z&&Z.st=='apply'?`<button class="b p" onclick="goView('blapply')">${BL_T('Review applications','ดูใบสมัคร')} (${blApproved(Z).length}/${BL_Q})</button>`:''}${Z&&Z.ep?`<button class="b p" onclick="blOpenEp(${Y},${Z.ep})">${BL_T('Watch the latest episode','ดูตอนล่าสุด')}</button>`:''}</div>
  ${Z&&Z.st=='done'&&Z.pg?`<div class="c blres"><h3>${BL_T('Final result','ผลสุดท้าย')} · ${esc(Z.pg.name)}</h3><div class="blgrid">${Z.eps[13].rank.slice(0,Z.eps[13].n).map(([id,r])=>blCard(Z,Z.cs.find(c=>c.id==id),{rk:r,debut:1})).join('')}</div></div>`:''}
  <div class="c"><h3>${BL_T('Season schedule','ตารางซีซัน')}</h3><div class="bltl">${tl.map(([d,a,b],i)=>`<div class="${S.day>=d?'on':''} ${i>1&&Z&&Z.eps[i-1]?'aired':''}" ${i>1&&Z&&Z.eps[i-1]?`onclick="blOpenEp(${Y},${i-1})"`:''}><b>${a}</b><small>${b}</small>${i>1?`<small>${esc(BL_T(BL_EPS[i-2][0],BL_EPS[i-2][1]))}</small>`:''}</div>`).join('')}</div>
- <p class="st">${BL_T(`One season per year. Members apply by themselves in March; the company may approve up to ${BL_Q} (shared by every group of the company). Members with company work between April 1 and EP.13 cannot apply (theater shows do not count: contestants are simply left out of those shows). Contestants are unavailable for company work until EP.13. The debut group is managed by the show's production company for two years; your debuted member takes no part in her group until it ends.`,`หนึ่งซีซันต่อปี เมมเบอร์สมัครเองในเดือนมีนาคม บริษัทอนุมัติได้สูงสุด ${BL_Q} คน (ใช้ร่วมกันทุกวงในบริษัท) เมมเบอร์ที่มีงานระหว่าง 1 เม.ย. ถึง EP.13 สมัครไม่ได้ (ยกเว้นรอบเธียเตอร์ ผู้เข้าแข่งขันจะถูกเว้นจากรอบเหล่านั้นแทน) ผู้เข้าแข่งขันทำงานของบริษัทไม่ได้จนจบ EP.13 วงเดบิวต์อยู่ในการดูแลของบริษัทผู้ผลิตรายการสองปี เมมเบอร์ที่ได้เดบิวต์จะไม่ร่วมกิจกรรมกับวงจนสัญญาสิ้นสุด`)}</p></div>`};
+ <p class="st">${BL_T(`One season per year. Members apply by themselves from February to March; the company may approve up to ${BL_Q} (shared by every group of the company). Members with company work between April 1 and EP.13 cannot apply (theater shows do not count: contestants are simply left out of those shows). Contestants are unavailable for company work until EP.13. The debut group is managed by the show's production company for two years; your debuted member takes no part in her group until it ends.`,`หนึ่งซีซันต่อปี เมมเบอร์สมัครเองช่วงกุมภาพันธ์–มีนาคม บริษัทอนุมัติได้สูงสุด ${BL_Q} คน (ใช้ร่วมกันทุกวงในบริษัท) เมมเบอร์ที่มีงานระหว่าง 1 เม.ย. ถึง EP.13 สมัครไม่ได้ (ยกเว้นรอบเธียเตอร์ ผู้เข้าแข่งขันจะถูกเว้นจากรอบเหล่านั้นแทน) ผู้เข้าแข่งขันทำงานของบริษัทไม่ได้จนจบ EP.13 วงเดบิวต์อยู่ในการดูแลของบริษัทผู้ผลิตรายการสองปี เมมเบอร์ที่ได้เดบิวต์จะไม่ร่วมกิจกรรมกับวงจนสัญญาสิ้นสุด`)}</p></div>`};
 function blCard(Z,c,o={}){if(!c)return'';const m=blObj(c),co=blCo(c),s=blSt(c);return`<div class="c blcard ${c.mid!=null?'mine':''} ${blDone(c)&&!o.debut?'out':''}">${o.rk?`<span class="blrk">#${o.rk}</span>`:''}${c.center?`<span class="blctr">CENTER</span>`:''}${ptc(m,52)}<b>${esc(blName(c))}</b><small>${esc(co[0])}${co[1]?' · '+esc(co[1]):''}</small><div class="row blgr">${blGB(c.g1,1)}${c.g2?'→'+blGB(c.g2,1):''}</div>${o.stats?`<small>Vo ${blK(s.vo)} · Da ${blK(s.da)} · Ra ${blK(s.ra)}</small>`:''}${blDone(c)&&c.out?`<small class="blout">${BL_T('Out','ตกรอบ')} EP.${String(c.out).padStart(2,'0')}</small>`:''}</div>`}
 V.blapply=function(){const Y=blYear(),Z=blCur(),D=blDates(Y);if(!Z||Z.st!='apply')return`<div class="c"><h3>${BL_T('Applications','ใบสมัคร')}</h3><p class="st">${blStatus(Z,Y)}</p></div>`;
  const ap0=blApproved(Z).length,F=ui.blf||'all',L=S.members.filter(m=>m.status!='graduated').map(m=>{const a=Z.apps[m.id],E=blElig(m,Y);const st=!a?'none':a.st;return{m,a,E,st:(!E.ok&&st!='approved')?'inel':st}}).filter(x=>F=='all'||x.st==F).sort((a,b)=>({applied:0,approved:1,inel:3,rejected:2,none:4}[a.st]-{applied:0,approved:1,inel:3,rejected:2,none:4}[b.st]));
@@ -27275,6 +27280,26 @@ function nvCmPopGo(id){nvCmPopClose();view='community';render();try{window.scrol
  document.body.classList.toggle('nv-in',true);
  const n=nvCmUnread();document.querySelectorAll('.nav button').forEach(b=>{if((b.getAttribute('onclick')||'')=="goSec('community')"){let x=b.querySelector('.nvbdg');if(n>0){if(!x){x=document.createElement('em');x.className='nvbdg';b.appendChild(x)}x.textContent=n>99?'99+':n}else if(x)x.remove()}});
  nvGrpDedupe()}}catch(e){console.error(e)}return r}}
+
+// ---- BLOOM → Media; pop-up when applications open ------------------------------------------------------
+(function(){try{const B=SECS.find(s=>s.k=='bloom'),M=SECS.find(s=>s.k=='media');if(B&&M){B.v.forEach(x=>{if(!M.v.some(y=>y[0]==x[0]))M.v.push(x)});M.hid=[...(M.hid||[]),...(B.hid||[])];SECS.splice(SECS.indexOf(B),1)}}catch(e){console.error(e)}})();
+if(typeof blDaily=='function'){const f=blDaily;blDaily=function(){const B=S&&S.bloom,Y=typeof blYear=='function'?blYear():null,had=!!(B&&Y!=null&&B.seasons&&B.seasons[Y]);const r=f.apply(this,arguments);try{const Z=S.bloom&&S.bloom.seasons&&S.bloom.seasons[Y];if(!had&&Z&&Z.st=='apply'){ui.nvBlPop=Y;if(Array.isArray(ui.blN))ui.blN=ui.blN.filter(h=>!/goView\('blapply'\)/.test(h))}}catch(e){}return r}}
+function nvBlPop(){const Y=ui.nvBlPop;if(Y==null)return;ui.nvBlPop=null;try{const Z=S.bloom.seasons[Y],D=blDates(Y);let el=document.getElementById('blpop');if(!el){el=document.createElement('div');el.id='blpop';document.body.appendChild(el)}
+ el.innerHTML=`<div class="blpopin"><b>BLOOM: THE IDOL PROJECT ${Y}</b><span>${NV_T(`Applications are open until ${jd(D.a1)} · ${Object.keys(Z.apps).length} member(s) applied`,`เปิดรับสมัครแล้ว ถึง ${jd(D.a1)} · มีเมมสมัครแล้ว ${Object.keys(Z.apps).length} คน`)}</span><div class="row"><button class="b s p" onclick="nvBlGo()">${NV_T('Review applications','ดูใบสมัคร')}</button><button class="b s" onclick="nvBlClose()">${NV_T('Later','ไว้ทีหลัง')}</button></div></div>`;
+ el.classList.add('on')}catch(e){console.error(e)}}
+function nvBlClose(){const el=document.getElementById('blpop');if(el)el.classList.remove('on')}
+function nvBlGo(){nvBlClose();ui.mod=null;goView('blapply')}
+{const f=adv;adv=function(){const r=f.apply(this,arguments);try{if(ui.nvBlPop!=null)setTimeout(nvBlPop,200)}catch(e){}return r}}
+
+// ---- desktop: member grids up to 10 columns ------------------------------------------------------------
+const NV_DESK=()=>{try{return window.matchMedia('(min-width:1000px)').matches}catch(e){return false}};
+if(typeof gcolGet=='function'){const g0=gcolGet,s0=gcolSet;
+ gcolGet=function(k){if(NV_DESK()){const v=+((UIP.gcolD||{})[k]);return v>=3&&v<=10?v:6}return g0.apply(this,arguments)};
+ gcolSet=function(k,n){if(NV_DESK()){n=+n;if(!(n>=3&&n<=10))return;UIP.gcolD=UIP.gcolD||{};UIP.gcolD[k]=n;try{localStorage.setItem('iv48ui',JSON.stringify(UIP))}catch(e){}render();return}return s0.apply(this,arguments)}}
+function nvGcolBars(){if(!NV_DESK())return;document.querySelectorAll('.gcolbar').forEach(b=>{if(b.dataset.nv)return;const btn=b.querySelector('button[onclick^="gcolSet"]');if(!btn)return;const k=(btn.getAttribute('onclick').match(/gcolSet\('([^']+)'/)||[])[1];if(!k)return;b.dataset.nv=1;const cur=gcolGet(k);
+ b.querySelectorAll('button').forEach(x=>x.remove());for(let n=3;n<=10;n++){const x=document.createElement('button');x.textContent=n;x.className=n==cur?'on':'';x.setAttribute('aria-pressed',n==cur);x.setAttribute('onclick',`gcolSet('${k}',${n})`);b.appendChild(x)}})}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{if(S&&!ui.t)nvGcolBars()}catch(e){console.error(e)}return r}}
+{let w=null;window.addEventListener('resize',()=>{const d=NV_DESK();if(w!==null&&d!==w&&S&&!ui.t)render();w=d})}
 
 </script>
 <script>

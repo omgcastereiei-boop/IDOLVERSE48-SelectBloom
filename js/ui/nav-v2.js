@@ -90,3 +90,23 @@ function nvCmPopGo(id){nvCmPopClose();view='community';render();try{window.scrol
  document.body.classList.toggle('nv-in',true);
  const n=nvCmUnread();document.querySelectorAll('.nav button').forEach(b=>{if((b.getAttribute('onclick')||'')=="goSec('community')"){let x=b.querySelector('.nvbdg');if(n>0){if(!x){x=document.createElement('em');x.className='nvbdg';b.appendChild(x)}x.textContent=n>99?'99+':n}else if(x)x.remove()}});
  nvGrpDedupe()}}catch(e){console.error(e)}return r}}
+
+// ---- BLOOM → Media; pop-up when applications open ------------------------------------------------------
+(function(){try{const B=SECS.find(s=>s.k=='bloom'),M=SECS.find(s=>s.k=='media');if(B&&M){B.v.forEach(x=>{if(!M.v.some(y=>y[0]==x[0]))M.v.push(x)});M.hid=[...(M.hid||[]),...(B.hid||[])];SECS.splice(SECS.indexOf(B),1)}}catch(e){console.error(e)}})();
+if(typeof blDaily=='function'){const f=blDaily;blDaily=function(){const B=S&&S.bloom,Y=typeof blYear=='function'?blYear():null,had=!!(B&&Y!=null&&B.seasons&&B.seasons[Y]);const r=f.apply(this,arguments);try{const Z=S.bloom&&S.bloom.seasons&&S.bloom.seasons[Y];if(!had&&Z&&Z.st=='apply'){ui.nvBlPop=Y;if(Array.isArray(ui.blN))ui.blN=ui.blN.filter(h=>!/goView\('blapply'\)/.test(h))}}catch(e){}return r}}
+function nvBlPop(){const Y=ui.nvBlPop;if(Y==null)return;ui.nvBlPop=null;try{const Z=S.bloom.seasons[Y],D=blDates(Y);let el=document.getElementById('blpop');if(!el){el=document.createElement('div');el.id='blpop';document.body.appendChild(el)}
+ el.innerHTML=`<div class="blpopin"><b>BLOOM: THE IDOL PROJECT ${Y}</b><span>${NV_T(`Applications are open until ${jd(D.a1)} · ${Object.keys(Z.apps).length} member(s) applied`,`เปิดรับสมัครแล้ว ถึง ${jd(D.a1)} · มีเมมสมัครแล้ว ${Object.keys(Z.apps).length} คน`)}</span><div class="row"><button class="b s p" onclick="nvBlGo()">${NV_T('Review applications','ดูใบสมัคร')}</button><button class="b s" onclick="nvBlClose()">${NV_T('Later','ไว้ทีหลัง')}</button></div></div>`;
+ el.classList.add('on')}catch(e){console.error(e)}}
+function nvBlClose(){const el=document.getElementById('blpop');if(el)el.classList.remove('on')}
+function nvBlGo(){nvBlClose();ui.mod=null;goView('blapply')}
+{const f=adv;adv=function(){const r=f.apply(this,arguments);try{if(ui.nvBlPop!=null)setTimeout(nvBlPop,200)}catch(e){}return r}}
+
+// ---- desktop: member grids up to 10 columns ------------------------------------------------------------
+const NV_DESK=()=>{try{return window.matchMedia('(min-width:1000px)').matches}catch(e){return false}};
+if(typeof gcolGet=='function'){const g0=gcolGet,s0=gcolSet;
+ gcolGet=function(k){if(NV_DESK()){const v=+((UIP.gcolD||{})[k]);return v>=3&&v<=10?v:6}return g0.apply(this,arguments)};
+ gcolSet=function(k,n){if(NV_DESK()){n=+n;if(!(n>=3&&n<=10))return;UIP.gcolD=UIP.gcolD||{};UIP.gcolD[k]=n;try{localStorage.setItem('iv48ui',JSON.stringify(UIP))}catch(e){}render();return}return s0.apply(this,arguments)}}
+function nvGcolBars(){if(!NV_DESK())return;document.querySelectorAll('.gcolbar').forEach(b=>{if(b.dataset.nv)return;const btn=b.querySelector('button[onclick^="gcolSet"]');if(!btn)return;const k=(btn.getAttribute('onclick').match(/gcolSet\('([^']+)'/)||[])[1];if(!k)return;b.dataset.nv=1;const cur=gcolGet(k);
+ b.querySelectorAll('button').forEach(x=>x.remove());for(let n=3;n<=10;n++){const x=document.createElement('button');x.textContent=n;x.className=n==cur?'on':'';x.setAttribute('aria-pressed',n==cur);x.setAttribute('onclick',`gcolSet('${k}',${n})`);b.appendChild(x)}})}
+{const f=render;render=function(){const r=f.apply(this,arguments);try{if(S&&!ui.t)nvGcolBars()}catch(e){console.error(e)}return r}}
+{let w=null;window.addEventListener('resize',()=>{const d=NV_DESK();if(w!==null&&d!==w&&S&&!ui.t)render();w=d})}
