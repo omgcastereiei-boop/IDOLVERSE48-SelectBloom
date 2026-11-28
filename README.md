@@ -1230,3 +1230,10 @@ Music Production › **Special Releases** (`js/ui/special-rel.js`):
 - Never numbered, never handshake tickets. After release the record lives with its project (not in the Regular single/album lists).
 - Members: Special songs appear in each member's history and **count as Center**, but never as Senbatsu (A/B-side counts, streaks, first-time records, Senbatsu record). Feelings are calculated only for members of the main song and coupling songs.
 - Charts: Special releases enter the existing weekly charts (digital via downloads + streams). Discography: filter All / Singles / Special Singles / Albums / Special Albums.
+
+## Documentaries & Dance Practice wear
+**Members › Documentaries** (`js/ui/documentary.js`, backgrounds `js/art/doc-bg.js`): films built automatically from the save.
+- Categories: **Group** (first one covers the founding to today; each next one continues from the end of the previous), **Member**, **Election** (every finished election not filmed yet), **Graduation**.
+- A persistent tracker (`S.doc`) remembers events, narration lines and interviews already used and each category's coverage date — nothing is retold; when there is not enough new history no film is made.
+- Scenes: title, chapter cards, timelines, narration over event pictures, galleries, individual and pair interviews, credits. Pictures come from the event: single stages / MV / covers in **that single's costumes**, election photos, concert and Theater stages, rehearsal scenes in **practice wear**; interviews use the **current single costume**. Player: play/pause, previous/next, progress, chapter list.
+**Practice wear** (`js/art/cz-practice.js`): 10 practice tops and 10 bottoms in the Costume Designer, 11 ready-made practice outfits, a practice look per member (Training › practice room, documentary rehearsals).
